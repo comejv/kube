@@ -1,6 +1,7 @@
 package kube.model;
 
 public enum Color {
+    NOT_DEFINE(-1),
     EMPTY(0), 
     WHITE(1), 
     NATURAL(2),
@@ -20,26 +21,15 @@ public enum Color {
         return this.colorCode;
     }
 
-    public Color getColor(int colorCode) {
-        switch (colorCode) {
-            case 0:
-                return Color.EMPTY;
-            case 1:
-                return Color.WHITE;
-            case 2:
-                return Color.NATURAL;
-            case 3:
-                return Color.RED;
-            case 4:
-                return Color.GREEN;
-            case 5:
-                return Color.BLUE;
-            case 6:
-                return Color.YELLOW;
-            case 7:
-                return Color.BLACK;
-            default:
-                return Color.EMPTY;
+    public static Color getColor(int colorCode) {
+        for (Color c : Color.values()) {
+            if (c.getColorCode() == colorCode)
+                return c;
         }
+        return NOT_DEFINE;
+    }
+
+    public Color[] getAllColored() { 
+        return new Color[]{RED, GREEN, BLUE, YELLOW, BLACK};
     }
 }
