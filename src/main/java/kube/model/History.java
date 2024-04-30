@@ -12,8 +12,8 @@ public class History {
     private ArrayList<Move> undone;
 
     // Constructor
-    public History(int player) {
-        setFirstPlayer(player);
+    public History() {
+        setFirstPlayer(0);
         this.done = new ArrayList<Move>();
         this.undone = new ArrayList<Move>();
     }
@@ -81,7 +81,7 @@ public class History {
 
     public String forSave() {
         String s = "";
-        s += getFirstPlayer() + "\n {";
+        s += getFirstPlayer() + "\n{";
         for (Move move : getDone()) {
             s += move.forSave() + ";";
         }
@@ -120,7 +120,7 @@ public class History {
         s += "</html>";
         return s;
     }
-    }
+
 
 
     @Override
@@ -140,7 +140,6 @@ public class History {
             }
             s += " } \n";
         }
-
         return s;
     }
 
