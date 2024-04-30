@@ -14,6 +14,15 @@ public class KubeTest {
 
     @Test
     public void testKube() {
+        Kube kube = new Kube();
+        assertEquals(6, kube.getP1().getMountain().getBaseSize());
+        assertEquals(6, kube.getP2().getMountain().getBaseSize());
+        assertEquals(9, kube.getK3().getBaseSize());
+        assertEquals(0, kube.getHistoric().getDone().size());
+        assertEquals(0, kube.getHistoric().getUndone().size());
+        assertEquals(0, kube.getHistoric().getFirstPlayer());
+        assertEquals(kube.getP1(), kube.getCurrentPlayer());
+        assertEquals(1, kube.getPhase());
         
 
     }
