@@ -29,7 +29,27 @@ public class Mountain {
     }
 
     public ArrayList<Point> removable() {
-        return null;
+        ArrayList<Point> r = new ArrayList<>();
+        for (int i = 0; i < baseSize; i++){
+            for (int j = 0; j < i+1; j++){
+                if (i == 0 || (getCase(i-1, j) == Color.EMPTY && (getCase(i-1, j+1) == Color.EMPTY)) && getCase(i, j) != Color.EMPTY){
+                    r.add(new Point(i, j));
+                }
+            }
+        }
+        return r;
+    }
+
+    public ArrayList<Point> compatible() {
+        ArrayList<Point> c = new ArrayList<>();
+        for (int i = 0; i < baseSize; i++){
+            for (int j = 0; j < i+1; j++){
+                if (i == (baseSize - 1) || (getCase(i+1, j) != Color.EMPTY && (getCase(i+1, j+1) != Color.EMPTY)) && getCase(i, j) == Color.EMPTY){
+                    c.add(new Point(i, j));
+                }
+            }
+        }
+        return c;
     }
 
     public int getSize() {
