@@ -7,17 +7,18 @@ import java.util.HashSet;
 public class Kube {
     private History history;
     private Player p1, p2, currentPlayer;
-    private Color[][] mountain;
+    private Mountain k3;
     private ArrayList<Color> bag;
     private int phase;
     private static final int nCubePerColor = 9;
+    private static final int baseSize = 9;
 
     // Constructeurs
     public Kube() {
-        mountain = new Color[9][9];
+        k3 = new Mountain(baseSize);
         bag = new ArrayList<>();
-        p1 = new Player(0, null);
-        p2 = new Player(2, null);
+        p1 = new Player(1);
+        p2 = new Player(2);
         history = new History();
         fillBag();
         fillBase();
@@ -39,9 +40,11 @@ public class Kube {
     }
 
     public void fillBase(){
-        
+        for (int y = 0; y < baseSize; y++){
+            k3.setCase(0, y, bag.remove(0));
+            System.out.println(k3.getCase(0, y));
+        }
     }
-
 
 
     public void nextPlayer() {

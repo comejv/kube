@@ -5,7 +5,7 @@ public class Mountain {
     private int base_size;
     private static final int nbBitPerColor = 7;
 
-    Mountain(int size){
+    public Mountain(int size){
         base_size = size;
         m = new int[base_size];
     }
