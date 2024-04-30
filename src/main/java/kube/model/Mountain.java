@@ -4,24 +4,22 @@ import java.util.ArrayList;
 import java.awt.Point;
 
 public class Mountain {
-    private int[] m;
+    private Color[][] m;
     private int baseSize;
-    private static final int nbBitPerColor = 7;
 
     public Mountain(int size) {
         baseSize = size;
-        m = new int[baseSize];
+        m = new Color[baseSize][baseSize];
     }
 
     // Method to get the color at the position x, y
     // where getCase(0, 0) return the value of the most left summit case
     public Color getCase(int x, int y) {
-        return Color.getColor((m[x] >> ((baseSize - y) * nbBitPerColor)) & 127);
+        return m[x][y];
     }
 
     public void setCase(int x, int y, Color c) {
-        m[x] = m[x] & (~127 << ((baseSize - y) * nbBitPerColor));
-        m[x] = m[x] & (c.getColorCode() << ((baseSize - y) * nbBitPerColor));
+        m[x][y] = c;
     }
 
     public void remove(int x, int y) {
@@ -57,7 +55,7 @@ public class Mountain {
     }
 
     public void clear() {
-        m = new int[baseSize];
+        m = new Color[baseSize][baseSize];
     }
 
     public Boolean isFull() {
