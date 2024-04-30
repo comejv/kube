@@ -97,4 +97,9 @@ public class Mountain {
         }
         return true;
     }
+
+    public String forSave() {
+        String s = "";
+        return s;
+    }
 }
