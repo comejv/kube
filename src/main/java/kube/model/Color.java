@@ -1,7 +1,6 @@
 package kube.model;
 
 public enum Color {
-    NOT_DEFINE(-1),
     EMPTY(0), 
     WHITE(1), 
     NATURAL(2),
@@ -13,23 +12,36 @@ public enum Color {
 
     int colorCode;
 
+    // Constructor
     Color(int colorCode) {
+        setColorCode(colorCode);
+    }
+
+    // Setter
+    public void setColorCode(int colorCode) {
         this.colorCode = colorCode;
     }
 
+    // Getter
     public int getColorCode() {
         return this.colorCode;
     }
 
+    // toString()
+    public String toString() {
+        return this.name();
+    }
+
+    // Methods
     public static Color getColor(int colorCode) {
         for (Color c : Color.values()) {
             if (c.getColorCode() == colorCode)
                 return c;
         }
-        return NOT_DEFINE;
+        return EMPTY;
     }
 
-    public Color[] getAllColored() { 
+    public static Color[] getAllColored() { 
         return new Color[]{RED, GREEN, BLUE, YELLOW, BLACK};
     }
 }

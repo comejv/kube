@@ -46,60 +46,56 @@ public class History {
 
     // Methods
     public void addMove(Move move) {
-        if (this.done.size() == 0) {
-            this.firstPlayer = move.getPlayer().getNum();
-        }
-        this.done.add(move);
+        getDone().add(move);
         clearUndone();
     }
 
     public void undoMove() {
-        Move move = this.done.get(this.done.size() - 1);
-        this.done.remove(this.done.size() - 1);
-        this.undone.add(move);
+        Move move = getDone().get(getDone().size() - 1);
+        getDone().remove(this.done.size() - 1);
+        getUndone().add(move);
     }
 
     public void redoMove() {
-        Move move = this.undone.get(this.undone.size() - 1);
-        this.undone.remove(this.undone.size() - 1);
-        this.done.add(move);
+        Move move = getUndone().get(getUndone().size() - 1);
+        getUndone().remove(getUndone().size() - 1);
+        getDone().add(move);
     }
 
     public void clearUndone() {
-        this.undone.clear();
+        getUndone().clear();
     }
 
     public void clear() {
-        this.done.clear();
-        this.undone.clear();
+        getDone().clear();
+        getUndone().clear();
     }
 
     public boolean canUndo() {
-        return this.done.size() > 0;
+        return getDone().size() > 0;
     }
 
     public boolean canRedo() {
-        return this.undone.size() > 0;
+        return getUndone().size() > 0;
     }
 
     public String forSave() {
         String s = "";
-        s += this.firstPlayer + "\n {";
-        for (Move move : this.done) {
-            s += move.forSave() + ",";
+        s += getFirstPlayer() + "\n{";
+        for (Move move : getDone()) {
+            s += move.forSave() + ";";
         }
         if(canUndo()){
             s = s.substring(0, s.length() - 1);
         }
-        s += "}\n {";
-        for (Move move : this.undone) {
-            s += move.forSave() + ",";
+        s += "}\n{";
+        for (Move move : getUndone()) {
+            s += move.forSave() + ";";
         }
         if(canRedo()){
             s = s.substring(0, s.length() - 1);
         }
         s += "}";
-
         return s;
     }
 
@@ -109,9 +105,9 @@ public class History {
         for (int i = done.size() - 1; i >= 0; i--) {
             Move m = done.get(i);
             Player player = m.getPlayer();
-            Point position = m.getPosition();
+            Point position = m.getFrom();
             if (IA) {
-                if (player.getNum() == 1) {
+                if (player.getId() == 1) {
                     s += "You" + " : (";
                 } else {
                     s += "AI" + " : (";
@@ -124,7 +120,7 @@ public class History {
         s += "</html>";
         return s;
     }
-    }
+
 
 
     @Override
@@ -144,7 +140,6 @@ public class History {
             }
             s += " } \n";
         }
-
         return s;
     }
 
