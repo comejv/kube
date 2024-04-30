@@ -56,17 +56,21 @@ public class Player {
         getAdditional().remove(color);
     }
 
-    public void addMountain(Point point, Color color) {
-        addMountain(point, color);
+    public void addToMountain(Point point, Color color) {
+        //TODO
     }
 
-    public void addMountain(int l, int c, Color color) {
-        getMountain().addPoint(l,c,color);
+    public void addToMountain(int l, int c, Color color) {
+        addToMountain(new Point(l, c), color);
     }
 
 
-    public void removeMountain(Point point) {
-        getMountain().removePoint(point);
+    public void removeFromMountain(Point point) {
+        //TODO
+    }
+
+    public void removeFromMountain(int l, int c) {
+        removeFromMountain(new Point(l,c));
     }
 
     public void clearMountain() {
@@ -75,5 +79,33 @@ public class Player {
 
     public boolean isMountainFull() {
         return getMountain().isFull();
+    }
+
+    public boolean isMountainEmpty() {
+        return getMountain().isEmpty();
+    }
+
+    public String forSave() {
+        String s = "{";
+        s += getId() + "\n {";
+        s += getMountain().forSave() + "}";
+        s += "{";
+        for (Color c : getAdditional()) {
+            s += c.toString() + ",";
+        }
+        if (getAdditional().size() > 0)
+            s = s.substring(0, s.length() - 1);
+        s += "}";
+        return s;
+    }
+
+    public String toString() {
+        String s = "Player " + getId();
+        s+= "\nMountain: " + getMountain().toString();
+        s+= "\nAdditional: ";
+        for (Color c : getAdditional()) {
+            s += c.toString() + " ";
+        }
+        return s;
     }
 }
