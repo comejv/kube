@@ -24,6 +24,68 @@ public class Kube {
         fillBase();
     }
 
+    // Getters
+
+    public ArrayList<Color> getBag() {
+        return bag;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+    
+    public History getHistoric() {
+        return history;
+    }
+
+    public Mountain getK3() {
+        return k3;
+    }
+
+    public Player getP1() {
+        return p1;
+    }
+
+    public Player getP2() {
+        return p2;
+    }
+
+    public int getPhase() {
+        return phase;
+    }
+
+    //Setters
+
+    public void setBag(ArrayList<Color> b) {
+        bag = b;
+    }
+
+    public void setCurrentPlayer(Player p) {
+        currentPlayer = p;
+    }
+
+    public void setHistoric(History h) {
+        history = h;
+    }
+
+    public void setK3(Mountain m) {
+        k3 = m;
+    }
+
+    public void setP1(Player p) {
+        p1 = p;
+    }
+
+    public void setP2(Player p) {
+        p2 = p;
+    }
+
+    public void setPhase(int p) {
+        phase = p;
+    }
+
+    // Methods
+
     // fill the bag with 9 times each colors, and randomize it until the base is valid 
     public void fillBag() {
         if (bag == null) {
@@ -41,8 +103,8 @@ public class Kube {
     }
 
     // fill the base with baseSize random colors
-    public void fillBase(){
-        for (int y = 0; y < baseSize; y++){
+    public void fillBase() {
+        for (int y = 0; y < baseSize; y++) {
             k3.setCase(baseSize, y, bag.remove(0));
             System.out.println(k3.getCase(0, y));
         }
@@ -59,27 +121,6 @@ public class Kube {
         }
     }
 
-    public History getHistoric() {
-        return history;
-    }
 
-    public void setP1(Player p) {
-        p1 = p;
-    }
 
-    public void setP2(Player p) {
-        p2 = p;
     }
-
-    public void setHistoric(History h) {
-        history = h;
-    }
-
-    public Player getP1() {
-        return p1;
-    }
-
-    public Player getP2() {
-        return p2;
-    }
-}
