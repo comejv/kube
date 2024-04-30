@@ -50,25 +50,32 @@ public class History {
         clearUndone();
     }
 
-    public void undoMove() {
+    public Move undoMove() {
         Move move = getDone().get(getDone().size() - 1);
         getDone().remove(this.done.size() - 1);
         getUndone().add(move);
+        return move;
     }
 
-    public void redoMove() {
+    public Move redoMove() {
         Move move = getUndone().get(getUndone().size() - 1);
         getUndone().remove(getUndone().size() - 1);
         getDone().add(move);
+        return move;
+    }
+
+
+    public void clear() {
+        getDone().clear();
+        clearUndone();
     }
 
     public void clearUndone() {
         getUndone().clear();
     }
 
-    public void clear() {
+    public void clearDone() {
         getDone().clear();
-        getUndone().clear();
     }
 
     public boolean canUndo() {
@@ -120,8 +127,6 @@ public class History {
         s += "</html>";
         return s;
     }
-
-
 
     @Override
     public String toString() {

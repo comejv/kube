@@ -12,6 +12,24 @@ public class Mountain {
         m = new Color[baseSize][baseSize];
     }
 
+    // Getter
+    public int getBaseSize(){
+        return baseSize;
+    }
+
+    public Color[][] getMountain(){
+        return m;
+    }
+
+    // Setter
+    public void setBaseSize(int size){
+        baseSize = size;
+    }
+
+    public void setMountain(Color[][] mountain){
+        m = mountain;
+    }
+
     // Method to get the color at the position x, y
     // where getCase(0, 0) return the value of the most left summit case
     public Color getCase(int x, int y) {
