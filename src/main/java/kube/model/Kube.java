@@ -1,7 +1,7 @@
-package kube.view;
+package kube.model;
 
 public class Kube {
-
+    Historic historic;
 
     // Constructeurs
     public Kube() {
@@ -9,4 +9,5 @@ public class Kube {
     }
 
    
+    public void setHistoric();
 }
