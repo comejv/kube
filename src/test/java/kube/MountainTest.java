@@ -13,6 +13,7 @@ public class MountainTest
 {
     @Test
     public void simpleSetTest() {
+
         Mountain m = new Mountain(5);
         m.setCase(0, 0, Color.RED);
         assertTrue(m.getCase(0, 0) == Color.RED);
@@ -20,6 +21,7 @@ public class MountainTest
 
     @Test
     public void simpleRemoveTest() {
+
         Mountain m1 = new Mountain(5);
         m1.setCase(0, 0, Color.RED);
         m1.remove(0, 0);
@@ -33,7 +35,7 @@ public class MountainTest
 
         Mountain m1 = new Mountain(5);
         Mountain m2 = new Mountain(5);
-        
+
         m1.setCase(0, 0, Color.BLUE);
         m1.setCase(1, 0, Color.RED);
         m1.setCase(2, 0, Color.GREEN);
@@ -50,18 +52,88 @@ public class MountainTest
     }
 
     @Test
-    public void mountainTest()
-    {
-        // Test to check if the mountain setting order doens't matter
+    public void multipleRemoveTest() {
 
+        Mountain m1 = new Mountain(5);
+        Mountain m2 = new Mountain(5);
 
-        // Test if the 
+        m1.setCase(0, 0, Color.BLUE);
+        m1.setCase(1, 0, Color.RED);
+        m1.setCase(2, 0, Color.GREEN);
+        m1.setCase(3, 0, Color.YELLOW);
+        m1.setCase(4, 0, Color.WHITE);
 
-        // Test if the clear method is working
+        m1.remove(0, 0);
+        m1.remove(1, 0);
+        m1.remove(2, 0);
+        m1.remove(3, 0);
+        m1.remove(4, 0);
+
+        assertTrue(areSameMountain(m1, m2));
+    }
+
+    @Test
+    public void clearTest() {
+
+        Mountain m1 = new Mountain(5);
+        Mountain m2 = new Mountain(5);
+
+        m1.setCase(0, 0, Color.BLUE);
+        m1.setCase(1, 0, Color.RED);
+        m1.setCase(2, 0, Color.GREEN);
+        m1.setCase(3, 0, Color.YELLOW);
+        m1.setCase(4, 0, Color.WHITE);
+
         m1.clear();
-        Mountain m3 = new Mountain(5);
-        assertTrue(areSameMountain(m1, m3));
 
+        assertTrue(areSameMountain(m1, m2));
+    }
+
+    @Test
+    public void notOverflowSimpleSetTest() {
+
+        Mountain m = new Mountain(5);
+        m.setCase(0, 0, Color.BLUE);
+
+        for (int etage = 0; etage < m.getBaseSize(); etage++) {
+            for (int colonne = 0; colonne < etage + 1; colonne++) {
+                if (etage == 0 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.BLUE);
+                } else {
+                    assertTrue(m.getCase(etage, colonne) == Color.EMPTY);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void notOverflowMultipleSetTest() {
+        
+        Mountain m = new Mountain(5);
+
+        m.setCase(0, 0, Color.BLUE);
+        m.setCase(1, 0, Color.RED);
+        m.setCase(2, 0, Color.GREEN);
+        m.setCase(3, 0, Color.YELLOW);
+        m.setCase(4, 0, Color.WHITE);
+
+        for (int etage = 0; etage < m.getBaseSize(); etage++) {
+            for (int colonne = 0; colonne < etage + 1; colonne++) {
+                if (etage == 0 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.BLUE);
+                } else if (etage == 1 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.RED);
+                } else if (etage == 2 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.GREEN);
+                } else if (etage == 3 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.YELLOW);
+                } else if (etage == 4 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.WHITE);
+                } else {
+                    assertTrue(m.getCase(etage, colonne) == Color.EMPTY);
+                }
+            }
+        }
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {

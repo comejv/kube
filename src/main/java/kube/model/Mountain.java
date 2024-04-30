@@ -17,7 +17,7 @@ public class Mountain {
         return baseSize;
     }
 
-    public int[] getMountain(){
+    public Color[][] getMountain(){
         return m;
     }
 
@@ -26,7 +26,7 @@ public class Mountain {
         baseSize = size;
     }
 
-    public void setMountain(int[] mountain){
+    public void setMountain(Color[][] mountain){
         m = mountain;
     }
 
