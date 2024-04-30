@@ -1,4 +1,4 @@
-package kube;
+package kube.model;
 
 public class Player {
     

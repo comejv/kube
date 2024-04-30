@@ -1,4 +1,4 @@
-package kube;
+package kube.model;
 
 public enum Color {
     EMPTY(0), 
