@@ -12,8 +12,8 @@ public class History {
     private ArrayList<Move> undone;
 
     // Constructor
-    public History(int player) {
-        setFirstPlayer(player);
+    public History() {
+        setFirstPlayer(0);
         this.done = new ArrayList<Move>();
         this.undone = new ArrayList<Move>();
     }
@@ -46,6 +46,9 @@ public class History {
 
     // Methods
     public void addMove(Move move) {
+        if (this.done.size() == 0) {
+            this.firstPlayer = move.getPlayer().getNum();
+        }
         this.done.add(move);
         clearUndone();
     }
@@ -114,7 +117,7 @@ public class History {
                     s += "AI" + " : (";
                 }
             } else {
-                s += "P" + player.getNum() + " : (";
+                s += "P" + player.getId() + " : (";
             }
             s += (int) (position.getX() + 1) + ", " + (int) (position.getY() + 1 )+ ")<br>";
         }
