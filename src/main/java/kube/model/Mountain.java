@@ -18,4 +18,8 @@ public class Mountain {
         m[x] = m[x] & (~127 << ((y-1 * nbBitPerColor)));
         m[x] = m[x] & (c.getColorCode() << (y * nbBitPerColor));
     }
+
+    public void remove(int x, int y){
+        setCase(x, y, Color.EMPTY);
+    }
 }

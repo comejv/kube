@@ -24,6 +24,7 @@ public class Kube {
         fillBase();
     }
 
+    // fill the bag with 9 times each colors, and randomize it until the base is valid 
     public void fillBag() {
         if (bag == null) {
             bag = new ArrayList<>();
@@ -33,12 +34,13 @@ public class Kube {
                 bag.add(c);
             }
         }
-        // verificate that there is 4 differents colors in the 9 first cube of the bag
+        // verificate that there is 4 differents colors in the baseSize first cubes of the bag
         while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
             Collections.shuffle(bag);
         }
     }
 
+    // fill the base with baseSize random colors
     public void fillBase(){
         for (int y = 0; y < baseSize; y++){
             k3.setCase(0, y, bag.remove(0));
@@ -46,7 +48,7 @@ public class Kube {
         }
     }
 
-
+    // Set current player to the next
     public void nextPlayer() {
         if (currentPlayer == p1) {
             currentPlayer = p2;
