@@ -28,4 +28,8 @@ public enum Color {
         }
         return NOT_DEFINE;
     }
+
+    public Color[] getAllColored() { 
+        return new Color[]{RED, GREEN, BLUE, YELLOW, BLACK};
+    }
 }
