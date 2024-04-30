@@ -43,7 +43,7 @@ public class Kube {
     // fill the base with baseSize random colors
     public void fillBase(){
         for (int y = 0; y < baseSize; y++){
-            k3.setCase(0, y, bag.remove(0));
+            k3.setCase(baseSize, y, bag.remove(0));
             System.out.println(k3.getCase(0, y));
         }
     }
