@@ -52,7 +52,7 @@ public class Move {
     // Methods
     public String forSave() {
         String s = "{";
-        s += getPlayer().forSave() + " ";
+        s += getPlayer().getId() + " ";
         s += "(" + getFrom().x + "," + getFrom().y + ") ";
         s += "(" + getTo().x + "," + getTo().y + ") ";
         s += getColor().toString() + "}";

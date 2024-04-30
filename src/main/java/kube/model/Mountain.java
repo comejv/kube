@@ -10,6 +10,24 @@ public class Mountain {
         m = new int[base_size];
     }
 
+    // Setter
+    public void setBaseSize(int size){
+        base_size = size;
+    }
+
+    public void setMountain(int[] mountain){
+        m = mountain;
+    }
+
+    // Getter
+    public int getBaseSize(){
+        return base_size;
+    }
+
+    public int[] getMountain(){
+        return m;
+    }
+
     public Color getCase(int x, int y){
         return Color.getColor((m[x] >> (y * nbBitPerColor)) & 127);
     }
