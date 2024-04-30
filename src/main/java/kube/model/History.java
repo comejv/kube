@@ -128,8 +128,6 @@ public class History {
         return s;
     }
 
-
-
     @Override
     public String toString() {
         String s = "History : \n";
