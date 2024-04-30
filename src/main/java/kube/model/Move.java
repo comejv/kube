@@ -56,5 +56,6 @@ public class Move {
         s += "(" + getFrom().x + "," + getFrom().y + ") ";
         s += "(" + getTo().x + "," + getTo().y + ") ";
         s += getColor().toString() + "}";
+        return s;
     }
 }

@@ -81,7 +81,7 @@ public class History {
 
     public String forSave() {
         String s = "";
-        s += getFirstPlayer() + "\n {";
+        s += getFirstPlayer() + "\n{";
         for (Move move : getDone()) {
             s += move.forSave() + ";";
         }
@@ -140,7 +140,6 @@ public class History {
             }
             s += " } \n";
         }
-
         return s;
     }
 
