@@ -7,22 +7,24 @@ import java.util.HashSet;
 public class Kube {
     private History history;
     private Player p1, p2, currentPlayer;
-    private Color[][] mountain;
+    private Mountain k3;
     private ArrayList<Color> bag;
     private int phase;
     private static final int nCubePerColor = 9;
+    private static final int baseSize = 9;
 
     // Constructeurs
     public Kube() {
-        mountain = new Color[9][9];
+        k3 = new Mountain(baseSize);
         bag = new ArrayList<>();
-        p1 = new Player(0, null);
-        p2 = new Player(2, null);
+        p1 = new Player(1);
+        p2 = new Player(2);
         history = new History();
         fillBag();
         fillBase();
     }
 
+    // fill the bag with 9 times each colors, and randomize it until the base is valid 
     public void fillBag() {
         if (bag == null) {
             bag = new ArrayList<>();
@@ -32,18 +34,21 @@ public class Kube {
                 bag.add(c);
             }
         }
-        // verificate that there is 4 differents colors in the 9 first cube of the bag
+        // verificate that there is 4 differents colors in the baseSize first cubes of the bag
         while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
             Collections.shuffle(bag);
         }
     }
 
+    // fill the base with baseSize random colors
     public void fillBase(){
-        
+        for (int y = 0; y < baseSize; y++){
+            k3.setCase(0, y, bag.remove(0));
+            System.out.println(k3.getCase(0, y));
+        }
     }
 
-
-
+    // Set current player to the next
     public void nextPlayer() {
         if (currentPlayer == p1) {
             currentPlayer = p2;
