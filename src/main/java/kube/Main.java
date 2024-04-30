@@ -4,7 +4,7 @@ package kube;
  * Hello world!
  *
  */
-public class Jeu 
+public class Main 
 {
     public static void main( String[] args )
     {
