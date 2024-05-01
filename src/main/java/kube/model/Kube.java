@@ -12,6 +12,8 @@ public class Kube {
     private int phase;
     private static final int nCubePerColor = 9;
     private static final int baseSize = 9;
+    private static final int preparationPhase = 1;
+    private static final int gamePhase = 2;
 
     // Constructeurs
     public Kube() {
@@ -22,6 +24,8 @@ public class Kube {
         history = new History();
         fillBag();
         fillBase();
+        phase = preparationPhase;
+        distributeCubesToPlayers();
     }
 
     // Getters
@@ -105,8 +109,7 @@ public class Kube {
     // fill the base with baseSize random colors
     public void fillBase() {
         for (int y = 0; y < baseSize; y++) {
-            k3.setCase(baseSize, y, bag.remove(0));
-            System.out.println(k3.getCase(0, y));
+            k3.setCase(baseSize-1, y, bag.remove(0));
         }
     }
 
@@ -123,4 +126,8 @@ public class Kube {
 
 
 
+    
+    public void distributeCubesToPlayers(){
+        
     }
+}

@@ -8,7 +8,7 @@ public class Player {
     int id;
     Mountain mountain;
     ArrayList<Color> additional;
-
+    ArrayList<Color> avalaibleToBuild;
     // Constructor
 
     public Player(int id) {

@@ -9,8 +9,7 @@ import kube.model.*;
 /**
  * Unit test for simple App.
  */
-public class MountainTest 
-{
+public class MountainTest {
     @Test
     public void simpleSetTest() {
 
@@ -41,7 +40,7 @@ public class MountainTest
         m1.setCase(2, 0, Color.GREEN);
         m1.setCase(3, 0, Color.YELLOW);
         m1.setCase(4, 0, Color.WHITE);
-        
+
         m2.setCase(4, 0, Color.WHITE);
         m2.setCase(1, 0, Color.RED);
         m2.setCase(2, 0, Color.GREEN);
@@ -108,7 +107,7 @@ public class MountainTest
 
     @Test
     public void notOverflowMultipleSetTest() {
-        
+
         Mountain m = new Mountain(5);
 
         m.setCase(0, 0, Color.BLUE);
@@ -141,8 +140,10 @@ public class MountainTest
             return false;
         }
         for (int i = 0; i < m1.getBaseSize(); i++) {
-            if (m1.getCase(i, 0) != m2.getCase(i, 0)) {
-                return false;
+            for (int j = 0; j < m1.getBaseSize(); j++) {
+                if (m1.getCase(i, j) != m2.getCase(i, j)) {
+                    return false;
+                }
             }
         }
         return true;
