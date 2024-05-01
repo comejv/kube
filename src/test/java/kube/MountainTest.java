@@ -244,6 +244,7 @@ public class MountainTest {
         m.setCase(0, 0, Color.GREEN);
 
         ArrayList<Point> r = m.removable();
+        System.out.println(r);
         assertTrue(r.size() == 1);
 
         Point p = r.get(0);
