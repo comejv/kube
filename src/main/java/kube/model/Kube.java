@@ -17,21 +17,23 @@ public class Kube {
 
     // Constructeurs
     public Kube() {
-        k3 = new Mountain(baseSize);
+        setK3(new Mountain(getBaseSize()));
         bag = new ArrayList<>();
         p1 = new Player(1);
         p2 = new Player(2);
         history = new History();
-        fillBag();
-        fillBase();
         phase = preparationPhase;
-        distributeCubesToPlayers();
+       
     }
 
     // Getters
 
     public ArrayList<Color> getBag() {
         return bag;
+    }
+
+    public int getBaseSize() {
+        return baseSize;
     }
 
     public Player getCurrentPlayer() {
@@ -45,6 +47,8 @@ public class Kube {
     public Mountain getK3() {
         return k3;
     }
+
+
 
     public Player getP1() {
         return p1;
@@ -64,6 +68,10 @@ public class Kube {
         bag = b;
     }
 
+    public int setBaseSize() {
+        return baseSize;
+    }
+
     public void setCurrentPlayer(Player p) {
         currentPlayer = p;
     }
@@ -75,6 +83,8 @@ public class Kube {
     public void setK3(Mountain m) {
         k3 = m;
     }
+
+
 
     public void setP1(Player p) {
         p1 = p;

@@ -7,11 +7,14 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
+import kube.configuration.Config;
+
 import kube.model.Color;
 import kube.model.Kube;
 
 
 public class KubeTest {
+
 
     @Test
     public void testKube() {
@@ -28,17 +31,12 @@ public class KubeTest {
     @Test
     public void testBag() {
         Kube kube = new Kube();
+        kube.fillBag();
         ArrayList<Color> bag = kube.getBag();
-        assertEquals(9, bag.size());
+        assertEquals(45, bag.size());
         int[] colors = new int[8];
         for (Color c : bag) {
             switch (c) {
-                case WHITE:
-                    colors[1]++;
-                    break;
-                case NATURAL:
-                    colors[2]++;
-                    break;
                 case RED:
                     colors[3]++;
                     break;
@@ -58,8 +56,29 @@ public class KubeTest {
                     assertFalse(true);
             }
         }
-        for (int i = 1; i < 8; i++) {
-            assertTrue(colors[i] >= 9);
+        for (int i = 3; i < 8; i++) {
+            assertEquals(colors[i], 9);
         }
+    }
+
+    @Test
+    public void testBase() {
+        Kube kube = new Kube();
+        kube.fillBag();
+        kube.fillBase();
+        assertEquals(36, kube.getBag().size());
+        Color[] base = new Color [9];
+        for (int i = 0; i < 9; i++) {
+            base[i] = kube.getK3().getCase(8, i);
+        }
+        ArrayList<Color> colors = new ArrayList<>();
+        for (Color c : base) {
+            assertFalse(c == Color.EMPTY);
+            if (!colors.contains(c)) {
+                colors.add(c);
+            }
+        }
+        assertTrue(colors.size()>=4);
+
     }
 }
