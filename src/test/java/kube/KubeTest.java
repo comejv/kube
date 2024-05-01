@@ -63,22 +63,27 @@ public class KubeTest {
 
     @Test
     public void testBase() {
-        Kube kube = new Kube();
-        kube.fillBag();
-        kube.fillBase();
-        assertEquals(36, kube.getBag().size());
-        Color[] base = new Color [9];
-        for (int i = 0; i < 9; i++) {
-            base[i] = kube.getK3().getCase(8, i);
-        }
-        ArrayList<Color> colors = new ArrayList<>();
-        for (Color c : base) {
-            assertFalse(c == Color.EMPTY);
-            if (!colors.contains(c)) {
-                colors.add(c);
-            }
-        }
-        assertTrue(colors.size()>=4);
+        Kube kube;
+        int n = 0;
+        while (n < 100000) { // Assume that test 100000 times is enough to test the randomness
 
+            kube = new Kube();
+            kube.fillBag();
+            kube.fillBase();
+            assertEquals(36, kube.getBag().size());
+            Color[] base = new Color[9];
+            for (int i = 0; i < 9; i++) {
+                base[i] = kube.getK3().getCase(8, i);
+            }
+            ArrayList<Color> colors = new ArrayList<>();
+            for (Color c : base) {
+                assertFalse(c == Color.EMPTY);
+                if (!colors.contains(c)) {
+                    colors.add(c);
+                }
+            }
+            assertTrue(colors.size() >= 4);
+            n++;
+        }
     }
 }
