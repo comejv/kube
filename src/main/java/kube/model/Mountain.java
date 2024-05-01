@@ -49,8 +49,8 @@ public class Mountain {
         ArrayList<Point> r = new ArrayList<>();
         for (int i = 0; i < baseSize; i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (i == 0 || (getCase(i - 1, j) == Color.EMPTY && (getCase(i - 1, j + 1) == Color.EMPTY))
-                        && getCase(i, j) != Color.EMPTY) {
+                if ((i == 0 && j == 0) || getCase(i, j) != Color.EMPTY
+                        && (getCase(i - 1, j) == Color.EMPTY && (getCase(i - 1, j + 1) == Color.EMPTY))) {
                     r.add(new Point(i, j));
                 }
             }
@@ -62,19 +62,20 @@ public class Mountain {
         ArrayList<Point> comp = new ArrayList<>();
         for (int i = 0; i < baseSize; i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (getCase(i, j) == Color.EMPTY
+                if (i == baseSize - 1) {
+                    comp.add(new Point(i, j));
+                } else if (getCase(i, j) == Color.EMPTY
                         && (getCase(i + 1, j) != Color.EMPTY && (getCase(i + 1, j + 1) != Color.EMPTY))) {
-                    if (c == Color.NATURAL || getCase(i + 1, j) == c
-                            || (getCase(i + 1, j) == Color.NATURAL || getCase(i + 1, j + 1) == c
-                                    || (getCase(i + 1, j + 1) == Color.NATURAL))) {
-                        comp.add(new Point(i, j));
+                    if (c == Color.NATURAL || getCase(i + 1, j) == c || (getCase(i + 1, j) == Color.NATURAL)) {
+                        if (c == Color.NATURAL || getCase(i + 1, j + 1) == c
+                                || (getCase(i + 1, j + 1) == Color.NATURAL)) {
+                            comp.add(new Point(i, j));
+                        }
                     }
-
                 }
             }
         }
         return comp;
-
     }
 
     public int getSize() {
