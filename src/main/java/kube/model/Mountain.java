@@ -76,6 +76,13 @@ public class Mountain {
         return comp;
     }
 
+    public boolean isPenality(int x, int y, Color c) {
+        if (compatible(c).contains(new Point(x, y)) && getCase(x + 1, y) == c && getCase(x + 1, y + 1) == c) {
+            return true;
+        }
+        return false;
+    }
+
     public void clear() {
         m = new Color[getBaseSize()][getBaseSize()];
         for (int i = 0; i < getBaseSize(); i++) {

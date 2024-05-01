@@ -249,7 +249,7 @@ public class MountainTest {
         assertTrue(r.size() == 1);
 
         Point p = r.get(0);
-        assertTrue(m.getCase((int) p.getX(), (int) p.getY()) == Color.GREEN);
+        assertTrue(m.getCase(p.x, p.y) == Color.GREEN);
     }
 
     @Test

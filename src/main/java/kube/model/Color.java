@@ -1,5 +1,7 @@
 package kube.model;
 
+import java.util.Comparator;
+
 public enum Color {
     EMPTY(0), 
     WHITE(1), 
@@ -41,7 +43,15 @@ public enum Color {
         return EMPTY;
     }
 
-    public static Color[] getAllColored() { 
-        return new Color[]{RED, GREEN, BLUE, YELLOW, BLACK};
+    public static Color[] getAllColored() {
+        return new Color[] { RED, GREEN, BLUE, YELLOW, BLACK };
     }
+    
+    public static Comparator<Color> compareByValue = new Comparator<Color>() {
+        @Override
+        public int compare(Color c1, Color c2) {
+            return c1.getColorCode() - c2.getColorCode();
+        }
+    };
+
 }

@@ -1,5 +1,6 @@
 package kube.model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -15,7 +16,7 @@ public class Kube {
     private static final int preparationPhase = 1;
     private static final int gamePhase = 2;
 
-    // Constructeurs
+    // Constructor
     public Kube() {
         setK3(new Mountain(getBaseSize()));
         bag = new ArrayList<>();
@@ -23,11 +24,9 @@ public class Kube {
         p2 = new Player(2);
         history = new History();
         phase = preparationPhase;
-       
     }
 
     // Getters
-
     public ArrayList<Color> getBag() {
         return bag;
     }
@@ -48,8 +47,6 @@ public class Kube {
         return k3;
     }
 
-
-
     public Player getP1() {
         return p1;
     }
@@ -63,7 +60,6 @@ public class Kube {
     }
 
     //Setters
-
     public void setBag(ArrayList<Color> b) {
         bag = b;
     }
@@ -84,8 +80,6 @@ public class Kube {
         k3 = m;
     }
 
-
-
     public void setP1(Player p) {
         p1 = p;
     }
@@ -99,6 +93,20 @@ public class Kube {
     }
 
     // Methods
+    public boolean isPlayable(Move move) {
+        Point from = move.getFrom();
+        Point to = move.getTo();
+        Color color = move.getColor();
+        Player player = getCurrentPlayer();
+
+        if (from == null || to == null || color == null)
+            return false;
+
+        if (player.getMountain().removable().contains(from) && player.getMountain().compatible(color).contains(to))
+            return true;
+
+        return false;
+    }
 
     // fill the bag with 9 times each colors, and randomize it until the base is valid 
     public void fillBag() {
@@ -134,10 +142,54 @@ public class Kube {
         }
     }
 
+    public void distributeCubesToPlayers() {
+        ArrayList<Color> p1Cubes = new ArrayList<>();
+        ArrayList<Color> p2Cubes = new ArrayList<>();
+        for (int i = 0; i < 17; i++) {
+            p1Cubes.add(bag.remove(0));
+            p2Cubes.add(bag.remove(0));
+        }
+        for (int i = 0; i < 2; i++) {
+            p1Cubes.add(Color.WHITE);
+            p1Cubes.add(Color.NATURAL);
+            p2Cubes.add(Color.WHITE);
+            p2Cubes.add(Color.NATURAL);
+        }
+        p1Cubes.sort(Color.compareByValue);
+        p2Cubes.sort(Color.compareByValue);
+        p1.setAdditional(p1Cubes);
+        p2.setAdditional(p2Cubes);
+    }
 
+    public boolean playMove(Move move) {
+        if (playMoveWithoutHistory(move)) {
+            history.addMove(move);
+            return true;
+        }
+        return false;
+    }
 
-    
-    public void distributeCubesToPlayers(){
-        
+    public boolean playMoveWithoutHistory(Move move) {
+        // Checking if the move is valid
+        if (isPlayable(move)) {
+            Point from = move.getFrom();
+            Point to = move.getTo();
+            Color color = move.getColor();
+            Player player = getCurrentPlayer();
+            
+            // Applying the move
+            player.getMountain().remove(from.x, from.y);
+            getK3().setCase(to.x, to.y, color);
+
+            // Checks whether the move results in a penalty
+            if (player.getMountain().isPenality(to.x, to.y, color)) {
+                // TODO: APPLY PENALTY
+            }
+            if (getK3().isFull()) {
+                // TODO: FINISH THE GAME
+            }
+            return true;
+        }
+        return false;
     }
 }

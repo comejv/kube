@@ -19,7 +19,6 @@ public class Player {
     }
 
     // Setters
-
     public void setId(int id) {
         this.id = id;
     }
@@ -32,8 +31,11 @@ public class Player {
         this.additional = additional;
     }
 
-    // Getters
+    public void setAvalaibleToBuild(ArrayList<Color> avalaibleToBuild) {
+        this.avalaibleToBuild = avalaibleToBuild;
+    }
 
+    // Getters
     public int getId() {
         return this.id;
     }
@@ -46,31 +48,35 @@ public class Player {
         return this.additional;
     }
 
-    // Methods
+    public ArrayList<Color> getAvalaibleToBuild() {
+        return this.avalaibleToBuild;
+    }
 
+    // Methods
     public void addAdditional(Color color) {
         getAdditional().add(color);
     }
 
-    public void removeAdditional(Color color) {
-        getAdditional().remove(color);
+    public Color removeAdditional(int pos) {
+        return getAdditional().remove(pos);
     }
 
-    public void addToMountain(Point point, Color color) {
-        //TODO
+    public void addToMountain(Point point, int pos) {
+        addToMountain(point.x, point.y, pos);
     }
 
-    public void addToMountain(int l, int c, Color color) {
-        addToMountain(new Point(l, c), color);
+    public void addToMountain(int l, int c,int pos) {
+        getMountain().setCase(l, c, avalaibleToBuild.get(pos));
     }
 
-
-    public void removeFromMountain(Point point) {
-        //TODO
+    public Color removeFromMountain(Point point) {
+        return removeFromMountain(point.x, point.y);
     }
 
-    public void removeFromMountain(int l, int c) {
-        removeFromMountain(new Point(l,c));
+    public Color removeFromMountain(int l, int c) {
+        Color col = getMountain().getCase(l, c);
+        getMountain().remove(l, c);
+        return col;
     }
 
     public void clearMountain() {
