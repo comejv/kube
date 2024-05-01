@@ -2,17 +2,17 @@ package kube.model;
 
 import java.awt.Point;
 
-public class MoveW extends Move {
+public class MoveMW extends Move {
     
     Point from;
 
     //Constructors
-    public MoveW(Point from) {
+    public MoveMW(Point from) {
         super(Color.WHITE);
         setFrom(from);
     }
 
-    public MoveW(int x, int y) {
+    public MoveMW(int x, int y) {
         this(new Point(x, y));
     }
     

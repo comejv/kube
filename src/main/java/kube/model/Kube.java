@@ -202,33 +202,40 @@ public class Kube {
         boolean result = false;
 
         // Catching if the move is about a colored cube or a white cube
-        if (move.isWhite() && isPlayable(move)) {
+        if (move.isWhite() && isPlayable(move)) 
+        {
             // Getting out the white cube from the player's mountain
             player.getMountain().remove(move.getFrom().x, move.getFrom().y);
+
             // Adding the white cube to the player's used white cubes 
             player.setWhiteUsed(player.getWhiteUsed() + 1);
             result = true;
         }
         // Checking if the move is about an additional cube
         else if (move.isFromAdditional() && isPlayable(move)) {
+
             // Getting out the additional cube from the player's additional cubes
             player.getAdditional().remove(color);
+
             // Adding the additional cube to the player's mountain
             getK3().setCase(move.getTo().x, move.getTo().y, color);
+
+            // Checks whether the move results in a penalty
+            if (player.getMountain().isPenality(move.getTo().x, move.getTo().y, color)) {
+                setPenality(true);
+            }
+
             result = true;
         }
         // Checking if the move is a classic move and is playable
         else if(move.isClassicMove() && isPlayable(move)) {
-            
-            Point from = move.getFrom();
-            Point to = move.getTo();
-            
+
             // Applying the move
-            player.getMountain().remove(from.x, from.y);
-            getK3().setCase(to.x, to.y, color);
-    
+            player.getMountain().remove(move.getFrom().x, move.getFrom().y);
+            getK3().setCase(move.getTo().x, move.getTo().y, color);
+
             // Checks whether the move results in a penalty
-            if (player.getMountain().isPenality(to.x, to.y, color)) {
+            if (player.getMountain().isPenality(move.getTo().x, move.getTo().y, color)) {
                 setPenality(true);
             }
     
