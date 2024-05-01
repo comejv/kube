@@ -1,10 +1,12 @@
 package kube.model;
 
+import java.util.Random;
+
 import java.util.Comparator;
 
 public enum Color {
-    EMPTY(0), 
-    WHITE(1), 
+    EMPTY(0),
+    WHITE(1),
     NATURAL(2),
     RED(3),
     GREEN(4),
@@ -45,6 +47,11 @@ public enum Color {
 
     public static Color[] getAllColored() {
         return new Color[] { RED, GREEN, BLUE, YELLOW, BLACK };
+    }
+
+    public static Color getRandomColor() {
+        Random r = new Random();
+        return Color.values()[r.nextInt(Color.values().length)];
     }
     
     public static Comparator<Color> compareByValue = new Comparator<Color>() {

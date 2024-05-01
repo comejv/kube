@@ -24,6 +24,7 @@ public class Kube {
         p2 = new Player(2);
         history = new History();
         phase = preparationPhase;
+
     }
 
     // Getters
@@ -38,7 +39,7 @@ public class Kube {
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
-    
+
     public History getHistoric() {
         return history;
     }
@@ -59,7 +60,8 @@ public class Kube {
         return phase;
     }
 
-    //Setters
+    // Setters
+
     public void setBag(ArrayList<Color> b) {
         bag = b;
     }
@@ -108,17 +110,17 @@ public class Kube {
         return false;
     }
 
-    // fill the bag with 9 times each colors, and randomize it until the base is valid 
+    // fill the bag with 9 times each colors, and randomize it until the base is
+    // valid
     public void fillBag() {
-        if (bag == null) {
-            bag = new ArrayList<>();
-        }
+        bag = new ArrayList<>();
         for (Color c : Color.getAllColored()) {
             for (int i = 0; i < nCubePerColor; i++) {
                 bag.add(c);
             }
         }
-        // verificate that there is 4 differents colors in the baseSize first cubes of the bag
+        // verificate that there is 4 differents colors in the baseSize first cubes of
+        // the bag
         while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
             Collections.shuffle(bag);
         }
@@ -127,7 +129,7 @@ public class Kube {
     // fill the base with baseSize random colors
     public void fillBase() {
         for (int y = 0; y < baseSize; y++) {
-            k3.setCase(baseSize-1, y, bag.remove(0));
+            k3.setCase(baseSize - 1, y, bag.remove(0));
         }
     }
 
