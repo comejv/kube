@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import kube.configuration.Config;
 import kube.model.*;
 
 /**
@@ -249,6 +250,34 @@ public class MountainTest {
 
         Point p = r.get(0);
         assertTrue(m.getCase((int) p.getX(), (int) p.getY()) == Color.GREEN);
+    }
+
+    @Test
+    public void compatibleTest() {
+        
+        Mountain m = new Mountain(3);
+
+        m.setCase(2, 0, Color.BLUE);
+        m.setCase(2, 1, Color.RED);
+        m.setCase(2, 2, Color.RED);
+
+        Point p1 = new Point(1, 0);
+        Point p2 = new Point(1, 1);
+        assertTrue(m.compatible(Color.GREEN).isEmpty());
+        assertTrue(m.compatible(Color.YELLOW).isEmpty());
+        assertTrue(m.compatible(Color.BLACK).isEmpty());
+
+        assertTrue(m.compatible(Color.NATURAL).size() == 2);
+        assertTrue(m.compatible(Color.NATURAL).contains(p1));
+        assertTrue(m.compatible(Color.NATURAL).contains(p2));
+
+        assertTrue(m.compatible(Color.RED).size() == 2);
+        assertTrue(m.compatible(Color.RED).contains(p1));
+        assertTrue(m.compatible(Color.RED).contains(p2));
+
+        assertTrue(m.compatible(Color.BLUE).size() == 1);
+        assertTrue(m.compatible(Color.BLUE).contains(p1));
+        assertTrue(!(m.compatible(Color.BLUE).contains(p2)));
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {
