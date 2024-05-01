@@ -2,6 +2,10 @@ package kube;
 
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Point;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 import org.junit.Test;
 
 import kube.model.*;
@@ -106,7 +110,7 @@ public class MountainTest {
     }
 
     @Test
-    public void notOverflowMultipleSetTest() {
+    public void notOverflowMultipleColumnSetTest() {
 
         Mountain m = new Mountain(5);
 
@@ -133,6 +137,117 @@ public class MountainTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void notOverflowMultipleLineSetTest() {
+            
+        Mountain m = new Mountain(5);
+
+        m.setCase(4, 0, Color.BLUE);
+        m.setCase(4, 1, Color.RED);
+        m.setCase(4, 2, Color.GREEN);
+        m.setCase(4, 3, Color.YELLOW);
+        m.setCase(4, 4, Color.WHITE);
+
+        for (int etage = 0; etage < m.getBaseSize(); etage++) {
+            for (int colonne = 0; colonne < etage + 1; colonne++) {
+                if (etage == 4 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.BLUE);
+                } else if (etage == 4 && colonne == 1) {
+                    assertTrue(m.getCase(etage, colonne) == Color.RED);
+                } else if (etage == 4 && colonne == 2) {
+                    assertTrue(m.getCase(etage, colonne) == Color.GREEN);
+                } else if (etage == 4 && colonne == 3) {
+                    assertTrue(m.getCase(etage, colonne) == Color.YELLOW);
+                } else if (etage == 4 && colonne == 4) {
+                    assertTrue(m.getCase(etage, colonne) == Color.WHITE);
+                } else {
+                    assertTrue(m.getCase(etage, colonne) == Color.EMPTY);
+                }
+            }
+        }
+    }
+    
+    @Test
+    public void notOverflowAllMountainSetTest() {
+
+        Mountain m = new Mountain(5);
+
+        m.setCase(0, 0, Color.BLUE);
+        m.setCase(1, 0, Color.RED);
+        m.setCase(1, 1, Color.GREEN);
+        m.setCase(2, 0, Color.YELLOW);
+        m.setCase(2, 1, Color.WHITE);
+        m.setCase(2, 2, Color.BLUE);
+        m.setCase(3, 0, Color.RED);
+        m.setCase(3, 1, Color.GREEN);
+        m.setCase(3, 2, Color.YELLOW);
+        m.setCase(3, 3, Color.WHITE);
+        m.setCase(4, 0, Color.BLUE);
+        m.setCase(4, 1, Color.RED);
+        m.setCase(4, 2, Color.GREEN);
+        m.setCase(4, 3, Color.YELLOW);
+        m.setCase(4, 4, Color.WHITE);
+
+        for (int etage = 0; etage < m.getBaseSize(); etage++) {
+            for (int colonne = 0; colonne < etage + 1; colonne++) {
+                if (etage == 0 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.BLUE);
+                } else if (etage == 1 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.RED);
+                } else if (etage == 1 && colonne == 1) {
+                    assertTrue(m.getCase(etage, colonne) == Color.GREEN);
+                } else if (etage == 2 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.YELLOW);
+                } else if (etage == 2 && colonne == 1) {
+                    assertTrue(m.getCase(etage, colonne) == Color.WHITE);
+                } else if (etage == 2 && colonne == 2) {
+                    assertTrue(m.getCase(etage, colonne) == Color.BLUE);
+                } else if (etage == 3 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.RED);
+                } else if (etage == 3 && colonne == 1) {
+                    assertTrue(m.getCase(etage, colonne) == Color.GREEN);
+                } else if (etage == 3 && colonne == 2) {
+                    assertTrue(m.getCase(etage, colonne) == Color.YELLOW);
+                } else if (etage == 3 && colonne == 3) {
+                    assertTrue(m.getCase(etage, colonne) == Color.WHITE);
+                } else if (etage == 4 && colonne == 0) {
+                    assertTrue(m.getCase(etage, colonne) == Color.BLUE);
+                } else if (etage == 4 && colonne == 1) {
+                    assertTrue(m.getCase(etage, colonne) == Color.RED);
+                } else if (etage == 4 && colonne == 2) {
+                    assertTrue(m.getCase(etage, colonne) == Color.GREEN);
+                } else if (etage == 4 && colonne == 3) {
+                    assertTrue(m.getCase(etage, colonne) == Color.YELLOW);
+                } else if (etage == 4 && colonne == 4) {
+                    assertTrue(m.getCase(etage, colonne) == Color.WHITE);
+                } else {
+                    assertTrue(m.getCase(etage, colonne) == Color.EMPTY);
+                }
+            }
+        }
+    }
+
+    @Test
+    public void removableTest() {
+
+        Mountain m = new Mountain(3);
+
+        m.setCase(2, 0, Color.BLUE);
+        m.setCase(2, 1, Color.BLUE);
+        m.setCase(2, 2, Color.BLUE);
+        
+        m.setCase(1, 0, Color.RED);
+        m.setCase(1, 1, Color.RED);
+
+        m.setCase(0, 0, Color.GREEN);
+
+        ArrayList<Point> r = m.removable();
+        assertTrue(r.size() == 1);
+
+        Point p = r.get(0);
+        assertTrue(m.getCase((int) p.getX(), (int) p.getY()) == Color.GREEN);
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {
