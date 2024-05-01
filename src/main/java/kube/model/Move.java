@@ -2,30 +2,38 @@ package kube.model;
 
 import java.awt.Point;
 
-public class Move {
-    
+public abstract class Move {
+
     Player player;
-    Point from;
-    Point to;
     Color color;
 
-    // Constructor
-    public Move(Point from, Color color) {
-        setFrom(from);
+    // Constructors
+    public Move(Color color) {
         setColor(color);
     }
+
+    public Move() {
+        this(Color.EMPTY);
+    }
+
+    // public Move(Point from, Point to, Color color) {
+    //     setFrom(from);
+    //     setTo(to);
+    //     setColor(color);
+    // }
+
+    // public Move(int x1, int x2, int y1, int y2, Color color) {
+    //     this(new Point(x1, y1), new Point(x2, y2), color);
+    // }
+    
+    // public Move(boolean fromAdditional, Color color) {
+    //     fromAdditional = true;
+    //     setColor(color);
+    // }
 
     // Setters
     public void setPlayer(Player p) {
         this.player = p;
-    }
-
-    public void setFrom(Point f) {
-        this.from = f;
-    }
-
-    public void setTo(Point t) {
-        this.to = t;
     }
 
     public void setColor(Color c) {
@@ -37,19 +45,31 @@ public class Move {
         return this.player;
     }
 
-    public Point getFrom() {
-        return this.from;
-    }
-
-    public Point getTo() {
-        return this.to;
-    }
-
     public Color getColor() {
         return this.color;
     }
 
+    public Point getFrom() {
+        return null;
+    }
+
+    public Point getTo() {
+        return null;
+    }
+
     // Methods
+    public boolean isFromAdditional() {
+        return false;
+    }
+
+    public boolean isWhite() {
+        return false;
+    }
+
+    public boolean isClassicMove() {
+        return false;
+    }
+
     public String forSave() {
         String s = "{";
         s += getPlayer().getId() + " ";

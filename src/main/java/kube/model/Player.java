@@ -5,7 +5,7 @@ import java.awt.Point;
 
 public class Player {
     
-    int id;
+    int id, whiteUsed;
     Mountain mountain;
     ArrayList<Color> additional;
     ArrayList<Color> avalaibleToBuild;
@@ -13,6 +13,7 @@ public class Player {
 
     public Player(int id) {
         setId(id);
+        setWhiteUsed(0);
         setMountain(new Mountain(6));
         clearMountain();
         setAdditional(new ArrayList<Color>());
@@ -21,6 +22,10 @@ public class Player {
     // Setters
     public void setId(int id) {
         this.id = id;
+    }
+
+    public void setWhiteUsed(int whiteUsed) {
+        this.whiteUsed = whiteUsed;
     }
 
     public void setMountain(Mountain mountain) {
@@ -38,6 +43,10 @@ public class Player {
     // Getters
     public int getId() {
         return this.id;
+    }
+
+    public int getWhiteUsed() {
+        return this.whiteUsed;
     }
 
     public Mountain getMountain() {
