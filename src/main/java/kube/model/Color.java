@@ -1,8 +1,10 @@
 package kube.model;
 
+import java.util.Random;
+
 public enum Color {
-    EMPTY(0), 
-    WHITE(1), 
+    EMPTY(0),
+    WHITE(1),
     NATURAL(2),
     RED(3),
     GREEN(4),
@@ -41,7 +43,12 @@ public enum Color {
         return EMPTY;
     }
 
-    public static Color[] getAllColored() { 
-        return new Color[]{RED, GREEN, BLUE, YELLOW, BLACK};
+    public static Color[] getAllColored() {
+        return new Color[] { RED, GREEN, BLUE, YELLOW, BLACK };
+    }
+
+    public static Color getRandomColor() {
+        Random r = new Random();
+        return Color.values()[r.nextInt(Color.values().length)];
     }
 }
