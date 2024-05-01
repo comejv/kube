@@ -35,7 +35,7 @@ public class History {
     public void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
-
+    
     public void setDone(ArrayList<Move> done) {
         this.done = done;
     }
