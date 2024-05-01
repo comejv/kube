@@ -8,8 +8,8 @@ public class Mountain {
     private int baseSize;
 
     public Mountain(int size) {
-        baseSize = size;
-        m = new Color[baseSize][baseSize];
+        setBaseSize(size);
+        setMountain(new Color[getBaseSize()][getBaseSize()]);
         clear();
     }
 
@@ -47,7 +47,7 @@ public class Mountain {
 
     public ArrayList<Point> removable() {
         ArrayList<Point> r = new ArrayList<>();
-        for (int i = 0; i < baseSize; i++) {
+        for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) != Color.EMPTY && 
                 ((i == 0) || (getCase(i - 1, j) == Color.EMPTY && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
@@ -60,17 +60,15 @@ public class Mountain {
 
     public ArrayList<Point> compatible(Color c) {
         ArrayList<Point> comp = new ArrayList<>();
-        for (int i = 0; i < baseSize; i++) {
+        for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (i == baseSize - 1) {
+                if (i == getBaseSize() - 1 && getCase(i, j) == Color.EMPTY) {
                     comp.add(new Point(i, j));
                 } else if (getCase(i, j) == Color.EMPTY
                         && (getCase(i + 1, j) != Color.EMPTY && (getCase(i + 1, j + 1) != Color.EMPTY))) {
-                    if (c == Color.NATURAL || getCase(i + 1, j) == c || (getCase(i + 1, j) == Color.NATURAL)) {
-                        if (c == Color.NATURAL || getCase(i + 1, j + 1) == c
-                                || (getCase(i + 1, j + 1) == Color.NATURAL)) {
-                            comp.add(new Point(i, j));
-                        }
+                    if (c == Color.NATURAL || getCase(i + 1, j) == c || (getCase(i + 1, j) == Color.NATURAL) ||
+                    getCase(i + 1, j + 1) == c|| (getCase(i + 1, j + 1) == Color.NATURAL)) {
+                        comp.add(new Point(i, j));
                     }
                 }
             }
@@ -78,21 +76,17 @@ public class Mountain {
         return comp;
     }
 
-    public int getSize() {
-        return baseSize;
-    }
-
     public void clear() {
-        m = new Color[baseSize][baseSize];
-        for (int i = 0; i < baseSize; i++) {
-            for (int j = 0; j < baseSize; j++) {
+        m = new Color[getBaseSize()][getBaseSize()];
+        for (int i = 0; i < getBaseSize(); i++) {
+            for (int j = 0; j < getBaseSize(); j++) {
                 m[i][j] = Color.EMPTY;
             }
         }
     }
 
     public Boolean isFull() {
-        for (int i = 0; i < baseSize; i++) {
+        for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) == Color.EMPTY) {
                     return false;
@@ -103,7 +97,7 @@ public class Mountain {
     }
 
     public Boolean isEmpty() {
-        for (int i = 0; i < baseSize; i++) {
+        for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) != Color.EMPTY) {
                     return false;
@@ -115,6 +109,7 @@ public class Mountain {
 
     public String forSave() {
         String s = "";
+        // TODO: Implement this method
         return s;
     }
 }

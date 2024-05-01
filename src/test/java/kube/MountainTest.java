@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import kube.configuration.Config;
 import kube.model.*;
 
 /**
@@ -262,9 +263,9 @@ public class MountainTest {
 
         Point p1 = new Point(1, 0);
         Point p2 = new Point(1, 1);
-        assertTrue(m.compatible(Color.GREEN).size() == 0);
-        assertTrue(m.compatible(Color.YELLOW).size() == 0);
-        assertTrue(m.compatible(Color.BLACK).size() == 0);
+        assertTrue(m.compatible(Color.GREEN).isEmpty());
+        assertTrue(m.compatible(Color.YELLOW).isEmpty());
+        assertTrue(m.compatible(Color.BLACK).isEmpty());
 
         assertTrue(m.compatible(Color.NATURAL).size() == 2);
         assertTrue(m.compatible(Color.NATURAL).contains(p1));
