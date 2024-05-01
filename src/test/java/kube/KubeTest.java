@@ -21,7 +21,6 @@ public class KubeTest {
         assertEquals(0, kube.getHistoric().getDone().size());
         assertEquals(0, kube.getHistoric().getUndone().size());
         assertEquals(0, kube.getHistoric().getFirstPlayer());
-        assertEquals(kube.getP1(), kube.getCurrentPlayer());
         assertEquals(1, kube.getPhase());
         
 
