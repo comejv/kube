@@ -9,23 +9,38 @@ import kube.model.Kube;
 import kube.model.Mountain;
 
 public class Simulation {
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Simulation s = new Simulation();
-        s.simulateNumberOfCubeAccessible();
-
+        s.simulateNumberOfCubeWithdrawable();
+        s.simulateNumberOfSlotAvailable();
     }
 
-    private void simulateNumberOfCubeAccessible() {
-        float nTest = 10000;
+    private void simulateNumberOfSlotAvailable() {
+        float nTest = 100000;
+        float availaibleSum = 0;
+        for (int i = 0; i < nTest; i++) {
+            Kube k = new Kube();
+            Mountain m = k.getK3();
+            k.fillBag();
+            k.fillBase();
+            availaibleSum += randomAdd(m);
+        }
+        System.out.println("Au total, sur " + (int) nTest + " simulations, il y a eu en moyenne " + availaibleSum / nTest
+        + " cases disponible à chaque coup");
+    }
+
+    private void simulateNumberOfCubeWithdrawable() {
+        float nTest = 100000;
+        float removableSum = 0;
         Mountain m = new Mountain(6);
         Kube k = new Kube();
-        float removableSum = 0;
         for (int i = 0; i < nTest; i++) {
             k.fillBag();
             randomFillMountain(m, k.getBag());
             removableSum += randomWithdraw(m);
         }
-        System.out.println("Au total, sur " + nTest + " simulations, il y a eu en moyenne " + removableSum / nTest + " pieces retirable à chaque coup");
+        System.out.println("Au total, sur " + (int) nTest + " simulations, il y a eu en moyenne " + removableSum / nTest
+                + " pieces retirable à chaque coup");
     }
 
     // A method to fill a moutain with random colors + 2 white and 2 natural
@@ -59,6 +74,23 @@ public class Simulation {
             removables = m.removable();
         }
         return removablesSum / 21;
+
+    }
+
+    private float randomAdd(Mountain m) {
+        Random r = new Random();
+        int nMove = 0;
+        float availableSum = 0;
+        Color c = Color.NATURAL;
+        ArrayList<Point> addable = m.compatible(c);
+        while (addable.size() > 0) {
+            availableSum += addable.size();
+            Point p = addable.remove(r.nextInt(addable.size()));
+            m.setCase(p.x, p.y, c);
+            addable = m.compatible(c);
+            nMove++;
+        }
+        return availableSum / nMove;
 
     }
 }
