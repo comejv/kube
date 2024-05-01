@@ -64,17 +64,17 @@ public class Mountain {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) == Color.EMPTY
                         && (getCase(i + 1, j) != Color.EMPTY && (getCase(i + 1, j + 1) != Color.EMPTY))) {
-                    if (c == Color.NATURAL || getCase(i + 1, j) == c || (getCase(i + 1, j) == Color.NATURAL)) {
-                        if (c == Color.NATURAL || getCase(i + 1, j + 1) == c
-                                || (getCase(i + 1, j + 1) == Color.NATURAL)) {
-                            comp.add(new Point(i, j));
-                        }
+                    if (c == Color.NATURAL || getCase(i + 1, j) == c
+                            || (getCase(i + 1, j) == Color.NATURAL || getCase(i + 1, j + 1) == c
+                                    || (getCase(i + 1, j + 1) == Color.NATURAL))) {
+                        comp.add(new Point(i, j));
                     }
 
                 }
             }
         }
         return comp;
+
     }
 
     public int getSize() {
