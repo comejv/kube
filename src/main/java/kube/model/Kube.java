@@ -101,7 +101,7 @@ public class Kube {
     public void setPenality(boolean p) {
         penality = p;
     }
-
+    
     // Methods
     public boolean isPlayable(Move move) {
 
