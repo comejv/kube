@@ -7,7 +7,6 @@ import java.awt.Point;
 
 public class Player {
 
-
     int id, whiteUsed;
     String name;
     Mountain mountain;
@@ -82,13 +81,26 @@ public class Player {
         return getAdditional().remove(pos);
     }
 
-    public boolean addToMountain(Point point, Color color) {
+    public Boolean addToMountain(Point point, Color color) {
         return addToMountain(point.x, point.y, color);
     }
 
+    public Boolean addToMountain(int l, int c, Color color) {
+        Boolean res = false;
+        Color colb;
+        if (l >= 0 && c >= 0 && l >= c && l < getMountain().getBaseSize()) {
+            for (Color col : getAvalaibleToBuild()) {
+                if (col == color) {
+                    if ((colb = getMountain().getCase(l, c)) != Color.EMPTY) {
+                        getAvalaibleToBuild().add(colb);
+                    }
+                    getMountain().setCase(l, c, color);
+                    res = true;
 
-    public void addToMountain(int l, int c, int pos) {
-        getMountain().setCase(l, c, avalaibleToBuild.get(pos));
+                }
+            }
+        }
+        return res;
     }
 
     public Color removeFromMountain(Point point) {
@@ -143,12 +155,12 @@ public class Player {
         HashSet<Color> playable = new HashSet<>();
         HashSet<Color> toTest = new HashSet<>();
         ArrayList<Point> removable = getMountain().removable();
-        for (Point p : removable){
+        for (Point p : removable) {
             toTest.add(getMountain().getCase(p.x, p.y));
         }
         toTest.addAll(getAdditional());
-        for (Color c : toTest){
-            if (getMountain().compatible(c).size() >= 1){
+        for (Color c : toTest) {
+            if (getMountain().compatible(c).size() >= 1) {
                 playable.add(c);
             }
         }
