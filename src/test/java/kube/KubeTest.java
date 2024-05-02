@@ -155,7 +155,7 @@ public class KubeTest {
         assertFalse(k.isPlayable(new MoveAM(7, 2, Color.YELLOW)));
 
         // MoveAM not compatible
-        assertFalse(k.isPlayable(new MoveAM(7, 5, Color.BLUE)));
+        assertFalse(k.isPlayable(new MoveAM(7, 4, Color.BLUE)));
         assertFalse(k.isPlayable(new MoveAM(7, 7, Color.RED)));
     }
 
