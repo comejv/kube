@@ -7,7 +7,9 @@ import java.awt.Point;
 
 public class Player {
 
+
     int id, whiteUsed;
+    String name;
     Mountain mountain;
     ArrayList<Color> additional;
     ArrayList<Color> avalaibleToBuild;
@@ -34,6 +36,10 @@ public class Player {
         this.mountain = mountain;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public void setAdditional(ArrayList<Color> additional) {
         this.additional = additional;
     }
@@ -55,6 +61,10 @@ public class Player {
         return this.mountain;
     }
 
+    public String getName() {
+        return this.name;
+    }
+
     public ArrayList<Color> getAdditional() {
         return this.additional;
     }
@@ -72,9 +82,10 @@ public class Player {
         return getAdditional().remove(pos);
     }
 
-    public void addToMountain(Point point, int pos) {
-        addToMountain(point.x, point.y, pos);
+    public boolean addToMountain(Point point, Color color) {
+        return addToMountain(point.x, point.y, color);
     }
+
 
     public void addToMountain(int l, int c, int pos) {
         getMountain().setCase(l, c, avalaibleToBuild.get(pos));
@@ -118,6 +129,8 @@ public class Player {
 
     public String toString() {
         String s = "Player " + getId();
+        s += "\nMountain: " + getMountain().toString();
+        s += "\nAdditional: ";
         s += "\nMountain: " + getMountain().toString();
         s += "\nAdditional: ";
         for (Color c : getAdditional()) {
