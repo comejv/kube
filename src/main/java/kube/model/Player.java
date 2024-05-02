@@ -1,10 +1,12 @@
 package kube.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.awt.Point;
 
 public class Player {
-    
+
     int id, whiteUsed;
     Mountain mountain;
     ArrayList<Color> additional;
@@ -74,7 +76,7 @@ public class Player {
         addToMountain(point.x, point.y, pos);
     }
 
-    public void addToMountain(int l, int c,int pos) {
+    public void addToMountain(int l, int c, int pos) {
         getMountain().setCase(l, c, avalaibleToBuild.get(pos));
     }
 
@@ -116,11 +118,27 @@ public class Player {
 
     public String toString() {
         String s = "Player " + getId();
-        s+= "\nMountain: " + getMountain().toString();
-        s+= "\nAdditional: ";
+        s += "\nMountain: " + getMountain().toString();
+        s += "\nAdditional: ";
         for (Color c : getAdditional()) {
             s += c.toString() + " ";
         }
         return s;
+    }
+
+    public HashSet<Color> getPlayableColors() {
+        HashSet<Color> playable = new HashSet<>();
+        HashSet<Color> toTest = new HashSet<>();
+        ArrayList<Point> removable = getMountain().removable();
+        for (Point p : removable){
+            toTest.add(getMountain().getCase(p.x, p.y));
+        }
+        toTest.addAll(getAdditional());
+        for (Color c : toTest){
+            if (getMountain().compatible(c).size() >= 1){
+                playable.add(c);
+            }
+        }
+        return playable;
     }
 }

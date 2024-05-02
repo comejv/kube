@@ -245,4 +245,12 @@ public class Kube {
         nextPlayer();
         return result;
     }
+
+    public Boolean canCurrentPlayerPlay(){
+        if (getCurrentPlayer().getPlayableColors().size() == 0){
+            return false;
+        } else {
+            return true;
+        }
+    }
 }
