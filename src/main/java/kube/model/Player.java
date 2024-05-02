@@ -1,6 +1,8 @@
 package kube.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.awt.Point;
 
 public class Player {
@@ -79,19 +81,17 @@ public class Player {
         return getAdditional().remove(pos);
     }
 
-    public boolean addToMountain(Point point, Color color) {
+    public Boolean addToMountain(Point point, Color color) {
         return addToMountain(point.x, point.y, color);
     }
 
-
-    //If  there is already a color at the (l,c) replace the color and add the color replace in the avalaibletobuilds 
-    public boolean addToMountain(int l, int c, Color color) {
-        boolean res = false;
+    public Boolean addToMountain(int l, int c, Color color) {
+        Boolean res = false;
         Color colb;
         if (l >= 0 && c >= 0 && l >= c && l < getMountain().getBaseSize()) {
             for (Color col : getAvalaibleToBuild()) {
                 if (col == color) {
-                    if((colb = getMountain().getCase(l, c))!=Color.EMPTY){
+                    if ((colb = getMountain().getCase(l, c)) != Color.EMPTY) {
                         getAvalaibleToBuild().add(colb);
                     }
                     getMountain().setCase(l, c, color);
@@ -143,9 +143,27 @@ public class Player {
         String s = "Player " + getId();
         s += "\nMountain: " + getMountain().toString();
         s += "\nAdditional: ";
+        s += "\nMountain: " + getMountain().toString();
+        s += "\nAdditional: ";
         for (Color c : getAdditional()) {
             s += c.toString() + " ";
         }
         return s;
+    }
+
+    public HashSet<Color> getPlayableColors() {
+        HashSet<Color> playable = new HashSet<>();
+        HashSet<Color> toTest = new HashSet<>();
+        ArrayList<Point> removable = getMountain().removable();
+        for (Point p : removable) {
+            toTest.add(getMountain().getCase(p.x, p.y));
+        }
+        toTest.addAll(getAdditional());
+        for (Color c : toTest) {
+            if (getMountain().compatible(c).size() >= 1) {
+                playable.add(c);
+            }
+        }
+        return playable;
     }
 }
