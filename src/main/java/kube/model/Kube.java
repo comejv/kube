@@ -20,7 +20,7 @@ public class Kube {
     // Constructor
     public Kube() {
         setK3(new Mountain(getBaseSize()));
-        setBag(new ArrayList<>());
+        setBag(new ArrayList<Color>());
         setP1(new Player(1));
         setP2(new Player(2));
         setHistoric(new History());

@@ -14,8 +14,8 @@ public class History {
     // Constructor
     public History() {
         setFirstPlayer(0);
-        this.done = new ArrayList<Move>();
-        this.undone = new ArrayList<Move>();
+        setDone(new ArrayList<Move>());
+        setDone(new ArrayList<Move>());
     }
 
     // Getters
