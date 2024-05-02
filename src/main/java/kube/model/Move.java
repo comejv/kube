@@ -8,27 +8,27 @@ public abstract class Move {
     Color color;
 
     // Constructors
+    public Move() {
+        setColor(Color.EMPTY);
+    }
+
     public Move(Color color) {
         setColor(color);
     }
 
-    public Move() {
-        this(Color.EMPTY);
-    }
-
     // public Move(Point from, Point to, Color color) {
-    //     setFrom(from);
-    //     setTo(to);
-    //     setColor(color);
+    // setFrom(from);
+    // setTo(to);
+    // setColor(color);
     // }
 
     // public Move(int x1, int x2, int y1, int y2, Color color) {
-    //     this(new Point(x1, y1), new Point(x2, y2), color);
+    // this(new Point(x1, y1), new Point(x2, y2), color);
     // }
-    
+
     // public Move(boolean fromAdditional, Color color) {
-    //     fromAdditional = true;
-    //     setColor(color);
+    // fromAdditional = true;
+    // setColor(color);
     // }
 
     // Setters
@@ -58,7 +58,7 @@ public abstract class Move {
     }
 
     // Methods
-    public boolean isFromAdditional() {
+    public boolean isFromAdditionals() {
         return false;
     }
 

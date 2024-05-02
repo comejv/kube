@@ -110,17 +110,19 @@ public class Kube {
         boolean cubeCompatible = false;
 
         if (move.isWhite() || move.isClassicMove()) {
-            // When we take the cube from the player's mountain, checking if the cube is removable
+            // When we take the cube from the player's mountain, checking if the cube is
+            // removable
             cubeRemovable = player.getMountain().removable().contains(move.getFrom());
-        } else if (move.isFromAdditional()) {
-            // When we take the cube from the player's additional cubes, checking if the move's cube color is in
+        } else if (move.isFromAdditionals()) {
+            // When we take the cube from the player's additional cubes, checking if the
+            // move's cube color is in
             cubeRemovable = player.getAdditional().contains(move.getColor());
         } else {
             // Should never happen
             return false;
         }
 
-        if (move.isFromAdditional() || move.isClassicMove()) {
+        if (move.isFromAdditionals() || move.isClassicMove()) {
             // Checking if the cube is compatible with the base
             cubeCompatible = getK3().compatible(move.getColor()).contains(move.getTo());
         } else if (move.isWhite()) {
@@ -183,8 +185,8 @@ public class Kube {
         }
         p1Cubes.sort(Color.compareByValue);
         p2Cubes.sort(Color.compareByValue);
-        p1.setAdditional(p1Cubes);
-        p2.setAdditional(p2Cubes);
+        p1.setAvalaibleToBuild(p1Cubes);
+        p2.setAvalaibleToBuild(p2Cubes);
     }
 
     public boolean playMove(Move move) {
@@ -196,23 +198,22 @@ public class Kube {
     }
 
     public boolean playMoveWithoutHistory(Move move) {
-        
+
         Player player = getCurrentPlayer();
         Color color = move.getColor();
         boolean result = false;
 
         // Catching if the move is about a colored cube or a white cube
-        if (move.isWhite() && isPlayable(move)) 
-        {
+        if (move.isWhite() && isPlayable(move)) {
             // Getting out the white cube from the player's mountain
             player.getMountain().remove(move.getFrom().x, move.getFrom().y);
 
-            // Adding the white cube to the player's used white cubes 
+            // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
             result = true;
         }
         // Checking if the move is about an additional cube
-        else if (move.isFromAdditional() && isPlayable(move)) {
+        else if (move.isFromAdditionals() && isPlayable(move)) {
 
             // Getting out the additional cube from the player's additional cubes
             player.getAdditional().remove(color);
@@ -228,7 +229,7 @@ public class Kube {
             result = true;
         }
         // Checking if the move is a classic move and is playable
-        else if(move.isClassicMove() && isPlayable(move)) {
+        else if (move.isClassicMove() && isPlayable(move)) {
 
             // Applying the move
             player.getMountain().remove(move.getFrom().x, move.getFrom().y);
@@ -238,11 +239,13 @@ public class Kube {
             if (player.getMountain().isPenality(move.getTo().x, move.getTo().y, color)) {
                 setPenality(true);
             }
-    
+
             result = true;
         }
 
-        nextPlayer();
+        if (result) {
+            nextPlayer();
+        }
         return result;
     }
 }

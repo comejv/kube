@@ -4,23 +4,23 @@ import java.awt.Point;
 
 public class MoveAM extends Move {
 
-    int pos;
+    Color color;
     Point to;
 
     //Constructors
-    public MoveAM(int pos, Point to) {
+    public MoveAM(Point to, Color color) {
         super();
-        setPos(pos);
+        setColor(color);
         setTo(to);
     }
 
-    public MoveAM(int pos, int x, int y) {
-        this(pos, new Point(x, y));
+    public MoveAM(int x, int y, Color color) {
+        this(new Point(x, y), color);
     }
 
     //Setters
-    public void setPos(int pos) {
-        this.pos = pos;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public void setTo(Point to) {
@@ -28,8 +28,8 @@ public class MoveAM extends Move {
     }
 
     //Getters
-    public int getPos() {
-        return pos;
+    public Color getColor() {
+        return color;
     }
 
     public Point getTo() {
@@ -44,7 +44,7 @@ public class MoveAM extends Move {
     @Override
     public String toString() {
         return "MoveAM{" +
-                "pos=" + pos +
+                "color=" + color +
                 ", to=" + to +
                 '}';
     }

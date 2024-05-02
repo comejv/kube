@@ -3,12 +3,10 @@ package kube;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.Point;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import org.junit.Test;
 
-import kube.configuration.Config;
 import kube.model.*;
 
 /**
@@ -245,7 +243,6 @@ public class MountainTest {
         m.setCase(0, 0, Color.GREEN);
 
         ArrayList<Point> r = m.removable();
-        System.out.println(r);
         assertTrue(r.size() == 1);
 
         Point p = r.get(0);
