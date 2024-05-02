@@ -15,7 +15,7 @@ public class History {
     public History() {
         setFirstPlayer(0);
         setDone(new ArrayList<Move>());
-        setDone(new ArrayList<Move>());
+        setUndone(new ArrayList<Move>());
     }
 
     // Getters
