@@ -1,4 +1,4 @@
-# k3
+# Kube
 
 Welcome to Kube, a Java clone of the classic K3 game!
 
