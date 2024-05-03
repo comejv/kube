@@ -119,4 +119,21 @@ public class Mountain {
         // TODO: Implement this method
         return s;
     }
+
+    @Override
+    public String toString(){
+        String s = "";
+        for (int i = 0; i < getBaseSize(); i++) {
+          for (int k = 0; k<(getBaseSize()-i)/2; k++)
+            s += " ";
+            for (int j = 0; j < i + 1; j++) {
+                if(((i%2)+2) == 1 ){
+                    s += " ";
+                 }
+                s += getCase(i, j).toString();
+            }
+            s += "\n";
+        }
+        return s;
+    }
 }

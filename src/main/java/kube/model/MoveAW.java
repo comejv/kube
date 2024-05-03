@@ -1,21 +1,12 @@
 package kube.model;
 
-import java.awt.Point;
-
-public class MoveAM extends Move {
-
+public class MoveAW extends Move {
+    
     Color color;
-    Point to;
 
     //Constructors
-    public MoveAM(Point to, Color color) {
-        super();
-        setColor(color);
-        setTo(to);
-    }
-
-    public MoveAM(int x, int y, Color color) {
-        this(new Point(x, y), color);
+    public MoveAW() {
+        super(Color.WHITE);
     }
 
     //Setters
@@ -23,17 +14,9 @@ public class MoveAM extends Move {
         this.color = color;
     }
 
-    public void setTo(Point to) {
-        this.to = to;
-    }
-
     //Getters
     public Color getColor() {
         return color;
-    }
-
-    public Point getTo() {
-        return to;
     }
 
     //Methods
@@ -41,11 +24,14 @@ public class MoveAM extends Move {
         return true;
     }
 
+    public boolean isWhite() {
+        return true;
+    }
+
     @Override
     public String toString() {
         return "MoveAM{" +
                 "color=" + color +
-                ", to=" + to +
                 '}';
     }
 }

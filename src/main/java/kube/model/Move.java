@@ -16,21 +16,6 @@ public abstract class Move {
         setColor(color);
     }
 
-    // public Move(Point from, Point to, Color color) {
-    // setFrom(from);
-    // setTo(to);
-    // setColor(color);
-    // }
-
-    // public Move(int x1, int x2, int y1, int y2, Color color) {
-    // this(new Point(x1, y1), new Point(x2, y2), color);
-    // }
-
-    // public Move(boolean fromAdditional, Color color) {
-    // fromAdditional = true;
-    // setColor(color);
-    // }
-
     // Setters
     public void setPlayer(Player p) {
         this.player = p;

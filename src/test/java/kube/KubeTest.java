@@ -7,12 +7,15 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 
+import kube.configuration.Config;
+
 import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.MoveMM;
 import kube.model.MoveMW;
 import kube.model.MoveAM;
+import kube.model.MoveAW;
 
 public class KubeTest {
 
@@ -93,21 +96,8 @@ public class KubeTest {
         Kube k = new Kube();
         k.setCurrentPlayer(k.getP1());
 
-        Mountain m = new Mountain(3);
-
-        m.setCase(1, 0, Color.BLUE);
-        m.setCase(1, 1, Color.WHITE);
-        m.setCase(2, 0, Color.YELLOW);
-        m.setCase(2, 1, Color.WHITE);
-        m.setCase(2, 2, Color.BLUE);
-
-        k.getP1().setMountain(m);
-
-        k.getP1().getAdditional().add(Color.BLUE);
-        k.getP1().getAdditional().add(Color.RED);
-        k.getP1().getAdditional().add(Color.NATURAL);
-
         setKubeBase(k);
+        setPlayerOneMountain(k);
 
         // Checking all the possible moves
         // MoveMM
@@ -171,13 +161,15 @@ public class KubeTest {
 
     @Test
     public void playMoveTest() {
+
         Kube kube = new Kube();
-        kube.fillBag();
         setKubeBase(kube);
+        System.out.println(kube.getK3().toString());
         kube.setCurrentPlayer(kube.getP1());
         kube.setPhase(2);
         kube.getP1().getMountain().setCase(0, 0, Color.BLUE);
 
+        // Move a cube on the wrong place
         // Move to a place there is already a cube
         boolean res = kube.playMove(new MoveMM(0, 0, 8, 0, kube.getP1().getMountain().getCase(0, 0)));
         assertFalse(res);
@@ -194,9 +186,45 @@ public class KubeTest {
         assertEquals(1, kube.getCurrentPlayer().getId());
         assertEquals(Color.BLUE, kube.getP1().getMountain().getCase(0, 0));
 
-        // Move a cube on top of the wrong cube
+        // Move a cube on the wrong mountain's cubes
         res = kube.playMove(new MoveMM(0, 0, 7, 2, kube.getP1().getMountain().getCase(0, 0)));
+        assertFalse(res);
+        assertEquals(0, kube.getHistory().getDone().size());
+        assertEquals(0, kube.getHistory().getUndone().size());
+        assertEquals(1, kube.getCurrentPlayer().getId());
+        assertEquals(Color.BLUE, kube.getP1().getMountain().getCase(0, 0));
 
+        // Move a cube on the right place
+        setPlayerOneMountain(kube);
+
+        // MoveMW
+        initPlayMove(kube);
+        res = kube.playMove(new MoveMW(1, 1));
+        assertTrue(res);
+
+        // MoveMM
+        initPlayMove(kube);
+        res = kube.playMove(new MoveMM(1, 0, 7, 0, Color.BLUE));
+        assertTrue(res);
+
+        // MoveAM
+        initPlayMove(kube);
+        res = kube.playMove(new MoveAM(7, 0, Color.BLUE));
+        assertTrue(res);
+
+        // MoveAM
+        initPlayMove(kube);
+        res = kube.playMove(new MoveAM(7, 6, Color.RED));
+        assertTrue(res);
+
+        // MoveAW
+        initPlayMove(kube);
+        MoveAW aw = new MoveAW();
+        Config.debug(kube.isPlayable(aw));
+        Config.debug(aw.isFromAdditionals());
+        Config.debug(aw.isWhite());
+        res = kube.playMove(new MoveAW());
+        assertTrue(res);
     }
 
     public void setKubeBase(Kube k) {
@@ -211,4 +239,29 @@ public class KubeTest {
         k.getK3().setCase(8, 7, Color.BLUE);
         k.getK3().setCase(8, 8, Color.GREEN);
     }
+
+    public void setPlayerOneMountain(Kube k) {
+        Mountain m = new Mountain(3);
+
+        m.setCase(1, 0, Color.BLUE);
+        m.setCase(1, 1, Color.WHITE);
+        m.setCase(2, 0, Color.YELLOW);
+        m.setCase(2, 1, Color.WHITE);
+        m.setCase(2, 2, Color.BLUE);
+
+        k.getP1().setMountain(m);
+
+        k.getP1().getAdditional().add(Color.BLUE);
+        k.getP1().getAdditional().add(Color.RED);
+        k.getP1().getAdditional().add(Color.NATURAL);
+        k.getP1().getAdditional().add(Color.WHITE);
+    }
+
+    public void initPlayMove(Kube kube){
+        kube.getK3().clear();
+        setKubeBase(kube);
+        setPlayerOneMountain(kube);
+        kube.setCurrentPlayer(kube.getP1());
+    }
+    
 }

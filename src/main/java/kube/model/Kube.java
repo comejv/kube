@@ -109,25 +109,25 @@ public class Kube {
         boolean cubeRemovable = false;
         boolean cubeCompatible = false;
 
-        if (move.isWhite() || move.isClassicMove()) {
-            // When we take the cube from the player's mountain, checking if the cube is
-            // removable
-            cubeRemovable = player.getMountain().removable().contains(move.getFrom());
-        } else if (move.isFromAdditionals()) {
+        if (move.isFromAdditionals()) {
             // When we take the cube from the player's additional cubes, checking if the
             // move's cube color is in
             cubeRemovable = player.getAdditional().contains(move.getColor());
+        } else if (move.isWhite() || move.isClassicMove()) {
+            // When we take the cube from the player's mountain, checking if the cube is
+            // removable
+            cubeRemovable = player.getMountain().removable().contains(move.getFrom());
         } else {
             // Should never happen
             return false;
         }
 
-        if (move.isFromAdditionals() || move.isClassicMove()) {
-            // Checking if the cube is compatible with the base
-            cubeCompatible = getK3().compatible(move.getColor()).contains(move.getTo());
-        } else if (move.isWhite()) {
+        if (move.isWhite()) {
             // White cube is always compatible
             cubeCompatible = true;
+        } else if (move.isFromAdditionals() || move.isClassicMove()) {
+            // Checking if the cube is compatible with the base
+            cubeCompatible = getK3().compatible(move.getColor()).contains(move.getTo());
         } else {
             // Should never happen
             return false;
@@ -203,8 +203,16 @@ public class Kube {
         Color color = move.getColor();
         boolean result = false;
 
+        if (move.isWhite() && move.isFromAdditionals() && isPlayable(move)) {
+            // Getting out the additional white cube from the player's additional cubes
+            player.getAdditional().remove(color);
+
+            // Adding the white cube to the player's used white cubes
+            player.setWhiteUsed(player.getWhiteUsed() + 1);
+            result = true;
+        }
         // Catching if the move is about a colored cube or a white cube
-        if (move.isWhite() && isPlayable(move)) {
+        else if (move.isWhite() && isPlayable(move)) {
             // Getting out the white cube from the player's mountain
             player.getMountain().remove(move.getFrom().x, move.getFrom().y);
 
