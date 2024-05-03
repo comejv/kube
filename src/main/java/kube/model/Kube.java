@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 public class Kube {
+    
     private History history;
     private Player p1, p2, currentPlayer;
     private Mountain k3;
@@ -23,7 +24,7 @@ public class Kube {
         setBag(new ArrayList<Color>());
         setP1(new Player(1));
         setP2(new Player(2));
-        setHistoric(new History());
+        setHistory(new History());
         setPhase(preparationPhase);
         setPenality(false);
     }
@@ -78,7 +79,7 @@ public class Kube {
         currentPlayer = p;
     }
 
-    public void setHistoric(History h) {
+    public void setHistory(History h) {
         history = h;
     }
 
