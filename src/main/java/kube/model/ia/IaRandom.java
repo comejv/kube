@@ -22,12 +22,7 @@ public class IaRandom implements Ia {
     }
 
     public void preparationPhase() {
-        Color c;
-        for (int i = 0; i < player.getMountain().getBaseSize(); i++){
-            for (int j = 0; j < i + 1; j++){
-                c = player.getAvalaibleToBuild().get(0);
-            }
-        }
+
     }
 
     public void gamePhase() {

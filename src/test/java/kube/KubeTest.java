@@ -275,12 +275,15 @@ public class KubeTest {
     }
 
     @Test
-    public void getListOfMoves() {
+    public void testSeededBag() {
         Kube kube = new Kube();
-        kube.fillBag();
-        kube.fillBase();
-        kube.distributeCubesToPlayers();
-       
+        kube.fillBag(1);
+        Kube kube2 = new Kube();
+        kube2.fillBag(1);
+        for (int i = 0; i < kube.getBag().size(); i++){
+            assertEquals(kube.getBag().get(i), kube2.getBag().get(i));
+        }
+
     }
 
 }

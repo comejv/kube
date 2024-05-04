@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-
+import java.util.Random;
 public class Kube {
 
     private History history;
@@ -138,9 +138,12 @@ public class Kube {
         return cubeRemovable && cubeCompatible;
     }
 
+    public void fillBag(){
+        fillBag(null);
+    }
     // fill the bag with 9 times each colors, and randomize it until the base is
     // valid
-    public void fillBag() {
+    public void fillBag(Integer seed) {
         bag = new ArrayList<>();
         for (Color c : Color.getAllColored()) {
             for (int i = 0; i < nCubePerColor; i++) {
@@ -150,7 +153,11 @@ public class Kube {
         // verificate that there is 4 differents colors in the baseSize first cubes of
         // the bag
         while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
-            Collections.shuffle(bag);
+            if (seed != null){
+                Collections.shuffle(bag, new Random(seed));
+            } else {
+                Collections.shuffle(bag);
+            }
         }
     }
 
