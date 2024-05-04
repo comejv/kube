@@ -54,7 +54,7 @@ public class Mountain {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) != Color.EMPTY && 
-                ((i == 0) || (getCase(i - 1, j) == Color.EMPTY && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
+                (i == 0 || (getCase(i - 1, j) == Color.EMPTY && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
                     r.add(new Point(i, j));
                 }
             }

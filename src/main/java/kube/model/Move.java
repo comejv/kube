@@ -63,4 +63,14 @@ public abstract class Move {
         s += getColor().toString() + "}";
         return s;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        MoveMM that = (MoveMM) o;
+        return getFrom().equals(that.getFrom()) && getTo().equals(that.getTo()) && getColor().equals(that.getColor());
+    }
 }

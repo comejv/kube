@@ -48,4 +48,5 @@ public class MoveAM extends Move {
                 ", to=" + to +
                 '}';
     }
+
 }

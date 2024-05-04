@@ -13,6 +13,7 @@ import kube.configuration.Config;
 import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
+import kube.model.Move;
 import kube.model.MoveMM;
 import kube.model.MoveMW;
 import kube.model.Player;
@@ -157,12 +158,12 @@ public class KubeTest {
         kube.fillBag();
         kube.distributeCubesToPlayers();
         int sum = 0;
-        for (int n : kube.getP1().getAvalaibleToBuild().values()){
+        for (int n : kube.getP1().getAvalaibleToBuild().values()) {
             sum += n;
         }
         assertEquals(21, sum);
         sum = 0;
-        for (int n : kube.getP2().getAvalaibleToBuild().values()){
+        for (int n : kube.getP2().getAvalaibleToBuild().values()) {
             sum += n;
         }
         assertEquals(21, sum);
@@ -280,9 +281,33 @@ public class KubeTest {
         kube.fillBag(1);
         Kube kube2 = new Kube();
         kube2.fillBag(1);
-        for (int i = 0; i < kube.getBag().size(); i++){
+        for (int i = 0; i < kube.getBag().size(); i++) {
             assertEquals(kube.getBag().get(i), kube2.getBag().get(i));
         }
+    }
+
+    @Test
+    public void testMoveList() {
+        Kube kube = new Kube();
+        kube.fillBag(1);
+        kube.fillBase();
+        kube.distributeCubesToPlayers();
+        Color[][] mountainP1 = new Color[][] {
+                { Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+                { Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+                { Color.EMPTY, Color.BLACK, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+                { Color.RED, Color.BLUE, Color.GREEN, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+                { Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.EMPTY, Color.EMPTY },
+                { Color.RED, Color.BLUE, Color.GREEN, Color.NATURAL, Color.YELLOW, Color.EMPTY },
+                { Color.RED, Color.BLUE, Color.GREEN, Color.NATURAL, Color.YELLOW, Color.WHITE }
+        };
+        kube.getP1().getMountain().setMountain(mountainP1);
+        kube.setCurrentPlayer(kube.getP1());
+        ArrayList<Move> moves = kube.ensMove();
+        System.out.println(kube.getK3().toString());
+        System.out.println(kube.getP1().getMountain().toString());
+        System.out.println(moves);
+        assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 0), Color.BLACK)));
 
     }
 

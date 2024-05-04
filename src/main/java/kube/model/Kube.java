@@ -280,6 +280,8 @@ public class Kube {
     public ArrayList<Move> ensMove() {
         ArrayList<Move> moves = new ArrayList<>();
         // List MM/MW moves
+        System.out.println(moves);
+
         for (Point start : getCurrentPlayer().getMountain().removable()) {
             Color c = getCurrentPlayer().getMountain().getCase(start);
             if (c == Color.WHITE) {

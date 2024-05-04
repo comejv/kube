@@ -50,4 +50,5 @@ public class MoveMM extends Move {
                 ", color=" + getColor() +
                 '}';
     }
+
 }
