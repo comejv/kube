@@ -1,9 +1,10 @@
 package kube.model;
 
 import java.util.ArrayList;
-import java.awt.Point;
 
-import kube.model.Move;
+import kube.model.move.Move;
+
+import java.awt.Point;
 
 public class History {
     // Attributes

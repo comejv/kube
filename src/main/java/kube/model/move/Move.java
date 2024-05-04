@@ -1,6 +1,9 @@
-package kube.model;
+package kube.model.move;
 
 import java.awt.Point;
+
+import kube.model.Color;
+import kube.model.Player;
 
 public abstract class Move {
 
@@ -44,6 +47,10 @@ public abstract class Move {
 
     // Methods
     public boolean isFromAdditionals() {
+        return false;
+    }
+
+    public boolean isToAdditionnals() {
         return false;
     }
 

@@ -1,6 +1,8 @@
-package kube.model;
+package kube.model.move;
 
 import java.awt.Point;
+
+import kube.model.Color;
 
 public class MoveAM extends Move {
 

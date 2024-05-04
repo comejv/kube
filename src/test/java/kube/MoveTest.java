@@ -3,13 +3,17 @@ package kube;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Point;
+
 import org.junit.Test;
 
 import kube.model.Color;
-import kube.model.MoveAM;
-import kube.model.MoveMM;
-import kube.model.MoveMW;
-import kube.model.MoveAW;
+import kube.model.move.MoveAA;
+import kube.model.move.MoveAM;
+import kube.model.move.MoveAW;
+import kube.model.move.MoveMA;
+import kube.model.move.MoveMM;
+import kube.model.move.MoveMW;
 
 public class MoveTest {
     
@@ -71,6 +75,19 @@ public class MoveTest {
         // MoveAW
         MoveAW aw = new MoveAW();
         assertTrue(aw.isFromAdditionals());
+    }
+
+    @Test
+    public void isToAdditionnalsTest(){
+        MoveAA aa = new MoveAA(Color.RED);
+        assertTrue(aa.isToAdditionals());
+        assertFalse(aa.isClassicMove());
+        assertTrue(aa.isFromAdditionals());
+
+        MoveMA ma = new MoveMA(new Point(1, 1), Color.BLACK);
+        assertTrue(ma.isToAdditionals());
+        assertFalse(ma.isClassicMove());
+        assertFalse(ma.isFromAdditionals());
     }
 
 }
