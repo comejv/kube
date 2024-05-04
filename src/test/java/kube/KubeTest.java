@@ -298,17 +298,32 @@ public class KubeTest {
                 { Color.EMPTY, Color.BLACK, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
                 { Color.RED, Color.BLUE, Color.GREEN, Color.EMPTY, Color.EMPTY, Color.EMPTY },
                 { Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.EMPTY, Color.EMPTY },
-                { Color.RED, Color.BLUE, Color.GREEN, Color.NATURAL, Color.YELLOW, Color.EMPTY },
                 { Color.RED, Color.BLUE, Color.GREEN, Color.NATURAL, Color.YELLOW, Color.WHITE }
         };
         kube.getP1().getMountain().setMountain(mountainP1);
+        kube.getP1().addAdditional(Color.NATURAL);
+        kube.getP1().addAdditional(Color.WHITE);
+        kube.getP1().addAdditional(Color.YELLOW);
         kube.setCurrentPlayer(kube.getP1());
         ArrayList<Move> moves = kube.ensMove();
-        System.out.println(kube.getK3().toString());
-        System.out.println(kube.getP1().getMountain().toString());
-        System.out.println(moves);
         assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 0), Color.BLACK)));
-
+        assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 2), Color.BLACK)));
+        assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 3), Color.BLACK)));
+        assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 4), Color.BLACK)));
+        assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 5), Color.BLACK)));
+        assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 5), Color.BLACK)));
+        assertTrue(moves.contains(new MoveMW(new Point(5, 5))));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 0), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 1), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 2), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 3), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 4), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 5), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 6), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 7), Color.NATURAL)));
+        assertTrue(moves.contains(new MoveAW()));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 6), Color.YELLOW)));
+        assertTrue(moves.contains(new MoveAM(new Point(7, 7), Color.YELLOW)));
     }
 
 }

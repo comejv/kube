@@ -70,7 +70,13 @@ public abstract class Move {
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        MoveMM that = (MoveMM) o;
-        return getFrom().equals(that.getFrom()) && getTo().equals(that.getTo()) && getColor().equals(that.getColor());
+        Move that = (Move) o;
+        if (!this.getClass().equals(that.getClass()))
+            return false;
+        if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null)
+            return false;
+        if (getTo() != null ? !getTo().equals(that.getTo()) : that.getTo() != null)
+            return false;
+        return getColor() == that.getColor();
     }
 }

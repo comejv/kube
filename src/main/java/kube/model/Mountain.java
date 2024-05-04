@@ -128,13 +128,16 @@ public class Mountain {
     public String toString(){
         String s = "";
         for (int i = 0; i < getBaseSize(); i++) {
-          for (int k = 0; k<(getBaseSize()-i)/2; k++)
-            s += " ";
+            for (int space = 0; space < getBaseSize() - i; space++){
+                s += "   ";
+            }
             for (int j = 0; j < i + 1; j++) {
-                if(((i%2)+2) == 1 ){
-                    s += " ";
-                 }
+                int n = 6 - getCase(i, j).toString().length();
                 s += getCase(i, j).toString() + " ";
+                while (n > 0) {
+                    s += " ";
+                    n--;
+                }
             }
             s += "\n";
         }
