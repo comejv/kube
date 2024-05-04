@@ -91,10 +91,10 @@ public class Player {
         }
         int n;
         Color colb = getMountain().getCase(l, c);
-        if ((n = getAvalaibleToBuild().get(color)) > 0){
+        if ((n = getAvalaibleToBuild().get(color)) > 0) {
             getMountain().setCase(l, c, color);
             getAvalaibleToBuild().put(color, n);
-            if (colb != Color.EMPTY){
+            if (colb != Color.EMPTY) {
                 getAvalaibleToBuild().put(colb, getAvalaibleToBuild().get(colb) + 1);
             }
             return true;
@@ -104,6 +104,18 @@ public class Player {
 
     public Color removeFromMountain(Point point) {
         return removeFromMountain(point.x, point.y);
+    }
+
+    public void removeToAvailableToBuild(Point p) {
+        removeToAvailableToBuild(p.x, p.y);
+    }
+
+    public void removeToAvailableToBuild(int l, int c) {
+        Color color;
+        if ((color = getMountain().getCase(l, c)) != Color.WHITE){
+            getMountain().remove(l, c);
+            getAvalaibleToBuild().put(color, getAvalaibleToBuild().get(color) + 1);
+        }
     }
 
     public Color removeFromMountain(int l, int c) {

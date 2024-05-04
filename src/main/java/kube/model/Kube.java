@@ -8,8 +8,10 @@ import java.util.HashSet;
 import java.util.Random;
 
 import kube.model.move.Move;
+import kube.model.move.MoveAA;
 import kube.model.move.MoveAM;
 import kube.model.move.MoveAW;
+import kube.model.move.MoveMA;
 import kube.model.move.MoveMM;
 import kube.model.move.MoveMW;
 
@@ -143,7 +145,7 @@ public class Kube {
             // Should never happen
             return false;
         }
-        
+
         if (move.isWhite() || move.isToAdditionnals()) {
             // White cube is always compatible
             cubeCompatible = true;
@@ -220,7 +222,7 @@ public class Kube {
         }
         p1.setAvalaibleToBuild(p1Cubes);
         p2.setAvalaibleToBuild(p2Cubes);
-    }
+    }   
 
     public boolean playMove(Move move) {
         if (playMoveWithoutHistory(move)) {
@@ -231,7 +233,6 @@ public class Kube {
     }
 
     public boolean playMoveWithoutHistory(Move move) {
-
         Player player = getCurrentPlayer();
         Player nextPlayer = null;
         if (player == getP1()) {
@@ -240,7 +241,6 @@ public class Kube {
             nextPlayer = getP1();
         }
         Color color = move.getColor();
-        boolean result = false;
         if (!isPlayable(move)) {
             return false;
         }
@@ -251,12 +251,12 @@ public class Kube {
             nextPlayer.getMountain().remove(move.getFrom().x, move.getFrom().y);
             player.addAdditional(color);
         } else if (move.isWhite() && move.isFromAdditionals()) {
+            
             // Getting out the additional white cube from the player's additional cubes
             player.getAdditional().remove(color);
 
             // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
-            result = true;
         }
         // Catching if the move is about a colored cube or a white cube
         else if (move.isWhite()) {
@@ -265,7 +265,6 @@ public class Kube {
 
             // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
-            result = true;
         }
         // Checking if the move is about an additional cube
         else if (move.isFromAdditionals()) {
@@ -280,8 +279,6 @@ public class Kube {
             if (player.getMountain().isPenality(move.getTo().x, move.getTo().y, color)) {
                 setPenality(true);
             }
-
-            result = true;
         }
         // Checking if the move is a classic move and is playable
         else if (move.isClassicMove()) {
@@ -294,14 +291,12 @@ public class Kube {
             if (player.getMountain().isPenality(move.getTo().x, move.getTo().y, color)) {
                 setPenality(true);
             }
-
-            result = true;
         }
 
-        if (result) {
+        if (!move.isToAdditionnals()) {
             nextPlayer();
         }
-        return result;
+        return true;
     }
 
     public Boolean canCurrentPlayerPlay() {
@@ -312,12 +307,13 @@ public class Kube {
         }
     }
 
-    // Method that resturn the ensemble of move available for the curretn player
+    // Method that return the list of moves available for the current player
     public ArrayList<Move> ensMove() {
+        if (getPenality()){
+            return ensPenality();
+        } 
         ArrayList<Move> moves = new ArrayList<>();
         // List MM/MW moves
-        System.out.println(moves);
-
         for (Point start : getCurrentPlayer().getMountain().removable()) {
             Color c = getCurrentPlayer().getMountain().getCase(start);
             if (c == Color.WHITE) {
@@ -341,6 +337,28 @@ public class Kube {
                     moves.add(am);
                 }
             }
+        }
+        return moves;
+    }
+
+    public ArrayList<Move> ensPenality() {
+        ArrayList<Move> moves = new ArrayList<>();
+        Player nextPlayer;
+        if (getCurrentPlayer() == getP1()){
+            nextPlayer = getP2();
+        } else {
+            nextPlayer = getP1();
+        }
+        // List AA
+        for (Color c : nextPlayer.getAdditional()){
+            MoveAA aa = new MoveAA(c);
+            moves.add(aa);
+        }
+        // List MA 
+        for (Point p : nextPlayer.getMountain().removable()){
+            Color c = nextPlayer.getMountain().getCase(p);
+            MoveMA ma = new MoveMA(p, c);
+            moves.add(ma);
         }
         return moves;
     }
