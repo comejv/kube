@@ -2,6 +2,7 @@ package kube.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.awt.Point;
 
@@ -11,7 +12,7 @@ public class Player {
     String name;
     Mountain mountain;
     ArrayList<Color> additional;
-    ArrayList<Color> avalaibleToBuild;
+    HashMap<Color, Integer> avalaibleToBuild;
     // Constructor
 
     public Player(int id) {
@@ -43,7 +44,7 @@ public class Player {
         this.additional = additional;
     }
 
-    public void setAvalaibleToBuild(ArrayList<Color> avalaibleToBuild) {
+    public void setAvalaibleToBuild(HashMap<Color, Integer> avalaibleToBuild) {
         this.avalaibleToBuild = avalaibleToBuild;
     }
 
@@ -68,7 +69,7 @@ public class Player {
         return this.additional;
     }
 
-    public ArrayList<Color> getAvalaibleToBuild() {
+    public HashMap<Color, Integer> getAvalaibleToBuild() {
         return this.avalaibleToBuild;
     }
 
@@ -86,21 +87,20 @@ public class Player {
     }
 
     public Boolean addToMountain(int l, int c, Color color) {
-        Boolean res = false;
-        Color colb;
-        if (l >= 0 && c >= 0 && l >= c && l < getMountain().getBaseSize()) {
-            for (Color col : getAvalaibleToBuild()) {
-                if (col == color) {
-                    if ((colb = getMountain().getCase(l, c)) != Color.EMPTY) {
-                        getAvalaibleToBuild().add(colb);
-                    }
-                    getMountain().setCase(l, c, color);
-                    res = true;
-
-                }
-            }
+        if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
+            return false;
         }
-        return res;
+        int n;
+        Color colb = getMountain().getCase(l, c);
+        if ((n = getAvalaibleToBuild().get(color)) > 0){
+            getMountain().setCase(l, c, color);
+            getAvalaibleToBuild().put(color, n);
+            if (colb != Color.EMPTY){
+                getAvalaibleToBuild().put(colb, getAvalaibleToBuild().get(colb) + 1);
+            }
+            return true;
+        }
+        return false;
     }
 
     public Color removeFromMountain(Point point) {

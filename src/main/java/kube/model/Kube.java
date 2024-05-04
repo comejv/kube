@@ -3,10 +3,11 @@ package kube.model;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 
 public class Kube {
-    
+
     private History history;
     private Player p1, p2, currentPlayer;
     private Mountain k3;
@@ -102,7 +103,7 @@ public class Kube {
     public void setPenality(boolean p) {
         penality = p;
     }
-    
+
     // Methods
     public boolean isPlayable(Move move) {
 
@@ -172,20 +173,22 @@ public class Kube {
     }
 
     public void distributeCubesToPlayers() {
-        ArrayList<Color> p1Cubes = new ArrayList<>();
-        ArrayList<Color> p2Cubes = new ArrayList<>();
+        HashMap<Color, Integer> p1Cubes = new HashMap<>();
+        HashMap<Color, Integer> p2Cubes = new HashMap<>();
+        p1Cubes.put(Color.WHITE, 2);
+        p2Cubes.put(Color.WHITE, 2);
+        p1Cubes.put(Color.NATURAL, 2);
+        p2Cubes.put(Color.NATURAL, 2);
+        for (Color c : Color.getAllColored()) {
+            p1Cubes.put(c, 0);
+            p2Cubes.put(c, 0);
+        }
+        Color c;
         for (int i = 0; i < 17; i++) {
-            p1Cubes.add(bag.remove(0));
-            p2Cubes.add(bag.remove(0));
-        }
-        for (int i = 0; i < 2; i++) {
-            p1Cubes.add(Color.WHITE);
-            p1Cubes.add(Color.NATURAL);
-            p2Cubes.add(Color.WHITE);
-            p2Cubes.add(Color.NATURAL);
-        }
-        p1Cubes.sort(Color.compareByValue);
-        p2Cubes.sort(Color.compareByValue);
+            c = bag.remove(0);
+            p1Cubes.put(c, p1Cubes.get(c) + 1);
+            c = bag.remove(0);
+            p2Cubes.put(c, p2Cubes.get(c) + 1);        }
         p1.setAvalaibleToBuild(p1Cubes);
         p2.setAvalaibleToBuild(p2Cubes);
     }
@@ -258,11 +261,42 @@ public class Kube {
         return result;
     }
 
-    public Boolean canCurrentPlayerPlay(){
-        if (getCurrentPlayer().getPlayableColors().size() == 0){
+    public Boolean canCurrentPlayerPlay() {
+        if (getCurrentPlayer().getPlayableColors().size() == 0) {
             return false;
         } else {
             return true;
         }
+    }
+
+    // Method that resturn the ensemble of move available for the curretn player
+    public ArrayList<Move> ensMove() {
+        ArrayList<Move> moves = new ArrayList<>();
+        // List MM/MW moves
+        for (Point start : getCurrentPlayer().getMountain().removable()) {
+            Color c = getCurrentPlayer().getMountain().getCase(start);
+            if (c == Color.WHITE) {
+                Move mw = new MoveMW(start);
+                moves.add(mw);
+            } else {
+                for (Point arr : getK3().compatible(c)) {
+                    Move mm = new MoveMM(start, arr, c);
+                    moves.add(mm);
+                }
+            }
+        }
+        // List AM/AW moves
+        for (Color c : getCurrentPlayer().getAdditional()) {
+            if (c == Color.WHITE) {
+                Move aw = new MoveAW();
+                moves.add(aw);
+            } else {
+                for (Point arr : getK3().compatible(c)) {
+                    Move am = new MoveAM(arr, c);
+                    moves.add(am);
+                }
+            }
+        }
+        return moves;
     }
 }

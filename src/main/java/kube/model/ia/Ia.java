@@ -6,4 +6,5 @@ public interface Ia {
     public void preparationPhase();
     public void gamePhase();
     public Move nextMove();
+    
 }

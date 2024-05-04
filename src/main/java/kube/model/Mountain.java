@@ -37,6 +37,10 @@ public class Mountain {
         return m[x][y];
     }
 
+    public Color getCase(Point p) {
+        return getCase(p.x, p.y);
+    }
+
     public void setCase(int x, int y, Color c) {
         m[x][y] = c;
     }
@@ -130,7 +134,7 @@ public class Mountain {
                 if(((i%2)+2) == 1 ){
                     s += " ";
                  }
-                s += getCase(i, j).toString();
+                s += getCase(i, j).toString() + " ";
             }
             s += "\n";
         }

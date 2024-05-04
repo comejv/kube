@@ -1,10 +1,15 @@
 package kube.model.ia;
 
 
+import java.util.ArrayList;
+
 import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.Move;
+import kube.model.MoveAM;
+import kube.model.MoveAW;
+import kube.model.MoveMW;
 import kube.model.Player;
 
 public class IaRandom implements Ia {

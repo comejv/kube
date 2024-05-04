@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import kube.configuration.Config;
@@ -14,6 +15,7 @@ import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.MoveMM;
 import kube.model.MoveMW;
+import kube.model.Player;
 import kube.model.MoveAM;
 import kube.model.MoveAW;
 
@@ -154,8 +156,16 @@ public class KubeTest {
         Kube kube = new Kube();
         kube.fillBag();
         kube.distributeCubesToPlayers();
-        assertEquals(21, kube.getP1().getAvalaibleToBuild().size());
-        assertEquals(21, kube.getP2().getAvalaibleToBuild().size());
+        int sum = 0;
+        for (int n : kube.getP1().getAvalaibleToBuild().values()){
+            sum += n;
+        }
+        assertEquals(21, sum);
+        sum = 0;
+        for (int n : kube.getP2().getAvalaibleToBuild().values()){
+            sum += n;
+        }
+        assertEquals(21, sum);
         assertEquals(11, kube.getBag().size());
     }
 
@@ -257,11 +267,20 @@ public class KubeTest {
         k.getP1().getAdditional().add(Color.WHITE);
     }
 
-    public void initPlayMove(Kube kube){
+    public void initPlayMove(Kube kube) {
         kube.getK3().clear();
         setKubeBase(kube);
         setPlayerOneMountain(kube);
         kube.setCurrentPlayer(kube.getP1());
     }
-    
+
+    @Test
+    public void getListOfMoves() {
+        Kube kube = new Kube();
+        kube.fillBag();
+        kube.fillBase();
+        kube.distributeCubesToPlayers();
+       
+    }
+
 }
