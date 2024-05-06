@@ -133,7 +133,6 @@ public class Mountain {
             }
             for (int j = 0; j < i + 1; j++) {
                 int n = 6 - getCase(i, j).toString().length();
-                s += getCase(i, j).toString() + " ";
                 while (n > 0) {
                     s += " ";
                     n--;
