@@ -19,6 +19,7 @@ public class KubeTest {
 
     @Test
     public void kubeTest() {
+        
         Kube kube = new Kube();
         assertEquals(6, kube.getP1().getMountain().getBaseSize());
         assertEquals(6, kube.getP2().getMountain().getBaseSize());
@@ -31,6 +32,7 @@ public class KubeTest {
 
     @Test
     public void fillBagTest() {
+
         Kube kube = new Kube();
         kube.fillBag();
         ArrayList<Color> bag = kube.getBag();
@@ -64,6 +66,7 @@ public class KubeTest {
 
     @Test
     public void fillBaseTest() {
+
         Kube kube;
         int n = 0;
         while (n < 100000) { // Assume that test 100000 times is enough to test the randomness
@@ -149,6 +152,7 @@ public class KubeTest {
 
     @Test
     public void distributeCubesToPlayersTest() {
+
         Kube kube = new Kube();
         kube.fillBag();
         kube.distributeCubesToPlayers();
@@ -167,9 +171,9 @@ public class KubeTest {
 
     @Test
     public void playMoveTest() {
+
         Kube kube = new Kube();
         setKubeBase(kube);
-        System.out.println(kube.getK3().toString());
         kube.setCurrentPlayer(kube.getP1());
         kube.setPhase(2);
         kube.getP1().getMountain().setCase(0, 0, Color.BLUE);
@@ -257,7 +261,6 @@ public class KubeTest {
         // MoveMA
         initPlayMove(kube);
         setPlayerTwoMountain(kube);
-        Config.debug(kube.isPlayable(new MoveMA(1, 0, Color.RED)));
         assertTrue(kube.playMove(new MoveMA(1, 0, Color.RED)));
 
         initPlayMove(kube);
