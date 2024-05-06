@@ -189,7 +189,7 @@ public class Kube {
     }
 
     // Set current player to the next
-    public void nextPlayer() {
+    private void nextPlayer() {
         if (currentPlayer == p1) {
             currentPlayer = p2;
         } else if (currentPlayer == p2) {
@@ -248,7 +248,7 @@ public class Kube {
         return false;
     }
 
-    public void evomYalp(Move move) {
+    private void evomYalp(Move move) {
         Player player = move.getPlayer();
         Player nextPlayer;
         // Get the other player
@@ -415,7 +415,7 @@ public class Kube {
         return moves;
     }
 
-    public ArrayList<Move> penalitySet() {
+    private ArrayList<Move> penalitySet() {
         ArrayList<Move> moves = new ArrayList<>();
         Player nextPlayer;
         if (getCurrentPlayer() == getP1()) {
