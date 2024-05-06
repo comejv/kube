@@ -37,6 +37,10 @@ public class Mountain {
         return m[x][y];
     }
 
+    public Color getCase(Point p) {
+        return getCase(p.x, p.y);
+    }
+
     public void setCase(int x, int y, Color c) {
         m[x][y] = c;
     }
@@ -50,7 +54,7 @@ public class Mountain {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) != Color.EMPTY && 
-                ((i == 0) || (getCase(i - 1, j) == Color.EMPTY && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
+                (i == 0 || (getCase(i - 1, j) == Color.EMPTY && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
                     r.add(new Point(i, j));
                 }
             }
@@ -124,10 +128,13 @@ public class Mountain {
     public String toString(){
         String s = "";
         for (int i = 0; i < getBaseSize(); i++) {
-          for (int k = 0; k<(getBaseSize()-i)/2; k++)
-            s += " ";
+            for (int space = 0; space < getBaseSize() - i; space++){
+                s += "   ";
+            }
             for (int j = 0; j < i + 1; j++) {
-                if(((i%2)+2) == 1 ){
+                int n = 6 - getCase(i, j).toString().length();
+                s += getCase(i, j).toString() + " ";
+                while (n > 0) {
                     s += " ";
                  }
                 s += getCase(i, j).forDisplay() + " ";

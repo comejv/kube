@@ -1,12 +1,14 @@
-package kube.model;
+package kube.model.move;
 
-public class MoveAW extends Move {
+import kube.model.Color;
+
+public class MoveAA extends Move {
     
     Color color;
 
     //Constructors
-    public MoveAW() {
-        super(Color.WHITE);
+    public MoveAA(Color c) {
+        super(c);
     }
 
     //Setters
@@ -24,13 +26,17 @@ public class MoveAW extends Move {
         return true;
     }
 
-    public boolean isWhite() {
+    public boolean isToAdditionals() {
         return true;
+    }
+    
+    public boolean isWhite() {
+        return color == Color.WHITE;
     }
 
     @Override
     public String toString() {
-        return "MoveAM{" +
+        return "MoveAA{" +
                 "color=" + color +
                 '}';
     }

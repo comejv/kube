@@ -1,6 +1,9 @@
-package kube.model;
+package kube.model.move;
 
 import java.awt.Point;
+
+import kube.model.Color;
+import kube.model.Player;
 
 public abstract class Move {
 
@@ -47,6 +50,10 @@ public abstract class Move {
         return false;
     }
 
+    public boolean isToAdditionnals() {
+        return false;
+    }
+
     public boolean isWhite() {
         return false;
     }
@@ -62,5 +69,21 @@ public abstract class Move {
         s += "(" + getTo().x + "," + getTo().y + ") ";
         s += getColor().toString() + "}";
         return s;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        Move that = (Move) o;
+        if (!this.getClass().equals(that.getClass()))
+            return false;
+        if (getFrom() != null ? !getFrom().equals(that.getFrom()) : that.getFrom() != null)
+            return false;
+        if (getTo() != null ? !getTo().equals(that.getTo()) : that.getTo() != null)
+            return false;
+        return getColor() == that.getColor();
     }
 }

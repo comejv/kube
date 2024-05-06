@@ -1,11 +1,13 @@
 package kube.model.ia;
 
 
+import java.util.ArrayList;
+
 import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
-import kube.model.Move;
 import kube.model.Player;
+import kube.model.move.*;
 
 public class IaRandom implements Ia {
     Kube k3;
@@ -17,12 +19,7 @@ public class IaRandom implements Ia {
     }
 
     public void preparationPhase() {
-        Color c;
-        for (int i = 0; i < player.getMountain().getBaseSize(); i++){
-            for (int j = 0; j < i + 1; j++){
-                c = player.getAvalaibleToBuild().get(0);
-            }
-        }
+
     }
 
     public void gamePhase() {
