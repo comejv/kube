@@ -19,7 +19,7 @@ public class KubeTest {
 
     @Test
     public void kubeTest() {
-        
+
         Kube kube = new Kube();
         assertEquals(6, kube.getP1().getMountain().getBaseSize());
         assertEquals(6, kube.getP2().getMountain().getBaseSize());
@@ -99,6 +99,7 @@ public class KubeTest {
 
         setKubeBase(k);
         setPlayerOneMountain(k);
+        setPlayerTwoMountain(k);
 
         // Checking all the possible moves
         // MoveMM
