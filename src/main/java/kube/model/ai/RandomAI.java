@@ -10,27 +10,23 @@ import kube.model.move.*;
 
 public class RandomAI implements AI {
     Kube k3;
-    Player player;
+    Player iaPlayer;
     Random r;
+
+    public RandomAI(Kube k, Player p, int seed) {
+        k3 = k;
+        iaPlayer = p;
+        r = new Random(seed);
+    }
 
     public RandomAI(Kube k, Player p) {
         k3 = k;
-        player = p;
+        iaPlayer = p;
         r = new Random();
     }
 
     public void preparationPhase() {
-        ArrayList<Color> colArr = new ArrayList<>(player.getAvalaibleToBuild().keySet());
-        for (int i = 0; i < player.getMountain().getBaseSize(); i++) {
-            for (int j = 0; j < i + 1; j++) {
-                int n = r.nextInt(colArr.size());
-                Color c =  colArr.get(n);
-                player.addToMountain(i, j, c);
-                if (!player.isAvailableToBuild(c)){
-                    colArr.remove(n);
-                }
-            }
-        }
+        utilsAI.randomFillMoutain(iaPlayer, r);
     }
 
     public void gamePhase() {
