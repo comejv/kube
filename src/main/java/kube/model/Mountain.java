@@ -136,7 +136,8 @@ public class Mountain {
                 s += getCase(i, j).toString() + " ";
                 while (n > 0) {
                     s += " ";
-                 }
+                    n--;
+                }
                 s += getCase(i, j).forDisplay() + " ";
             }
             s += "\n";
