@@ -1,4 +1,4 @@
-package kube;
+package kube.view;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 import kube.model.*;
 
-public class Textuelle {
+public class TextualMode {
     public static void main(String[] args) {
 
         game();
@@ -29,27 +29,7 @@ public class Textuelle {
                 "-afficher : affiche l'état de la base centrale et de sa montagne");
     }
 
-    public static void randomizeMoutain(Player p){
-            for (int i = 0; i < p.getMountain().getBaseSize(); i++){
-                for (int j = 0; j < i + 1; j++){
-                    p.removeToAvailableToBuild(i, j);
-                }
-            }
-            for (int i = 0; i < p.getMountain().getBaseSize(); i++){
-                for (int j = 0; j < i + 1; j++){
-                    Color c = Color.getRandomColor();
-                    while (p.getAvalaibleToBuild().get(c) == 0){
-                        c = Color.getRandomColor();
-                    }
-                    p.addToMountain(i, j, c);
-                }
-            }
- 
-        for (int i = 0; i < p.getMountain().getBaseSize(); i++){
-            for (int j = 0; j < i + 1; j++){
-            }
-        }
-    }
+
 
     public static void phase1(Player p) {
         Scanner sc = new Scanner(System.in);
