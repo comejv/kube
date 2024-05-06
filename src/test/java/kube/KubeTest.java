@@ -218,7 +218,6 @@ public class KubeTest {
         assertTrue(res);
 
         // MoveAM
-        initPlayMove(kube);
         res = kube.playMove(new MoveAM(7, 6, Color.RED));
         assertTrue(res);
 

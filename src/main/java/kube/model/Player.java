@@ -102,6 +102,10 @@ public class Player {
         return false;
     }
 
+    public boolean isAvailableToBuild(Color c){
+        return getAvalaibleToBuild().get(c) > 0;
+    }
+
     public Color removeFromMountain(Point point) {
         return removeFromMountain(point.x, point.y);
     }

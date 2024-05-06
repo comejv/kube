@@ -124,14 +124,11 @@ public class Kube {
         }
         boolean cubeRemovable = false;
         boolean cubeCompatible = false;
-        if (move.isToAdditionnals()) {
-            // Penality
-            if (move.isFromAdditionals()) {
-                cubeRemovable = nextPlayer.getAdditional().contains(move.getColor());
-            } else {
-                cubeRemovable = nextPlayer.getMountain().removable().contains(move.getFrom()) &&
-                        nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
-            }
+        if (move.isToAdditionnals() && move.isFromAdditionals()) {
+            cubeRemovable = nextPlayer.getAdditional().contains(move.getColor());
+        } else if (move.isToAdditionnals()) {
+            cubeRemovable = nextPlayer.getMountain().removable().contains(move.getFrom()) &&
+                    nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
         } else if (move.isFromAdditionals()) {
             // When we take the cube from the player's additional cubes, checking if the
             // move's cube color is in
@@ -253,7 +250,7 @@ public class Kube {
     public void evomYalp(Move move) {
         Player player = move.getPlayer();
         Player nextPlayer;
-        // Get the other player 
+        // Get the other player
         if (player == getP1()) {
             nextPlayer = getP2();
         } else {
@@ -269,14 +266,14 @@ public class Kube {
             player.getAdditional().remove(ma.getColor());
             nextPlayer.getMountain().setCase(ma.getFrom().x, ma.getFrom().y, ma.getColor());
         } else if (move.isWhite() && move.isFromAdditionals()) {
-            //MoveAW aw = (MoveAW) move; 
+            // MoveAW aw = (MoveAW) move;
             player.addAdditional(Color.WHITE);
             player.setWhiteUsed(player.getWhiteUsed() - 1);
-        } else if (move.isWhite()){
+        } else if (move.isWhite()) {
             MoveMW mw = (MoveMW) move;
             player.addAdditional(mw.getColor());
             player.setWhiteUsed(player.getWhiteUsed() - 1);
-        } else if (move.isFromAdditionals()){
+        } else if (move.isFromAdditionals()) {
             MoveAM am = (MoveAM) move;
             player.addAdditional(am.getColor());
             k3.remove(am.getTo());
@@ -285,7 +282,7 @@ public class Kube {
             player.addToMountain(mm.getFrom(), mm.getColor());
             k3.remove(mm.getTo());
         }
-        // Penality doesn't change the current player 
+        // Penality doesn't change the current player
         if (!move.isToAdditionnals()) {
             setCurrentPlayer(nextPlayer);
         }
