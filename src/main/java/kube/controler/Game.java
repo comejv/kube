@@ -1,9 +1,8 @@
 package kube.controler;
 
 import kube.model.*;
-import kube.model.ia.AI;
-import kube.model.ia.AIRandom;
-import kube.model.move.MoveMW;
+import kube.model.ai.AI;
+import kube.model.ai.AIrandom;
 
 public class Game {
 
@@ -64,14 +63,14 @@ public class Game {
         }
 
         if (getNbPlayers() == 0) {
-            setAI(new AIRandom(kube, kube.getP1()));
-            setAI2(new AIRandom(kube, kube.getP2()));
+            setAI(new AIrandom(kube, kube.getP1()));
+            setAI2(new AIrandom(kube, kube.getP2()));
             getAI().preparationPhase();
             getAI2().preparationPhase();
         }
 
         if (getNbPlayers() == 1) {
-            setAI(new AIRandom(kube, kube.getP2()));
+            setAI(new AIrandom(kube, kube.getP2()));
             getAI().preparationPhase();
         }
 

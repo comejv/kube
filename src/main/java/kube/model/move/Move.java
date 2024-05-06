@@ -50,7 +50,7 @@ public abstract class Move {
         return false;
     }
 
-    public boolean isToAdditionnals() {
+    public boolean isToAdditionals() {
         return false;
     }
 

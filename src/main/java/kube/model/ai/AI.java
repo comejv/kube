@@ -1,4 +1,4 @@
-package kube.model.ia;
+package kube.model.ai;
 
 import kube.model.move.Move;
 

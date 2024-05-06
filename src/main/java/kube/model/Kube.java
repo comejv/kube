@@ -14,6 +14,8 @@ import kube.model.move.MoveAW;
 import kube.model.move.MoveMA;
 import kube.model.move.MoveMM;
 import kube.model.move.MoveMW;
+import kube.configuration.Config;
+import kube.configuration.Config;
 
 public class Kube {
 
@@ -124,14 +126,12 @@ public class Kube {
         }
         boolean cubeRemovable = false;
         boolean cubeCompatible = false;
-        if (move.isToAdditionnals()) {
-            // Penality
-            if (move.isFromAdditionals()) {
-                cubeRemovable = nextPlayer.getAdditional().contains(move.getColor());
-            } else {
-                cubeRemovable = nextPlayer.getMountain().removable().contains(move.getFrom()) &&
-                        nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
-            }
+        if (move.isToAdditionals() && move.isFromAdditionals()) {
+            cubeRemovable = nextPlayer.getAdditional().contains(move.getColor());
+        } else if (move.isToAdditionals()) {
+            System.out.println(nextPlayer.getMountain().removable().contains(move.getFrom()));
+            cubeRemovable = nextPlayer.getMountain().removable().contains(move.getFrom()) &&
+                    nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
         } else if (move.isFromAdditionals()) {
             // When we take the cube from the player's additional cubes, checking if the
             // move's cube color is in
@@ -146,7 +146,7 @@ public class Kube {
             return false;
         }
 
-        if (move.isWhite() || move.isToAdditionnals()) {
+        if (move.isWhite() || move.isToAdditionals()) {
             // White cube is always compatible
             cubeCompatible = true;
         } else if (move.isFromAdditionals() || move.isClassicMove()) {
@@ -253,30 +253,30 @@ public class Kube {
     public void evomYalp(Move move) {
         Player player = move.getPlayer();
         Player nextPlayer;
-        // Get the other player 
+        // Get the other player
         if (player == getP1()) {
             nextPlayer = getP2();
         } else {
             nextPlayer = getP1();
         }
 
-        if (move.isToAdditionnals() && move.isFromAdditionals()) {
+        if (move.isToAdditionals() && move.isFromAdditionals()) {
             MoveAA aa = (MoveAA) move;
             player.getAdditional().remove(aa.getColor());
             nextPlayer.addAdditional(aa.getColor());
-        } else if (move.isToAdditionnals() && !move.isFromAdditionals()) {
+        } else if (move.isToAdditionals() && !move.isFromAdditionals()) {
             MoveMA ma = (MoveMA) move;
             player.getAdditional().remove(ma.getColor());
             nextPlayer.getMountain().setCase(ma.getFrom().x, ma.getFrom().y, ma.getColor());
         } else if (move.isWhite() && move.isFromAdditionals()) {
-            //MoveAW aw = (MoveAW) move; 
+            // MoveAW aw = (MoveAW) move;
             player.addAdditional(Color.WHITE);
             player.setWhiteUsed(player.getWhiteUsed() - 1);
-        } else if (move.isWhite()){
+        } else if (move.isWhite()) {
             MoveMW mw = (MoveMW) move;
             player.addAdditional(mw.getColor());
             player.setWhiteUsed(player.getWhiteUsed() - 1);
-        } else if (move.isFromAdditionals()){
+        } else if (move.isFromAdditionals()) {
             MoveAM am = (MoveAM) move;
             player.addAdditional(am.getColor());
             k3.remove(am.getTo());
@@ -285,8 +285,8 @@ public class Kube {
             player.addToMountain(mm.getFrom(), mm.getColor());
             k3.remove(mm.getTo());
         }
-        // Penality doesn't change the current player 
-        if (!move.isToAdditionnals()) {
+        // Penality doesn't change the current player
+        if (!move.isToAdditionals()) {
             setCurrentPlayer(nextPlayer);
         }
     }
@@ -303,11 +303,24 @@ public class Kube {
         if (!isPlayable(move)) {
             return false;
         }
-        if (move.isToAdditionnals() && move.isFromAdditionals()) {
+        // Catching if the move is a MoveAA (Penality where the player take in oppenent's additionals)
+        if (move.isToAdditionals() && move.isFromAdditionals()) {
+            // Getting out the additional cube from the player's additional cubes
             nextPlayer.getAdditional().remove(color);
+            // Adding the additional cube to the player's mountain
             player.addAdditional(color);
-        } else if (move.isToAdditionnals() && !move.isFromAdditionals()) {
+        } 
+        // Catching if the move is a MoveMA (Penality where the player take in oppenent's mountain)
+        else if (move.isToAdditionals() && !move.isFromAdditionals()) {
+
+            // Getting out the additional cube from the player's mountain
+        } 
+        // Catching if the move is a MoveMA (Penality where the player take in oppenent's mountain)
+        else if (move.isToAdditionals() && !move.isFromAdditionals()) {
+
+            // Getting out the additional cube from the player's mountain
             nextPlayer.getMountain().remove(move.getFrom().x, move.getFrom().y);
+            // Adding the additional cube to the player's additional cubes
             player.addAdditional(color);
         } else if (move.isWhite() && move.isFromAdditionals()) {
 
@@ -317,7 +330,7 @@ public class Kube {
             // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
         }
-        // Catching if the move is about a colored cube or a white cube
+        // Catching if the move is a MoveMW (Placing a white cube from self mountain)
         else if (move.isWhite()) {
             // Getting out the white cube from the player's mountain
             player.getMountain().remove(move.getFrom().x, move.getFrom().y);
@@ -325,7 +338,7 @@ public class Kube {
             // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
         }
-        // Checking if the move is about an additional cube
+        // Catching if the move is a MoveAM (Placing a cube from self additionals on the K3)
         else if (move.isFromAdditionals()) {
 
             // Getting out the additional cube from the player's additional cubes
@@ -339,7 +352,7 @@ public class Kube {
                 setPenality(true);
             }
         }
-        // Checking if the move is a classic move and is playable
+        // Catching if the move is a MoveMM (Placing a cube from self mountain on the K3)
         else if (move.isClassicMove()) {
 
             // Applying the move
@@ -352,7 +365,7 @@ public class Kube {
             }
         }
         move.setPlayer(player);
-        if (!move.isToAdditionnals()) {
+        if (!move.isToAdditionals()) {
             nextPlayer();
         }
         return true;

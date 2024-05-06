@@ -35,7 +35,7 @@ public class MoveMA extends Move {
 
     @Override
     public String toString() {
-        return "MoveMM{" +
+        return "MoveMA{" +
                 "from=" + getFrom() +
                 ", to=" + getTo() +
                 ", color=" + getColor() +

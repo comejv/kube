@@ -1,4 +1,4 @@
-package kube.model.ia;
+package kube.model.ai;
 
 
 import java.util.ArrayList;
@@ -9,11 +9,11 @@ import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.move.*;
 
-public class AIRandom implements AI {
+public class AIrandom implements AI {
     Kube k3;
     Player player;
 
-    public AIRandom(Kube k, Player p){
+    public AIrandom(Kube k, Player p){
         k3 = k;
         player = p;
     }
