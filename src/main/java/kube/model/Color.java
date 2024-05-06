@@ -16,6 +16,16 @@ public enum Color {
 
     int colorCode;
 
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_GRAY = "\u001B[37m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+    public static final String ANSI_WHITE = "\u001B[37m";
+
     // Constructor
     Color(int colorCode) {
         setColorCode(colorCode);
@@ -64,21 +74,21 @@ public enum Color {
     public String forDisplay() {
         switch (this) {
             case EMPTY:
-                return "▦";
+                return " ";
             case WHITE:
-                return "W";
+                return ANSI_WHITE+"▣"+ANSI_RESET;
             case NATURAL:
-                return "N";
+                return ANSI_GRAY+"▣"+ANSI_RESET;
             case RED:
-                return "R";
+                return ANSI_RED+"▣"+ANSI_RESET;
             case GREEN:
-                return "G";
+                return ANSI_GREEN + "▣" + ANSI_RESET;
             case BLUE:
-                return "B";
+                return ANSI_BLUE + "▣" + ANSI_RESET;
             case YELLOW:
-                return "Y";
+                return ANSI_YELLOW + "▣" + ANSI_RESET;
             case BLACK:
-                return "K";
+                return ANSI_BLACK + "▣" + ANSI_RESET;
             default:
                 return " ";
         }

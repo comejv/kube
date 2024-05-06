@@ -57,8 +57,9 @@ public class Mountain {
         ArrayList<Point> r = new ArrayList<>();
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (getCase(i, j) != Color.EMPTY && 
-                (i == 0 || (getCase(i - 1, j) == Color.EMPTY && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
+                if (getCase(i, j) != Color.EMPTY &&
+                        (i == 0 || (getCase(i - 1, j) == Color.EMPTY
+                                && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
                     r.add(new Point(i, j));
                 }
             }
@@ -75,7 +76,7 @@ public class Mountain {
                 } else if (getCase(i, j) == Color.EMPTY
                         && (getCase(i + 1, j) != Color.EMPTY && (getCase(i + 1, j + 1) != Color.EMPTY))) {
                     if (c == Color.NATURAL || getCase(i + 1, j) == c || (getCase(i + 1, j) == Color.NATURAL) ||
-                    getCase(i + 1, j + 1) == c|| (getCase(i + 1, j + 1) == Color.NATURAL)) {
+                            getCase(i + 1, j + 1) == c || (getCase(i + 1, j + 1) == Color.NATURAL)) {
                         comp.add(new Point(i, j));
                     }
                 }
@@ -129,22 +130,19 @@ public class Mountain {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String s = "";
+        boolean space = false;
         for (int i = 0; i < getBaseSize(); i++) {
-            for (int space = 0; space < getBaseSize() - i; space++){
-                s += "   ";
+            for(int j = 0; j < getBaseSize() - i - 1; j++) {
+                s += " ";
             }
             for (int j = 0; j < i + 1; j++) {
-                int n = 6 - getCase(i, j).toString().length();
-                s += getCase(i, j).toString() + " ";
-                while (n > 0) {
-                    s += " ";
-                    n--;
-                }
                 s += getCase(i, j).forDisplay() + " ";
             }
             s += "\n";
+
+            space = !space;
         }
         return s;
     }
