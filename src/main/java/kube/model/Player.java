@@ -110,6 +110,12 @@ public class Player {
         return removeFromMountain(point.x, point.y);
     }
 
+    public Color removeFromMountain(int l, int c) {
+        Color col = getMountain().getCase(l, c);
+        getMountain().remove(l, c);
+        return col;
+    }
+
     public void removeToAvailableToBuild(Point p) {
         removeToAvailableToBuild(p.x, p.y);
     }
@@ -120,12 +126,6 @@ public class Player {
             getMountain().remove(l, c);
             getAvalaibleToBuild().put(color, getAvalaibleToBuild().get(color) + 1);
         }
-    }
-
-    public Color removeFromMountain(int l, int c) {
-        Color col = getMountain().getCase(l, c);
-        getMountain().remove(l, c);
-        return col;
     }
 
     public void clearMountain() {
