@@ -78,7 +78,7 @@ public class MoveTest {
     }
 
     @Test
-    public void isToAdditionnalsTest(){
+    public void isToAdditionalsTest(){
         MoveAA aa = new MoveAA(Color.RED);
         assertTrue(aa.isToAdditionals());
         assertFalse(aa.isClassicMove());
