@@ -124,11 +124,17 @@ public class Game {
         return getKube().getK3().toString();
     }
 
-    public void swap(int x1, int y1, int x2, int y2) {
+    public String swap(int x1, int y1, int x2, int y2) {
+        String s = "";
+        if (x1 < 0 || x1 > 5 || y1 < 0 || y1 > x1 || x2 < 0 || x2 > 5 || y2 < 0 || y2 > x2) {
+            return "Invalid coordinates";
+        }
+        s += "Swap ("+getKube().getCurrentPlayer().getMountain().getCase(x1, y1).toString()+") and (" + getKube().getCurrentPlayer().getMountain().getCase(x2, y2).toString()+")\n";
         Color col = getKube().getCurrentPlayer().getMountain().getCase(x1, y1);
         getKube().getCurrentPlayer().getMountain().setCase(x1, y1,
                 getKube().getCurrentPlayer().getMountain().getCase(x2, y2));
         getKube().getCurrentPlayer().getMountain().setCase(x2, y2, col);
+        return s;
     }
 
     public void nextPlayer() {

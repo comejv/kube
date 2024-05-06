@@ -66,11 +66,12 @@ public class TextualMode {
 
     public void phase1() {
         String s;
-        System.out.print(game.getKube().getK3().toString());
-        System.out.println("Première phase - Construction de la montagne du joueur " + game.getKube().getCurrentPlayer() + " :");
+        boolean end = false;
+        System.out.println("Première phase - Construction de la montagne du joueur " + game.getKube().getCurrentPlayer().getId() + " :");
         afficherCommandePahse1();
         System.out.println("Votre montagne tirée de manière aléatoire :\n" + game.getKube().getCurrentPlayer().getMountain().toString());
-        while (sc.hasNextLine() && (s = sc.nextLine()) != "valider"){
+        while (sc.hasNextLine() && !end) {
+            s = sc.nextLine();
             switch (s){
                 case "random":
                     game.randomizeMoutain();
@@ -89,12 +90,14 @@ public class TextualMode {
                         coords = s.split(" ");
                         int x2 = Integer.parseInt(coords[0]);
                         int y2 = Integer.parseInt(coords[1]);
-                        game.swap(x1, y1, x2, y2);
+                        System.out.println(game.swap(x1, y1, x2, y2));
                     } catch (Exception e) {
                         System.out.println("Erreur de saisie");
                         break;
                     }
                     break;
+                case "valider":
+                    end = true;
                 default:
                     System.out.println("Commande inconnue");
                     break;

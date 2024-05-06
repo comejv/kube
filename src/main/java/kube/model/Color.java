@@ -18,8 +18,8 @@ public enum Color {
 
 
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BROWN = "\u001B[33m";
-    public static final String ANSI_GRAY = "\u001B[37m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+    public static final String ANSI_DARK_GRAY = "\u001B[90m";
     public static final String ANSI_RED = "\u001B[31m";
     public static final String ANSI_GREEN = "\u001B[32m";
     public static final String ANSI_YELLOW = "\u001B[33m";
@@ -78,7 +78,7 @@ public enum Color {
             case WHITE:
                 return ANSI_WHITE+"▣"+ANSI_RESET;
             case NATURAL:
-                return ANSI_GRAY+"▣"+ANSI_RESET;
+                return ANSI_DARK_GRAY+"▣"+ANSI_RESET;
             case RED:
                 return ANSI_RED+"▣"+ANSI_RESET;
             case GREEN:
@@ -88,7 +88,7 @@ public enum Color {
             case YELLOW:
                 return ANSI_YELLOW + "▣" + ANSI_RESET;
             case BLACK:
-                return ANSI_BROWN + "▣" + ANSI_RESET;
+                return ANSI_PURPLE + "▣" + ANSI_RESET;
             default:
                 return " ";
         }
