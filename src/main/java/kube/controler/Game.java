@@ -63,14 +63,14 @@ public class Game {
         }
 
         if (getNbPlayers() == 0) {
-            setAI(new AIRandom(kube, kube.getP1()));
-            setAI2(new AIRandom(kube, kube.getP2()));
+            setAI(new AIrandom(kube, kube.getP1()));
+            setAI2(new AIrandom(kube, kube.getP2()));
             getAI().preparationPhase();
             getAI2().preparationPhase();
         }
 
         if (getNbPlayers() == 1) {
-            setAI(new AIRandom(kube, kube.getP2()));
+            setAI(new AIrandom(kube, kube.getP2()));
             getAI().preparationPhase();
         }
 
