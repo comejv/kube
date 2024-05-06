@@ -1,4 +1,4 @@
-package kube;
+package kube.view;
 
 import java.awt.Point;
 import java.util.ArrayList;

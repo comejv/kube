@@ -9,11 +9,11 @@ import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.move.*;
 
-public class IaRandom implements Ia {
+public class AIRandom implements AI {
     Kube k3;
     Player player;
 
-    public IaRandom(Kube k, Player p){
+    public AIRandom(Kube k, Player p){
         k3 = k;
         player = p;
     }
