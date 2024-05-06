@@ -99,6 +99,8 @@ public class Game {
         }
     }
 
+
+    //For Whites
     public boolean playMove(int l,int c){
         Color color = getKube().getCurrentPlayer().getMountain().getCase(l, c);
         if (color == Color.EMPTY) {
@@ -111,10 +113,24 @@ public class Game {
         return false;
     }
 
+    //Basic case
     public boolean playMove(int l,int c,int tl, int tc){
-
-
-        return false;
+        return getKube().playMove(new MoveMM(l,c,tl,tc, getKube().getCurrentPlayer().getMountain().getCase(l, c)));
     }
+
+    //For Additionals To Additionals
+    public boolean playMove(Color color){
+        return getKube().playMove(new MoveAA(color));
+    }
+
+    //For Additionals To Mountain
+    public boolean playMove(int l,int c,Color color){
+        return getKube().playMove(new MoveAM(l,c,color));
+    }
+
+
+
+
+
 
 }
