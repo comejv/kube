@@ -2,7 +2,7 @@ package kube.controler;
 
 import kube.model.*;
 import kube.model.ai.AI;
-import kube.model.ai.AIrandom;
+import kube.model.ai.RandomAI;
 
 public class Game {
 
@@ -63,14 +63,14 @@ public class Game {
         }
 
         if (getNbPlayers() == 0) {
-            setAI(new AIrandom(kube, kube.getP1()));
-            setAI2(new AIrandom(kube, kube.getP2()));
+            setAI(new RandomAI(kube, kube.getP1()));
+            setAI2(new RandomAI(kube, kube.getP2()));
             getAI().preparationPhase();
             getAI2().preparationPhase();
         }
 
         if (getNbPlayers() == 1) {
-            setAI(new AIrandom(kube, kube.getP2()));
+            setAI(new RandomAI(kube, kube.getP2()));
             getAI().preparationPhase();
         }
 
