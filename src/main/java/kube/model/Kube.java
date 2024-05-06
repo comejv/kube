@@ -26,6 +26,7 @@ public class Kube {
     // Constructor
     public Kube() {
 
+        setBaseSize(9);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
         setP1(new Player(1));
@@ -33,7 +34,7 @@ public class Kube {
         setHistory(new History());
         setPhase(preparationPhase);
         setPenality(false);
-        setBaseSize(9);
+        setCurrentPlayer(getP1());//TODO
     }
 
     // Getters
@@ -213,7 +214,7 @@ public class Kube {
     }
 
     // Set current player to the next
-    private void nextPlayer() {
+    public void nextPlayer() {
 
         if (currentPlayer == p1) {
 
