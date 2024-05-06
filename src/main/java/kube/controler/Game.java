@@ -79,7 +79,7 @@ public class Game {
 
     }
 
-    public static void randomizeMoutain(Player p) {
+    public void randomizeMoutain(Player p) {
         Mountain m = p.getMountain();
         for (int i = 0; i < m.getBaseSize(); i++) {
             for (int j = 0; j < m.getBaseSize(); j++) {
@@ -96,6 +96,24 @@ public class Game {
                 }
             }
         }
+    }
+
+    public boolean playMove(int l,int c){
+        Color color = getKube().getCurrentPlayer().getMountain().getCase(l, c);
+        if (color == Color.EMPTY) {
+            return false;
+        }
+        else if (color == Color.WHITE){
+            return getKube().playMove(new MoveMW(l,c));
+        }
+
+        return false;
+    }
+
+    public boolean playMove(int l,int c,int tl, int tc){
+
+
+        return false;
     }
 
 }
