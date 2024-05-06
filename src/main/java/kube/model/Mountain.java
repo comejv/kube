@@ -130,10 +130,16 @@ public class Mountain {
                 if(((i%2)+2) == 1 ){
                     s += " ";
                  }
-                s += getCase(i, j).toString();
+                s += getCase(i, j).forDisplay() + " ";
             }
             s += "\n";
         }
+        return s;
+    }
+
+    public String forDisplay() {
+        String s = "";
+        // TODO: Implement this method
         return s;
     }
 }

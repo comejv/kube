@@ -219,10 +219,6 @@ public class KubeTest {
 
         // MoveAW
         initPlayMove(kube);
-        MoveAW aw = new MoveAW();
-        Config.debug(kube.isPlayable(aw));
-        Config.debug(aw.isFromAdditionals());
-        Config.debug(aw.isWhite());
         res = kube.playMove(new MoveAW());
         assertTrue(res);
     }

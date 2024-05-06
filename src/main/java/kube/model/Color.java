@@ -61,4 +61,27 @@ public enum Color {
         }
     };
 
+    public String forDisplay() {
+        switch (this) {
+            case EMPTY:
+                return "▦";
+            case WHITE:
+                return "W";
+            case NATURAL:
+                return "N";
+            case RED:
+                return "R";
+            case GREEN:
+                return "G";
+            case BLUE:
+                return "B";
+            case YELLOW:
+                return "Y";
+            case BLACK:
+                return "K";
+            default:
+                return " ";
+        }
+    }
+
 }
