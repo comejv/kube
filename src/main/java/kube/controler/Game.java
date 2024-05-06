@@ -3,6 +3,7 @@ package kube.controler;
 import kube.model.*;
 import kube.model.ai.AI;
 import kube.model.ai.RandomAI;
+import kube.model.move.*;
 
 public class Game {
 
