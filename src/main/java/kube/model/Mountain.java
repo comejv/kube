@@ -45,6 +45,10 @@ public class Mountain {
         m[x][y] = c;
     }
 
+    public void remove(Point p) {
+        remove(p.x, p.y);
+    }
+
     public void remove(int x, int y) {
         setCase(x, y, Color.EMPTY);
     }

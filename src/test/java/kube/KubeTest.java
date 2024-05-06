@@ -167,7 +167,6 @@ public class KubeTest {
 
     @Test
     public void playMoveTest() {
-
         Kube kube = new Kube();
         setKubeBase(kube);
         System.out.println(kube.getK3().toString());

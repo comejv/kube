@@ -156,7 +156,6 @@ public class Kube {
             // Should never happen
             return false;
         }
-
         return cubeRemovable && cubeCompatible;
     }
 
@@ -222,7 +221,7 @@ public class Kube {
         }
         p1.setAvalaibleToBuild(p1Cubes);
         p2.setAvalaibleToBuild(p2Cubes);
-    }   
+    }
 
     public boolean playMove(Move move) {
         if (playMoveWithoutHistory(move)) {
@@ -230,6 +229,66 @@ public class Kube {
             return true;
         }
         return false;
+    }
+
+    public boolean unplay() {
+        if (getHistory().canUndo()) {
+            Move c = getHistory().undoMove();
+            if (c == null) {
+                return false;
+            }
+            evomYalp(c);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean replay() {
+        if (getHistory().canRedo()) {
+            return playMoveWithoutHistory(getHistory().redoMove());
+        }
+        return false;
+    }
+
+    public void evomYalp(Move move) {
+        Player player = move.getPlayer();
+        Player nextPlayer;
+        // Get the other player 
+        if (player == getP1()) {
+            nextPlayer = getP2();
+        } else {
+            nextPlayer = getP1();
+        }
+
+        if (move.isToAdditionnals() && move.isFromAdditionals()) {
+            MoveAA aa = (MoveAA) move;
+            player.getAdditional().remove(aa.getColor());
+            nextPlayer.addAdditional(aa.getColor());
+        } else if (move.isToAdditionnals() && !move.isFromAdditionals()) {
+            MoveMA ma = (MoveMA) move;
+            player.getAdditional().remove(ma.getColor());
+            nextPlayer.getMountain().setCase(ma.getFrom().x, ma.getFrom().y, ma.getColor());
+        } else if (move.isWhite() && move.isFromAdditionals()) {
+            //MoveAW aw = (MoveAW) move; 
+            player.addAdditional(Color.WHITE);
+            player.setWhiteUsed(player.getWhiteUsed() - 1);
+        } else if (move.isWhite()){
+            MoveMW mw = (MoveMW) move;
+            player.addAdditional(mw.getColor());
+            player.setWhiteUsed(player.getWhiteUsed() - 1);
+        } else if (move.isFromAdditionals()){
+            MoveAM am = (MoveAM) move;
+            player.addAdditional(am.getColor());
+            k3.remove(am.getTo());
+        } else if (move.isClassicMove()) {
+            MoveMM mm = (MoveMM) move;
+            player.addToMountain(mm.getFrom(), mm.getColor());
+            k3.remove(mm.getTo());
+        }
+        // Penality doesn't change the current player 
+        if (!move.isToAdditionnals()) {
+            setCurrentPlayer(nextPlayer);
+        }
     }
 
     public boolean playMoveWithoutHistory(Move move) {
@@ -251,7 +310,7 @@ public class Kube {
             nextPlayer.getMountain().remove(move.getFrom().x, move.getFrom().y);
             player.addAdditional(color);
         } else if (move.isWhite() && move.isFromAdditionals()) {
-            
+
             // Getting out the additional white cube from the player's additional cubes
             player.getAdditional().remove(color);
 
@@ -292,7 +351,7 @@ public class Kube {
                 setPenality(true);
             }
         }
-
+        move.setPlayer(player);
         if (!move.isToAdditionnals()) {
             nextPlayer();
         }
@@ -309,9 +368,9 @@ public class Kube {
 
     // Method that return the list of moves available for the current player
     public ArrayList<Move> moveSet() {
-        if (getPenality()){
+        if (getPenality()) {
             return penalitySet();
-        } 
+        }
         ArrayList<Move> moves = new ArrayList<>();
         // List MM/MW moves
         for (Point start : getCurrentPlayer().getMountain().removable()) {
@@ -344,18 +403,18 @@ public class Kube {
     public ArrayList<Move> penalitySet() {
         ArrayList<Move> moves = new ArrayList<>();
         Player nextPlayer;
-        if (getCurrentPlayer() == getP1()){
+        if (getCurrentPlayer() == getP1()) {
             nextPlayer = getP2();
         } else {
             nextPlayer = getP1();
         }
         // List AA
-        for (Color c : nextPlayer.getAdditional()){
+        for (Color c : nextPlayer.getAdditional()) {
             MoveAA aa = new MoveAA(c);
             moves.add(aa);
         }
-        // List MA 
-        for (Point p : nextPlayer.getMountain().removable()){
+        // List MA
+        for (Point p : nextPlayer.getMountain().removable()) {
             Color c = nextPlayer.getMountain().getCase(p);
             MoveMA ma = new MoveMA(p, c);
             moves.add(ma);
