@@ -19,7 +19,7 @@ public class RandomAI implements AI {
     }
 
     public void preparationPhase() {
-
+        ArrayList<Color> colArr = new ArrayList<>(player.getAvalaibleToBuild().keySet());
     }
 
     public void gamePhase() {
