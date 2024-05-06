@@ -308,9 +308,9 @@ public class Kube {
     }
 
     // Method that return the list of moves available for the current player
-    public ArrayList<Move> ensMove() {
+    public ArrayList<Move> moveSet() {
         if (getPenality()){
-            return ensPenality();
+            return penalitySet();
         } 
         ArrayList<Move> moves = new ArrayList<>();
         // List MM/MW moves
@@ -341,7 +341,7 @@ public class Kube {
         return moves;
     }
 
-    public ArrayList<Move> ensPenality() {
+    public ArrayList<Move> penalitySet() {
         ArrayList<Move> moves = new ArrayList<>();
         Player nextPlayer;
         if (getCurrentPlayer() == getP1()){

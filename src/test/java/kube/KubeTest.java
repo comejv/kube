@@ -296,7 +296,7 @@ public class KubeTest {
         kube.getP1().addAdditional(Color.WHITE);
         kube.getP1().addAdditional(Color.YELLOW);
         kube.setCurrentPlayer(kube.getP1());
-        ArrayList<Move> moves = kube.ensMove();
+        ArrayList<Move> moves = kube.moveSet();
         assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 0), Color.BLACK)));
         assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 2), Color.BLACK)));
         assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 3), Color.BLACK)));
