@@ -2,7 +2,7 @@ package kube.controler;
 
 import kube.model.*;
 import kube.model.ai.AI;
-import kube.model.ai.AIRandom;
+import kube.model.ai.AIrandom;
 
 public class Game {
 
