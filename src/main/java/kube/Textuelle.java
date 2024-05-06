@@ -44,13 +44,9 @@ public class Textuelle {
                     p.addToMountain(i, j, c);
                 }
             }
-            
-        }
  
-        Collections.shuffle(c);
         for (int i = 0; i < p.getMountain().getBaseSize(); i++){
             for (int j = 0; j < i + 1; j++){
-                m[i][j]
             }
         }
     }
