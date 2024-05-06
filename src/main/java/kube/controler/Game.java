@@ -52,7 +52,6 @@ public class Game {
     }
 
     // Methods
-
     public void initGame() {
         getKube().fillBag();
         getKube().fillBase();
