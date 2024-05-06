@@ -129,7 +129,6 @@ public class Kube {
         if (move.isToAdditionals() && move.isFromAdditionals()) {
             cubeRemovable = nextPlayer.getAdditional().contains(move.getColor());
         } else if (move.isToAdditionals()) {
-            System.out.println(nextPlayer.getMountain().removable().contains(move.getFrom()));
             cubeRemovable = nextPlayer.getMountain().removable().contains(move.getFrom()) &&
                     nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
         } else if (move.isFromAdditionals()) {
