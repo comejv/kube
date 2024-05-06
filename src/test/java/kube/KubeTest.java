@@ -199,73 +199,100 @@ public class KubeTest {
         assertEquals(1, kube.getCurrentPlayer().getId());
         assertEquals(Color.BLUE, kube.getP1().getMountain().getCase(0, 0));
 
-        // Move a cube on the right place
-        setPlayerOneMountain(kube);
+        // Move a cube with the wrong color
+        res = kube.playMove(new MoveMM(0, 0, 7, 0, Color.RED));
+        assertFalse(res);
+        assertEquals(0, kube.getHistory().getDone().size());
+        assertEquals(0, kube.getHistory().getUndone().size());
+        assertEquals(1, kube.getCurrentPlayer().getId());
+        assertEquals(Color.BLUE, kube.getP1().getMountain().getCase(0, 0));
 
+        // Move a cube on the right place
         // MoveMW
         initPlayMove(kube);
-        res = kube.playMove(new MoveMW(1, 1));
-        assertTrue(res);
+        assertTrue(kube.playMove(new MoveMW(1, 1)));
 
         // MoveMM
         initPlayMove(kube);
-        res = kube.playMove(new MoveMM(1, 0, 7, 0, Color.BLUE));
-        assertTrue(res);
+        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 0, Color.BLUE)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 5, Color.BLUE)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 6, Color.BLUE)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 7, Color.BLUE)));
 
         // MoveAM
         initPlayMove(kube);
-        res = kube.playMove(new MoveAM(7, 0, Color.BLUE));
-        assertTrue(res);
+        assertTrue(kube.playMove(new MoveAM(7, 0, Color.BLUE)));
 
-        // MoveAM
-        res = kube.playMove(new MoveAM(7, 6, Color.RED));
-        assertTrue(res);
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveAM(7, 5, Color.BLUE)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveAM(7, 6, Color.BLUE)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveAM(7, 7, Color.BLUE)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveAM(7, 0, Color.RED)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveAM(7, 1, Color.RED)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveAM(7, 5, Color.RED)));
+
+        initPlayMove(kube);
+        assertTrue(kube.playMove(new MoveAM(7, 6, Color.RED)));
 
         // MoveAW
         initPlayMove(kube);
-        res = kube.playMove(new MoveAW());
-        assertTrue(res);
+        assertTrue(kube.playMove(new MoveAW()));
+
+        // MoveMA
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        Config.debug(kube.isPlayable(new MoveMA(1, 0, Color.RED)));
+        assertTrue(kube.playMove(new MoveMA(1, 0, Color.RED)));
+
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        assertTrue(kube.playMove(new MoveMA(1, 1, Color.GREEN)));
+
+        // MoveAA
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        assertTrue(kube.playMove(new MoveAA(Color.RED)));
+
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        assertTrue(kube.playMove(new MoveAA(Color.GREEN)));
+
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        assertTrue(kube.playMove(new MoveAA(Color.YELLOW)));
+
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        assertTrue(kube.playMove(new MoveAA(Color.BLACK)));
+
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        assertTrue(kube.playMove(new MoveAA(Color.NATURAL)));
+
+        initPlayMove(kube);
+        setPlayerTwoMountain(kube);
+        assertTrue(kube.playMove(new MoveAA(Color.WHITE)));
     }
-
-    public void setKubeBase(Kube k) {
-
-        k.getK3().setCase(8, 0, Color.BLUE);
-        k.getK3().setCase(8, 1, Color.RED);
-        k.getK3().setCase(8, 2, Color.GREEN);
-        k.getK3().setCase(8, 3, Color.YELLOW);
-        k.getK3().setCase(8, 4, Color.BLACK);
-        k.getK3().setCase(8, 5, Color.BLACK);
-        k.getK3().setCase(8, 6, Color.NATURAL);
-        k.getK3().setCase(8, 7, Color.BLUE);
-        k.getK3().setCase(8, 8, Color.GREEN);
-    }
-
-    public void setPlayerOneMountain(Kube k) {
-        Mountain m = new Mountain(3);
-
-        m.setCase(1, 0, Color.BLUE);
-        m.setCase(1, 1, Color.WHITE);
-        m.setCase(2, 0, Color.YELLOW);
-        m.setCase(2, 1, Color.WHITE);
-        m.setCase(2, 2, Color.BLUE);
-
-        k.getP1().setMountain(m);
-
-        k.getP1().getAdditional().add(Color.BLUE);
-        k.getP1().getAdditional().add(Color.RED);
-        k.getP1().getAdditional().add(Color.NATURAL);
-        k.getP1().getAdditional().add(Color.WHITE);
-    }
-
-    public void initPlayMove(Kube kube) {
-        kube.getK3().clear();
-        setKubeBase(kube);
-        setPlayerOneMountain(kube);
-        kube.setCurrentPlayer(kube.getP1());
-    }
-
+    
     @Test
     public void testSeededBag() {
+
         Kube kube = new Kube();
         kube.fillBag(1);
         Kube kube2 = new Kube();
@@ -277,24 +304,27 @@ public class KubeTest {
 
     @Test
     public void testMoveList() {
+
         Kube kube = new Kube();
         kube.fillBag(1);
         kube.fillBase();
         kube.distributeCubesToPlayers();
         Color[][] mountainP1 = new Color[][] {
-                { Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
-                { Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
-                { Color.EMPTY, Color.BLACK, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
-                { Color.RED, Color.BLUE, Color.GREEN, Color.EMPTY, Color.EMPTY, Color.EMPTY },
-                { Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.EMPTY, Color.EMPTY },
-                { Color.RED, Color.BLUE, Color.GREEN, Color.NATURAL, Color.YELLOW, Color.WHITE }
+            { Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+            { Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+            { Color.EMPTY, Color.BLACK, Color.EMPTY, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+            { Color.RED, Color.BLUE, Color.GREEN, Color.EMPTY, Color.EMPTY, Color.EMPTY },
+            { Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.EMPTY, Color.EMPTY },
+            { Color.RED, Color.BLUE, Color.GREEN, Color.NATURAL, Color.YELLOW, Color.WHITE }
         };
+
         kube.getP1().getMountain().setMountain(mountainP1);
         kube.getP1().addAdditional(Color.NATURAL);
         kube.getP1().addAdditional(Color.WHITE);
         kube.getP1().addAdditional(Color.YELLOW);
         kube.setCurrentPlayer(kube.getP1());
         ArrayList<Move> moves = kube.moveSet();
+
         assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 0), Color.BLACK)));
         assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 2), Color.BLACK)));
         assertTrue(moves.contains(new MoveMM(new Point(2, 1), new Point(7, 3), Color.BLACK)));
@@ -314,5 +344,63 @@ public class KubeTest {
         assertTrue(moves.contains(new MoveAM(new Point(7, 6), Color.YELLOW)));
         assertTrue(moves.contains(new MoveAM(new Point(7, 7), Color.YELLOW)));
     }
+    
+    public void setKubeBase(Kube k) {
 
+        k.getK3().setCase(8, 0, Color.BLUE);
+        k.getK3().setCase(8, 1, Color.RED);
+        k.getK3().setCase(8, 2, Color.GREEN);
+        k.getK3().setCase(8, 3, Color.YELLOW);
+        k.getK3().setCase(8, 4, Color.BLACK);
+        k.getK3().setCase(8, 5, Color.BLACK);
+        k.getK3().setCase(8, 6, Color.NATURAL);
+        k.getK3().setCase(8, 7, Color.BLUE);
+        k.getK3().setCase(8, 8, Color.GREEN);
+    }
+
+    public void setPlayerOneMountain(Kube k) {
+
+        Mountain m = new Mountain(3);
+
+        m.setCase(1, 0, Color.BLUE);
+        m.setCase(1, 1, Color.WHITE);
+        m.setCase(2, 0, Color.YELLOW);
+        m.setCase(2, 1, Color.WHITE);
+        m.setCase(2, 2, Color.BLUE);
+
+        k.getP1().setMountain(m);
+
+        k.getP1().getAdditional().add(Color.BLUE);
+        k.getP1().getAdditional().add(Color.RED);
+        k.getP1().getAdditional().add(Color.NATURAL);
+        k.getP1().getAdditional().add(Color.WHITE);
+    }
+
+    public void setPlayerTwoMountain(Kube k) {
+
+        Mountain m = new Mountain(3);
+
+        m.setCase(1, 0, Color.RED);
+        m.setCase(1, 1, Color.GREEN);
+        m.setCase(2, 0, Color.BLACK);
+        m.setCase(2, 1, Color.GREEN);
+        m.setCase(2, 2, Color.RED);
+
+        k.getP2().setMountain(m);
+
+        k.getP2().getAdditional().add(Color.GREEN);
+        k.getP2().getAdditional().add(Color.YELLOW);
+        k.getP2().getAdditional().add(Color.BLACK);
+        k.getP2().getAdditional().add(Color.RED);
+        k.getP2().getAdditional().add(Color.NATURAL);
+        k.getP2().getAdditional().add(Color.WHITE);
+    }
+
+    public void initPlayMove(Kube kube) {
+
+        kube.getK3().clear();
+        setKubeBase(kube);
+        setPlayerOneMountain(kube);
+        kube.setCurrentPlayer(kube.getP1());
+    }
 }
