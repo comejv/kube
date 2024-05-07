@@ -10,7 +10,7 @@ public class MoveMM extends Move {
     private Point from;
     private Point to;
 
-    //Constructors
+    // Constructors
     public MoveMM(Point from, Point to, Color color) {
         super(color);
         setFrom(from);
@@ -21,7 +21,7 @@ public class MoveMM extends Move {
         this(new Point(fromX, fromY), new Point(toX, toY), color);
     }
 
-    //Setters
+    // Setters
     public void setFrom(Point from) {
         this.from = from;
     }
@@ -30,7 +30,7 @@ public class MoveMM extends Move {
         this.to = to;
     }
 
-    //Getters
+    // Getters
     public Point getFrom() {
         return from;
     }
@@ -39,7 +39,7 @@ public class MoveMM extends Move {
         return to;
     }
 
-    //Methods
+    // Methods
     public boolean isClassicMove() {
         return true;
     }

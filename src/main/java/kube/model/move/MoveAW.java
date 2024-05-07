@@ -3,25 +3,25 @@ package kube.model.move;
 import kube.model.Color;
 
 public class MoveAW extends Move {
-    
+
     Color color;
 
-    //Constructors
+    // Constructors
     public MoveAW() {
         super(Color.WHITE);
     }
 
-    //Setters
+    // Setters
     public void setColor(Color color) {
         this.color = color;
     }
 
-    //Getters
+    // Getters
     public Color getColor() {
         return color;
     }
 
-    //Methods
+    // Methods
     public boolean isFromAdditionals() {
         return true;
     }

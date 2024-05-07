@@ -39,7 +39,7 @@ public enum Color {
 
     // Methods
     public static Color getColor(int colorCode) {
-        
+
         for (Color c : Color.values()) {
 
             if (c.getColorCode() == colorCode) {
@@ -59,7 +59,7 @@ public enum Color {
         Random r = new Random();
         return Color.values()[r.nextInt(Color.values().length)];
     }
-    
+
     public static Comparator<Color> compareByValue = new Comparator<Color>() {
 
         @Override

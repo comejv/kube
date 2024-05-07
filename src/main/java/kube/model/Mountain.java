@@ -135,7 +135,7 @@ public class Mountain {
         boolean space = false;
         for (int i = 0; i < getBaseSize(); i++) {
             s += i + " ";
-            for(int j = 0; j < getBaseSize() - i - 1; j++) {
+            for (int j = 0; j < getBaseSize() - i - 1; j++) {
                 s += " ";
             }
             for (int j = 0; j < i + 1; j++) {
@@ -146,7 +146,7 @@ public class Mountain {
             space = !space;
         }
         for (int i = 0; i < getBaseSize(); i++) {
-            s +=" "+ i;
+            s += " " + i;
         }
 
         return s;

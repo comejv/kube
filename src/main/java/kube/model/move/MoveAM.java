@@ -9,7 +9,7 @@ public class MoveAM extends Move {
     Color color;
     Point to;
 
-    //Constructors
+    // Constructors
     public MoveAM(Point to, Color color) {
         super();
         setColor(color);
@@ -20,7 +20,7 @@ public class MoveAM extends Move {
         this(new Point(x, y), color);
     }
 
-    //Setters
+    // Setters
     public void setColor(Color color) {
         this.color = color;
     }
@@ -29,7 +29,7 @@ public class MoveAM extends Move {
         this.to = to;
     }
 
-    //Getters
+    // Getters
     public Color getColor() {
         return color;
     }
@@ -38,7 +38,7 @@ public class MoveAM extends Move {
         return to;
     }
 
-    //Methods
+    // Methods
     public boolean isFromAdditionals() {
         return true;
     }
