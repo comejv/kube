@@ -8,7 +8,6 @@ import kube.model.Player;
 
 public class utilsAI {
     public static void randomFillMountain(Player player, Random r) {
-        //TODO : Fix with AddToMountain method
 
         ArrayList<Color> colArr= new ArrayList<>();
         //If the Mountain is already build 

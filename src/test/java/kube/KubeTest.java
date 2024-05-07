@@ -213,7 +213,6 @@ public class KubeTest {
         lastElementIndex = kube.getHistory().getDone().size() - 1;
         assertEquals(mm, kube.getHistory().getDone().get(lastElementIndex));
 
-
         initPlayMove(kube);
         mm = new MoveMM(1, 0, 7, 5, Color.BLUE);
         assertTrue(kube.playMove(mm));
