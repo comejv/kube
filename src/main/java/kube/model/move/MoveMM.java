@@ -47,9 +47,9 @@ public class MoveMM extends Move {
     @Override
     public String toString() {
         return "MoveMM{" +
-                "from=" + getFrom() +
-                ", to=" + getTo() +
-                ", color=" + getColor() +
+                "Couleur " + getColor() +
+                " De (" + getFrom().x + ", " + getFrom().y + ")" +
+                "Vers ( " + getTo().x + ", " + getTo().y + ")" +
                 '}';
     }
 

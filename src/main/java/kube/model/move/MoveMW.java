@@ -37,7 +37,8 @@ public class MoveMW extends Move {
     @Override
     public String toString() {
         return "MoveW{" +
-                "from=" + from +
+                "Couleur " + getColor() +
+                " De (" + getFrom().x + ", " + getFrom().y + ")" +
                 '}';
     }
 }
