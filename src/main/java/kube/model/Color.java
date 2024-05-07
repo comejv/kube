@@ -16,7 +16,6 @@ public enum Color {
 
     int colorCode;
 
-
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_GRAY = "\u001B[37m";
