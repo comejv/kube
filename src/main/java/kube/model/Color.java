@@ -16,7 +16,6 @@ public enum Color {
 
     int colorCode;
 
-
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_PURPLE = "\u001B[35m";
     public static final String ANSI_DARK_GRAY = "\u001B[90m";
@@ -63,7 +62,7 @@ public enum Color {
         Random r = new Random();
         return Color.values()[r.nextInt(Color.values().length)];
     }
-    
+
     public static Comparator<Color> compareByValue = new Comparator<Color>() {
         @Override
         public int compare(Color c1, Color c2) {
@@ -76,11 +75,11 @@ public enum Color {
             case EMPTY:
                 return " ";
             case WHITE:
-                return ANSI_WHITE+"▣"+ANSI_RESET;
+                return ANSI_WHITE + "▣" + ANSI_RESET;
             case NATURAL:
-                return ANSI_DARK_GRAY+"▣"+ANSI_RESET;
+                return ANSI_DARK_GRAY + "▣" + ANSI_RESET;
             case RED:
-                return ANSI_RED+"▣"+ANSI_RESET;
+                return ANSI_RED + "▣" + ANSI_RESET;
             case GREEN:
                 return ANSI_GREEN + "▣" + ANSI_RESET;
             case BLUE:
@@ -93,5 +92,4 @@ public enum Color {
                 return " ";
         }
     }
-
 }

@@ -36,7 +36,7 @@ public class History {
     public void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
-    
+
     public void setDone(ArrayList<Move> done) {
         this.done = done;
     }
@@ -65,7 +65,6 @@ public class History {
         return move;
     }
 
-
     public void clear() {
         getDone().clear();
         clearUndone();
@@ -93,22 +92,21 @@ public class History {
         for (Move move : getDone()) {
             s += move.forSave() + ";";
         }
-        if(canUndo()){
+        if (canUndo()) {
             s = s.substring(0, s.length() - 1);
         }
         s += "}\n{";
         for (Move move : getUndone()) {
             s += move.forSave() + ";";
         }
-        if(canRedo()){
+        if (canRedo()) {
             s = s.substring(0, s.length() - 1);
         }
         s += "}";
         return s;
     }
 
-
-    public String forDisplay(boolean IA){
+    public String forDisplay(boolean IA) {
         String s = "<html>";
         for (int i = done.size() - 1; i >= 0; i--) {
             Move m = done.get(i);
@@ -123,7 +121,7 @@ public class History {
             } else {
                 s += "P" + player.getId() + " : (";
             }
-            s += (int) (position.getX() + 1) + ", " + (int) (position.getY() + 1 )+ ")<br>";
+            s += (int) (position.getX() + 1) + ", " + (int) (position.getY() + 1) + ")<br>";
         }
         s += "</html>";
         return s;
