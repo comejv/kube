@@ -83,16 +83,24 @@ public class Game {
 
     }
 
-    public void randomizeMoutain() {
-        randomizeMoutain(getKube().getCurrentPlayer());
+    public boolean isOver() {
+        return !getKube().canCurrentPlayerPlay();
     }
 
-    public void randomizeMoutain(Player p) {
-        utilsAI.randomFillMountain(p, new Random());
+    public String listMove() {
+        String res = "";
+        for (int i = 0; i < moveSet().size(); i++) {
+            res += i + " : " + moveSet().get(i).toString() + "\n";
+        }
+        return res;
     }
 
     public ArrayList<Move> moveSet() {
         return getKube().moveSet();
+    }
+
+    public void nextPlayer() {
+        getKube().nextPlayer();
     }
 
     public boolean playMove(int i) {
@@ -105,24 +113,24 @@ public class Game {
         return res;
     }
 
-    public String listMove() {
-        String res = "";
-        for (int i = 0; i < moveSet().size(); i++) {
-            res += i + " : " + moveSet().get(i).toString() + "\n";
-        }
-        return res;
-    }
-
-    public boolean isOver() {
-        return !getKube().canCurrentPlayerPlay();
+    public String printK3() {
+        return getKube().getK3().toString();
     }
 
     public String printMountain(Player p) {
         return p.getMountain().toString();
     }
 
-    public String printK3() {
-        return getKube().getK3().toString();
+    public void randomizeMoutain() {
+        randomizeMoutain(getKube().getCurrentPlayer());
+    }
+
+    public void randomizeMoutain(Player p) {
+        utilsAI.randomFillMountain(p, new Random());
+    }
+
+    public void redo() {
+        getKube().rePlay();
     }
 
     public String swap(int x1, int y1, int x2, int y2) {
@@ -139,15 +147,12 @@ public class Game {
         return s;
     }
 
-    public void nextPlayer() {
-        getKube().nextPlayer();
+    public void setPhase(int phase){
+        getKube().setPhase(phase);
     }
 
     public void undo() {
         getKube().unPlay();
-    }
+    } 
 
-    public void redo() {
-        getKube().rePlay();
-    }
 }

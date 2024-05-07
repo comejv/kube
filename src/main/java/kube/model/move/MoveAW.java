@@ -33,7 +33,7 @@ public class MoveAW extends Move {
     @Override
     public String toString() {
         return "MoveAM{" +
-                "color=" + color +
+                "Couleur " + color +
                 '}';
     }
 }

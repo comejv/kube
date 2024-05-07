@@ -441,12 +441,9 @@ public class Kube {
     }
 
     public Boolean canCurrentPlayerPlay() {
-        if (getCurrentPlayer().getPlayableColors().size() == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return (getCurrentPlayer().getPlayableColors().size() == 0);
     }
+
 
     // Method that return the list of moves available for the current player
     public ArrayList<Move> moveSet() {

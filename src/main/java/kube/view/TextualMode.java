@@ -2,6 +2,7 @@ package kube.view;
 
 import java.util.Scanner;
 
+import kube.configuration.Config;
 import kube.controller.*;
 import kube.model.Player;
 
@@ -39,6 +40,7 @@ public class TextualMode {
         for (int i = 0; i < game.getNbPlayers(); i++) {
             phase1();
         }
+        Config.debug(game.getKube().moveSet());
         Player winner = phase2();
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
     }
@@ -55,7 +57,7 @@ public class TextualMode {
         return nbPlayers;
     }
 
-    public static void afficherCommandePahse1() {
+    public void afficherCommandePahse1() {
         System.out.println("Tapez une des commandes suivantes : \n" +
                 "-random : construit aléatoirement une tour\n" +
                 "-echanger : permet d'échanger la position de 2 pièces de son choix\n" +
@@ -63,7 +65,16 @@ public class TextualMode {
                 "-afficher : affiche l'état de la base centrale et de sa montagne");
     }
 
+    public void afficherCommandePhase2(){
+        System.out.println("Tapez une des commandes suivantes : \n" +
+                "-jouer : jouer un coup\n" +
+                "-annuler : annuler le dernier coup\n" +
+                "-rejouer : rejouer le dernier coup\n" +
+                "-afficher : affiche l'état de la base centrale et de sa montagne");
+    }
+
     public void phase1() {
+        game.setPhase(1);
         String s;
         boolean end = false;
         System.out.println("Première phase - Construction de la montagne du joueur "
@@ -116,6 +127,7 @@ public class TextualMode {
 
     // Return the winner
     public Player phase2() {
+        game.setPhase(2);
         String s;
         boolean end = false;
         System.out.println("Deuxième phase - Jeu :");
@@ -127,6 +139,7 @@ public class TextualMode {
             System.out.println(game.printMountain(game.getKube().getCurrentPlayer()));
 
             while (!end) {
+                afficherCommandePhase2();
                 s = sc.nextLine();
                 switch (s) {
                     case "afficher":

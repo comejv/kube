@@ -37,7 +37,7 @@ public class MoveAA extends Move {
     @Override
     public String toString() {
         return "MoveAA{" +
-                "color=" + color +
+                "Couleur " + color +
                 '}';
     }
 }

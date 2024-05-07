@@ -46,8 +46,8 @@ public class MoveAM extends Move {
     @Override
     public String toString() {
         return "MoveAM{" +
-                "color=" + color +
-                ", to=" + to +
+                "Couleur " + color +
+                ", vers (" + to.x + ", " + to.y + ")" +
                 '}';
     }
 
