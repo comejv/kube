@@ -86,11 +86,11 @@ public class Player {
     }
 
     public boolean addToMountain(int l, int c, Color color) {
-        
+
         if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
             return false;
         }
-        
+
         int n;
         Color colb = getMountain().getCase(l, c);
         if ((n = getAvalaibleToBuild().get(color)) > 0) {
@@ -104,7 +104,7 @@ public class Player {
         return false;
     }
 
-    public boolean isAvailableToBuild(Color c){
+    public boolean isAvailableToBuild(Color c) {
         return getAvalaibleToBuild().get(c) > 0;
     }
 
@@ -124,7 +124,7 @@ public class Player {
 
     public void removeFromAvailableToBuild(int l, int c) {
         Color color;
-        if ((color = getMountain().getCase(l, c)) != Color.WHITE){
+        if ((color = getMountain().getCase(l, c)) != Color.WHITE) {
             getMountain().remove(l, c);
             getAvalaibleToBuild().put(color, getAvalaibleToBuild().get(color) + 1);
         }

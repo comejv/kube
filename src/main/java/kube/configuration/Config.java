@@ -2,9 +2,9 @@ package kube.configuration;
 
 public class Config {
     private static boolean isJar;
-    private static  boolean mute = true;
+    private static boolean mute = true;
     private static final boolean debug = true;
-    private static final boolean showBorders = false ;
+    private static final boolean showBorders = false;
 
     public Config() {
         isJar = System.getProperty("java.class.path").contains(".jar");
@@ -30,14 +30,16 @@ public class Config {
         mute = !mute;
     }
 
-    public static void  debug (Object... args){
-        if (debug){
+    public static void debug(Object... args) {
+        if (debug) {
             StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-            if (stackTraceElements.length > 2){ 
-                System.out.print("Debug at : " + stackTraceElements[2].getClassName() + " : " + stackTraceElements[2].getMethodName() +"("+stackTraceElements[2].getLineNumber() +")" +" : ");
+            if (stackTraceElements.length > 2) {
+                System.out.print("Debug at : " + stackTraceElements[2].getClassName() + " : "
+                        + stackTraceElements[2].getMethodName() + "(" + stackTraceElements[2].getLineNumber() + ")"
+                        + " : ");
             }
-            //Print args
-            for (Object arg : args){
+            // Print args
+            for (Object arg : args) {
                 System.out.print(arg + " ");
             }
 
@@ -45,7 +47,4 @@ public class Config {
         }
     }
 
-
-
-    
 }

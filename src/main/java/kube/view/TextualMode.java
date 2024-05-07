@@ -43,7 +43,6 @@ public class TextualMode {
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
     }
 
-
     public int askNbPlayers() {
         System.out.println("Combien de joueurs ?");
         int nbPlayers;
@@ -81,7 +80,7 @@ public class TextualMode {
                 case "random":
                     game.randomizeMoutain();
                 case "afficher":
-                    System.out.print(game.getKube().getCurrentPlayer()); //Print the mountain & the additionals
+                    System.out.print(game.getKube().getCurrentPlayer()); // Print the mountain & the additionals
                     break;
                 case "echanger":
                     try {
@@ -131,8 +130,7 @@ public class TextualMode {
                 s = sc.nextLine();
                 switch (s) {
                     case "afficher":
-                        System.out.print(game.getKube().getCurrentPlayer().getMountain().toString());
-                        System.out.println(game.getCurrentPlayer().getAdditional());
+                        System.out.print(game.getKube().getCurrentPlayer());
                         break;
                     case "jouer":
                         end = playMove();
@@ -150,7 +148,7 @@ public class TextualMode {
                         break;
                 }
             }
-            end = false; 
+            end = false;
         }
         return game.getKube().getCurrentPlayer();
 
