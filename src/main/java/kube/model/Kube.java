@@ -27,6 +27,7 @@ public class Kube {
     public Kube() {
 
         setBaseSize(9);
+        setBaseSize(9);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
         setP1(new Player(1));
@@ -34,6 +35,7 @@ public class Kube {
         setHistory(new History());
         setPhase(preparationPhase);
         setPenality(false);
+        setCurrentPlayer(getP1());//TODO
     }
 
     // Getters
@@ -213,7 +215,7 @@ public class Kube {
     }
 
     // Set current player to the next
-    private void nextPlayer() {
+    public void nextPlayer() {
 
         if (currentPlayer == p1) {
 
@@ -247,9 +249,9 @@ public class Kube {
         for (int i = 0; i < 17; i++) {
 
             c = bag.remove(0);
-            p1Cubes.put(c, p1Cubes.get(c) + 1);
+            p1Cubes.put(c, p1Cubes.get(c)+1);
             c = bag.remove(0);
-            p2Cubes.put(c, p2Cubes.get(c) + 1);
+            p2Cubes.put(c, p2Cubes.get(c)+1);
         }
 
         p1.setAvalaibleToBuild(p1Cubes);
