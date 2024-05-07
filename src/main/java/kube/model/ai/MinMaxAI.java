@@ -30,7 +30,7 @@ public class MinMaxAI implements AI {
 
     @Override
     public void preparationPhase() {
-        utilsAI.randomFillMoutain(iaPlayer, r);
+        utilsAI.randomFillMountain(iaPlayer, r);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class MinMaxAI implements AI {
             for (Move m : moves){
                 k.playMove(m);
                 score = minMax(k, horizon - 1);
-                k.unplay();
+                k.unPlay();
                 if (k.getCurrentPlayer() == iaPlayer) {
                     if (score > value){
                         value = score;

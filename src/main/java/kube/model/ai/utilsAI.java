@@ -3,13 +3,15 @@ package kube.model.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-import kube.configuration.Config;
 import kube.model.Color;
 import kube.model.Player;
 
 public class utilsAI {
-    public static void randomFillMoutain(Player player, Random r) {
+    public static void randomFillMountain(Player player, Random r) {
+        //TODO : Fix with AddToMountain method
+
         ArrayList<Color> colArr= new ArrayList<>();
+        //If the Mountain is already build 
         if (player.getMountain().isFull()){
             for (int i = 0; i < player.getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {
@@ -18,6 +20,7 @@ public class utilsAI {
                 }
             }
         }
+        //If the Mountain is not build
         else{
             for (Color color : player.getAvalaibleToBuild().keySet()) {
                 int n = player.getAvalaibleToBuild().get(color);
