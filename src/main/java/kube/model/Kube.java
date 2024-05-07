@@ -26,7 +26,6 @@ public class Kube {
     public Kube() {
 
         setBaseSize(9);
-        setBaseSize(9);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
         setP1(new Player(1));
@@ -34,7 +33,7 @@ public class Kube {
         setHistory(new History());
         setPhase(preparationPhase);
         setPenality(false);
-        setCurrentPlayer(getP1());// TODO
+        setCurrentPlayer(getP1());// TODO: randomize first player
     }
 
     // Getters
@@ -232,6 +231,7 @@ public class Kube {
 
         HashMap<Color, Integer> p1Cubes = new HashMap<>();
         HashMap<Color, Integer> p2Cubes = new HashMap<>();
+
         p1Cubes.put(Color.WHITE, 2);
         p2Cubes.put(Color.WHITE, 2);
         p1Cubes.put(Color.NATURAL, 2);
@@ -253,16 +253,6 @@ public class Kube {
 
         p1.setAvalaibleToBuild(p1Cubes);
         p2.setAvalaibleToBuild(p2Cubes);
-    }
-
-    public boolean playMove(Move move) {
-
-        if (playMoveWithoutHistory(move)) {
-
-            history.addMove(move);
-            return true;
-        }
-        return false;
     }
 
     public boolean unPlay() {
@@ -351,13 +341,22 @@ public class Kube {
         }
     }
 
+    public boolean playMove(Move move) {
+
+        if (playMoveWithoutHistory(move)) {
+
+            history.addMove(move);
+            return true;
+        }
+        return false;
+    }
+
     public boolean playMoveWithoutHistory(Move move) {
 
         Player player = getCurrentPlayer();
         Player nextPlayer = null;
 
         if (player == getP1()) {
-
             nextPlayer = getP2();
         } else {
             nextPlayer = getP1();
@@ -384,7 +383,7 @@ public class Kube {
         else if (move.isToAdditionals() && !move.isFromAdditionals()) {
 
             // Getting out the additional cube from the player's mountain
-            nextPlayer.getMountain().remove(move.getFrom().x, move.getFrom().y);
+            nextPlayer.removeFromMountain(move.getFrom().x, move.getFrom().y);
             // Adding the additional cube to the player's additional cubes
             player.addToAdditionals(color);
         }
@@ -401,7 +400,7 @@ public class Kube {
         else if (move.isWhite()) {
 
             // Getting out the white cube from the player's mountain
-            player.getMountain().remove(move.getFrom().x, move.getFrom().y);
+            player.removeFromMountain(move.getFrom().x, move.getFrom().y);
 
             // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
@@ -426,7 +425,7 @@ public class Kube {
         else if (move.isClassicMove()) {
 
             // Applying the move
-            player.getMountain().remove(move.getFrom().x, move.getFrom().y);
+            player.removeFromMountain(move.getFrom().x, move.getFrom().y);
             getK3().setCase(move.getTo().x, move.getTo().y, color);
 
             // Checks whether the move results in a penalty
