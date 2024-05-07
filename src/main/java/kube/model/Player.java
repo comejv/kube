@@ -156,9 +156,7 @@ public class Player {
 
     public String toString() {
         String s = "Player " + getId();
-        s += "\nMountain: " + getMountain().toString();
-        s += "\nAdditional: ";
-        s += "\nMountain: " + getMountain().toString();
+        s += "\nMountain: \n" + getMountain().toString();
         s += "\nAdditional: ";
         for (Color c : getAdditional()) {
             s += c.toString() + " ";

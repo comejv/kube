@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Random;
 
 import kube.model.move.*;
-import kube.configuration.Config;
 
 public class Kube {
 
