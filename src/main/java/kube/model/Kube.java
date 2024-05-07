@@ -26,6 +26,7 @@ public class Kube {
     // Constructor
     public Kube() {
 
+        setBaseSize(9);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
         setP1(new Player(1));
@@ -33,7 +34,6 @@ public class Kube {
         setHistory(new History());
         setPhase(preparationPhase);
         setPenality(false);
-        setBaseSize(9);
     }
 
     // Getters
@@ -168,7 +168,7 @@ public class Kube {
             // Should never happen
             return false;
         }
-        
+
         return cubeRemovable && cubeCompatible;
     }
 
@@ -266,7 +266,7 @@ public class Kube {
         return false;
     }
 
-    public boolean unplay() {
+    public boolean unPlay() {
 
         if (getHistory().canUndo()) {
 
@@ -281,7 +281,7 @@ public class Kube {
         return false;
     }
 
-    public boolean replay() {
+    public boolean rePlay() {
 
         if (getHistory().canRedo()) {
 
@@ -296,8 +296,11 @@ public class Kube {
         Player nextPlayer;
         // Get the other player
         if (player == getP1()) {
+
             nextPlayer = getP2();
-        } else {
+        } 
+        else {
+
             nextPlayer = getP1();
         }
 

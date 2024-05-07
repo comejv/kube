@@ -94,11 +94,7 @@ public class KubeTest {
     public void isPlayableWorkingTest() {
 
         Kube k = new Kube();
-        k.setCurrentPlayer(k.getP1());
-
-        setKubeBase(k);
-        setPlayerOneMountain(k);
-        setPlayerTwoMountain(k);
+        initPlayMove(k);
 
         // MoveMM
         assertTrue(k.isPlayable(new MoveMM(1, 0, 7, 0, Color.BLUE)));
@@ -143,11 +139,7 @@ public class KubeTest {
     public void isPlayableNotWorkingTest() {
 
         Kube k = new Kube();
-        k.setCurrentPlayer(k.getP1());
-
-        setKubeBase(k);
-        setPlayerOneMountain(k);
-        setPlayerTwoMountain(k);
+        initPlayMove(k);
 
         // MoveMM not removable
         assertFalse(k.isPlayable(new MoveMM(0, 0, 7, 0, Color.BLUE)));
@@ -205,138 +197,205 @@ public class KubeTest {
     public void playMoveWorkingTest() {
 
         Kube kube = new Kube();
-        kube.setCurrentPlayer(kube.getP1());
-        kube.setPhase(2);
+        initPlayMove(kube);
 
         // MoveMW
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveMW(1, 1)));
+        MoveMW mw = new MoveMW(1, 1);
+        assertTrue(kube.playMove(mw));
         assertEquals(Color.EMPTY, kube.getP1().getMountain().getCase(1, 1));
+        int lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(mw, kube.getHistory().getDone().get(lastElementIndex));
 
         // MoveMM
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 0, Color.BLUE)));
+        MoveMM mm = new MoveMM(1, 0, 7, 0, Color.BLUE);
+        assertTrue(kube.playMove(mm));
         assertEquals(Color.EMPTY, kube.getP1().getMountain().getCase(1, 0));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 0));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(mm, kube.getHistory().getDone().get(lastElementIndex));
+
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 5, Color.BLUE)));
+        mm = new MoveMM(1, 0, 7, 5, Color.BLUE);
+        assertTrue(kube.playMove(mm));
         assertEquals(Color.EMPTY, kube.getP1().getMountain().getCase(1, 0));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 5));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(mm, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 6, Color.BLUE)));
+        mm = new MoveMM(1, 0, 7, 6, Color.BLUE);
+        assertTrue(kube.playMove(mm));
         assertEquals(Color.EMPTY, kube.getP1().getMountain().getCase(1, 0));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 6));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(mm, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveMM(1, 0, 7, 7, Color.BLUE)));
+        mm = new MoveMM(1, 0, 7, 7, Color.BLUE);
+        assertTrue(kube.playMove(mm));
         assertEquals(Color.EMPTY, kube.getP1().getMountain().getCase(1, 0));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 7));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(mm, kube.getHistory().getDone().get(lastElementIndex));
 
         // MoveAM
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 0, Color.BLUE)));
+        MoveAM am = new MoveAM(7, 0, Color.BLUE);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 0));
         assertEquals(0, Collections.frequency(kube.getP1().getAdditional(), Color.BLUE));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 5, Color.BLUE)));
+        am = new MoveAM(7, 5, Color.BLUE);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 5));
         assertFalse(kube.getP1().getAdditional().contains(Color.BLUE));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 6, Color.BLUE)));
+        am = new MoveAM(7, 6, Color.BLUE);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 6));
         assertFalse(kube.getP1().getAdditional().contains(Color.BLUE));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 7, Color.BLUE)));
+        am = new MoveAM(7, 7, Color.BLUE);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.BLUE, kube.getK3().getCase(7, 7));
         assertFalse(kube.getP1().getAdditional().contains(Color.BLUE));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 0, Color.RED)));
+        am = new MoveAM(7, 0, Color.RED);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.RED, kube.getK3().getCase(7, 0));
         assertFalse(kube.getP1().getAdditional().contains(Color.RED));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 1, Color.RED)));
+        am = new MoveAM(7, 1, Color.RED);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.RED, kube.getK3().getCase(7, 1));
         assertFalse(kube.getP1().getAdditional().contains(Color.RED));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 5, Color.RED)));
+        am = new MoveAM(7, 5, Color.RED);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.RED, kube.getK3().getCase(7, 5));
         assertFalse(kube.getP1().getAdditional().contains(Color.RED));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAM(7, 6, Color.RED)));
+        am = new MoveAM(7, 6, Color.RED);
+        assertTrue(kube.playMove(am));
         assertEquals(Color.RED, kube.getK3().getCase(7, 6));
         assertFalse(kube.getP1().getAdditional().contains(Color.RED));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
 
         for (int i = 0; i < 7; i++) {
             initPlayMove(kube);
-            assertTrue(kube.playMove(new MoveAM(7, i, Color.NATURAL)));
+            am = new MoveAM(7, i, Color.NATURAL);
+            assertTrue(kube.playMove(am));
             assertEquals(Color.NATURAL, kube.getK3().getCase(7, i));
             assertFalse(kube.getP1().getAdditional().contains(Color.NATURAL));
+            lastElementIndex = kube.getHistory().getDone().size() - 1;
+            assertEquals(am, kube.getHistory().getDone().get(lastElementIndex));
         }
 
         // MoveAW
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAW()));
+        MoveAW aw = new MoveAW();
+        assertTrue(kube.playMove(aw));
         assertFalse(kube.getP1().getAdditional().contains(Color.WHITE));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(aw, kube.getHistory().getDone().get(lastElementIndex));
 
         // MoveMA
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveMA(1, 0, Color.RED)));
+        MoveMA ma = new MoveMA(1, 0, Color.RED);
+        assertTrue(kube.playMove(ma));
         assertEquals(Color.EMPTY, kube.getP2().getMountain().getCase(1, 0));
         assertEquals(2, Collections.frequency(kube.getP1().getAdditional(), Color.RED));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(ma, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveMA(1, 1, Color.GREEN)));
+        ma = new MoveMA(1, 1, Color.GREEN);
+        assertTrue(kube.playMove(ma));
         assertEquals(Color.EMPTY, kube.getP2().getMountain().getCase(1, 1));
         assertEquals(1, Collections.frequency(kube.getP2().getAdditional(), Color.GREEN));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(ma, kube.getHistory().getDone().get(lastElementIndex));
 
         // MoveAA
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAA(Color.GREEN)));
+        MoveAA aa = new MoveAA(Color.GREEN);
+        assertTrue(kube.playMove(aa));
         assertEquals(0, Collections.frequency(kube.getP2().getAdditional(), Color.GREEN));
         assertEquals(1, Collections.frequency(kube.getP1().getAdditional(), Color.GREEN));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(aa, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAA(Color.YELLOW)));
+        aa = new MoveAA(Color.YELLOW);
+        assertTrue(kube.playMove(aa));
         assertEquals(0, Collections.frequency(kube.getP2().getAdditional(), Color.YELLOW));
         assertEquals(1, Collections.frequency(kube.getP1().getAdditional(), Color.YELLOW));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(aa, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAA(Color.BLACK)));
+        aa = new MoveAA(Color.BLACK);
+        assertTrue(kube.playMove(aa));
         assertEquals(0, Collections.frequency(kube.getP2().getAdditional(), Color.BLACK));
         assertEquals(1, Collections.frequency(kube.getP1().getAdditional(), Color.BLACK));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(aa, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAA(Color.RED)));
+        aa = new MoveAA(Color.RED);
+        assertTrue(kube.playMove(aa));
         assertEquals(0, Collections.frequency(kube.getP2().getAdditional(), Color.RED));
         assertEquals(2, Collections.frequency(kube.getP1().getAdditional(), Color.RED));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(aa, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAA(Color.NATURAL)));
+        aa = new MoveAA(Color.NATURAL);
+        assertTrue(kube.playMove(aa));
         assertEquals(0, Collections.frequency(kube.getP2().getAdditional(), Color.NATURAL));
         assertEquals(2, Collections.frequency(kube.getP1().getAdditional(), Color.NATURAL));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(aa, kube.getHistory().getDone().get(lastElementIndex));
 
         initPlayMove(kube);
-        assertTrue(kube.playMove(new MoveAA(Color.WHITE)));
+        aa = new MoveAA(Color.WHITE);
+        assertTrue(kube.playMove(aa));
         assertEquals(0, Collections.frequency(kube.getP2().getAdditional(), Color.WHITE));
         assertEquals(2, Collections.frequency(kube.getP1().getAdditional(), Color.WHITE));
+        lastElementIndex = kube.getHistory().getDone().size() - 1;
+        assertEquals(aa, kube.getHistory().getDone().get(lastElementIndex));
     }
     
     @Test
     public void playMoveNotWorkingTest() {
 
         Kube kube = new Kube();
-        setKubeBase(kube);
-        kube.setCurrentPlayer(kube.getP1());
-        kube.setPhase(2);
+        initPlayMove(kube);
         kube.getP1().getMountain().setCase(0, 0, Color.BLUE);
 
         // Move to a place there is already a cube
@@ -370,6 +429,14 @@ public class KubeTest {
         assertEquals(0, kube.getHistory().getUndone().size());
         assertEquals(1, kube.getCurrentPlayer().getId());
         assertEquals(Color.BLUE, kube.getP1().getMountain().getCase(0, 0));
+    }
+
+    @Test
+    public void evomYalpTest() {
+
+        Kube kube = new Kube();
+        initPlayMove(kube);
+        
     }
 
     @Test
@@ -486,6 +553,7 @@ public class KubeTest {
         setKubeBase(kube);
         setPlayerOneMountain(kube);
         setPlayerTwoMountain(kube);
+        kube.setPhase(2);
         kube.setCurrentPlayer(kube.getP1());
     }
 }
