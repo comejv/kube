@@ -144,10 +144,10 @@ public class Game {
     }
 
     public void undo() {
-        getKube().unplay();
+        getKube().unPlay();
     }
 
     public void redo() {
-        getKube().replay();
+        getKube().rePlay();
     }
 }

@@ -131,8 +131,7 @@ public class TextualMode {
                 s = sc.nextLine();
                 switch (s) {
                     case "afficher":
-                        System.out.print(game.getKube().getCurrentPlayer().getMountain().toString());
-                        System.out.println(game.getCurrentPlayer().getAdditional());
+                        System.out.print(game.getKube().getCurrentPlayer());
                         break;
                     case "jouer":
                         end = playMove();
