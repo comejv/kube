@@ -45,9 +45,9 @@ public class MoveAM extends Move {
 
     @Override
     public String toString() {
-        return "MoveAM{" +
-                "Couleur " + color +
-                ", vers (" + to.x + ", " + to.y + ")" +
+        return "Poser depuis les additionels{" +
+                getColor().forDisplay() +
+                ", en (" + to.x + ", " + to.y + ")" +
                 '}';
     }
 

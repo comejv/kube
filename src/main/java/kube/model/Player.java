@@ -61,6 +61,9 @@ public class Player {
     }
 
     public String getName() {
+        if (this.name == null) {
+            return "Joueur " + getId();
+        }
         return this.name;
     }
 
@@ -166,6 +169,7 @@ public class Player {
         for (Color c : getAdditionals()) {
             s += c.toString() + " ";
         }
+        s+= "\n";
         return s;
     }
 

@@ -32,8 +32,8 @@ public class MoveAW extends Move {
 
     @Override
     public String toString() {
-        return "MoveAM{" +
-                "Couleur " + color +
+        return "Passer son tour depuis les additionels{" +
+                color.forDisplay() +
                 '}';
     }
 }

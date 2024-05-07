@@ -2,7 +2,6 @@ package kube.view;
 
 import java.util.Scanner;
 
-import kube.configuration.Config;
 import kube.controller.*;
 import kube.model.Player;
 
@@ -28,6 +27,8 @@ public class TextualMode {
                     end = true;
                     System.out.println("Merci d'avoir joué !");
                     break;
+                case "":
+                    break;
                 default:
                     System.out.println("Commande inconnue");
             }
@@ -40,20 +41,23 @@ public class TextualMode {
         for (int i = 0; i < game.getNbPlayers(); i++) {
             phase1();
         }
-        Config.debug(game.getKube().moveSet());
         Player winner = phase2();
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
+        System.out.println(game.getKube().getK3());
+        System.out.println(game.getKube().getP1());
+        System.out.println(game.getKube().getP2());
     }
 
     public int askNbPlayers() {
-        System.out.println("Combien de joueurs ?");
-        int nbPlayers;
-        String s = sc.next();
-        nbPlayers = Integer.parseInt(s);
-        while (nbPlayers < 0 || nbPlayers > 4) {
-            System.out.println("Le nombre de joueurs doit être compris entre 0 et 4");
-            nbPlayers = sc.nextInt();
-        }
+        int nbPlayers = 2;
+        //TODO 
+        // System.out.println("Combien de joueurs ?");
+        // String s = sc.next();
+        // nbPlayers = Integer.parseInt(s);
+        // while (nbPlayers < 0 || nbPlayers > 4) {
+        //     System.out.println("Le nombre de joueurs doit être compris entre 0 et 4");
+        //     nbPlayers = sc.nextInt();
+        // }
         return nbPlayers;
     }
 
@@ -70,7 +74,8 @@ public class TextualMode {
                 "-jouer : jouer un coup\n" +
                 "-annuler : annuler le dernier coup\n" +
                 "-rejouer : rejouer le dernier coup\n" +
-                "-afficher : affiche l'état de la base centrale et de sa montagne");
+                "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
+                "-aide : affiche cette liste\n");
     }
 
     public void phase1() {
@@ -85,7 +90,7 @@ public class TextualMode {
         System.out.println("Votre montagne tirée de manière aléatoire :\n"
                 + game.getKube().getCurrentPlayer().getMountain().toString());
         sc.reset();
-        while (sc.hasNextLine() && !end) {
+        while (!end) {
             s = sc.nextLine();
             switch (s) {
                 case "random":
@@ -137,12 +142,12 @@ public class TextualMode {
             System.out.println(game.printK3());
             System.out.println("Voici votre montagne :");
             System.out.println(game.printMountain(game.getKube().getCurrentPlayer()));
-
+            afficherCommandePhase2();
             while (!end) {
-                afficherCommandePhase2();
                 s = sc.nextLine();
                 switch (s) {
                     case "afficher":
+                        System.out.println(game.printK3());
                         System.out.print(game.getKube().getCurrentPlayer());
                         break;
                     case "jouer":
@@ -153,6 +158,9 @@ public class TextualMode {
                         break;
                     case "rejouer":
                         game.redo();
+                        break;
+                    case "aide":
+                        afficherCommandePhase2();
                         break;
                     case "":
                         break;
@@ -172,6 +180,12 @@ public class TextualMode {
         System.out.println(game.listMove());
         System.out.println("Entrez le numéro du coup que vous voulez jouer:");
         String s = sc.nextLine();
+        try {
+            Integer.parseInt(s);
+        } catch (Exception e) {
+            System.out.println("Numéro invalide");
+            return false;
+        }
         if (!game.playMove(Integer.parseInt(s))) {
             System.out.println("Numéro invalide invalide");
             return false;

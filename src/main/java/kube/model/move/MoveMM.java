@@ -46,10 +46,10 @@ public class MoveMM extends Move {
 
     @Override
     public String toString() {
-        return "MoveMM{" +
-                "Couleur " + getColor() +
-                " De (" + getFrom().x + ", " + getFrom().y + ")" +
-                "Vers ( " + getTo().x + ", " + getTo().y + ")" +
+        return "Poser {" +
+                getColor().forDisplay() +
+                " depuis (" + getFrom().x + ", " + getFrom().y + ")" +
+                " en ( " + getTo().x + ", " + getTo().y + ")" +
                 '}';
     }
 

@@ -441,7 +441,7 @@ public class Kube {
     }
 
     public Boolean canCurrentPlayerPlay() {
-        return (getCurrentPlayer().getPlayableColors().size() == 0);
+        return (moveSet().size() > 0);
     }
 
 
