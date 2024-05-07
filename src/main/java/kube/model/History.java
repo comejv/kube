@@ -67,7 +67,7 @@ public class History {
 
 
     public void clear() {
-        getDone().clear();
+        clearDone();
         clearUndone();
     }
 

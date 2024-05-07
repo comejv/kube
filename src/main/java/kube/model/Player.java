@@ -10,16 +10,16 @@ public class Player {
     int id, whiteUsed;
     String name;
     Mountain mountain;
-    ArrayList<Color> additional;
+    ArrayList<Color> additionals;
     HashMap<Color, Integer> avalaibleToBuild;
-    // Constructor
 
+    // Constructor
     public Player(int id) {
         setId(id);
         setWhiteUsed(0);
         setMountain(new Mountain(6));
         clearMountain();
-        setAdditional(new ArrayList<Color>());
+        setAdditionals(new ArrayList<Color>());
     }
 
     // Setters
@@ -39,8 +39,8 @@ public class Player {
         this.name = name;
     }
 
-    public void setAdditional(ArrayList<Color> additional) {
-        this.additional = additional;
+    public void setAdditionals(ArrayList<Color> additionals) {
+        this.additionals = additionals;
     }
 
     public void setAvalaibleToBuild(HashMap<Color, Integer> avalaibleToBuild) {
@@ -64,8 +64,8 @@ public class Player {
         return this.name;
     }
 
-    public ArrayList<Color> getAdditional() {
-        return this.additional;
+    public ArrayList<Color> getAdditionals() {
+        return this.additionals;
     }
 
     public HashMap<Color, Integer> getAvalaibleToBuild() {
@@ -73,22 +73,24 @@ public class Player {
     }
 
     // Methods
-    public void addAdditional(Color color) {
-        getAdditional().add(color);
+    public void addToAdditionals(Color color) {
+        getAdditionals().add(color);
     }
 
-    public Color removeAdditional(int pos) {
-        return getAdditional().remove(pos);
+    public Color removeFromAdditionals(int pos) {
+        return getAdditionals().remove(pos);
     }
 
-    public Boolean addToMountain(Point point, Color color) {
+    public boolean addToMountain(Point point, Color color) {
         return addToMountain(point.x, point.y, color);
     }
 
-    public Boolean addToMountain(int l, int c, Color color) {
+    public boolean addToMountain(int l, int c, Color color) {
+        
         if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
             return false;
         }
+        
         int n;
         Color colb = getMountain().getCase(l, c);
         if ((n = getAvalaibleToBuild().get(color)) > 0) {
@@ -116,11 +118,11 @@ public class Player {
         return col;
     }
 
-    public void removeToAvailableToBuild(Point p) {
-        removeToAvailableToBuild(p.x, p.y);
+    public void removeFromAvailableToBuild(Point p) {
+        removeFromAvailableToBuild(p.x, p.y);
     }
 
-    public void removeToAvailableToBuild(int l, int c) {
+    public void removeFromAvailableToBuild(int l, int c) {
         Color color;
         if ((color = getMountain().getCase(l, c)) != Color.WHITE){
             getMountain().remove(l, c);
@@ -145,10 +147,10 @@ public class Player {
         s += getId() + "\n {";
         s += getMountain().forSave() + "}";
         s += "{";
-        for (Color c : getAdditional()) {
+        for (Color c : getAdditionals()) {
             s += c.toString() + ",";
         }
-        if (getAdditional().size() > 0)
+        if (getAdditionals().size() > 0)
             s = s.substring(0, s.length() - 1);
         s += "}";
         return s;
@@ -158,22 +160,29 @@ public class Player {
         String s = "Player " + getId();
         s += "\nMountain: \n" + getMountain().toString();
         s += "\nAdditional: ";
-        for (Color c : getAdditional()) {
+        for (Color c : getAdditionals()) {
             s += c.toString() + " ";
         }
         return s;
     }
 
     public HashSet<Color> getPlayableColors() {
+
         HashSet<Color> playable = new HashSet<>();
         HashSet<Color> toTest = new HashSet<>();
         ArrayList<Point> removable = getMountain().removable();
+
         for (Point p : removable) {
+
             toTest.add(getMountain().getCase(p.x, p.y));
         }
-        toTest.addAll(getAdditional());
+
+        toTest.addAll(getAdditionals());
+
         for (Color c : toTest) {
+
             if (getMountain().compatible(c).size() >= 1) {
+
                 playable.add(c);
             }
         }
