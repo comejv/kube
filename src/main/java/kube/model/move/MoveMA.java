@@ -9,7 +9,7 @@ public class MoveMA extends Move {
 
     private Point from;
 
-    //Constructors
+    // Constructors
     public MoveMA(Point from, Color color) {
         super(color);
         setFrom(from);
@@ -22,13 +22,13 @@ public class MoveMA extends Move {
     public boolean isToAdditionals() {
         return true;
     }
-    
-    //Setters
+
+    // Setters
     public void setFrom(Point from) {
         this.from = from;
     }
 
-    //Getters
+    // Getters
     public Point getFrom() {
         return from;
     }

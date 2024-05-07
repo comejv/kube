@@ -3,7 +3,6 @@ package kube.model.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Player;
 import kube.model.move.*;
@@ -26,7 +25,7 @@ public class RandomAI implements AI {
     }
 
     public void preparationPhase() {
-        utilsAI.randomFillMoutain(iaPlayer, r);
+        utilsAI.randomFillMountain(iaPlayer, r);
     }
 
     public void gamePhase() {

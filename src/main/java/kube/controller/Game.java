@@ -38,6 +38,10 @@ public class Game {
         return this.ai2;
     }
 
+    public Player getCurrentPlayer() {
+        return getKube().getCurrentPlayer();
+    }
+
     // Setters
     public void setKube(Kube kube) {
         this.kube = kube;
@@ -77,9 +81,6 @@ public class Game {
             getAI().preparationPhase();
         }
 
-        randomizeMoutain(kube.getP1());
-        randomizeMoutain(kube.getP2());
-
     }
 
     public void randomizeMoutain() {
@@ -87,7 +88,7 @@ public class Game {
     }
 
     public void randomizeMoutain(Player p) {
-        utilsAI.randomFillMoutain(p, new Random());
+        utilsAI.randomFillMountain(p, new Random());
     }
 
     public ArrayList<Move> moveSet() {
@@ -140,5 +141,13 @@ public class Game {
 
     public void nextPlayer() {
         getKube().nextPlayer();
+    }
+
+    public void undo() {
+        getKube().unPlay();
+    }
+
+    public void redo() {
+        getKube().rePlay();
     }
 }

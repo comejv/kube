@@ -5,10 +5,10 @@ import java.awt.Point;
 import kube.model.Color;
 
 public class MoveMW extends Move {
-    
+
     Point from;
 
-    //Constructors
+    // Constructors
     public MoveMW(Point from) {
         super(Color.WHITE);
         setFrom(from);
@@ -17,19 +17,19 @@ public class MoveMW extends Move {
     public MoveMW(int x, int y) {
         this(new Point(x, y));
     }
-    
-    //Setter
+
+    // Setter
 
     public void setFrom(Point from) {
         this.from = from;
     }
 
-    //Getter
+    // Getter
     public Point getFrom() {
         return from;
     }
 
-    //Methods
+    // Methods
     public boolean isWhite() {
         return true;
     }
