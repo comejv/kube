@@ -30,7 +30,7 @@ public class MinMaxAI implements AI {
 
     @Override
     public void preparationPhase() {
-        utilsAI.randomFillMoutain(iaPlayer, r);
+        utilsAI.randomFillMountain(iaPlayer, r);
     }
 
     @Override

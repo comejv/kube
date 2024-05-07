@@ -23,4 +23,9 @@ public class PlayerTest {
     public void removeFromMountainTest() {
 
     }
+
+    @Test
+    public void removeFromAvailableToBuildTest() {
+
+    }
 }

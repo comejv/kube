@@ -25,7 +25,7 @@ public class RandomAI implements AI {
     }
 
     public void preparationPhase() {
-        utilsAI.randomFillMoutain(iaPlayer, r);
+        utilsAI.randomFillMountain(iaPlayer, r);
     }
 
     public void gamePhase() {

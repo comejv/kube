@@ -88,7 +88,7 @@ public class Game {
     }
 
     public void randomizeMoutain(Player p) {
-        utilsAI.randomFillMoutain(p, new Random());
+        utilsAI.randomFillMountain(p, new Random());
     }
 
     public ArrayList<Move> moveSet() {

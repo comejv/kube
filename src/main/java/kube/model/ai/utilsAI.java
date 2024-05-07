@@ -7,7 +7,7 @@ import kube.model.Color;
 import kube.model.Player;
 
 public class utilsAI {
-    public static void randomFillMoutain(Player player, Random r) {
+    public static void randomFillMountain(Player player, Random r) {
         //TODO : Fix with AddToMountain method
 
         ArrayList<Color> colArr= new ArrayList<>();
