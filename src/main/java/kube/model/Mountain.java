@@ -134,6 +134,7 @@ public class Mountain {
         String s = "";
         boolean space = false;
         for (int i = 0; i < getBaseSize(); i++) {
+            s += i + " ";
             for(int j = 0; j < getBaseSize() - i - 1; j++) {
                 s += " ";
             }
@@ -144,6 +145,10 @@ public class Mountain {
 
             space = !space;
         }
+        for (int i = 0; i < getBaseSize(); i++) {
+            s +=" "+ i;
+        }
+
         return s;
     }
 

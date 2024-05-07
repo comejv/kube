@@ -248,9 +248,9 @@ public class Kube {
         for (int i = 0; i < 17; i++) {
 
             c = bag.remove(0);
-            p1Cubes.put(c, p1Cubes.get(c) + 1);
+            p1Cubes.put(c, p1Cubes.get(c)+1);
             c = bag.remove(0);
-            p2Cubes.put(c, p2Cubes.get(c) + 1);
+            p2Cubes.put(c, p2Cubes.get(c)+1);
         }
 
         p1.setAvalaibleToBuild(p1Cubes);

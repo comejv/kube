@@ -34,7 +34,6 @@ public class TextualMode {
         
 
         for (int i = 0; i < tm.game.getNbPlayers(); i++) {
-            Config.debug("Player " + tm.game.getKube().getCurrentPlayer().getId());
             tm.phase1();
         }
 
@@ -49,8 +48,6 @@ public class TextualMode {
             System.out.println("Le nombre de joueurs doit être compris entre 0 et 4");
             nbPlayers = sc.nextInt();
         }
-        Config.debug("nbPlayers: " + s);
-
         return nbPlayers;
     }
 
@@ -70,6 +67,7 @@ public class TextualMode {
         System.out.println("Première phase - Construction de la montagne du joueur " + game.getKube().getCurrentPlayer().getId() + " :");
         afficherCommandePahse1();
         System.out.println("Votre montagne tirée de manière aléatoire :\n" + game.getKube().getCurrentPlayer().getMountain().toString());
+        sc.reset();
         while (sc.hasNextLine() && !end) {
             s = sc.nextLine();
             switch (s){
@@ -98,11 +96,19 @@ public class TextualMode {
                     break;
                 case "valider":
                     end = true;
+                    break;
+                case "":
+                    break;
                 default:
                     System.out.println("Commande inconnue");
                     break;
             }
         }
         game.nextPlayer();
+    }
+
+    public void phase2(){
+        String s;
+        boolean end = false;
     }
 }
