@@ -9,9 +9,10 @@ import java.awt.*;
 public class MainFrame extends JFrame {
     private JPanel cardPanel;
     private CardLayout cardLayout;
-    public MainFrame(){
+
+    public MainFrame() {
         setTitle("KUBE");
-        //setIconImage(); for later
+        // setIconImage(); for later
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(800, 600));
@@ -21,9 +22,11 @@ public class MainFrame extends JFrame {
         add(cardPanel, BorderLayout.CENTER);
         setVisible(true);
     }
-    public void addPanel(JPanel panel, String name){
+
+    public void addPanel(JPanel panel, String name) {
         cardPanel.add(panel, name);
     }
+
     public void showPanel(String name) {
         cardLayout.show(cardPanel, name);
     }
