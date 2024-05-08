@@ -42,6 +42,14 @@ public class Game {
         return getKube().getCurrentPlayer();
     }
 
+    public Player getPlayer(int i) {
+        if (i == 1) {
+            return getKube().getP1();
+        } else {
+            return getKube().getP2();
+        }
+    }
+
     // Setters
     public void setKube(Kube kube) {
         this.kube = kube;
@@ -59,8 +67,17 @@ public class Game {
         this.ai2 = ai2;
     }
 
+    public void setPhase(int phase) {
+        getKube().setPhase(phase);
+    }
+
+    public void setCurrentPlayer(Player p) {
+        getKube().setCurrentPlayer(p);
+    }
+
     // Methods
     public void initGame() {
+        setPhase(1);
         getKube().fillBag();
         getKube().fillBase();
         getKube().distributeCubesToPlayers();
@@ -113,6 +130,16 @@ public class Game {
         return res;
     }
 
+    public boolean playMove(Move m) {
+        boolean res;
+        try {
+            res = getKube().playMove(m);
+        } catch (Exception e) {
+            res = false;
+        }
+        return res;
+    }
+
     public String printK3() {
         return getKube().getK3().toString();
     }
@@ -145,9 +172,6 @@ public class Game {
         return s;
     }
 
-    public void setPhase(int phase){
-        getKube().setPhase(phase);
-    }
 
     public void undo() {
         getKube().unPlay();
@@ -155,6 +179,10 @@ public class Game {
     
     public void redo() {
         getKube().rePlay();
+    }
+
+    public boolean isPenality() {
+        return getKube().getPenality();
     }
 
 }

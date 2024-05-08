@@ -1,9 +1,11 @@
 package kube.view;
 
+import java.util.Random;
 import java.util.Scanner;
 
 import kube.controller.*;
 import kube.model.Player;
+import kube.model.move.Move;
 
 public class TextualMode {
 
@@ -16,8 +18,8 @@ public class TextualMode {
         tm.sc = new Scanner(System.in);
         String s;
         boolean end = false;
-        System.out.println("Tapez 'start' pour commencer une partie ou 'exit' pour quitter");
         while (!end) {
+            System.out.println("Tapez 'start' pour commencer une partie ou 'exit' pour quitter");
             s = tm.sc.nextLine();
             switch (s) {
                 case "start":
@@ -37,11 +39,42 @@ public class TextualMode {
 
     public void startGame() {
         game = new Game(askNbPlayers());
+        Player winner;
 
-        for (int i = 0; i < game.getNbPlayers(); i++) {
-            phase1();
+        if (game.getNbPlayers() == 0) {
+            System.out.println("Voulez-vous voir l'IA jouer ? (O/N)");
+            String s = sc.next();
+            Boolean show = (s.equals("O") || s.equals("o"));
+            Random r = new Random();
+            if (r.nextInt(2) == 1) {
+                game.setCurrentPlayer(game.getKube().getP1());
+            } else {
+                game.setCurrentPlayer(game.getKube().getP2());
+            }
+            winner = AIVsAI(show);
+            return;
+        } else {
+            System.out.println("Qui commence ? (1/2) \n Entrée vide pour aléatoire");
+            String s = sc.nextLine();
+            if (s.equals("1")) {
+                game.setCurrentPlayer(game.getKube().getP1());
+            } else if (s.equals("2")) {
+                game.setCurrentPlayer(game.getKube().getP2());
+            } else {
+                Random r = new Random();
+                if (r.nextInt(2) == 1) {
+                    game.setCurrentPlayer(game.getKube().getP1());
+                } else {
+                    game.setCurrentPlayer(game.getKube().getP2());
+                }
+            }
+
+            for (int i = 0; i < game.getNbPlayers(); i++) {
+                phase1();
+            }
+            winner = phase2();
         }
-        Player winner = phase2();
+
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
         System.out.println(game.getKube().getK3());
         System.out.println(game.getKube().getP1());
@@ -50,14 +83,13 @@ public class TextualMode {
 
     public int askNbPlayers() {
         int nbPlayers = 2;
-        //TODO 
-        // System.out.println("Combien de joueurs ?");
-        // String s = sc.next();
-        // nbPlayers = Integer.parseInt(s);
-        // while (nbPlayers < 0 || nbPlayers > 4) {
-        //     System.out.println("Le nombre de joueurs doit être compris entre 0 et 4");
-        //     nbPlayers = sc.nextInt();
-        // }
+        System.out.println("Combien de joueurs ?");
+        String s = sc.next();
+        nbPlayers = Integer.parseInt(s);
+        while (nbPlayers < 0 || nbPlayers > 2) {
+            System.out.println("Le nombre de joueurs doit être compris entre 0 et 2");
+            nbPlayers = sc.nextInt();
+        }
         return nbPlayers;
     }
 
@@ -69,7 +101,7 @@ public class TextualMode {
                 "-afficher : affiche l'état de la base centrale et de sa montagne");
     }
 
-    public void afficherCommandePhase2(){
+    public void afficherCommandePhase2() {
         System.out.println("Tapez une des commandes suivantes : \n" +
                 "-jouer : jouer un coup\n" +
                 "-annuler : annuler le dernier coup\n" +
@@ -141,9 +173,12 @@ public class TextualMode {
             System.out.println("Voici la base centrale :");
             System.out.println(game.printK3());
             System.out.println("Voici votre montagne :");
-            System.out.println(game.printMountain(game.getKube().getCurrentPlayer()));
+            System.out.println(game.getKube().getCurrentPlayer());
             afficherCommandePhase2();
             while (!end) {
+                if (game.isPenality()) {
+                    playPenality();
+                }
                 s = sc.nextLine();
                 switch (s) {
                     case "afficher":
@@ -170,6 +205,49 @@ public class TextualMode {
                 }
             }
             end = false;
+            if (game.getNbPlayers() == 1 && !game.isOver()) {
+                try {
+                    game.playMove(game.getAI().nextMove());
+                } catch (Exception e) {
+                    System.out.println("Erreur de l'IA");
+                }
+
+            }
+        }
+        return game.getKube().getCurrentPlayer();
+
+    }
+
+    public Player AIVsAI(boolean show) {
+        game.setPhase(2);
+        while (!game.isOver()) {
+            if (show) {
+                System.out.println("Tour de l'IA " + game.getKube().getCurrentPlayer().getId());
+                System.out.println(game.printK3());
+                System.out.print(game.getKube().getCurrentPlayer());
+            }
+            if (game.getCurrentPlayer() == game.getKube().getP1()) {
+                try {
+                    Move m = game.getAI().nextMove();
+                    game.playMove(m);
+                    if (show) {
+                        System.out.println("L'IA1 a joué : " + m.toString());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur de l'IA");
+                }
+            } else {
+                try {
+                    Move m = game.getAI2().nextMove();
+                    game.playMove(m);
+
+                    if (show) {
+                        System.out.println("L'IA2 a joué : " + m.toString());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Erreur de l'IA");
+                }
+            }
         }
         return game.getKube().getCurrentPlayer();
 
@@ -191,5 +269,16 @@ public class TextualMode {
             return false;
         }
         return true;
+    }
+
+    public boolean playPenality() {
+        System.out.println("Votre adversaire a une penalité, choisissez une pièce à recupérer:\n Sa Montagne :");
+        if (game.getCurrentPlayer()==game.getPlayer(1)) {
+            System.out.println(game.getPlayer(2));
+        } else {
+            System.out.println(game.getPlayer(1));
+        }
+        System.out.println("Votre Montagne :\n" + game.getCurrentPlayer());
+        return playMove();
     }
 }
