@@ -385,6 +385,7 @@ public class Kube {
             nextPlayer.getAdditionals().remove(color);
             // Adding the additional cube to the player's mountain
             player.addToAdditionals(color);
+            setPenality(false);
         }
         // Catching if the move is a MoveMA (Penality where the player take in
         // oppenent's mountain)
@@ -394,6 +395,7 @@ public class Kube {
             nextPlayer.removeFromMountain(move.getFrom().x, move.getFrom().y);
             // Adding the additional cube to the player's additional cubes
             player.addToAdditionals(color);
+            setPenality(false);
         }
         // Catching if the move is a MoveAW (Placing a white cube from self additionals)
         else if (move.isWhite() && move.isFromAdditionals()) {
