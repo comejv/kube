@@ -521,7 +521,9 @@ public class KubeTest {
 
     @Test
     public void rePlayTest() {
-        //TODO
+        
+        Kube kube = new Kube();
+
     }
 
     @Test
