@@ -164,7 +164,7 @@ public class Player {
 
     public String toString() {
         String s = getName() + ":\n";
-        s += "\nMontagne: \n" + getMountain().toString();
+        s += getMountain().toString();
         s += "\nAdditionels: ";
         for (Color c : getAdditionals()) {
             s += c.forDisplay() + " ";
