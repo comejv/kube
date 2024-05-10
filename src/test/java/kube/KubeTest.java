@@ -524,6 +524,13 @@ public class KubeTest {
         
         Kube kube = new Kube();
 
+        initPlayMove(kube);
+        kube.playMove(new MoveMW(1, 1));
+        kube.unPlay();
+        kube.rePlay();
+        assertEquals(Color.EMPTY, kube.getP1().getMountain().getCase(1, 1));
+        
+
     }
 
     @Test
