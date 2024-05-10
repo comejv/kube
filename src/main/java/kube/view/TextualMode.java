@@ -3,6 +3,7 @@ package kube.view;
 import java.util.Random;
 import java.util.Scanner;
 
+import kube.configuration.Config;
 import kube.controller.*;
 import kube.model.Player;
 import kube.model.move.Move;
@@ -52,7 +53,6 @@ public class TextualMode {
                 game.setCurrentPlayer(game.getKube().getP2());
             }
             winner = AIVsAI(show);
-            return;
         } else {
             System.out.println("Qui commence ? (1/2) \n Entrée vide pour aléatoire");
             String s = sc.nextLine();
@@ -76,7 +76,7 @@ public class TextualMode {
         }
 
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
-        System.out.println(game.getKube().getK3());
+        System.out.println("Plateau final : \n" +game.getKube().getK3()+"\n");
         System.out.println(game.getKube().getP1());
         System.out.println(game.getKube().getP2());
     }
@@ -214,12 +214,18 @@ public class TextualMode {
 
             }
         }
+        if(!game.getHistory().getDone().isEmpty()){ // If the history is empty, it's the second player who wins
+            game.nextPlayer();    
+        }
         return game.getKube().getCurrentPlayer();
 
     }
 
     public Player AIVsAI(boolean show) {
         game.setPhase(2);
+        if (show) {
+            System.out.println("IA"+ game.getKube().getCurrentPlayer().getId()+" commence.");
+        }
         while (!game.isOver()) {
             if (show) {
                 System.out.println("Tour de l'IA " + game.getKube().getCurrentPlayer().getId());
@@ -248,6 +254,10 @@ public class TextualMode {
                     System.err.println("Erreur de l'IA");
                 }
             }
+        }
+
+        if (!game.getHistory().getDone().isEmpty()) { // If the history is empty, it's the second player who wins
+            game.nextPlayer();
         }
         return game.getKube().getCurrentPlayer();
 

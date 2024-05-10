@@ -185,4 +185,8 @@ public class Game {
         return getKube().getPenality();
     }
 
+    public History getHistory() {
+        return getKube().getHistory();
+    }
+
 }
