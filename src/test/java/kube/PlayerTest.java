@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-import kube.configuration.Config;
 import kube.model.*;
 
 public class PlayerTest {

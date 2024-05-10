@@ -137,7 +137,7 @@ public class Kube {
         else if (move.isToAdditionals()) {
 
             cubeRemovable = nextPlayer.getMountain().removable().contains(move.getFrom()) &&
-                    nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
+                            nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
         }
         // Catching if the move is a MoveAW (Placing a white cube from self additionals)
         else if (move.isFromAdditionals()) {
@@ -148,17 +148,23 @@ public class Kube {
         else if (move.isWhite() || move.isClassicMove()) {
 
             cubeRemovable = player.getMountain().removable().contains(move.getFrom()) &&
-                    player.getMountain().getCase(move.getFrom()) == move.getColor();
+                            player.getMountain().getCase(move.getFrom()) == move.getColor();
         } else {
             // Should never happen
             return false;
         }
 
-        // Catching if the move is a MoveAA, MoveMA, MoveMW or AW
-        if (move.isWhite() || move.isToAdditionals()) {
+        // Catching if the move is a MoveMW or MoveAW
+        if (move.isWhite()) {
+
             // White cube is always compatible
             cubeCompatible = true;
         }
+        // Catching if the move is a MoveAA or MoveMA
+        else if (move.isToAdditionals()) {
+
+            cubeCompatible = getPenality();
+        } 
         // Catching if the move is a MoveMM or MoveAM
         else if (move.isFromAdditionals() || move.isClassicMove()) {
 
@@ -298,6 +304,7 @@ public class Kube {
             MoveAA aa = (MoveAA) move;
             player.getAdditionals().remove(aa.getColor());
             nextPlayer.addToAdditionals(aa.getColor());
+            setPenality(true);
         }
         // MoveMA
         else if (move.isToAdditionals() && !move.isFromAdditionals()) {
@@ -305,6 +312,7 @@ public class Kube {
             MoveMA ma = (MoveMA) move;
             player.getAdditionals().remove(ma.getColor());
             nextPlayer.getMountain().setCase(ma.getFrom().x, ma.getFrom().y, ma.getColor());
+            setPenality(true);
         }
         // MoveAW
         else if (move.isWhite() && move.isFromAdditionals()) {
@@ -392,7 +400,6 @@ public class Kube {
 
             // Getting out the additional white cube from the player's additional cubes
             player.getAdditionals().remove(color);
-
             // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
         }
@@ -401,7 +408,6 @@ public class Kube {
 
             // Getting out the white cube from the player's mountain
             player.removeFromMountain(move.getFrom().x, move.getFrom().y);
-
             // Adding the white cube to the player's used white cubes
             player.setWhiteUsed(player.getWhiteUsed() + 1);
         }
@@ -411,12 +417,10 @@ public class Kube {
 
             // Getting out the additional cube from the player's additional cubes
             player.getAdditionals().remove(color);
-
             // Adding the additional cube to the player's mountain
             getK3().setCase(move.getTo().x, move.getTo().y, color);
-
             // Checks whether the move results in a penalty
-            if (player.getMountain().isPenality(move.getTo().x, move.getTo().y, color)) {
+            if (player.getMountain().isPenality(move.getTo())) {
                 setPenality(true);
             }
         }
@@ -427,9 +431,8 @@ public class Kube {
             // Applying the move
             player.removeFromMountain(move.getFrom().x, move.getFrom().y);
             getK3().setCase(move.getTo().x, move.getTo().y, color);
-
             // Checks whether the move results in a penalty
-            if (player.getMountain().isPenality(move.getTo().x, move.getTo().y, color)) {
+            if (player.getMountain().isPenality(move.getTo())) {
                 setPenality(true);
             }
         }
@@ -443,7 +446,6 @@ public class Kube {
     public Boolean canCurrentPlayerPlay() {
         return (moveSet().size() > 0);
     }
-
 
     // Method that return the list of moves available for the current player
     public ArrayList<Move> moveSet() {

@@ -1,5 +1,6 @@
 package kube;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.awt.Point;
@@ -275,6 +276,23 @@ public class MountainTest {
         assertTrue(m.compatible(Color.BLUE).size() == 1);
         assertTrue(m.compatible(Color.BLUE).contains(p1));
         assertTrue(!(m.compatible(Color.BLUE).contains(p2)));
+    }
+
+    @Test
+    public void isPenalityTest() {
+        
+        Mountain m = new Mountain(5);
+
+        m.setCase(4, 0, Color.BLUE);
+        m.setCase(4, 1, Color.RED);
+        m.setCase(4, 2, Color.RED);
+        m.setCase(4, 3, Color.NATURAL);
+        m.setCase(4, 4, Color.NATURAL);
+
+        assertFalse(m.isPenality(3, 0));
+        assertTrue(m.isPenality(3, 1));
+        assertFalse(m.isPenality(3, 2));
+        assertTrue(m.isPenality(3, 3));
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {

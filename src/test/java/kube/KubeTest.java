@@ -121,6 +121,7 @@ public class KubeTest {
         assertTrue(k.isPlayable(new MoveAW()));
 
         // MoveMA
+        k.setPenality(true);
         assertTrue(k.isPlayable(new MoveMA(1, 0, Color.RED)));
         assertTrue(k.isPlayable(new MoveMA(1, 1, Color.GREEN)));
 
@@ -164,12 +165,27 @@ public class KubeTest {
         assertFalse(k.isPlayable(new MoveAW()));
 
         // MoveMA not removable
+        k.setPenality(true);
         assertFalse(k.isPlayable(new MoveMA(2, 0, Color.YELLOW)));
         assertFalse(k.isPlayable(new MoveMA(2, 1, Color.WHITE)));
         assertFalse(k.isPlayable(new MoveMA(2, 2, Color.BLUE)));
 
+        // MoveMA not compatible
+        k.setPenality(false);
+        assertFalse(k.isPlayable(new MoveMA(1, 0, Color.RED)));
+        assertFalse(k.isPlayable(new MoveMA(1, 1, Color.GREEN)));
+
         // MoveAA not removable
+        k.setPenality(true);
         assertFalse(k.isPlayable(new MoveAA(Color.BLUE)));
+
+        // MoveAA not compatible
+        k.setPenality(false);
+        assertFalse(k.isPlayable(new MoveAA(Color.GREEN)));
+        assertFalse(k.isPlayable(new MoveAA(Color.YELLOW)));
+        assertFalse(k.isPlayable(new MoveAA(Color.BLACK)));
+        assertFalse(k.isPlayable(new MoveAA(Color.RED)));
+        assertFalse(k.isPlayable(new MoveAA(Color.NATURAL)));
     }
 
     @Test
@@ -470,21 +486,29 @@ public class KubeTest {
 
         // MoveMA
         simpleUnPlayTest(kube, new MoveMA(1, 0, Color.RED));
+        assertTrue(kube.getPenality());
 
         simpleUnPlayTest(kube, new MoveMA(1, 1, Color.GREEN));
+        assertTrue(kube.getPenality());
 
         // MoveAA
         simpleUnPlayTest(kube, new MoveAA(Color.GREEN));
+        assertTrue(kube.getPenality());
 
         simpleUnPlayTest(kube, new MoveAA(Color.YELLOW));
+        assertTrue(kube.getPenality());
 
         simpleUnPlayTest(kube, new MoveAA(Color.BLACK));
+        assertTrue(kube.getPenality());
 
         simpleUnPlayTest(kube, new MoveAA(Color.RED));
+        assertTrue(kube.getPenality());
 
         simpleUnPlayTest(kube, new MoveAA(Color.NATURAL));
+        assertTrue(kube.getPenality());
 
         simpleUnPlayTest(kube, new MoveAA(Color.WHITE));
+        assertTrue(kube.getPenality());
     }
 
     @Test

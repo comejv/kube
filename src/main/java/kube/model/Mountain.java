@@ -85,11 +85,12 @@ public class Mountain {
         return comp;
     }
 
-    public boolean isPenality(int x, int y, Color c) {
-        if (compatible(c).contains(new Point(x, y)) && getCase(x + 1, y) == c && getCase(x + 1, y + 1) == c) {
-            return true;
-        }
-        return false;
+    public boolean isPenality(Point p) {
+        return isPenality(p.x, p.y);
+    }
+
+    public boolean isPenality(int x, int y) {
+        return x >= getBaseSize() - 1 || y >= getBaseSize() - 1 || (getCase(x + 1, y) == getCase(x + 1, y + 1));
     }
 
     public void clear() {
