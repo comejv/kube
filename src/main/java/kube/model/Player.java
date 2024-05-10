@@ -163,11 +163,11 @@ public class Player {
     }
 
     public String toString() {
-        String s = "Player " + getId();
-        s += "\nMountain: \n" + getMountain().toString();
-        s += "\nAdditional: ";
+        String s = getName() + ":\n";
+        s += "\nMontagne: \n" + getMountain().toString();
+        s += "\nAdditionels: ";
         for (Color c : getAdditionals()) {
-            s += c.toString() + " ";
+            s += c.forDisplay() + " ";
         }
         s+= "\n";
         return s;
