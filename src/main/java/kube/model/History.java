@@ -53,7 +53,7 @@ public class History {
 
     public Move undoMove() {
         Move move = getDone().get(getDone().size() - 1);
-        getDone().remove(this.done.size() - 1);
+        getDone().remove(getDone().size() - 1);
         getUndone().add(move);
         return move;
     }

@@ -8,10 +8,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import kube.configuration.Config;
 
 import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
+import kube.model.Player;
 import kube.model.move.*;
 
 public class KubeTest {
@@ -461,28 +463,18 @@ public class KubeTest {
 
         // MoveMM
         simpleUnPlayTest(kube, new MoveMM(1, 0, 7, 0, Color.BLUE));
-
         simpleUnPlayTest(kube, new MoveMM(1, 0, 7, 5, Color.BLUE));
-
         simpleUnPlayTest(kube, new MoveMM(1, 0, 7, 6, Color.BLUE));
-
         simpleUnPlayTest(kube, new MoveMM(1, 0, 7, 7, Color.BLUE));
 
         // MoveAM
         simpleUnPlayTest(kube, new MoveAM(7, 0, Color.BLUE));
-
         simpleUnPlayTest(kube, new MoveAM(7, 5, Color.BLUE));
-
         simpleUnPlayTest(kube, new MoveAM(7, 6, Color.BLUE));
-
         simpleUnPlayTest(kube, new MoveAM(7, 7, Color.BLUE));
-
         simpleUnPlayTest(kube, new MoveAM(7, 0, Color.RED));
-
         simpleUnPlayTest(kube, new MoveAM(7, 1, Color.RED));
-
         simpleUnPlayTest(kube, new MoveAM(7, 5, Color.RED));
-
         simpleUnPlayTest(kube, new MoveAM(7, 6, Color.RED));
 
         for (int i = 0; i < 7; i++) {
@@ -494,34 +486,250 @@ public class KubeTest {
 
         // MoveMA
         simpleUnPlayTest(kube, new MoveMA(1, 0, Color.RED));
-        assertTrue(kube.getPenality());
-
         simpleUnPlayTest(kube, new MoveMA(1, 1, Color.GREEN));
-        assertTrue(kube.getPenality());
 
         // MoveAA
         simpleUnPlayTest(kube, new MoveAA(Color.GREEN));
-        assertTrue(kube.getPenality());
-
         simpleUnPlayTest(kube, new MoveAA(Color.YELLOW));
-        assertTrue(kube.getPenality());
-
         simpleUnPlayTest(kube, new MoveAA(Color.BLACK));
-        assertTrue(kube.getPenality());
-
         simpleUnPlayTest(kube, new MoveAA(Color.RED));
-        assertTrue(kube.getPenality());
-
         simpleUnPlayTest(kube, new MoveAA(Color.NATURAL));
-        assertTrue(kube.getPenality());
-
         simpleUnPlayTest(kube, new MoveAA(Color.WHITE));
-        assertTrue(kube.getPenality());
     }
 
     @Test
     public void rePlayTest() {
-    // TODO
+    
+        Kube kube = new Kube();
+
+        // MoveMW
+        initPlayMove(kube);
+        MoveMW mw = new MoveMW(1, 1);
+
+        Mountain k3 = cloneMountain(kube.getK3());
+        Mountain p1 = cloneMountain(kube.getP1().getMountain());
+        Mountain p2 = cloneMountain(kube.getP2().getMountain());
+        int nbWhite = kube.getP1().getWhiteUsed();
+        ArrayList<Color> p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
+        ArrayList<Color> p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        kube.playMove(mw);
+        kube.unPlay();
+        kube.rePlay();
+
+        p1.remove(1, 1);
+        nbWhite ++;
+
+        ArrayList<Color> p1Additional2 = new ArrayList<>(kube.getP1().getAdditionals());
+        ArrayList<Color> p2Additional2 = new ArrayList<>(kube.getP2().getAdditionals());
+
+        assertTrue(areSameMountain(k3, kube.getK3()));
+        assertTrue(areSameMountain(p1, kube.getP1().getMountain()));
+        assertTrue(areSameMountain(p2, kube.getP2().getMountain()));
+
+        p1Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        assertEquals(p1Additional, p1Additional2);
+        assertEquals(p2Additional, p2Additional2);
+
+        assertTrue(kube.getHistory().getDone().contains(mw));
+        assertFalse(kube.getHistory().getUndone().contains(mw));
+        assertEquals(nbWhite, kube.getP1().getWhiteUsed());
+
+        // MoveMM
+        initPlayMove(kube);
+        MoveMM mm = new MoveMM(1, 0, 7, 0, Color.BLUE);
+
+        k3 = cloneMountain(kube.getK3());
+        p1 = cloneMountain(kube.getP1().getMountain());
+        p2 = cloneMountain(kube.getP2().getMountain());
+        p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        kube.playMove(mm);
+        kube.unPlay();
+        kube.rePlay();
+
+        p1.remove(1, 0);
+        k3.setCase(7, 0, Color.BLUE);
+
+        p1Additional2 = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional2 = new ArrayList<>(kube.getP2().getAdditionals());
+
+        assertTrue(areSameMountain(k3, kube.getK3()));
+        assertTrue(areSameMountain(p1, kube.getP1().getMountain()));
+        assertTrue(areSameMountain(p2, kube.getP2().getMountain()));
+
+        p1Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        assertEquals(p1Additional, p1Additional2);
+        assertEquals(p2Additional, p2Additional2);
+
+        assertTrue(kube.getHistory().getDone().contains(mm));
+        assertFalse(kube.getHistory().getUndone().contains(mm));
+
+        // MoveAM
+        initPlayMove(kube);
+        MoveAM am = new MoveAM(7, 0, Color.BLUE);
+
+        k3 = cloneMountain(kube.getK3());
+        p1 = cloneMountain(kube.getP1().getMountain());
+        p2 = cloneMountain(kube.getP2().getMountain());
+        p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        kube.playMove(am);
+        kube.unPlay();
+        kube.rePlay();
+
+        p1Additional.remove(Color.BLUE);
+        k3.setCase(7, 0, Color.BLUE);
+
+        p1Additional2 = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional2 = new ArrayList<>(kube.getP2().getAdditionals());
+
+        assertTrue(areSameMountain(k3, kube.getK3()));
+        assertTrue(areSameMountain(p1, kube.getP1().getMountain()));
+        assertTrue(areSameMountain(p2, kube.getP2().getMountain()));
+
+        p1Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        assertEquals(p1Additional, p1Additional2);
+        assertEquals(p2Additional, p2Additional2);
+
+        assertTrue(kube.getHistory().getDone().contains(am));
+        assertFalse(kube.getHistory().getUndone().contains(am));
+
+        // MoveAW
+        initPlayMove(kube);
+        MoveAW aw = new MoveAW();
+
+        k3 = cloneMountain(kube.getK3());
+        p1 = cloneMountain(kube.getP1().getMountain());
+        p2 = cloneMountain(kube.getP2().getMountain());
+        nbWhite = kube.getP1().getWhiteUsed();
+        p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        kube.playMove(aw);
+        kube.unPlay();
+        kube.rePlay();
+
+        p1Additional.remove(Color.WHITE);
+        nbWhite ++;
+
+        p1Additional2 = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional2 = new ArrayList<>(kube.getP2().getAdditionals());
+
+        assertTrue(areSameMountain(k3, kube.getK3()));
+        assertTrue(areSameMountain(p1, kube.getP1().getMountain()));
+        assertTrue(areSameMountain(p2, kube.getP2().getMountain()));
+
+        p1Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        assertEquals(p1Additional, p1Additional2);
+        assertEquals(p2Additional, p2Additional2);
+
+        assertTrue(kube.getHistory().getDone().contains(aw));
+        assertFalse(kube.getHistory().getUndone().contains(aw));
+        assertEquals(nbWhite, kube.getP1().getWhiteUsed());
+
+        // MoveMA
+        initPlayMove(kube);
+        kube.setPenality(true);
+        MoveMA ma = new MoveMA(1, 0, Color.RED);
+
+        k3 = cloneMountain(kube.getK3());
+        p1 = cloneMountain(kube.getP1().getMountain());
+        p2 = cloneMountain(kube.getP2().getMountain());
+        nbWhite = kube.getP1().getWhiteUsed();
+        p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        kube.playMove(ma);
+        kube.unPlay();
+        kube.rePlay();
+
+        p2.remove(1, 0);
+        p1Additional.add(Color.RED);
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        p1Additional2 = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional2 = new ArrayList<>(kube.getP2().getAdditionals());
+
+        assertTrue(areSameMountain(k3, kube.getK3()));
+        assertTrue(areSameMountain(p1, kube.getP1().getMountain()));
+        assertTrue(areSameMountain(p2, kube.getP2().getMountain()));
+
+        p1Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        assertEquals(p1Additional, p1Additional2);
+        assertEquals(p2Additional, p2Additional2);
+
+        assertTrue(kube.getHistory().getDone().contains(ma));
+        assertFalse(kube.getHistory().getUndone().contains(ma));
+
+        // MoveAA
+        initPlayMove(kube);
+        kube.setPenality(true);
+        MoveAA aa = new MoveAA(Color.GREEN);
+
+        k3 = cloneMountain(kube.getK3());
+        p1 = cloneMountain(kube.getP1().getMountain());
+        p2 = cloneMountain(kube.getP2().getMountain());
+        p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        kube.playMove(aa);
+        kube.unPlay();
+        kube.rePlay();
+
+        p2Additional.remove(Color.GREEN);
+        p1Additional.add(Color.GREEN);
+
+        p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        p1Additional2 = new ArrayList<>(kube.getP1().getAdditionals());
+        p2Additional2 = new ArrayList<>(kube.getP2().getAdditionals());
+
+        assertTrue(areSameMountain(k3, kube.getK3()));
+        assertTrue(areSameMountain(p1, kube.getP1().getMountain()));
+        assertTrue(areSameMountain(p2, kube.getP2().getMountain()));
+
+        p1Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+
+        assertEquals(p1Additional, p1Additional2);
+        assertEquals(p2Additional, p2Additional2);
+
+        assertTrue(kube.getHistory().getDone().contains(aa));
+        assertFalse(kube.getHistory().getUndone().contains(aa));
     }
 
     @Test
@@ -641,6 +849,7 @@ public class KubeTest {
         kube.getHistory().clear();
         kube.setPhase(2);
         kube.setCurrentPlayer(kube.getP1());
+        kube.setPenality(false);
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {
@@ -673,24 +882,40 @@ public class KubeTest {
     private void simpleUnPlayTest(Kube k, Move m) {
 
         initPlayMove(k);
+        if (m.isToAdditionals()) {
+            k.setPenality(true);
+        }
         Mountain k3 = cloneMountain(k.getK3());
         Mountain p1 = cloneMountain(k.getP1().getMountain());
+        Mountain p2 = cloneMountain(k.getP2().getMountain());
+        int p = k.getCurrentPlayer().getId();
         ArrayList<Color> p1Additional = new ArrayList<>(k.getP1().getAdditionals());
+        ArrayList<Color> p2Additional = new ArrayList<>(k.getP2().getAdditionals());
 
         p1Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
 
         k.playMove(m);
         k.unPlay();
 
         ArrayList<Color> p1Additional2 = new ArrayList<>(k.getP1().getAdditionals());
+        ArrayList<Color> p2Additional2 = new ArrayList<>(k.getP2().getAdditionals());
 
         assertTrue(areSameMountain(k3, k.getK3()));
         assertTrue(areSameMountain(p1, k.getP1().getMountain()));
+        assertTrue(areSameMountain(p2, k.getP2().getMountain()));
 
         p1Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
+        p2Additional2.sort((c1, c2) -> c1.getColorCode() - c2.getColorCode());
 
         assertEquals(p1Additional, p1Additional2);
+        assertEquals(p2Additional, p2Additional2);
+        assertEquals(p, k.getCurrentPlayer().getId());
 
         assertFalse(k.getHistory().getDone().contains(m));
+
+        if (m.isToAdditionals()) {
+            assertTrue(k.getPenality());
+        }
     }
 }

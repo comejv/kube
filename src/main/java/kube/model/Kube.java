@@ -1,5 +1,7 @@
 package kube.model;
 
+import kube.configuration.Config;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -344,8 +346,7 @@ public class Kube {
         }
         // Penality doesn't change the current player
         if (!move.isToAdditionals()) {
-
-            setCurrentPlayer(nextPlayer);
+            nextPlayer();
         }
     }
 
