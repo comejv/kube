@@ -38,6 +38,19 @@ public class Game {
         return this.ai2;
     }
 
+  
+    public AI getCurrentAI() {
+        if (getCurrentPlayer() == getPlayer(1)) {
+            return getAI();
+        }
+        else if (getCurrentPlayer() == getPlayer(2)) {
+            return getAI2();
+        }
+        else {
+            return null;
+        }
+    }
+
     public Player getCurrentPlayer() {
         return getKube().getCurrentPlayer();
     }
@@ -163,7 +176,7 @@ public class Game {
         if (x1 < 0 || x1 > 5 || y1 < 0 || y1 > x1 || x2 < 0 || x2 > 5 || y2 < 0 || y2 > x2) {
             return "Invalid coordinates";
         }
-        s += "Swap ( " + getKube().getCurrentPlayer().getMountain().getCase(x1, y1).forDisplay() + " ) and ( "
+        s += "Echange de ( " + getKube().getCurrentPlayer().getMountain().getCase(x1, y1).forDisplay() + " ) et ( "
                 + getKube().getCurrentPlayer().getMountain().getCase(x2, y2).forDisplay() + " )\n";
         Color col = getKube().getCurrentPlayer().getMountain().getCase(x1, y1);
         getKube().getCurrentPlayer().getMountain().setCase(x1, y1,

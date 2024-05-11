@@ -3,6 +3,7 @@ package kube.model.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
+import kube.configuration.Config;
 import kube.model.Color;
 import kube.model.Player;
 
@@ -20,7 +21,7 @@ public class utilsAI {
             }
         }
         //If the Mountain is not build
-        else{
+        else {
             for (Color color : player.getAvalaibleToBuild().keySet()) {
                 int n = player.getAvalaibleToBuild().get(color);
                 for (int i = 0; i < n; i++) {
@@ -28,7 +29,6 @@ public class utilsAI {
                 }
                 player.getAvalaibleToBuild().put(color, 0);
             }
-
         }
         for (int i = 0; i < player.getMountain().getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
