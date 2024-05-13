@@ -345,8 +345,15 @@ public class Kube {
             k3.remove(mm.getTo());
         }
         // Penality doesn't change the current player
-        if (!move.isToAdditionals() && !getHistory().getDone().get(getHistory().getDone().size() - 1).isToAdditionals()) {
-            nextPlayer();
+        if (!move.isToAdditionals()) {
+            try {
+                if (!getHistory().getDone().get(getHistory().getDone().size() - 1).isToAdditionals()) {
+                    nextPlayer();
+                }
+            }
+            catch (IndexOutOfBoundsException e) {
+                nextPlayer();
+            }
         }
     }
 
