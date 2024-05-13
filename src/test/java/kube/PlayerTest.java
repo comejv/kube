@@ -46,6 +46,7 @@ public class PlayerTest {
     public void addToMountainTest() {
 
         Kube kube = new Kube();
+        kube.setCurrentPlayer(kube.getP1());
         Player player = kube.getCurrentPlayer();
 
         kube.fillBag(0);
@@ -82,6 +83,7 @@ public class PlayerTest {
     public void removeFromMountainTest() {
 
         Kube kube = new Kube();
+        kube.setCurrentPlayer(kube.getP1());
         Player player = kube.getCurrentPlayer();
 
         kube.fillBag(0);
@@ -113,6 +115,7 @@ public class PlayerTest {
     public void removeFromMountainToAvailableToBuildTest() {
         
         Kube kube = new Kube();
+        kube.setCurrentPlayer(kube.getP1());
         Player player = kube.getCurrentPlayer();
 
         kube.fillBag(0);
