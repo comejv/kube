@@ -216,4 +216,14 @@ public class Player {
     public int hashCode() {
         return Objects.hash(getMountain(), getId());
     }
+
+    @Override
+    public Player clone(){
+        Player p = new Player(getId());
+        p.setAdditionals(new ArrayList<>(getAdditionals()));
+        p.setName(getName());
+        p.setWhiteUsed(getWhiteUsed());
+        p.setMountain(getMountain().clone());
+        return p;
+    }
 }

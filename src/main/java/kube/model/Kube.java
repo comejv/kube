@@ -535,4 +535,21 @@ public class Kube {
     public int hashCode(){
         return Objects.hash(getP1(), getP2(), getK3(), getCurrentPlayer());
     }
+
+    @Override
+    public Kube clone(){
+        Kube Kopy = new Kube();
+        Kopy.setP1(getP1().clone());
+        Kopy.setP2(getP2().clone());
+        if (getCurrentPlayer() == getP1()){
+            Kopy.setCurrentPlayer(Kopy.getP1());
+        } else {
+            Kopy.setCurrentPlayer(Kopy.getP2());
+        }
+        Kopy.setPenality(getPenality());
+        Kopy.setBag(new ArrayList<>(getBag()));
+        Kopy.setPhase(getPhase());
+        Kopy.setK3(getK3().clone());
+        return Kopy;
+    }
 }
