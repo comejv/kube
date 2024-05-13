@@ -510,9 +510,9 @@ public class KubeTest {
         // Creation of the move we want to test
         Move move = new MoveMW(1, 1);
         // Cloning the global kube state
-        Mountain k3 = cloneMountain(kube.getK3());
-        Mountain p1 = cloneMountain(kube.getP1().getMountain());
-        Mountain p2 = cloneMountain(kube.getP2().getMountain());
+        Mountain k3 = kube.getK3().clone();
+        Mountain p1 = kube.getP1().getMountain().clone();
+        Mountain p2 = kube.getP2().getMountain().clone();
         int p = kube.getCurrentPlayer().getId();
         ArrayList<Color> p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         ArrayList<Color> p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -546,9 +546,9 @@ public class KubeTest {
         // MoveMM(MoveMM(1, 0, 7, 0, Color.BLUE))
         initPlayMove(kube);
         move = new MoveMM(1, 0, 7, 0, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -579,9 +579,9 @@ public class KubeTest {
         // MoveMM(1, 0, 7, 5, Color.BLUE)
         initPlayMove(kube);
         move = new MoveMM(1, 0, 7, 5, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -612,9 +612,9 @@ public class KubeTest {
         // MoveMM(1, 0, 7, 6, Color.BLUE)
         initPlayMove(kube);
         move = new MoveMM(1, 0, 7, 6, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -645,9 +645,9 @@ public class KubeTest {
         // MoveMM(1, 0, 7, 7, Color.BLUE)
         initPlayMove(kube);
         move = new MoveMM(1, 0, 7, 7, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -679,9 +679,9 @@ public class KubeTest {
         // MoveAM(7, 0, Color.BLUE)
         initPlayMove(kube);
         move = new MoveAM(7, 0, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -712,9 +712,9 @@ public class KubeTest {
         // MoveAM(7, 5, Color.BLUE)
         initPlayMove(kube);
         move = new MoveAM(7, 5, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -745,9 +745,9 @@ public class KubeTest {
         // MoveAM(7, 6, Color.BLUE)
         initPlayMove(kube);
         move = new MoveAM(7, 6, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -778,9 +778,9 @@ public class KubeTest {
         // MoveAM(7, 7, Color.BLUE)
         initPlayMove(kube);
         move = new MoveAM(7, 7, Color.BLUE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -811,9 +811,9 @@ public class KubeTest {
         // MoveAM(7, 0, Color.RED)
         initPlayMove(kube);
         move = new MoveAM(7, 0, Color.RED);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -844,9 +844,9 @@ public class KubeTest {
         // MoveAM(7, 1, Color.RED)
         initPlayMove(kube);
         move = new MoveAM(7, 1, Color.RED);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -877,9 +877,9 @@ public class KubeTest {
         // MoveAM(7, 5, Color.RED)
         initPlayMove(kube);
         move = new MoveAM(7, 5, Color.RED);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -910,9 +910,9 @@ public class KubeTest {
         // MoveAM(7, 6, Color.RED)
         initPlayMove(kube);
         move = new MoveAM(7, 6, Color.RED);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -945,9 +945,9 @@ public class KubeTest {
 
             initPlayMove(kube);
             move = new MoveAM(7, i, Color.NATURAL);
-            k3 = cloneMountain(kube.getK3());
-            p1 = cloneMountain(kube.getP1().getMountain());
-            p2 = cloneMountain(kube.getP2().getMountain());
+            k3 = kube.getK3().clone();
+            p1 = kube.getP1().getMountain().clone();
+            p2 = kube.getP2().getMountain().clone();
             p = kube.getCurrentPlayer().getId();
             p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
             p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -979,9 +979,9 @@ public class KubeTest {
         // MoveAW
         initPlayMove(kube);
         move = new MoveAW();
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1014,9 +1014,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveMA(1, 0, Color.RED);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1048,9 +1048,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveMA(1, 1, Color.GREEN);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1083,9 +1083,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveAA(Color.GREEN);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1117,9 +1117,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveAA(Color.YELLOW);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1151,9 +1151,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveAA(Color.BLACK);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1185,9 +1185,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveAA(Color.RED);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1219,9 +1219,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveAA(Color.NATURAL);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1253,9 +1253,9 @@ public class KubeTest {
         initPlayMove(kube);
         kube.setPenality(true);
         move = new MoveAA(Color.WHITE);
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p = kube.getCurrentPlayer().getId();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1295,9 +1295,9 @@ public class KubeTest {
         // Creation of the move we want to test
         MoveMW mw = new MoveMW(1, 1);
         // Cloning all the kube state
-        Mountain k3 = cloneMountain(kube.getK3());
-        Mountain p1 = cloneMountain(kube.getP1().getMountain());
-        Mountain p2 = cloneMountain(kube.getP2().getMountain());
+        Mountain k3 = kube.getK3().clone();
+        Mountain p1 = kube.getP1().getMountain().clone();
+        Mountain p2 = kube.getP2().getMountain().clone();
         int nbWhite = kube.getP1().getWhiteUsed();
         ArrayList<Color> p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         ArrayList<Color> p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1336,9 +1336,9 @@ public class KubeTest {
         initPlayMove(kube);
         MoveMM mm = new MoveMM(1, 0, 7, 0, Color.BLUE);
 
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
 
@@ -1372,9 +1372,9 @@ public class KubeTest {
         initPlayMove(kube);
         MoveAM am = new MoveAM(7, 0, Color.BLUE);
 
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
 
@@ -1408,9 +1408,9 @@ public class KubeTest {
         initPlayMove(kube);
         MoveAW aw = new MoveAW();
 
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         nbWhite = kube.getP1().getWhiteUsed();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1447,9 +1447,9 @@ public class KubeTest {
         kube.setPenality(true);
         MoveMA ma = new MoveMA(1, 0, Color.RED);
 
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         nbWhite = kube.getP1().getWhiteUsed();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
@@ -1488,9 +1488,9 @@ public class KubeTest {
         kube.setPenality(true);
         MoveAA aa = new MoveAA(Color.GREEN);
 
-        k3 = cloneMountain(kube.getK3());
-        p1 = cloneMountain(kube.getP1().getMountain());
-        p2 = cloneMountain(kube.getP2().getMountain());
+        k3 = kube.getK3().clone();
+        p1 = kube.getP1().getMountain().clone();
+        p2 = kube.getP2().getMountain().clone();
         p1Additional = new ArrayList<>(kube.getP1().getAdditionals());
         p2Additional = new ArrayList<>(kube.getP2().getAdditionals());
 
@@ -1591,7 +1591,7 @@ public class KubeTest {
     private void initPlayMove(Kube k) {
 
         k.getK3().clear();
-        
+
         // Seeting the kube's base
         k.getK3().setCase(8, 0, Color.BLUE);
         k.getK3().setCase(8, 1, Color.RED);
@@ -1658,18 +1658,5 @@ public class KubeTest {
             }
         }
         return true;
-    }
-
-    private Mountain cloneMountain(Mountain m) {
-
-        Mountain clone = new Mountain(m.getBaseSize());
-        for (int i = 0; i < m.getBaseSize(); i++) {
-
-            for (int j = 0; j < m.getBaseSize(); j++) {
-
-                clone.setCase(i, j, m.getCase(i, j));
-            }
-        }
-        return clone;
     }
 }
