@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Random;
 
 import kube.model.move.*;
@@ -139,7 +140,7 @@ public class Kube {
         else if (move.isToAdditionals()) {
 
             cubeRemovable = nextPlayer.getMountain().removable().contains(move.getFrom()) &&
-                            nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
+                    nextPlayer.getMountain().getCase(move.getFrom()) == move.getColor();
         }
         // Catching if the move is a MoveAW (Placing a white cube from self additionals)
         else if (move.isFromAdditionals()) {
@@ -150,7 +151,7 @@ public class Kube {
         else if (move.isWhite() || move.isClassicMove()) {
 
             cubeRemovable = player.getMountain().removable().contains(move.getFrom()) &&
-                            player.getMountain().getCase(move.getFrom()) == move.getColor();
+                    player.getMountain().getCase(move.getFrom()) == move.getColor();
         } else {
             // Should never happen
             return false;
@@ -166,7 +167,7 @@ public class Kube {
         else if (move.isToAdditionals()) {
 
             cubeCompatible = getPenality();
-        } 
+        }
         // Catching if the move is a MoveMM or MoveAM
         else if (move.isFromAdditionals() || move.isClassicMove()) {
 
@@ -513,5 +514,25 @@ public class Kube {
             moves.add(ma);
         }
         return moves;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
+        Kube k = (Kube) o;
+        if (getCurrentPlayer().getId() != k.getCurrentPlayer().getId()){
+            return false;
+        } 
+        return getP1().equals(k.getP1()) && getP2().equals(k.getP2()) && getK3().equals(k.getK3());
+    }
+
+    @Override 
+    public int hashCode(){
+        return Objects.hash(getP1(), getP2(), getK3(), getCurrentPlayer());
     }
 }

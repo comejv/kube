@@ -3,6 +3,7 @@ package kube.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.awt.Point;
 
 public class Player {
@@ -194,5 +195,25 @@ public class Player {
             }
         }
         return playable;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Player p = (Player) o;
+        if (getId() != p.getId()){
+            return false;
+        }
+        return getMountain().equals(p.getMountain());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMountain(), getId());
     }
 }
