@@ -431,7 +431,7 @@ public class Kube {
             // Adding the additional cube to the player's mountain
             getK3().setCase(move.getTo().x, move.getTo().y, color);
             // Checks whether the move results in a penalty
-            if (player.getMountain().isPenality(move.getTo())) {
+            if (getK3().isPenality(move.getTo())) {
                 setPenality(true);
             }
         }
@@ -443,7 +443,7 @@ public class Kube {
             player.removeFromMountain(move.getFrom().x, move.getFrom().y);
             getK3().setCase(move.getTo().x, move.getTo().y, color);
             // Checks whether the move results in a penalty
-            if (player.getMountain().isPenality(move.getTo())) {
+            if (getK3().isPenality(move.getTo())) {
                 setPenality(true);
             }
         }
