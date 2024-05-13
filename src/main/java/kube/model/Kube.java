@@ -36,7 +36,12 @@ public class Kube {
         setHistory(new History());
         setPhase(preparationPhase);
         setPenality(false);
-        setCurrentPlayer(getP1());// TODO: randomize first player
+        if (new Random().nextInt(2) == 0){
+            setCurrentPlayer(getP1());
+        } else {
+            setCurrentPlayer(getP2());
+        }
+
     }
 
     // Getters
@@ -552,4 +557,6 @@ public class Kube {
         Kopy.setK3(getK3().clone());
         return Kopy;
     }
+
+
 }
