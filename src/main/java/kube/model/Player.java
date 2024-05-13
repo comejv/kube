@@ -85,11 +85,11 @@ public class Player {
         return getAdditionals().remove(pos);
     }
 
-    public boolean addToMountain(Point point, Color color) {
-        return addToMountain(point.x, point.y, color);
+    public boolean buildToMoutain(Point point, Color color) {
+        return buildToMoutain(point.x, point.y, color);
     }
 
-    public boolean addToMountain(int l, int c, Color color) {
+    public boolean buildToMoutain(int l, int c, Color color) {
 
         if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
             return false;
@@ -110,6 +110,24 @@ public class Player {
 
         return false;
     }
+
+    public Color unbuildFromMoutain(int l, int c) {
+
+        if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
+            return Color.EMPTY;
+        }
+
+        Color mountainColor = getMountain().getCase(l, c);
+        if (mountainColor != Color.EMPTY) {
+            getMountain().remove(l, c);
+            getAvalaibleToBuild().put(mountainColor, getAvalaibleToBuild().get(mountainColor) + 1);
+            return mountainColor;
+        }
+
+        return mountainColor;
+    }
+
+
 
     public boolean isAvailableToBuild(Color c) {
         return getAvalaibleToBuild().get(c) > 0;
