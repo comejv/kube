@@ -189,8 +189,13 @@ public class Mountain {
     }
 
     @Override
-    public Mountain clone(){
-        Mountain m = new Mountain(getBaseSize());
-        
+    public Mountain clone() {
+        Mountain copy = new Mountain(getBaseSize());
+        for (int i = 0; i < getBaseSize(); i++){
+            for (int j = 0; j < i + 1; j++){
+                copy.setCase(i, j, getCase(i, j));
+            }
+        }
+        return copy;
     }
 }

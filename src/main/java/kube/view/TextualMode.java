@@ -11,88 +11,42 @@ import kube.model.move.Move;
 
 public class TextualMode {
 
-    Game game;
+    CommandListener listener;
     Scanner sc;
-
+    Thread t;
     public static void main(String[] args) {
         System.out.println("Bienvenue dans K3 !");
         TextualMode tm = new TextualMode();
-        tm.sc = new Scanner(System.in);
-        String s;
-        boolean end = false;
-        while (!end) {
-            System.out.println("Tapez 'start' pour commencer une partie ou 'exit' pour quitter");
-            s = tm.sc.nextLine();
-            switch (s) {
-                case "start":
-                    tm.startGame();
-                    break;
-                case "exit":
-                    end = true;
-                    System.out.println("Merci d'avoir joué !");
-                    break;
-                case "":
-                    break;
-                default:
-                    System.out.println("Commande inconnue");
-            }
+    }
+
+    
+    TextualMode(){
+        listener = new CommandListener();
+        t = new Thread(listener);
+        t.start();
+        startGame();
+    }
+
+    public String getNextCmd(){
+        String cmd = null;
+        while (cmd == null){
+            cmd = listener.getCommand();
         }
+        return cmd;
     }
 
     public void startGame() {
-        game = new Game(askNbPlayers());
-        String s;
-
-        if (game.getNbPlayers() == 0) {
-            System.out.println("Voulez-vous voir l'IA jouer ? (O/N)");
-            s = sc.nextLine();
-            Boolean show = (s.equals("O") || s.equals("o"));
-            Random r = new Random();
-            if (r.nextInt(2) == 1) {
-                game.setCurrentPlayer(game.getKube().getP1());
-            } else {
-                game.setCurrentPlayer(game.getKube().getP2());
-            }
-            winMessage(AIVsAI(show));
-        } 
-        else {
-            System.out.println("Qui commence ? (1/2), entrée vide pour aléatoire");
-            s = sc.nextLine();
-            for (int i = 0; i < game.getNbPlayers(); i++) {
-                phase1();
-            }
-            if (s.equals("1")) {
-                game.setCurrentPlayer(game.getKube().getP1());
-            } else if (s.equals("2")) {
-                game.setCurrentPlayer(game.getKube().getP2());
-            } else {
-                Random r = new Random();
-                if (r.nextInt(2) == 1) {
-                    game.setCurrentPlayer(game.getKube().getP1());
-                } else {
-                    game.setCurrentPlayer(game.getKube().getP2());
-                }
-            }
-            winMessage(phase2());
-        }
+        
     }
     
-
-
+/* 
     public int askNbPlayers() {
-        int nbPlayers = 2;
+        int nbPlayers = -1;
         System.out.println("Combien de joueurs ?");
-        String s = sc.nextLine();
-        try {
-            nbPlayers=Integer.parseInt(s);
-        } catch (Exception e) {
-            System.out.println("Nombre invalide");
-            return askNbPlayers();
-        }
         while (nbPlayers < 0 || nbPlayers > 2) {
             System.out.println("Le nombre de joueurs doit être compris entre 0 et 2");
             try {
-                nbPlayers = Integer.parseInt(s);
+                nbPlayers = Integer.parseInt(getNextCmd());
             } catch (Exception e) { 
                 System.out.println("Nombre invalide");
                 return askNbPlayers();
@@ -309,4 +263,5 @@ public class TextualMode {
         System.out.println(game.getKube().getP1());
         System.out.println(game.getKube().getP2());
     }
+    */
 }
