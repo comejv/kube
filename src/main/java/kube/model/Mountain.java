@@ -1,6 +1,7 @@
 package kube.model;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.awt.Point;
 
 public class Mountain {
@@ -157,5 +158,33 @@ public class Mountain {
         String s = "";
         // TODO: Implement this method
         return s;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Mountain m = (Mountain) o;
+        if (getBaseSize() != m.getBaseSize()){
+            return false;
+        }
+        
+        for (int i = 0; i < getBaseSize(); i++){
+            for (int j = 0; j < i + 1; j++){
+                if (getCase(i, j) != m.getCase(i, j)){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash((Object[]) getMountain());
     }
 }
