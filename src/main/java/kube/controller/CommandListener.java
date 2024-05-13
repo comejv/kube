@@ -34,11 +34,21 @@ public class CommandListener implements Runnable {
                     System.out.print(currentPlayerToBuild); // Print the mountain & the additionals
                     break;
                 case "echanger":
-                    swap(currentPlayerToBuild, sc);
-                    System.out.print(currentPlayerToBuild); // Print the mountain & the additionals
+                    if (swap(currentPlayerToBuild, sc)) {
+                        System.out.println(currentPlayerToBuild); // Print the mountain & the additionals
+                    } else {
+                        System.out.println("Erreur lors de la lecture des coordonnées");
+                    }
                     break;
                 case "afficher":
-                    System.out.print(currentPlayerToBuild); 
+                    if (k3.getPhase() == Kube.preparationPhase) {
+                        System.out.println(k3.getK3());
+                        System.out.println(currentPlayerToBuild);
+                    } else {
+                        System.out.println(k3.getK3());
+                        System.out.println(k3.getP1());
+                        System.out.println(k3.getP2());
+                    }
                     break;
                 case "valider":
                     if (!currentPlayerToBuild.getMountain().isFull()) {
@@ -71,7 +81,7 @@ public class CommandListener implements Runnable {
         }
     }
 
-    public void swap(Player p, Scanner sc) {
+    public boolean swap(Player p, Scanner sc) {
         try {
             System.out.println("Entrez les coordonnées de la première pièce :");
             String s = sc.nextLine();
@@ -84,15 +94,22 @@ public class CommandListener implements Runnable {
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Color c = p.unbuildFromMoutain(x1, y1);
+            Color c2 = p.unbuildFromMoutain(x2, y2);
+            if (c == Color.EMPTY || c2 == Color.EMPTY) {
+                return false;
+            }
+            p.buildToMoutain(x1, y1, c2);
             p.buildToMoutain(x2, y2, c);
+            return true;
         } catch (Exception e) {
-            System.out.println("Erreur lors de la lecture des coordonnées");
+            return false;
         }
     }
 
     public boolean playMove(Scanner sc) {
-        System.out.println("Voici les coups possibles :");
         ArrayList<Move> moves = k3.moveSet();
+        System.out.println("Voici les coups possibles :");
+        System.out.println(moves);
         System.out.println("Entrez le numéro du coup que vous voulez jouer:");
         String s = sc.nextLine();
         try {

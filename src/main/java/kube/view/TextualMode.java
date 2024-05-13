@@ -15,7 +15,7 @@ public class TextualMode {
     Kube k3;
     public static void main(String[] args) {
         System.out.println("Bienvenue dans K3 !");
-        TextualMode tm = new TextualMode();
+        new TextualMode();
     }
 
     
