@@ -342,6 +342,7 @@ public class Kube {
             MoveAM am = (MoveAM) move;
             player.addToAdditionals(am.getColor());
             k3.remove(am.getTo());
+            setPenality(false);
         }
         // MoveMM
         else if (move.isClassicMove()) {
@@ -349,6 +350,7 @@ public class Kube {
             MoveMM mm = (MoveMM) move;
             player.getMountain().setCase(mm.getFrom().x, mm.getFrom().y, mm.getColor());
             k3.remove(mm.getTo());
+            setPenality(false);
         }
         // Penality doesn't change the current player
         if (!move.isToAdditionals()) {
