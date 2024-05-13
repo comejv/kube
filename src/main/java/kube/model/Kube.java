@@ -3,6 +3,7 @@ package kube.model;
 import kube.configuration.Config;
 
 import java.awt.Point;
+import java.lang.invoke.WrongMethodTypeException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -119,7 +120,11 @@ public class Kube {
     }
 
     // Methods
-    public boolean isPlayable(Move move) {
+    public boolean isPlayable(Move move) throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
 
         Player player = getCurrentPlayer();
         Player nextPlayer = null;
@@ -186,14 +191,18 @@ public class Kube {
         return cubeRemovable && cubeCompatible;
     }
 
-    public void fillBag() {
+    public void fillBag() throws UnsupportedOperationException {
 
         fillBag(null);
     }
 
     // fill the bag with 9 times each colors, and randomize it until the base is
     // valid
-    public void fillBag(Integer seed) {
+    public void fillBag(Integer seed) throws UnsupportedOperationException {
+
+        if (getPhase() != preparationPhase) {
+            throw new UnsupportedOperationException();
+        }
 
         bag = new ArrayList<>();
         for (Color c : Color.getAllColored()) {
@@ -218,7 +227,11 @@ public class Kube {
     }
 
     // fill the base with baseSize random colors
-    public void fillBase() {
+    public void fillBase() throws UnsupportedOperationException {
+
+        if (getPhase() != preparationPhase) {
+            throw new UnsupportedOperationException();
+        }
 
         for (int y = 0; y < baseSize; y++) {
 
@@ -230,18 +243,18 @@ public class Kube {
     public void nextPlayer() {
 
         if (currentPlayer == p1) {
-
             currentPlayer = p2;
-        } else if (currentPlayer == p2) {
-
+        }
+        else {
             currentPlayer = p1;
-        } else {
-
-            throw new UnsupportedOperationException("Current player is null");
         }
     }
 
-    public void distributeCubesToPlayers() {
+    public void distributeCubesToPlayers() throws UnsupportedOperationException {
+
+        if (getPhase() != preparationPhase) {
+            throw new UnsupportedOperationException();
+        }
 
         HashMap<Color, Integer> p1Cubes = new HashMap<>();
         HashMap<Color, Integer> p2Cubes = new HashMap<>();
@@ -269,7 +282,11 @@ public class Kube {
         p2.setAvalaibleToBuild(p2Cubes);
     }
 
-    public boolean unPlay() {
+    public boolean unPlay() throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
 
         if (getHistory().canUndo()) {
 
@@ -284,7 +301,11 @@ public class Kube {
         return false;
     }
 
-    public boolean rePlay() {
+    public boolean rePlay() throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
 
         if (getHistory().canRedo()) {
 
@@ -293,7 +314,11 @@ public class Kube {
         return false;
     }
 
-    private void evomYalp(Move move) {
+    private void evomYalp(Move move) throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
 
         Player player = move.getPlayer();
         Player nextPlayer;
@@ -365,7 +390,11 @@ public class Kube {
         }
     }
 
-    public boolean playMove(Move move) {
+    public boolean playMove(Move move) throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
 
         if (playMoveWithoutHistory(move)) {
 
@@ -375,7 +404,11 @@ public class Kube {
         return false;
     }
 
-    public boolean playMoveWithoutHistory(Move move) {
+    public boolean playMoveWithoutHistory(Move move) throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
 
         Player player = getCurrentPlayer();
         Player nextPlayer = null;
@@ -461,12 +494,21 @@ public class Kube {
         return true;
     }
 
-    public Boolean canCurrentPlayerPlay() {
+    public Boolean canCurrentPlayerPlay() throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
+
         return (moveSet().size() > 0);
     }
 
     // Method that return the list of moves available for the current player
-    public ArrayList<Move> moveSet() {
+    public ArrayList<Move> moveSet() throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
 
         if (getPenality()) {
             return penalitySet();
@@ -501,7 +543,12 @@ public class Kube {
         return moves;
     }
 
-    private ArrayList<Move> penalitySet() {
+    private ArrayList<Move> penalitySet() throws UnsupportedOperationException {
+
+        if (getPhase() != gamePhase) {
+            throw new UnsupportedOperationException();
+        }
+        
         ArrayList<Move> moves = new ArrayList<>();
         Player nextPlayer;
         if (getCurrentPlayer() == getP1()) {

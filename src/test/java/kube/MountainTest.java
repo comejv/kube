@@ -10,10 +10,8 @@ import org.junit.Test;
 
 import kube.model.*;
 
-/**
- * Unit test for simple App.
- */
 public class MountainTest {
+    
     @Test
     public void simpleSetTest() {
 
