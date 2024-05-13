@@ -22,9 +22,9 @@ public class Kube {
     private int phase;
     private boolean penality;
     private int baseSize;
-    private static final int nCubePerColor = 9;
-    private static final int preparationPhase = 1;
-    private static final int gamePhase = 2;
+    public static final int nCubePerColor = 9;
+    public static final int preparationPhase = 1;
+    public static final int gamePhase = 2;
 
     // Constructor
     public Kube() {
