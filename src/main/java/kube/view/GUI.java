@@ -4,6 +4,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.UIManager.*;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import kube.configuration.Config;
@@ -15,21 +16,30 @@ public class GUI extends Thread {
     public final static String PHASE2 = "PHASE2";
 
     MainFrame mF;
-    ActionListener mL, fL, sL;
+    ActionListener menuListener, firstPhaseListener, secondPhaseListener;
 
     public GUI(ActionListener mL, ActionListener fL, ActionListener sL) {
-        this.mL = mL;
-        this.fL = fL;
-        this.sL = sL;
+        this.menuListener = mL;
+        this.firstPhaseListener = fL;
+        this.secondPhaseListener = sL;
         try {
-            UIManager.setLookAndFeel(
-                    UIManager.getSystemLookAndFeelClassName());
-            Config.debug("Set Look and Feel to system.");
+            boolean nimbusFound = false;
+            for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                    Config.debug("Set Look and Feel to Nimbus.");
+                    nimbusFound = true;
+                    break;
+                }
+            }
+            if (!nimbusFound) {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                Config.debug("Set Look and Feel to system.");
+            }
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
                 | IllegalAccessException e) {
             System.err.println("Can't set look and feel : " + e);
         }
-        System.setProperty("sun.java2d.noddraw", Boolean.TRUE.toString());
         SwingUtilities.invokeLater(this);
     }
 
@@ -38,13 +48,13 @@ public class GUI extends Thread {
         mF = new MainFrame();
 
         // add menu pannel
-        MenuPanel mP = new MenuPanel(mL);
+        MenuPanel mP = new MenuPanel(menuListener);
         mF.addPanel(mP, MENU);
         // add new phase 1 pannel
-        FirstPhasePanel fP = new FirstPhasePanel(fL);
+        FirstPhasePanel fP = new FirstPhasePanel(firstPhaseListener);
         mF.addPanel(fP, PHASE1);
         // add new phase 2 pannel
-        SecondPhasePanel sP = new SecondPhasePanel(sL);
+        SecondPhasePanel sP = new SecondPhasePanel(secondPhaseListener);
         mF.addPanel(sP, PHASE2);
     }
 

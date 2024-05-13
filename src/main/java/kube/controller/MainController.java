@@ -21,7 +21,7 @@ public class MainController {
     public class menuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent evt) {
-            // Si changement frame : mF.showPanel(gui.PHASE1)
+            gui.showPanel(GUI.PHASE1);
         }
     }
 
@@ -29,7 +29,7 @@ public class MainController {
     public class phase1Listener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent evt) {
-
+            gui.showPanel(GUI.PHASE2);
         }
     }
 
@@ -37,7 +37,7 @@ public class MainController {
     public class phase2Listener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent evt) {
-
+            gui.showPanel(GUI.MENU);
         }
     }
 }

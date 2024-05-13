@@ -1,6 +1,9 @@
 package kube.view;
 
 import javax.swing.*;
+
+import kube.configuration.Config;
+
 import java.awt.*;
 
 /*
@@ -15,7 +18,8 @@ public class MainFrame extends JFrame {
         // setIconImage(); for later
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(800, 600));
+        setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
+        setMinimumSize(new Dimension(Config.getInitWidth() / 2, Config.getInitHeight() / 2));
         setLocationRelativeTo(null);
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);

@@ -5,6 +5,8 @@ public class Config {
     private static boolean mute = true;
     private static final boolean debug = true;
     private static final boolean showBorders = false;
+    private static final int initWidth = 800;
+    private static final int initHeight = 600;
 
     public Config() {
         isJar = System.getProperty("java.class.path").contains(".jar");
@@ -28,6 +30,14 @@ public class Config {
 
     public static void toggleMute() {
         mute = !mute;
+    }
+
+    public static int getInitWidth() {
+        return initWidth;
+    }
+
+    public static int getInitHeight() {
+        return initWidth;
     }
 
     public static void debug(Object... args) {
