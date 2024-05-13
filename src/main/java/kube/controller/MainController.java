@@ -14,7 +14,7 @@ public class MainController {
 
     public MainController() {
         game = new Game(2);
-        gui = GUI.start(new menuListener(), new phase1Listener(), new phase2Listener());
+        gui = new GUI(new menuListener(), new phase1Listener(), new phase2Listener());
     }
 
     // menu listeners

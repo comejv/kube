@@ -21,9 +21,6 @@ public class GUI extends Thread {
         this.mL = mL;
         this.fL = fL;
         this.sL = sL;
-    }
-
-    public static GUI start(ActionListener mL, ActionListener fL, ActionListener sL) {
         try {
             UIManager.setLookAndFeel(
                     UIManager.getSystemLookAndFeelClassName());
@@ -33,9 +30,7 @@ public class GUI extends Thread {
             System.err.println("Can't set look and feel : " + e);
         }
         System.setProperty("sun.java2d.noddraw", Boolean.TRUE.toString());
-        GUI gui = new GUI(mL, fL, sL);
-        SwingUtilities.invokeLater(gui);
-        return gui;
+        SwingUtilities.invokeLater(this);
     }
 
     public void run() {
