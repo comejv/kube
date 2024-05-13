@@ -187,4 +187,10 @@ public class Mountain {
     public int hashCode() {
         return Objects.hash((Object[]) getMountain());
     }
+
+    @Override
+    public Mountain clone(){
+        Mountain m = new Mountain(getBaseSize());
+        
+    }
 }
