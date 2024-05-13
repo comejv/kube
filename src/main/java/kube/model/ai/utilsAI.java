@@ -9,9 +9,8 @@ import kube.model.Player;
 
 public class utilsAI {
     public static void randomFillMountain(Player player, Random r) {
-
         ArrayList<Color> colArr= new ArrayList<>();
-        //If the Mountain is already build 
+        // If the Mountain is already build 
         if (player.getMountain().isFull()){
             for (int i = 0; i < player.getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {
@@ -36,5 +35,4 @@ public class utilsAI {
                 }
             }
         }
-
     }
