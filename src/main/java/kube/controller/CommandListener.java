@@ -8,8 +8,10 @@ import java.util.Scanner;
 
 import kube.model.Kube;
 import kube.model.Player;
+import kube.model.action.move.Move;
+import kube.model.action.Action;
+import kube.model.action.Queue;
 import kube.model.ai.utilsAI;
-import kube.model.move.Move;
 import kube.view.TextualMode;
 
 public class CommandListener implements Runnable {
@@ -17,7 +19,7 @@ public class CommandListener implements Runnable {
     String command;
     Kube k3;
     TextualMode tm;
-
+    Queue<Action> actions;
     public CommandListener(Kube k3, TextualMode tm) {
         this.k3 = k3;
         this.tm = tm;
@@ -30,7 +32,8 @@ public class CommandListener implements Runnable {
         while (sc.hasNextLine()) {
             switch (sc.nextLine()) {
                 case "random":
-                    utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
+                    actions.add(new Action(Action.SHUFFLE));
+                    //utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
                     System.out.print(currentPlayerToBuild); // Print the mountain & the additionals
                     break;
                 case "echanger":
@@ -41,9 +44,11 @@ public class CommandListener implements Runnable {
                     }
                     break;
                 case "afficher":
+                    actions.add(new Action(Action.SHOW_MOUNTAIN));
                     tm.printState(currentPlayerToBuild);
                     break;
                 case "valider":
+                    actions.add(new Action(Action.VALIDATE));
                     if (!currentPlayerToBuild.getMountain().isFull()) {
                         System.out.println("Vous n'avez pas rempli votre montagne !");
                         break;
@@ -51,10 +56,11 @@ public class CommandListener implements Runnable {
                     if (currentPlayerToBuild == k3.getP1()) {
                         currentPlayerToBuild = k3.getP2();
                     } else {
-                        k3.setPhase(Kube.gamePhase);
+                        k3.setPhase(Kube.GAME_PHASE);
                     }
                     break;
                 case "jouer":
+                    actions.add(new Action(Action.PLAY));
                     playMove(sc);
                     break;
                 case "annuler":

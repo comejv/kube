@@ -1,17 +1,15 @@
 package kube.model;
 
-import kube.configuration.Config;
+import kube.model.action.move.*;
+import kube.model.ai.abstractAI;
 
 import java.awt.Point;
-import java.lang.invoke.WrongMethodTypeException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
-
-import kube.model.move.*;
 
 public class Kube {
 
@@ -23,26 +21,47 @@ public class Kube {
     private boolean penality;
     private int baseSize;
     public static final int nCubePerColor = 9;
-    public static final int preparationPhase = 1;
-    public static final int gamePhase = 2;
+    public static final int PREPARATION_PHASE = 1;
+    public static final int GAME_PHASE = 2;
 
     // Constructor
     public Kube() {
+        init();
+    }
 
+    public void init(){
+        init(null, null);
+    }
+
+    public void init(abstractAI typeAI1) {
+        init(typeAI1, null);
+    }
+    
+    public void init(abstractAI typeAI1, abstractAI typeAI2) {
         setBaseSize(9);
+        setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
-        setP1(new Player(1));
-        setP2(new Player(2));
+        fillBag();
+        fillBase();
         setHistory(new History());
-        setPhase(preparationPhase);
         setPenality(false);
-        if (new Random().nextInt(2) == 0){
+        if (typeAI1 != null){
+            setP1(new AI(1, typeAI1, this));
+        } else {
+            setP1(new Player(1));
+        }
+        if (typeAI2 != null){
+            setP2(new AI(2, typeAI2, this));
+        } else {
+            setP2(new Player(1));
+        }
+        if (new Random().nextInt(2) == 0) {
             setCurrentPlayer(getP1());
         } else {
             setCurrentPlayer(getP2());
         }
-
+        distributeCubesToPlayers();
     }
 
     // Getters
@@ -122,7 +141,7 @@ public class Kube {
     // Methods
     public boolean isPlayable(Move move) throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -200,7 +219,7 @@ public class Kube {
     // valid
     public void fillBag(Integer seed) throws UnsupportedOperationException {
 
-        if (getPhase() != preparationPhase) {
+        if (getPhase() != PREPARATION_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -229,7 +248,7 @@ public class Kube {
     // fill the base with baseSize random colors
     public void fillBase() throws UnsupportedOperationException {
 
-        if (getPhase() != preparationPhase) {
+        if (getPhase() != PREPARATION_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -244,15 +263,14 @@ public class Kube {
 
         if (currentPlayer == p1) {
             currentPlayer = p2;
-        }
-        else {
+        } else {
             currentPlayer = p1;
         }
     }
 
     public void distributeCubesToPlayers() throws UnsupportedOperationException {
 
-        if (getPhase() != preparationPhase) {
+        if (getPhase() != PREPARATION_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -284,7 +302,7 @@ public class Kube {
 
     public boolean unPlay() throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -303,7 +321,7 @@ public class Kube {
 
     public boolean rePlay() throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -316,7 +334,7 @@ public class Kube {
 
     private void evomYalp(Move move) throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -383,8 +401,7 @@ public class Kube {
                 if (!getHistory().getDone().get(getHistory().getDone().size() - 1).isToAdditionals()) {
                     nextPlayer();
                 }
-            }
-            catch (IndexOutOfBoundsException e) {
+            } catch (IndexOutOfBoundsException e) {
                 nextPlayer();
             }
         }
@@ -392,7 +409,7 @@ public class Kube {
 
     public boolean playMove(Move move) throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -406,7 +423,7 @@ public class Kube {
 
     public boolean playMoveWithoutHistory(Move move) throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -496,7 +513,7 @@ public class Kube {
 
     public Boolean canCurrentPlayerPlay() throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -506,7 +523,7 @@ public class Kube {
     // Method that return the list of moves available for the current player
     public ArrayList<Move> moveSet() throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -545,10 +562,10 @@ public class Kube {
 
     private ArrayList<Move> penalitySet() throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
-        
+
         ArrayList<Move> moves = new ArrayList<>();
         Player nextPlayer;
         if (getCurrentPlayer() == getP1()) {
@@ -572,30 +589,30 @@ public class Kube {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o){
+        if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()){
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
         Kube k = (Kube) o;
-        if (getCurrentPlayer().getId() != k.getCurrentPlayer().getId()){
+        if (getCurrentPlayer().getId() != k.getCurrentPlayer().getId()) {
             return false;
-        } 
+        }
         return getP1().equals(k.getP1()) && getP2().equals(k.getP2()) && getK3().equals(k.getK3());
     }
 
-    @Override 
-    public int hashCode(){
+    @Override
+    public int hashCode() {
         return Objects.hash(getP1(), getP2(), getK3(), getCurrentPlayer());
     }
 
     @Override
-    public Kube clone(){
+    public Kube clone() {
         Kube Kopy = new Kube();
         Kopy.setP1(getP1().clone());
         Kopy.setP2(getP2().clone());
-        if (getCurrentPlayer() == getP1()){
+        if (getCurrentPlayer() == getP1()) {
             Kopy.setCurrentPlayer(Kopy.getP1());
         } else {
             Kopy.setCurrentPlayer(Kopy.getP2());
@@ -606,6 +623,5 @@ public class Kube {
         Kopy.setK3(getK3().clone());
         return Kopy;
     }
-
 
 }

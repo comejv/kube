@@ -8,12 +8,12 @@ import java.awt.Point;
 import org.junit.Test;
 
 import kube.model.Color;
-import kube.model.move.MoveAA;
-import kube.model.move.MoveAM;
-import kube.model.move.MoveAW;
-import kube.model.move.MoveMA;
-import kube.model.move.MoveMM;
-import kube.model.move.MoveMW;
+import kube.model.action.move.MoveAA;
+import kube.model.action.move.MoveAM;
+import kube.model.action.move.MoveAW;
+import kube.model.action.move.MoveMA;
+import kube.model.action.move.MoveMM;
+import kube.model.action.move.MoveMW;
 
 public class MoveTest {
     

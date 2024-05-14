@@ -244,4 +244,8 @@ public class Player {
         p.setMountain(getMountain().clone());
         return p;
     }
+
+    public boolean isAI(){
+        return false;
+    }
 }

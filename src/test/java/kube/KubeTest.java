@@ -14,7 +14,7 @@ import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.Player;
-import kube.model.move.*;
+import kube.model.action.move.*;
 
 public class KubeTest {
 

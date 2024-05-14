@@ -1,5 +1,5 @@
 
-package kube.model.move;
+package kube.model.action.move;
 
 import java.awt.Point;
 

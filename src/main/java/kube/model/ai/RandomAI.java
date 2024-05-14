@@ -5,9 +5,9 @@ import java.util.Random;
 
 import kube.model.Kube;
 import kube.model.Player;
-import kube.model.move.*;
+import kube.model.action.move.*;
 
-public class RandomAI implements AI {
+public class RandomAI implements abstractAI {
     Kube k3;
     Player iaPlayer;
     Random r;
@@ -24,12 +24,8 @@ public class RandomAI implements AI {
         r = new Random();
     }
 
-    public void preparationPhase() {
+    public void PREPARATION_PHASE() {
         utilsAI.randomFillMountain(iaPlayer, r);
-    }
-
-    public void gamePhase() {
-        
     }
 
     public Move nextMove() throws Exception {
@@ -40,5 +36,12 @@ public class RandomAI implements AI {
             return moves.get(r.nextInt(moves.size()));
         }
     }
+    
+    public void setK3(Kube k){
+        k3 = k;
+    }
 
+    public void setPlayer(Player p){
+        iaPlayer = p;
+    }
 }
