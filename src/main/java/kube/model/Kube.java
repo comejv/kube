@@ -90,6 +90,9 @@ public class Kube {
     }
 
     public int getPhase() {
+        if (phase == PREPARATION_PHASE && getP1() != null && getP1().hasValidateBuilding() && getP2() != null && getP2().hasValidateBuilding()){
+            phase  = GAME_PHASE;
+        }
         return phase;
     }
 

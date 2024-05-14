@@ -5,7 +5,7 @@ import kube.model.Player;
 import kube.model.action.move.Move;
 
 public interface abstractAI {
-    public void PREPARATION_PHASE();
+    public void constructionPhase();
 
     public Move nextMove() throws Exception;
 

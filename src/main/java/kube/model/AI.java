@@ -16,4 +16,9 @@ public class AI extends Player {
     public boolean isAI(){
         return true;
     }
+
+    @Override
+    public abstractAI getAI(){
+        return ai;
+    }
 }

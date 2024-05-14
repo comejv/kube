@@ -43,8 +43,10 @@ public class MinMaxAI implements abstractAI, ActionListener {
     }
 
     @Override
-    public void PREPARATION_PHASE() {
-        utilsAI.randomFillMountain(iaPlayer, r);
+    public void constructionPhase() {
+        while (!iaPlayer.validateBuilding()){
+            utilsAI.randomFillMountain(iaPlayer, r);
+        }
     }
 
 

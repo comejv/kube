@@ -24,7 +24,7 @@ public class RandomAI implements abstractAI {
         r = new Random();
     }
 
-    public void PREPARATION_PHASE() {
+    public void constructionPhase() {
         utilsAI.randomFillMountain(iaPlayer, r);
     }
 

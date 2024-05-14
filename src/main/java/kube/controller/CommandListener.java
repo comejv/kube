@@ -11,6 +11,7 @@ import kube.model.Player;
 import kube.model.action.move.Move;
 import kube.model.action.Action;
 import kube.model.action.Queue;
+import kube.model.action.Swap;
 import kube.model.ai.utilsAI;
 import kube.view.TextualMode;
 
@@ -33,7 +34,7 @@ public class CommandListener implements Runnable {
             switch (sc.nextLine()) {
                 case "random":
                     actions.add(new Action(Action.SHUFFLE));
-                    //utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
+                    utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
                     System.out.print(currentPlayerToBuild); // Print the mountain & the additionals
                     break;
                 case "echanger":
@@ -64,9 +65,11 @@ public class CommandListener implements Runnable {
                     playMove(sc);
                     break;
                 case "annuler":
+                    actions.add(new Action(Action.UNDO));
                     k3.unPlay();
                     break;
                 case "rejouer":
+                    actions.add(new Action(Action.REDO));
                     k3.rePlay();
                     break;
                 case "":
@@ -97,6 +100,7 @@ public class CommandListener implements Runnable {
             if (c == Color.EMPTY || c2 == Color.EMPTY) {
                 return false;
             }
+            actions.add(new Action(Action.SWAP,new Swap(x1, y1, x2, y2)));
             p.buildToMoutain(x1, y1, c2);
             p.buildToMoutain(x2, y2, c);
             return true;
@@ -113,6 +117,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
+            actions.add(new Action(Action.MOVE,moves.get(n)));
             return k3.playMove(moves.get(n));
         } catch (Exception e) {
             System.out.println("Numéro invalide");

@@ -3,7 +3,7 @@ package kube.model.action;
 public class Queue<E> {
     Maillon<E> head, queue;
 
-    Queue() {
+    public Queue() {
         head = queue = null;
     }
 
@@ -20,7 +20,7 @@ public class Queue<E> {
         notifyAll();
     }
 
-    public synchronized Object remove() {
+    public synchronized E remove() {
         while (head == null) {
             try {
                 wait();
