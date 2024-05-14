@@ -17,8 +17,8 @@ import java.awt.Image;
  */
 public class Buttons {
 
-    public static class MenuButtons extends JButton {
-        public MenuButtons(String name){
+    public static class MenuButton extends JButton {
+        public MenuButton(String name){
             //Font font = Font.createFont(Font.TRUETYPE_FONT, getResourceAsStream(Jomhuria-Regular.ttf));
 
             super(name);
@@ -30,8 +30,8 @@ public class Buttons {
         }
     }
 
-    public static class LocalButtons extends JButton {
-        public LocalButtons(String name){
+    public static class LocalButton extends JButton {
+        public LocalButton(String name){
             super(name);
             setPreferredSize(new Dimension(Config.getInitWidth()/2, Config.getInitWidth()/6));
             setBackground(GUIColors.ACCENT);
@@ -39,8 +39,8 @@ public class Buttons {
         }    
     }
 
-    public static class GameFirstPhaseButtons extends JButton {
-        public GameFirstPhaseButtons(String name){
+    public static class GameFirstPhaseButton extends JButton {
+        public GameFirstPhaseButton(String name){
             super(name);
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT);
@@ -48,31 +48,31 @@ public class Buttons {
         }    
     }
 
-    public static class GameSecondPhaseButtons extends JButton {
-        public GameSecondPhaseButtons(String name){
+    public static class GameSecondPhaseButton extends JButton {
+        public GameSecondPhaseButton(String name){
             super(name);
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT);
         }
     }
 
-    public static class ParameterButtons extends JButton {
-        public ParameterButtons(Image image){
+    public static class ParameterButton extends JButton {
+        public ParameterButton(Image image){
             super(new ImageIcon(image));
             setPreferredSize(new Dimension(100, 100));
         }
     }
 
-    public static class RulesButtons extends JButton {
-        public RulesButtons(String name){
+    public static class RulesButton extends JButton {
+        public RulesButton(String name){
             super(name);
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT);
         }
     }
 
-    public static class InGameMenuButtons extends JButton {
-        public InGameMenuButtons(String name){
+    public static class InGameMenuButton extends JButton {
+        public InGameMenuButton(String name){
             super(name);
             setPreferredSize(new Dimension(Config.getInitWidth()/4, Config.getInitHeight()/8));
             setBackground(GUIColors.ACCENT);

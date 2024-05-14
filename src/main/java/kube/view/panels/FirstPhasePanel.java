@@ -17,7 +17,7 @@ public class FirstPhasePanel extends JPanel {
     public FirstPhasePanel(ActionListener aL) {
         buttonListener = aL;
         add(new JLabel("Phase 1"));
-        JButton b = new Buttons.GameFirstPhaseButtons("Valider");
+        JButton b = new Buttons.GameFirstPhaseButton("Valider");
 
         b.setActionCommand("phase2");
         b.addActionListener(buttonListener);
