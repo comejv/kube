@@ -16,7 +16,7 @@ public class Kube {
     /**********
      * CONSTANTS
      **********/
-    public static final int nCubePerColor = 9;
+    public static final int NB_CUBE_PER_COLOR = 9;
     public static final int PREPARATION_PHASE = 1;
     public static final int GAME_PHASE = 2;
 
@@ -35,10 +35,16 @@ public class Kube {
      * CONSTRUCTOR
      **********/
 
+    /**
+     * Constructor of the Kube
+     */
     public Kube() {
         init();
     }
 
+    /**********
+     * INITIALIZATION
+     **********/
     public void init() {
         init(null, null);
     }
@@ -48,6 +54,7 @@ public class Kube {
     }
 
     public void init(abstractAI typeAI1, abstractAI typeAI2) {
+
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
@@ -56,21 +63,25 @@ public class Kube {
         fillBase();
         setHistory(new History());
         setPenality(false);
+
         if (typeAI1 != null) {
             setP1(new AI(1, typeAI1, this));
         } else {
             setP1(new Player(1));
         }
+
         if (typeAI2 != null) {
             setP2(new AI(2, typeAI2, this));
         } else {
             setP2(new Player(1));
         }
+
         if (new Random().nextInt(2) == 0) {
             setCurrentPlayer(getP1());
         } else {
             setCurrentPlayer(getP2());
         }
+
         distributeCubesToPlayers();
     }
 
@@ -109,6 +120,10 @@ public class Kube {
         return baseSize;
     }
 
+    public int getPhase() {
+        return phase;
+    }
+
     public Color getPlayerCase(Player player, Point point) {
         return player.getMountain().getCase(point);
     }
@@ -117,10 +132,9 @@ public class Kube {
         return player.getMountain().getCase(x, y);
     }
 
-    public int getPhase() {
-        return phase;
+    public ArrayList<Point> getPlayerRemovable(Player player) {
+        return player.getMountain().removable();
     }
-
     /**********
      * SETTERS
      **********/
@@ -160,12 +174,12 @@ public class Kube {
         baseSize = b;
     }
 
-    public int updatePhase() {
-        if (phase == PREPARATION_PHASE && getP1() != null && getP1().hasValidateBuilding() && getP2() != null
-                && getP2().hasValidateBuilding()) {
-            phase = GAME_PHASE;
-        }
-        return phase;
+    public void setPlayerCase(Player player, Point point, Color color) {
+        player.getMountain().setCase(point, color);
+    }
+
+    public void setPlayerCase(Player player, int x, int y, Color color) {
+        player.getMountain().setCase(x, y, color);
     }
 
      /**********
@@ -191,7 +205,7 @@ public class Kube {
         // Fill the bag with nCubePerColor cubes of each color
         bag = new ArrayList<>();
         for (Color c : Color.getAllColored()) {
-            for (int i = 0; i < nCubePerColor; i++) {
+            for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
                 bag.add(c);
             }
         }
@@ -248,14 +262,17 @@ public class Kube {
      */
     public void distributeCubesToPlayers() throws UnsupportedOperationException {
 
+        HashMap<Color, Integer> p1Cubes, p2Cubes;
+        Color cAvailable;
+
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
             throw new UnsupportedOperationException();
         }
 
         // Distribute the cubes to the players
-        HashMap<Color, Integer> p1Cubes = new HashMap<>();
-        HashMap<Color, Integer> p2Cubes = new HashMap<>();
+        p1Cubes = new HashMap<>();
+        p2Cubes = new HashMap<>();
 
         p1Cubes.put(Color.WHITE, 2);
         p2Cubes.put(Color.WHITE, 2);
@@ -267,16 +284,15 @@ public class Kube {
             p2Cubes.put(c, 0);
         }
 
-        Color c;
         for (int i = 0; i < 17; i++) {
-            c = bag.remove(0);
-            p1Cubes.put(c, p1Cubes.get(c) + 1);
-            c = bag.remove(0);
-            p2Cubes.put(c, p2Cubes.get(c) + 1);
+            cAvailable = bag.remove(0);
+            p1Cubes.put(cAvailable, p1Cubes.get(cAvailable) + 1);
+            cAvailable = bag.remove(0);
+            p2Cubes.put(cAvailable, p2Cubes.get(cAvailable) + 1);
         }
 
-        p1.setAvalaibleToBuild(p1Cubes);
-        p2.setAvalaibleToBuild(p2Cubes);
+        p1.setAvailableToBuild(p1Cubes);
+        p2.setAvailableToBuild(p2Cubes);
     }
 
     /**********
@@ -294,17 +310,21 @@ public class Kube {
      */
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
 
+        Player player;
+        Player previousPlayer;
+        boolean cubeRemovable;
+        boolean cubeCompatible;
+        ArrayList<Color> additionals;
+        boolean accessible, sameColor;
+
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
-        Player player = getCurrentPlayer();
-        Player previousPlayer = null;
-        boolean cubeRemovable = false;
-        boolean cubeCompatible = false;
-        ArrayList<Color> additionals;
-        boolean accessible, sameColor;
+        player = getCurrentPlayer();
+        cubeRemovable = false;
+        cubeCompatible = false;
 
         // Get the premvious player
         if (player == getP1()) {
@@ -325,7 +345,7 @@ public class Kube {
         else if (move.isToAdditionals()) {
             // Checking if the cube is in the nextPlayer's mountain and if it is the same
             // color
-            accessible = previousPlayer.getMountain().removable().contains(move.getFrom());
+            accessible = getPlayerRemovable(previousPlayer).contains(move.getFrom());
             sameColor = getPlayerCase(previousPlayer, move.getFrom()) == move.getColor();
             cubeRemovable = accessible && sameColor;
         }
@@ -339,7 +359,7 @@ public class Kube {
         // Catching if the move is a MoveMW or a MM (placing from player's mountain)
         else if (move.isWhite() || move.isClassicMove()) {
             // Checking if the cube is in the player's mountain and if it is the same color
-            accessible = player.getMountain().removable().contains(move.getFrom());
+            accessible = getPlayerRemovable(player).contains(move.getFrom());
             sameColor = getPlayerCase(player, move.getFrom()) == move.getColor();
             cubeRemovable = accessible && sameColor;
         } else {
@@ -379,14 +399,18 @@ public class Kube {
      */
     public boolean playMoveWithoutHistory(Move move) throws UnsupportedOperationException {
 
+        Player player;
+        Player previousPlayer;
+        Color color;
+
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
-        Player player = getCurrentPlayer();
-        Player previousPlayer = null;
-        Color color = move.getColor();
+        player = getCurrentPlayer();
+        previousPlayer = null;
+        color = move.getColor();
 
         // Get the previous player
         if (player == getP1()) {
@@ -479,7 +503,7 @@ public class Kube {
         // Play the move
         if (playMoveWithoutHistory(move)) {
             // Add the move to the history
-            history.addMove(move);
+            getHistory().addMove(move);
             return true;
         }
 
@@ -531,7 +555,7 @@ public class Kube {
             // Cancel the move
             ma = (MoveMA) move;
             player.getAdditionals().remove(ma.getColor());
-            previousPlayer.getMountain().setCase(ma.getFrom().x, ma.getFrom().y, ma.getColor());
+            setPlayerCase(previousPlayer, ma.getFrom(), ma.getColor());
             setPenality(true);
         }
         // Catching if the move is a MoveAW (placing a white cube from player's
@@ -546,7 +570,7 @@ public class Kube {
         else if (move.isWhite()) {
             // Cancel the move
             mw = (MoveMW) move;
-            player.getMountain().setCase(mw.getFrom().x, mw.getFrom().y, mw.getColor());
+            setPlayerCase(player, mw.getFrom(), mw.getColor());
             player.setWhiteUsed(player.getWhiteUsed() - 1);
         }
         // Catching if the move is a MoveAM (placing a cube from player's additionals on
@@ -563,7 +587,7 @@ public class Kube {
         else if (move.isClassicMove()) {
             // Cancel the move
             mm = (MoveMM) move;
-            player.getMountain().setCase(mm.getFrom().x, mm.getFrom().y, mm.getColor());
+            setPlayerCase(player, mm.getFrom(), mm.getColor());
             k3.remove(mm.getTo());
             setPenality(false);
         }
@@ -609,16 +633,24 @@ public class Kube {
         return false;
     }
 
+    /**
+     * Re play the last move that has been unplayed
+     * 
+     * @return true if the move is replayed, false otherwise
+     * @throws UnsupportedOperationException if the phase is not the game phase
+     */
     public boolean rePlay() throws UnsupportedOperationException {
 
+        // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
+        // Re play the last move that has been unplayed
         if (getHistory().canRedo()) {
-
             return playMoveWithoutHistory(getHistory().redoMove());
         }
+
         return false;
     }
 
@@ -658,7 +690,7 @@ public class Kube {
         }
 
         // Adding the list of MoveMA
-        for (Point p : previousPlayer.getMountain().removable()) {
+        for (Point p : getPlayerRemovable(previousPlayer)) {
             cMountain = getPlayerCase(previousPlayer, p);
             ma = new MoveMA(p, cMountain);
             moves.add(ma);
@@ -692,7 +724,7 @@ public class Kube {
         moves = new ArrayList<>();
 
         // Adding list of MoveMM and MoveMW moves
-        for (Point start : getCurrentPlayer().getMountain().removable()) {
+        for (Point start : getPlayerRemovable(getCurrentPlayer())) {
             cMountain = getPlayerCase(getCurrentPlayer(), start);
             if (cMountain == Color.WHITE) {
                 mw = new MoveMW(start);
@@ -755,6 +787,26 @@ public class Kube {
         }
     }
 
+    /**
+     * Change the current phase to the game phase if the two players have validated
+     * 
+     * @return the current phase
+     */
+    public int updatePhase() {
+
+        boolean p1ValidateBuilding, p2ValidateBuilding, isPreparationPhase;
+
+        p1ValidateBuilding = getP1() != null && getP1().hasValidateBuilding();
+        p2ValidateBuilding = getP2() != null && getP2().hasValidateBuilding();
+        isPreparationPhase = getPhase() == PREPARATION_PHASE;
+
+        if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
+            setPhase(2);
+        }
+
+        return getPhase();
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -788,21 +840,23 @@ public class Kube {
     @Override
     public Kube clone() {
 
-        Kube Kopy = new Kube();
+        Kube kopy;
 
-        Kopy.setP1(getP1().clone());
-        Kopy.setP2(getP2().clone());
+        kopy = new Kube();
+
+        kopy.setP1(getP1().clone());
+        kopy.setP2(getP2().clone());
 
         if (getCurrentPlayer() == getP1()) {
-            Kopy.setCurrentPlayer(Kopy.getP1());
+            kopy.setCurrentPlayer(kopy.getP1());
         } else {
-            Kopy.setCurrentPlayer(Kopy.getP2());
+            kopy.setCurrentPlayer(kopy.getP2());
         }
 
-        Kopy.setPenality(getPenality());
-        Kopy.setBag(new ArrayList<>(getBag()));
-        Kopy.setPhase(getPhase());
-        Kopy.setK3(getK3().clone());
-        return Kopy;
+        kopy.setPenality(getPenality());
+        kopy.setBag(new ArrayList<>(getBag()));
+        kopy.setPhase(getPhase());
+        kopy.setK3(getK3().clone());
+        return kopy;
     }
 }
