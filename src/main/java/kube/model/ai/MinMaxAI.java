@@ -16,6 +16,9 @@ import kube.model.action.move.Move;
 
 public class MinMaxAI implements abstractAI, ActionListener {
 
+    /**********
+     * ATTRIBUTES
+     **********/
     private Kube k3;
     private Player iaPlayer;
     private Random r;
@@ -25,6 +28,9 @@ public class MinMaxAI implements abstractAI, ActionListener {
     private boolean noMoreTime;
     private Timer timer;
 
+    /**********
+     * CONSTRUCTORS
+     **********/
     public MinMaxAI(int time, int seed) {
         r = new Random(seed);
         setTime(time);
@@ -35,6 +41,9 @@ public class MinMaxAI implements abstractAI, ActionListener {
         setTime(3000);
     }
 
+    /**********
+     * SETTERS
+     **********/
     public void setK3(Kube k) {
         k3 = k;
     }
@@ -43,45 +52,143 @@ public class MinMaxAI implements abstractAI, ActionListener {
         iaPlayer = p;
     }
 
+    public void setR(Random r) {
+        this.r = r;
+    }
+
+    public void setSolution(HashMap<Kube, Move> s) {
+        solution = s;
+    }
+
+    public void setTmp(HashMap<Kube, Move> t) {
+        tmp = t;
+    }
+
+    public void setHeuristic(Method m) {
+        heuristic = m;
+    }
+
+    public void setTime(int t) {
+        time = t;
+    }
+
+    public void setNoMoreTime(boolean b) {
+        noMoreTime = b;
+    }
+
+    public void setTimer(Timer t) {
+        timer = t;
+    }
+
+    /**********
+     * GETTERS
+     **********/
+    public Kube getK3() {
+        return k3;
+    }
+
+    public Player getPlayer() {
+        return iaPlayer;
+    }
+
+    public Random getR() {
+        return r;
+    }
+
+    public HashMap<Kube, Move> getSolution() {
+        return solution;
+    }
+
+    public HashMap<Kube, Move> getTmp() {
+        return tmp;
+    }
+
+    public Method getHeuristic() {
+        return heuristic;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public boolean getNoMoreTime() {
+        return noMoreTime;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Fill the mountain with random mountains until the mountain is valid
+     * 
+     * @return void
+     */
     @Override
     public void constructionPhase() {
-        while (!iaPlayer.validateBuilding()) {
-            utilsAI.randomFillMountain(iaPlayer, r);
+        while (!getPlayer().validateBuilding()) {
+            utilsAI.randomFillMountain(getPlayer(), getR());
         }
     }
 
+    /**
+     * Give the next move
+     * 
+     * @return the next move
+     */
     @Override
     public Move nextMove() throws Exception {
-        solution = new HashMap<>();
-        noMoreTime = false;
-        int horizon = 1;
-        timer = new Timer(time, this);
-        timer.start();
+
+        int horizon;
+
+        setSolution(new HashMap<>());
+        setNoMoreTime(false);
+
+        horizon = 1;
+
+        setTimer(new Timer(time, this));
+        getTimer().start();
+
         while (true) {
-            tmp = new HashMap<>();
-            minMax(k3.clone(), horizon);
-            if (noMoreTime) {
-                return solution.get(k3);
+            setTmp(new HashMap<>());
+            minMax(getK3().clone(), horizon);
+            if (getNoMoreTime()) {
+                return getSolution().get(getK3());
             } else {
-                solution = tmp;
+                setSolution(getTmp());
                 horizon++;
             }
         }
     }
 
+    /**
+     * MinMax algorithm
+     * 
+     * @param k       the current state of the game
+     * @param horizon the depth of the tree
+     * @return the best value for a max node or the worst value for a min node
+     */
     public int minMax(Kube k, int horizon) {
-        if (noMoreTime) { // Timer's end
+
+        // Timer's end
+        if (getNoMoreTime()) {
             return -1;
         }
+
         ArrayList<Move> moves;
+        int value, score;
+
         // Leaf
         if (horizon == 0) {
             return evaluation(k);
         } else if ((moves = k.moveSet()).size() == 0) {
             return evaluation(k);
         } else {
-            int value, score;
-            if (k.getCurrentPlayer() == iaPlayer) {
+            if (k.getCurrentPlayer() == getPlayer()) {
                 value = Integer.MIN_VALUE;
             } else {
                 value = Integer.MAX_VALUE;
@@ -93,10 +200,10 @@ public class MinMaxAI implements abstractAI, ActionListener {
                     return -1;
                 }
                 k.unPlay();
-                if (k.getCurrentPlayer() == iaPlayer) {
+                if (k.getCurrentPlayer() == getPlayer()) {
                     if (score > value) {
                         value = score;
-                        tmp.put(k.clone(), m);
+                        getTmp().put(k.clone(), m);
                     }
                 } else {
                     if (score < value) {
@@ -108,6 +215,12 @@ public class MinMaxAI implements abstractAI, ActionListener {
         }
     }
 
+    /**
+     * Kube's evaluation method
+     * 
+     * @param k the current state of the game
+     * @return the value of the state
+     */
     private int evaluation(Kube k) {
         try {
             return (int) heuristic.invoke(null, k); // Assuming heuristic method is static
@@ -118,21 +231,14 @@ public class MinMaxAI implements abstractAI, ActionListener {
     }
 
     @Override
+    /**
+     * Action performed when the timer ends
+     * 
+     * @param arg0 the action event
+     * @return void
+     */
     public void actionPerformed(ActionEvent arg0) {
-        noMoreTime = true;
-        timer.stop();
-    }
-
-    public void setHeuristicMethod(Method h) {
-        heuristic = h;
-    }
-
-    // Set time in ms
-    public void setTime(int t) {
-        time = t;
-    }
-
-    public int getTime() {
-        return time;
+        setNoMoreTime(true);
+        getTimer().stop();
     }
 }
