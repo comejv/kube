@@ -26,15 +26,11 @@ public class RandomAI implements abstractAI {
      * @param p the player
      * @param seed the seed of the random
      */
-    public RandomAI(Kube k, Player p, int seed) {
-        setK3(k);
-        setPlayer(p);
+    public RandomAI(int seed) {
         setR(new Random(seed));
     }
 
-    public RandomAI(Kube k, Player p) {
-        setK3(k);
-        setPlayer(p);
+    public RandomAI() {
         setR(new Random());
     }
 

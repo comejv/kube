@@ -9,25 +9,112 @@ import kube.model.Kube;
 import kube.model.Player;
 import kube.model.action.move.Move;
 import kube.model.Mountain;
+import kube.model.action.*;
 
 
-
-public class TextualMode{
+public class TextualMode implements Runnable{
 
     Game game;
-
-    public TextualMode(Game g) {
-        game = g;
+    Queue<Action> modelToView;
+    public TextualMode(Game g, Queue<Action> modelToView) {
+        this.game = g;
+        this.modelToView = modelToView;
     }
 
-    public void printAI() {
-        System.out.println("Difficultée de l'IA? (1-3)");
-    }
+    @Override
+    public void run() {
+        printWelcome();
+        printStart();
+        while(true){
+            Action action = modelToView.remove();
+            switch (action.getType()) {
+                case Action.PRINT_AI:
+                    if (action.getData()!=null) {
+                        printAI();
+                    } else {
+                        printAI((int) action.getData());
+                    }
+                    break;
+                case Action.PRINT_COMMAND_ERROR:
+                    printCommandError();
+                    break;
+                case Action.PRINT_WAIT_COORDINATES:
+                    printWaitCoordinates((int) action.getData());
+                    break;
+                case Action.PRINT_GOODBYE:
+                    printGoodbye();
+                    break;
+                case Action.PRINT_HELP:
+                    printHelp();
+                    break;
+                case Action.PRINT_LIST_MOVES:
+                    printListMoves();
+                    break;
+                case Action.PRINT_MOVE:
+                    printMove((Move) action.getData());
+                    break;
+                case Action.PRINT_MOVE_ERROR:
+                    printMoveError();
+                    break;
+                case Action.PRINT_NEXT_PLAYER:
+                    printNextPlayer();
+                    break;
+                case Action.PRINT_PLAYER:
+                    if (action.getData()!=null) {
+                        printPlayer();
+                    } else {
+                        printPlayer((int) action.getData());
+                    }
+                    break;
+                case Action.PRINT_RANDOM:
+                    printRandom();
+                    break;
+                case Action.PRINT_REDO:
+                    printRedo((Move)action.getData());
+                    break;
+                case Action.PRINT_REDO_ERROR:
+                    printRedoError();
+                    break;
+                case Action.PRINT_STATE:
+                    printState();
+                    break;
+                case Action.PRINT_SWAP:
+                    printSwap();
+                    break;
+                case Action.PRINT_SWAP_ERROR:
+                    printSwapError();
+                    break;
+                case Action.PRINT_SWAP_SUCCESS:
+                    Point[] points = (Point[]) action.getData();
+                    printSwapSuccess(points[0], points[1]);
+                    break;
+                case Action.PRINT_UNDO:
+                    printUndo((Move) action.getData());
+                    break;
+                case Action.PRINT_UNDO_ERROR:
+                    printUndoError();
+                    break;
+                case Action.PRINT_VALIDATE:
+                    printValidate();
+                    break;
+                case Action.PRINT_WELCOME:
+                    printWelcome();
+                    break;
+                case Action.PRINT_WIN_MESSAGE:
+                    printWinMessage((Player) action.getData());
+                    break;
+                case Action.UPDATE:
+                    update();
+                    break;
+                default:
+                    break;
+            }
+        }
 
-    public void printAI(int n) {
-        System.out.println("Difficultée de l'IA" + n + "? (1-3)");
-    }
+        
 
+    }
+    
     public void printCommandPhase1() {
         System.out.println("Tapez une des commandes suivantes : \n" +
                 "-random : construit aléatoirement une tour\n" +
@@ -45,7 +132,19 @@ public class TextualMode{
                 "-aide : affiche cette liste\n");
     }
 
-    public void printError() {
+
+
+    public void printAI() {
+        System.out.println("Difficultée de l'IA? (1-3)");
+    }
+
+    public void printAI(int n) {
+        System.out.println("Difficultée de l'IA" + n + "? (1-3)");
+    }
+
+
+
+    public void printCommandError() {
         System.out.println("Commande invalide. Tapez -aide pour afficher la liste des commandes.");
     }
 
@@ -79,34 +178,6 @@ public class TextualMode{
         return moves;
     }
 
-    public void printGameType(){
-        System.out.println("Voulez vous jouer en local (1) ou en ligne (2)?");
-    }
-
-    public void printGameOnline(){
-        System.out.println("Voulez vous créer (1) ou rejoindre (2) une partie?");
-    }
-
-    public void printGameOnlineInfo(int port){
-        try {
-            System.out.println("Votre adresse locale est : " + InetAddress.getLocalHost() + ":" + port);
-        } catch (Exception e) {
-            System.out.println("Impossible de récupérer l'adresse locale");
-        }
-    }
-
-    public void printGameOnlinePort(){
-        System.out.println("Entrez le port sur lequel vous voulez écouter");
-    }
-
-    public void printGameOnlineConnect(){
-        System.out.println("Entrez l'adresse IP et le port de la partie à rejoindre (Au format xx.xx.xx.xx:xxxx)");
-    }
-
-    public void printGameOnlineError(){
-        System.out.println("Erreur lors de la connexion au serveur");
-    }
-
     public void printMove(Move move){
         System.out.println("Vous avez joué : " + move);
     }
@@ -133,8 +204,8 @@ public class TextualMode{
         System.out.println("Votre montagne a été mélangée");
     }
 
-    public void printRedo(){
-        System.out.println("Coup rejoué ");
+    public void printRedo(Move move){
+        System.out.println("Coup "+ move.toString() +" rejoué");
     }
 
     public void printRedoError(){
@@ -175,7 +246,7 @@ public class TextualMode{
     }
 
     public void printUndo(Move move){
-        System.out.println("Coup annulé");
+        System.out.println("Coup "+ move.toString() +" annulé");
     }
     public void printUndoError(){
         System.out.println("Impossible d'annuler le coup");
@@ -210,5 +281,7 @@ public class TextualMode{
             printCommandPhase2();
         }
     }
+
+
 
 }
