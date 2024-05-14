@@ -1,19 +1,14 @@
 package kube.configuration;
 
 public class Config {
-    private static boolean isJar;
     private static boolean mute = true;
     private static final boolean debug = true;
     private static final boolean showBorders = false;
     private static final int initWidth = 800;
     private static final int initHeight = 600;
 
-    public Config() {
-        isJar = System.getProperty("java.class.path").contains(".jar");
-    }
-
     public static boolean isJar() {
-        return isJar;
+        return System.getProperty("java.class.path").contains(".jar");
     }
 
     public static boolean isMute() {
@@ -37,7 +32,7 @@ public class Config {
     }
 
     public static int getInitHeight() {
-        return initWidth;
+        return initHeight;
     }
 
     public static void debug(Object... args) {

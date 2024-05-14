@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
-
 import javax.imageio.ImageIO;
 
 public class ResourceLoader {
@@ -41,7 +40,7 @@ public class ResourceLoader {
                     System.err.println("Missing required resource images/notFound.png");
                     System.exit(1);
                 }
-            } 
+            }
 
             return ImageIO.read(in);
         } catch (FileNotFoundException e) {

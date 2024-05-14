@@ -21,6 +21,14 @@ public class MainController {
     public class menuListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent evt) {
+            switch (evt.getActionCommand()) {
+                case "play":
+                    gui.showPanel(GUI.PHASE1);
+                    break;
+
+                default:
+                    break;
+            }
             gui.showPanel(GUI.PHASE1);
         }
     }
