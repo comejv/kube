@@ -19,12 +19,12 @@ public class Buttons {
         public MenuButton(String name) {
             super(name);
 
-            setPreferredSize(new Dimension(Config.getInitWidth() / 3,
-                    Config.getInitWidth() / 6));
+            setPreferredSize(new Dimension(Config.getInitWidth() / 2,
+                    Config.getInitWidth() / 12));
             setBackground(GUIColors.ACCENT);
             setForeground(GUIColors.TEXT);
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
         }
     }
 
@@ -34,6 +34,8 @@ public class Buttons {
             setPreferredSize(new Dimension(Config.getInitWidth() / 2, Config.getInitWidth() / 6));
             setBackground(GUIColors.ACCENT);
             setForeground(GUIColors.TEXT);
+
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
     }
 
@@ -43,6 +45,8 @@ public class Buttons {
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT);
             setForeground(GUIColors.TEXT);
+
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
     }
 
@@ -51,6 +55,8 @@ public class Buttons {
             super(name);
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT);
+
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
     }
 
@@ -66,6 +72,8 @@ public class Buttons {
             super(name);
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT);
+
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
     }
 
@@ -74,6 +82,8 @@ public class Buttons {
             super(name);
             setPreferredSize(new Dimension(Config.getInitWidth() / 4, Config.getInitHeight() / 8));
             setBackground(GUIColors.ACCENT);
+
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
     }
 

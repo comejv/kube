@@ -9,6 +9,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.awt.Insets;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -60,9 +61,16 @@ public class MenuPanel extends JPanel {
         add(buttonsPanel, c);
 
         // Local and Online buttons - fill entire row
-        JPanel localOnlineButtons = new JPanel();
-        localOnlineButtons.setLayout(new BoxLayout(localOnlineButtons, BoxLayout.Y_AXIS));
-        buttonsPanel.add(localOnlineButtons, "localonline");
+        JPanel menuMainButtons = new JPanel();
+        menuMainButtons.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        Insets insets = new Insets(10, 0, 10, 0);
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.insets = insets;
+        buttonsPanel.add(menuMainButtons, "localOnlineButtons");
 
         // Local button
         JButton local = new MenuButton("LOCAL");
@@ -71,13 +79,22 @@ public class MenuPanel extends JPanel {
             CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
             cl.show(buttonsPanel, "players");
         });
-        localOnlineButtons.add(local);
+        menuMainButtons.add(local, gbc);
 
         // Online button
         JButton online = new MenuButton("ONLINE");
-        localOnlineButtons.add(online);
+        menuMainButtons.add(online, gbc);
 
-        buttonsPanel.add("main", localOnlineButtons);
+        
+        // Rules button
+        JButton rules = new MenuButton("RULES");
+        menuMainButtons.add(rules, gbc);
+        
+        // Quit button
+        JButton quit = new MenuButton("QUIT");
+        menuMainButtons.add(quit, gbc);
+        
+        buttonsPanel.add("main", menuMainButtons);
 
         // Players buttons - fill entire row
         JPanel playersButtons = new JPanel();
