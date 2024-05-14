@@ -36,8 +36,7 @@ public class MoveAA extends Move {
 
     @Override
     public String toString() {
-        return "Prendre dans les additionels{" +
-                getColor().forDisplay() +
-                '}';
+        return "Prendre dans les additionels " +
+                getColor().forDisplay();
     }
 }

@@ -35,10 +35,9 @@ public class MoveMA extends Move {
 
     @Override
     public String toString() {
-        return "Recuperer dans ses additionels {" +
+        return "Recuperer dans ses additionels " +
                 getColor().forDisplay() +
-                " depuis (" + getFrom().x + ", " + getFrom().y + ")"+
-                '}';
+                " depuis (" + getFrom().x + ", " + getFrom().y + ")";
     }
 
 }

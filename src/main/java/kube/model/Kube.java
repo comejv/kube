@@ -120,7 +120,7 @@ public class Kube {
         return baseSize;
     }
 
-    public int getPhase() {
+    synchronized public int getPhase() {
         return phase;
     }
 
@@ -705,7 +705,7 @@ public class Kube {
      * @return the list of moves that can be played
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    public ArrayList<Move> moveSet() throws UnsupportedOperationException {
+    synchronized public ArrayList<Move> moveSet() throws UnsupportedOperationException {
 
         Color cMountain;
         Move mm, mw, am, aw;
