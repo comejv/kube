@@ -66,5 +66,16 @@ public class TextualMode {
         System.out.println(k3.getP1());
         System.out.println(k3.getP2());
     }
+
+    public void printState(Player currentPlayerToBuild){
+        if (k3.getPhase() == Kube.preparationPhase) {
+            System.out.println(k3.getK3());
+            System.out.println(currentPlayerToBuild);
+        } else {
+            System.out.println(k3.getK3());
+            System.out.println(k3.getP1());
+            System.out.println(k3.getP2());
+        }
+    }
     
 }

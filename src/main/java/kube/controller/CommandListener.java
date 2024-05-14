@@ -41,14 +41,7 @@ public class CommandListener implements Runnable {
                     }
                     break;
                 case "afficher":
-                    if (k3.getPhase() == Kube.preparationPhase) {
-                        System.out.println(k3.getK3());
-                        System.out.println(currentPlayerToBuild);
-                    } else {
-                        System.out.println(k3.getK3());
-                        System.out.println(k3.getP1());
-                        System.out.println(k3.getP2());
-                    }
+                    tm.printState(currentPlayerToBuild);
                     break;
                 case "valider":
                     if (!currentPlayerToBuild.getMountain().isFull()) {
