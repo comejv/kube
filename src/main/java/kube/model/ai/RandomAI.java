@@ -12,15 +12,11 @@ public class RandomAI implements abstractAI {
     Player iaPlayer;
     Random r;
 
-    public RandomAI(Kube k, Player p, int seed) {
-        k3 = k;
-        iaPlayer = p;
+    public RandomAI(int seed) {
         r = new Random(seed);
     }
 
-    public RandomAI(Kube k, Player p) {
-        k3 = k;
-        iaPlayer = p;
+    public RandomAI() {
         r = new Random();
     }
 

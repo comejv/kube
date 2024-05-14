@@ -73,7 +73,7 @@ public class Kube {
         if (typeAI2 != null) {
             setP2(new AI(2, typeAI2, this));
         } else {
-            setP2(new Player(1));
+            setP2(new Player(2));
         }
 
         if (new Random().nextInt(2) == 0) {

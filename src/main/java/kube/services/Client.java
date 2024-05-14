@@ -6,8 +6,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
-import java.awt.Point;
-import kube.model.move.*;
+import kube.model.action.Action;
 
 public class Client extends Network{
 
@@ -69,28 +68,6 @@ public class Client extends Network{
 
     @Override
     public void run() {
-        Scanner scanner = new Scanner(System.in);
-        String s;
-        while(true){
-            s = scanner.nextLine();
-            System.err.println("Sending: " + s);
-            Move p = new MoveMW(new Point(0,0));
-            send(p);
-            Object data = receive();
-            if(data != null){
-                System.out.println("Received: " + data);
-            }
-        }
+         
     }
-
-    public static void main(String[] args) {
-        System.out.println("Starting client");
-        Thread t = new Thread(new Server(1234));
-        System.out.println("Starting server on port 1234");
-        t.start();
-        System.out.println("Server started");
-        Client client = new Client();
-        Thread t2 = new Thread(client);
-        t2.start();
-       }
 }

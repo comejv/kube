@@ -9,51 +9,56 @@ import kube.model.action.*;
 import kube.model.action.move.Move;
 
 public class Game implements Runnable {
-    public static final int localTextual = 1;
-    public static final int onlineServerTextual = 2;
-    public static final int onlineClientTextual = 3;
+    public static final int local = 1;
 
-    Queue<Action> events;
+    Queue<Action> controllerToModele;
+    Queue<Action> modeleToView;
     private int gameType;
     private Kube k3;
     Player currentPlayerToBuild;
 
-    public Game(int gameType, Kube k3, Queue<Action> events) {
+    public Game(int gameType, Kube k3, Queue<Action> controllerToModele, Queue<Action> modeleToView) {
         this.gameType = gameType;
         this.k3 = k3;
-        this.events = events;
+        this.controllerToModele = controllerToModele;
+        this.modeleToView = modeleToView;
     }
 
     @Override
     public void run() {
         switch (gameType) {
-            case localTextual:
-                localTextualGame();
+            case local:
+                localGame();
                 break;
             default:
                 break;
         }
     }
 
-    public void localTextualGame() {
+    public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init();
+        k3.init(new RandomAI());
         currentPlayerToBuild = k3.getP1();
 
         // Construction phase
         while (k3.getPhase() == 1) {
             if (currentPlayerToBuild.isAI()) {
                 currentPlayerToBuild.getAI().constructionPhase();
+                if (currentPlayerToBuild.validateBuilding()) {
+                    Config.debug("Validation construction IA");
+                    currentPlayerToBuild = k3.getP2();
+                }
+                k3.updatePhase();
             } else {
-                Action a = events.remove();
+                Action a = controllerToModele.remove();
                 switch (a.getType()) {
                     case Action.SWAP:
                         swap((Swap) a.getData());
                         break;
                     case Action.VALIDATE:
                         if (currentPlayerToBuild.validateBuilding()) {
-                            Config.debug("Validation construction j1");
+                            Config.debug("Validation construction j" + currentPlayerToBuild.getId());
                             currentPlayerToBuild = k3.getP2();
                         }
                         k3.updatePhase();
@@ -62,6 +67,7 @@ public class Game implements Runnable {
                         utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
                         break;
                     default:
+                        redirectMessage(a);
                         break;
                 }
             }
@@ -78,7 +84,7 @@ public class Game implements Runnable {
                     System.err.println("Coup de l'IA impossible" + e);
                 }
             } else {
-                Action a = events.remove();
+                Action a = controllerToModele.remove();
                 switch (a.getType()) {
                     case Action.MOVE:
                         k3.playMove((Move) a.getData());
@@ -90,6 +96,7 @@ public class Game implements Runnable {
                         k3.rePlay();
                         break;
                     default:
+                        redirectMessage(a);
                         break;
                 }
             }
@@ -112,4 +119,36 @@ public class Game implements Runnable {
         currentPlayerToBuild.buildToMoutain(s.getPos2(), c);
     }
 
+    public void redirectMessage(Action a) {
+        switch (a.getType()) {
+            case Action.PRINT_AI:
+            case Action.PRINT_COMMAND_ERROR:
+            case Action.PRINT_WAIT_COORDINATES:
+            case Action.PRINT_GOODBYE:
+            case Action.PRINT_HELP:
+            case Action.PRINT_LIST_MOVES:
+            case Action.PRINT_MOVE:
+            case Action.PRINT_MOVE_ERROR:
+            case Action.PRINT_NEXT_PLAYER:
+            case Action.PRINT_PLAYER:
+            case Action.PRINT_PLAYER_NAME:
+            case Action.PRINT_RANDOM:
+            case Action.PRINT_REDO:
+            case Action.PRINT_REDO_ERROR:
+            case Action.PRINT_START:
+            case Action.PRINT_STATE:
+            case Action.PRINT_SWAP:
+            case Action.PRINT_SWAP_ERROR:
+            case Action.PRINT_SWAP_SUCCESS:
+            case Action.PRINT_UNDO:
+            case Action.PRINT_UNDO_ERROR:
+            case Action.PRINT_VALIDATE:
+            case Action.PRINT_WELCOME:
+            case Action.PRINT_WIN_MESSAGE:
+            case Action.UPDATE:
+                modeleToView.add(a);
+            default:
+                break;
+        }
+    }
 }
