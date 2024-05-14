@@ -49,7 +49,7 @@ public class Player {
         this.additionals = additionals;
     }
 
-    public void setAvalaibleToBuild(HashMap<Color, Integer> avalaibleToBuild) {
+    public void setAvailableToBuild(HashMap<Color, Integer> avalaibleToBuild) {
         this.avalaibleToBuild = avalaibleToBuild;
     }
 

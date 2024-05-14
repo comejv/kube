@@ -15,14 +15,15 @@ import kube.model.Player;
 import kube.model.action.move.Move;
 
 public class MinMaxAI implements abstractAI, ActionListener {
-    Kube k3;
-    Player iaPlayer;
-    Random r;
-    HashMap<Kube, Move> solution, tmp;
-    Method heuristic;
-    int time; // in ms 
-    Boolean noMoreTime;
-    Timer timer;
+
+    private Kube k3;
+    private Player iaPlayer;
+    private Random r;
+    private HashMap<Kube, Move> solution, tmp;
+    private Method heuristic;
+    private int time; // in ms
+    private boolean noMoreTime;
+    private Timer timer;
 
     public MinMaxAI(int time, int seed) {
         r = new Random(seed);
@@ -34,21 +35,20 @@ public class MinMaxAI implements abstractAI, ActionListener {
         setTime(3000);
     }
 
-    public void setK3(Kube k){
+    public void setK3(Kube k) {
         k3 = k;
     }
 
-    public void setPlayer(Player p){
+    public void setPlayer(Player p) {
         iaPlayer = p;
     }
 
     @Override
     public void constructionPhase() {
-        while (!iaPlayer.validateBuilding()){
+        while (!iaPlayer.validateBuilding()) {
             utilsAI.randomFillMountain(iaPlayer, r);
         }
     }
-
 
     @Override
     public Move nextMove() throws Exception {
@@ -60,7 +60,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
         while (true) {
             tmp = new HashMap<>();
             minMax(k3.clone(), horizon);
-            if (noMoreTime){
+            if (noMoreTime) {
                 return solution.get(k3);
             } else {
                 solution = tmp;
@@ -123,17 +123,16 @@ public class MinMaxAI implements abstractAI, ActionListener {
         timer.stop();
     }
 
-
     public void setHeuristicMethod(Method h) {
         heuristic = h;
     }
 
-    // Set time in ms 
-    public void setTime(int t){
+    // Set time in ms
+    public void setTime(int t) {
         time = t;
     }
 
-    public int getTime(){
+    public int getTime() {
         return time;
     }
 }

@@ -6,6 +6,9 @@ import java.util.Comparator;
 
 public enum Color {
 
+    /**********
+     * ENUMERATION
+     **********/
     EMPTY(0),
     WHITE(1),
     NATURAL(2),
@@ -15,35 +18,54 @@ public enum Color {
     YELLOW(6),
     BLACK(7);
 
+    /**********
+     * ATTRIBUTES
+     **********/
     int colorCode;
 
-    // Constructor
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the Color
+     * @param colorCode
+     */
     Color(int colorCode) {
         setColorCode(colorCode);
     }
 
-    // Setter
+    /**********
+     * SETTER
+     **********/
     public void setColorCode(int colorCode) {
         this.colorCode = colorCode;
     }
 
-    // Getter
+    /**********
+     * GETTER
+     **********/
     public int getColorCode() {
         return this.colorCode;
     }
 
-    // toString()
+    /**********
+     * METHODS
+     **********/
+    @Override
     public String toString() {
         return this.name();
     }
 
-    // Methods
+    /**
+     * Return the color corresponding to the color code
+     * 
+     * @param colorCode
+     * @return the color that corresponds to the color code
+     */
     public static Color getColor(int colorCode) {
-
         for (Color c : Color.values()) {
-
             if (c.getColorCode() == colorCode) {
-
                 return c;
             }
         }

@@ -46,6 +46,10 @@ public class Mountain {
         m[x][y] = c;
     }
 
+    public void setCase(Point p, Color c) {
+        setCase(p.x, p.y, c);
+    }
+
     public void remove(Point p) {
         remove(p.x, p.y);
     }
