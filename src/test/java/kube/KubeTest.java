@@ -8,12 +8,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import kube.configuration.Config;
-
 import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
-import kube.model.Player;
 import kube.model.action.move.*;
 
 public class KubeTest {
