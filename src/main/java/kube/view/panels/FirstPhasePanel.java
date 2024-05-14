@@ -1,5 +1,7 @@
 package kube.view.panels;
 
+import kube.view.components.Buttons;
+
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -15,7 +17,8 @@ public class FirstPhasePanel extends JPanel {
     public FirstPhasePanel(ActionListener aL) {
         buttonListener = aL;
         add(new JLabel("Phase 1"));
-        JButton b = new JButton("Phase 2");
+        JButton b = new Buttons.GameFirstPhaseButtons("Valider");
+
         b.setActionCommand("phase2");
         b.addActionListener(buttonListener);
         add(b);
