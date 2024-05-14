@@ -7,6 +7,12 @@ import kube.model.Color;
 import kube.model.Player;
 
 public class utilsAI {
+
+    /**
+     * Fill the mountain of the player with random colors
+     * @param player
+     * @param r
+     */
     public static void randomFillMountain(Player player, Random r) {
         ArrayList<Color> colArr= new ArrayList<>();
         // If the Mountain is already build 

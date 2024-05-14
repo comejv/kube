@@ -42,7 +42,7 @@ public class AI extends Player {
     }
 
     /**********
-     * METHODS
+     * METHOD
      **********/
 
     /**
