@@ -273,7 +273,7 @@ public class MountainTest {
 
         assertTrue(m.compatible(Color.BLUE).size() == 1);
         assertTrue(m.compatible(Color.BLUE).contains(p1));
-        assertTrue(!(m.compatible(Color.BLUE).contains(p2)));
+        assertFalse(m.compatible(Color.BLUE).contains(p2));
     }
 
     @Test
@@ -291,6 +291,22 @@ public class MountainTest {
         assertTrue(m.isPenality(3, 1));
         assertFalse(m.isPenality(3, 2));
         assertTrue(m.isPenality(3, 3));
+    }
+
+    @Test
+    public void cloneTest() {
+        
+        Mountain m1 = new Mountain(5);
+
+        m1.setCase(4, 0, Color.BLUE);
+        m1.setCase(4, 1, Color.RED);
+        m1.setCase(4, 2, Color.GREEN);
+        m1.setCase(4, 3, Color.YELLOW);
+        m1.setCase(4, 4, Color.WHITE);
+
+        Mountain m2 = m1.clone();
+
+        assertTrue(areSameMountain(m1, m2));
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {
