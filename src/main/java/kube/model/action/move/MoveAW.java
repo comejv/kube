@@ -32,8 +32,7 @@ public class MoveAW extends Move {
 
     @Override
     public String toString() {
-        return "Passer son tour depuis les additionels{" +
-                color.forDisplay() +
-                '}';
+        return "Passer son tour depuis les additionels " +
+                color.forDisplay();
     }
 }

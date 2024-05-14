@@ -36,9 +36,8 @@ public class MoveMW extends Move {
 
     @Override
     public String toString() {
-        return "Passer son tour{" +
+        return "Passer son tour " +
                 getColor().forDisplay() +
-                " depuis (" + getFrom().x + ", " + getFrom().y + ")" +
-                '}';
+                " depuis (" + getFrom().x + ", " + getFrom().y + ")";
     }
 }

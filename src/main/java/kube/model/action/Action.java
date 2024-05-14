@@ -6,7 +6,6 @@ public class Action{
     public static final int SWAP = 2;
     public static final int SHUFFLE = 3;
     public static final int VALIDATE = 4;
-    public static final int PLAY = 5;
     public static final int MOVE = 6;
     public static final int UNDO = 7;
     public static final int REDO = 8;
