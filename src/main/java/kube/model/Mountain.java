@@ -5,66 +5,104 @@ import java.util.Objects;
 import java.awt.Point;
 
 public class Mountain {
-    private Color[][] m;
+
+    /**********
+     * ATTRIBUTES
+     **********/
+    private Color[][] content;
     private int baseSize;
 
+    /**********
+     * CONSTUCTOR
+     **********/
     public Mountain(int size) {
         setBaseSize(size);
         setMountain(new Color[getBaseSize()][getBaseSize()]);
         clear();
     }
 
-    // Getter
-    public int getBaseSize() {
-        return baseSize;
-    }
-
-    public Color[][] getMountain() {
-        return m;
-    }
-
-    // Setter
+    /**********
+     * SETTERS
+     **********/
     public void setBaseSize(int size) {
         baseSize = size;
     }
 
     public void setMountain(Color[][] mountain) {
-        m = mountain;
-    }
-
-    // Method to get the color at the position x, y
-    // where getCase(0, 0) return the value of the most left summit case
-    public Color getCase(int x, int y) {
-        return m[x][y];
-    }
-
-    public Color getCase(Point p) {
-        return getCase(p.x, p.y);
-    }
-
-    public void setCase(int x, int y, Color c) {
-        m[x][y] = c;
+        content = mountain;
     }
 
     public void setCase(Point p, Color c) {
         setCase(p.x, p.y, c);
     }
 
+    public void setCase(int x, int y, Color c) {
+        content[x][y] = c;
+    }
+
+    /**********
+     * GETTERS
+     **********/
+    public int getBaseSize() {
+        return baseSize;
+    }
+
+    public Color[][] getMountain() {
+        return content;
+    }
+
+    public Color getCase(Point p) {
+        return getCase(p.x, p.y);
+    }
+
+    public Color getCase(int x, int y) {
+        return content[x][y];
+    }
+
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Remove a case from the mountain
+     * 
+     * @param p the position to remove
+     * @return void
+     */
     public void remove(Point p) {
         remove(p.x, p.y);
     }
 
+    /**
+     * Remove a case from the mountain
+     * 
+     * @param x the x position to remove
+     * @param y the y position to remove
+     * @return void
+     */
     public void remove(int x, int y) {
         setCase(x, y, Color.EMPTY);
     }
 
+    /**
+     * Give the list of removable positions
+     * 
+     * @return the list of removable positions
+     */
     public ArrayList<Point> removable() {
-        ArrayList<Point> r = new ArrayList<>();
+
+        ArrayList<Point> r;
+        boolean isEmpty, isAtPeak, isTopLeftEmpty, isTopRightEmpty;
+
+        r = new ArrayList<>();
+
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (getCase(i, j) != Color.EMPTY &&
-                        (i == 0 || (getCase(i - 1, j) == Color.EMPTY
-                                && (j == 0 || getCase(i - 1, j - 1) == Color.EMPTY)))) {
+                isEmpty = getCase(i, j) == Color.EMPTY;
+                isAtPeak = i == 0;
+                isTopLeftEmpty = j == 0 || getCase(i - 1, j - 1) == Color.EMPTY;
+                isTopRightEmpty = j == i || getCase(i - 1, j) == Color.EMPTY;
+                if (!isEmpty && (isAtPeak || (isTopLeftEmpty && isTopRightEmpty))) {
                     r.add(new Point(i, j));
                 }
             }
@@ -73,15 +111,35 @@ public class Mountain {
     }
 
     public ArrayList<Point> compatible(Color c) {
-        ArrayList<Point> comp = new ArrayList<>();
+
+        ArrayList<Point> comp;
+        Color natural, empty, bottomLeft, bottomRight;
+        boolean isBottomLeftEmpty, isBottomRightEmpty, isBottomEmpty, isNatural, isBottomLeftCompatible,
+                isBottomRightCompatible, isCompatible;
+        comp = new ArrayList<>();
+
+        empty = Color.EMPTY;
+        natural = Color.NATURAL;
+
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (i == getBaseSize() - 1 && getCase(i, j) == Color.EMPTY) {
+                if (i == getBaseSize() - 1 && getCase(i, j) == empty) {
                     comp.add(new Point(i, j));
-                } else if (getCase(i, j) == Color.EMPTY
-                        && (getCase(i + 1, j) != Color.EMPTY && (getCase(i + 1, j + 1) != Color.EMPTY))) {
-                    if (c == Color.NATURAL || getCase(i + 1, j) == c || (getCase(i + 1, j) == Color.NATURAL) ||
-                            getCase(i + 1, j + 1) == c || (getCase(i + 1, j + 1) == Color.NATURAL)) {
+                } else if (getCase(i, j) == empty) {
+
+                    bottomLeft = getCase(i + 1, j);
+                    bottomRight = getCase(i + 1, j + 1);
+
+                    isBottomLeftEmpty = bottomLeft == empty;
+                    isBottomRightEmpty = bottomRight == empty;
+                    isBottomEmpty = isBottomLeftEmpty || isBottomRightEmpty;
+
+                    isNatural = c == natural;
+                    isBottomLeftCompatible = bottomLeft == c || bottomLeft == natural;
+                    isBottomRightCompatible = bottomRight == c || bottomRight == natural;
+                    isCompatible = isNatural || isBottomLeftCompatible || isBottomRightCompatible;
+
+                    if (!isBottomEmpty && isCompatible) {
                         comp.add(new Point(i, j));
                     }
                 }
@@ -99,10 +157,10 @@ public class Mountain {
     }
 
     public void clear() {
-        m = new Color[getBaseSize()][getBaseSize()];
+        content = new Color[getBaseSize()][getBaseSize()];
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < getBaseSize(); j++) {
-                m[i][j] = Color.EMPTY;
+                content[i][j] = Color.EMPTY;
             }
         }
     }
@@ -173,13 +231,13 @@ public class Mountain {
             return false;
         }
         Mountain m = (Mountain) o;
-        if (getBaseSize() != m.getBaseSize()){
+        if (getBaseSize() != m.getBaseSize()) {
             return false;
         }
-        
-        for (int i = 0; i < getBaseSize(); i++){
-            for (int j = 0; j < i + 1; j++){
-                if (getCase(i, j) != m.getCase(i, j)){
+
+        for (int i = 0; i < getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                if (getCase(i, j) != m.getCase(i, j)) {
                     return false;
                 }
             }
@@ -195,8 +253,8 @@ public class Mountain {
     @Override
     public Mountain clone() {
         Mountain copy = new Mountain(getBaseSize());
-        for (int i = 0; i < getBaseSize(); i++){
-            for (int j = 0; j < i + 1; j++){
+        for (int i = 0; i < getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
                 copy.setCase(i, j, getCase(i, j));
             }
         }
