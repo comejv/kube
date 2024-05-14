@@ -2,7 +2,7 @@ package kube.model;
 
 import java.util.ArrayList;
 
-import kube.model.move.Move;
+import kube.model.action.move.Move;
 
 import java.awt.Point;
 

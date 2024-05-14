@@ -1,5 +1,8 @@
 package kube.model;
 
+import kube.model.action.move.*;
+import kube.model.ai.abstractAI;
+
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,16 +11,14 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 
-import kube.model.move.*;
-
 public class Kube {
 
     /**********
      * CONSTANTS
      **********/
-    public static final int preparationPhase = 1;
     public static final int nCubePerColor = 9;
-    public static final int gamePhase = 2;
+    public static final int PREPARATION_PHASE = 1;
+    public static final int GAME_PHASE = 2;
 
     /**********
      * ATTRIBUTES
@@ -33,22 +34,91 @@ public class Kube {
     /**********
      * CONSTRUCTOR
      **********/
-    public Kube() {
 
+    public Kube() {
+        init();
+    }
+
+    public void init() {
+        init(null, null);
+    }
+
+    public void init(abstractAI typeAI1) {
+        init(typeAI1, null);
+    }
+
+    public void init(abstractAI typeAI1, abstractAI typeAI2) {
         setBaseSize(9);
+        setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
-        setP1(new Player(1));
-        setP2(new Player(2));
+        fillBag();
+        fillBase();
         setHistory(new History());
-        setPhase(preparationPhase);
         setPenality(false);
-
+        if (typeAI1 != null) {
+            setP1(new AI(1, typeAI1, this));
+        } else {
+            setP1(new Player(1));
+        }
+        if (typeAI2 != null) {
+            setP2(new AI(2, typeAI2, this));
+        } else {
+            setP2(new Player(1));
+        }
         if (new Random().nextInt(2) == 0) {
             setCurrentPlayer(getP1());
         } else {
             setCurrentPlayer(getP2());
         }
+        distributeCubesToPlayers();
+    }
+
+    /**********
+     * GETTERS
+     **********/
+    public ArrayList<Color> getBag() {
+        return bag;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public History getHistory() {
+        return history;
+    }
+
+    public Mountain getK3() {
+        return k3;
+    }
+
+    public Player getP1() {
+        return p1;
+    }
+
+    public Player getP2() {
+        return p2;
+    }
+
+    public boolean getPenality() {
+        return penality;
+    }
+
+    public int getBaseSize() {
+        return baseSize;
+    }
+
+    public Color getPlayerCase(Player player, Point point) {
+        return player.getMountain().getCase(point);
+    }
+
+    public Color getPlayerCase(Player player, int x, int y) {
+        return player.getMountain().getCase(x, y);
+    }
+
+    public int getPhase() {
+        return phase;
     }
 
     /**********
@@ -90,54 +160,15 @@ public class Kube {
         baseSize = b;
     }
 
-    /**********
-     * GETTERS
-     **********/
-    public ArrayList<Color> getBag() {
-        return bag;
-    }
-
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
-
-    public History getHistory() {
-        return history;
-    }
-
-    public Mountain getK3() {
-        return k3;
-    }
-
-    public Player getP1() {
-        return p1;
-    }
-
-    public Player getP2() {
-        return p2;
-    }
-
-    public int getPhase() {
+    public int updatePhase() {
+        if (phase == PREPARATION_PHASE && getP1() != null && getP1().hasValidateBuilding() && getP2() != null
+                && getP2().hasValidateBuilding()) {
+            phase = GAME_PHASE;
+        }
         return phase;
     }
 
-    public boolean getPenality() {
-        return penality;
-    }
-
-    public int getBaseSize() {
-        return baseSize;
-    }
-
-    public Color getPlayerCase(Player player, Point point) {
-        return player.getMountain().getCase(point);
-    }
-
-    public Color getPlayerCase(Player player, int x, int y) {
-        return player.getMountain().getCase(x, y);
-    }
-
-    /**********
+     /**********
      * PREPARATION PHASE METHODS
      **********/
 
@@ -153,7 +184,7 @@ public class Kube {
     public void fillBag(Integer seed) throws UnsupportedOperationException {
 
         // Check if the phase is the preparation phase
-        if (getPhase() != preparationPhase) {
+        if (getPhase() != PREPARATION_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -197,7 +228,7 @@ public class Kube {
     public void fillBase() throws UnsupportedOperationException {
 
         // Check if the phase is the preparation phase
-        if (getPhase() != preparationPhase) {
+        if (getPhase() != PREPARATION_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -218,7 +249,7 @@ public class Kube {
     public void distributeCubesToPlayers() throws UnsupportedOperationException {
 
         // Check if the phase is the preparation phase
-        if (getPhase() != preparationPhase) {
+        if (getPhase() != PREPARATION_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -264,7 +295,7 @@ public class Kube {
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
 
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -349,7 +380,7 @@ public class Kube {
     public boolean playMoveWithoutHistory(Move move) throws UnsupportedOperationException {
 
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -441,7 +472,7 @@ public class Kube {
     public boolean playMove(Move move) throws UnsupportedOperationException {
 
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -472,7 +503,7 @@ public class Kube {
         MoveAM am;
 
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -561,7 +592,7 @@ public class Kube {
         Move m;
 
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -580,7 +611,7 @@ public class Kube {
 
     public boolean rePlay() throws UnsupportedOperationException {
 
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -607,7 +638,7 @@ public class Kube {
         MoveMA ma;
         
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -649,7 +680,7 @@ public class Kube {
         ArrayList<Move> moves;
 
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 
@@ -699,7 +730,7 @@ public class Kube {
     public Boolean canCurrentPlayerPlay() throws UnsupportedOperationException {
 
         // Check if the phase is the game phase
-        if (getPhase() != gamePhase) {
+        if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
         }
 

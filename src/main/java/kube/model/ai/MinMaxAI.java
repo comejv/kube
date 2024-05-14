@@ -12,9 +12,9 @@ import java.awt.event.ActionListener;
 
 import kube.model.Kube;
 import kube.model.Player;
-import kube.model.move.Move;
+import kube.model.action.move.Move;
 
-public class MinMaxAI implements AI, ActionListener {
+public class MinMaxAI implements abstractAI, ActionListener {
     Kube k3;
     Player iaPlayer;
     Random r;
@@ -24,28 +24,31 @@ public class MinMaxAI implements AI, ActionListener {
     Boolean noMoreTime;
     Timer timer;
 
-    public MinMaxAI(Kube k, Player p, int time, int seed) {
-        this(k, p);
+    public MinMaxAI(int time, int seed) {
         r = new Random(seed);
         setTime(time);
     }
 
-    public MinMaxAI(Kube k, Player p) {
-        k3 = k;
-        iaPlayer = p;
+    public MinMaxAI() {
         r = new Random();
         setTime(3000);
     }
 
-    @Override
-    public void preparationPhase() {
-        utilsAI.randomFillMountain(iaPlayer, r);
+    public void setK3(Kube k){
+        k3 = k;
+    }
+
+    public void setPlayer(Player p){
+        iaPlayer = p;
     }
 
     @Override
-    public void gamePhase() {
-
+    public void constructionPhase() {
+        while (!iaPlayer.validateBuilding()){
+            utilsAI.randomFillMountain(iaPlayer, r);
+        }
     }
+
 
     @Override
     public Move nextMove() throws Exception {

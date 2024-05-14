@@ -8,8 +8,11 @@ import java.util.Scanner;
 
 import kube.model.Kube;
 import kube.model.Player;
+import kube.model.action.move.Move;
+import kube.model.action.Action;
+import kube.model.action.Queue;
+import kube.model.action.Swap;
 import kube.model.ai.utilsAI;
-import kube.model.move.Move;
 import kube.view.TextualMode;
 
 public class CommandListener implements Runnable {
@@ -17,7 +20,7 @@ public class CommandListener implements Runnable {
     String command;
     Kube k3;
     TextualMode tm;
-
+    Queue<Action> actions;
     public CommandListener(Kube k3, TextualMode tm) {
         this.k3 = k3;
         this.tm = tm;
@@ -30,6 +33,7 @@ public class CommandListener implements Runnable {
         while (sc.hasNextLine()) {
             switch (sc.nextLine()) {
                 case "random":
+                    actions.add(new Action(Action.SHUFFLE));
                     utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
                     System.out.print(currentPlayerToBuild); // Print the mountain & the additionals
                     break;
@@ -41,9 +45,11 @@ public class CommandListener implements Runnable {
                     }
                     break;
                 case "afficher":
+                    actions.add(new Action(Action.SHOW_MOUNTAIN));
                     tm.printState(currentPlayerToBuild);
                     break;
                 case "valider":
+                    actions.add(new Action(Action.VALIDATE));
                     if (!currentPlayerToBuild.getMountain().isFull()) {
                         System.out.println("Vous n'avez pas rempli votre montagne !");
                         break;
@@ -51,16 +57,19 @@ public class CommandListener implements Runnable {
                     if (currentPlayerToBuild == k3.getP1()) {
                         currentPlayerToBuild = k3.getP2();
                     } else {
-                        k3.setPhase(Kube.gamePhase);
+                        k3.setPhase(Kube.GAME_PHASE);
                     }
                     break;
                 case "jouer":
+                    actions.add(new Action(Action.PLAY));
                     playMove(sc);
                     break;
                 case "annuler":
+                    actions.add(new Action(Action.UNDO));
                     k3.unPlay();
                     break;
                 case "rejouer":
+                    actions.add(new Action(Action.REDO));
                     k3.rePlay();
                     break;
                 case "":
@@ -91,6 +100,7 @@ public class CommandListener implements Runnable {
             if (c == Color.EMPTY || c2 == Color.EMPTY) {
                 return false;
             }
+            actions.add(new Action(Action.SWAP,new Swap(x1, y1, x2, y2)));
             p.buildToMoutain(x1, y1, c2);
             p.buildToMoutain(x2, y2, c);
             return true;
@@ -107,6 +117,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
+            actions.add(new Action(Action.MOVE,moves.get(n)));
             return k3.playMove(moves.get(n));
         } catch (Exception e) {
             System.out.println("Numéro invalide");

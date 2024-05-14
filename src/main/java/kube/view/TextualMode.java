@@ -30,7 +30,7 @@ public class TextualMode {
     }
 
     public void update(){
-        if (k3.getPhase() == Kube.preparationPhase){
+        if (k3.getPhase() == Kube.PREPARATION_PHASE){
             afficherCommandePhase1();
         } else if (!k3.canCurrentPlayerPlay()){
             if (k3.getCurrentPlayer() == k3.getP1()){
@@ -68,7 +68,7 @@ public class TextualMode {
     }
 
     public void printState(Player currentPlayerToBuild){
-        if (k3.getPhase() == Kube.preparationPhase) {
+        if (k3.getPhase() == Kube.PREPARATION_PHASE) {
             System.out.println(k3.getK3());
             System.out.println(currentPlayerToBuild);
         } else {

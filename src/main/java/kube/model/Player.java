@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
+
+import kube.model.ai.abstractAI;
+
 import java.awt.Point;
 
 public class Player {
@@ -13,6 +16,7 @@ public class Player {
     Mountain mountain;
     ArrayList<Color> additionals;
     HashMap<Color, Integer> avalaibleToBuild;
+    boolean hasValidateBuilding;
 
     // Constructor
     public Player(int id) {
@@ -21,6 +25,7 @@ public class Player {
         setMountain(new Mountain(6));
         clearMountain();
         setAdditionals(new ArrayList<Color>());
+        hasValidateBuilding = false;
     }
 
     // Setters
@@ -91,7 +96,7 @@ public class Player {
 
     public boolean buildToMoutain(int l, int c, Color color) {
 
-        if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
+        if (hasValidateBuilding || l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
             return false;
         }
 
@@ -113,7 +118,7 @@ public class Player {
 
     public Color unbuildFromMoutain(int l, int c) {
 
-        if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
+        if (hasValidateBuilding || l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
             return Color.EMPTY;
         }
 
@@ -243,5 +248,24 @@ public class Player {
         p.setWhiteUsed(getWhiteUsed());
         p.setMountain(getMountain().clone());
         return p;
+    }
+
+    public boolean validateBuilding(){
+        if (getMountain().isFull()){
+            hasValidateBuilding = true;
+        }
+        return hasValidateBuilding;
+    }
+
+    public boolean hasValidateBuilding(){
+        return hasValidateBuilding;
+    }
+
+    public boolean isAI(){
+        return false;
+    }
+
+    public abstractAI getAI(){
+        return null;
     }
 }

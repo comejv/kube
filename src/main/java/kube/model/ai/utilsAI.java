@@ -3,7 +3,6 @@ package kube.model.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-import kube.configuration.Config;
 import kube.model.Color;
 import kube.model.Player;
 
