@@ -3,6 +3,7 @@ package kube.model;
 import kube.model.ai.*;
 
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 import kube.configuration.Config;
 import kube.model.action.*;
@@ -38,69 +39,91 @@ public class Game implements Runnable {
     public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init(new RandomAI());
+        k3.init(new RandomAI(), new RandomAI());
         currentPlayerToBuild = k3.getP1();
-
         // Construction phase
         while (k3.getPhase() == 1) {
-            if (currentPlayerToBuild.isAI()) {
-                currentPlayerToBuild.getAI().constructionPhase();
-                if (currentPlayerToBuild.validateBuilding()) {
-                    Config.debug("Validation construction IA");
-                    currentPlayerToBuild = k3.getP2();
+            try {
+
+                if (currentPlayerToBuild.isAI()) {
+                    currentPlayerToBuild.getAI().constructionPhase();
+                    if (currentPlayerToBuild.validateBuilding()) {
+                        Config.debug("Validation construction IA");
+                        currentPlayerToBuild = k3.getP2();
+                    }
+                    k3.updatePhase();
+                } else {
+                    Action a = controllerToModele.remove();
+                    switch (a.getType()) {
+                        case Action.SWAP:
+                            swap((Swap) a.getData());
+                            modeleToView.add(a);
+                            break;
+                        case Action.VALIDATE:
+                            boolean isValidated;
+                            if ((isValidated = currentPlayerToBuild.validateBuilding())) {
+                                Config.debug("Validation construction j" + currentPlayerToBuild.getId());
+                                currentPlayerToBuild = k3.getP2();
+                            }
+                            k3.updatePhase();
+                            a.setData(isValidated);
+                            modeleToView.add(a);
+                            break;
+                        case Action.SHUFFLE:
+                            utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
+                            modeleToView.add(a);
+                            break;
+                        default:
+                            modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
+                            break;
+                    }
                 }
-                k3.updatePhase();
-            } else {
-                Action a = controllerToModele.remove();
-                switch (a.getType()) {
-                    case Action.SWAP:
-                        swap((Swap) a.getData());
-                        break;
-                    case Action.VALIDATE:
-                        if (currentPlayerToBuild.validateBuilding()) {
-                            Config.debug("Validation construction j" + currentPlayerToBuild.getId());
-                            currentPlayerToBuild = k3.getP2();
-                        }
-                        k3.updatePhase();
-                        break;
-                    case Action.SHUFFLE:
-                        utilsAI.randomFillMountain(currentPlayerToBuild, new Random());
-                        break;
-                    default:
-                        redirectMessage(a);
-                        break;
-                }
+            } catch (Exception e) {
+                modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
             }
         }
 
         Config.debug("Fin phase 1");
         // Game phase
 
+        Action redirectAction;
         while (k3.canCurrentPlayerPlay()) {
-            if (k3.getCurrentPlayer().isAI()) {
-                try {
-                    k3.playMove(k3.getCurrentPlayer().getAI().nextMove());
-                } catch (Exception e) {
-                    System.err.println("Coup de l'IA impossible" + e);
+            try {
+                if (k3.getCurrentPlayer().isAI()) {
+                    try {
+                        k3.playMove(k3.getCurrentPlayer().getAI().nextMove());
+                    } catch (Exception e) {
+                        System.err.println("Coup de l'IA impossible" + e);
+                    }
+                } else {
+                    Action a = controllerToModele.remove();
+                    switch (a.getType()) {
+                        case Action.MOVE:
+                            Move move = k3.moveSet().get((int) a.getData());
+                            k3.playMove(move);
+                            modeleToView.add(new Action(Action.MOVE, move));
+                            break;
+                        case Action.UNDO:
+                            k3.unPlay();
+                            redirectAction = new Action(Action.UNDO, k3.getLastMovePlayed());
+                            modeleToView.add(redirectAction);
+                            break;
+                        case Action.REDO:
+                            k3.rePlay();
+                            redirectAction = new Action(Action.REDO, k3.getLastMovePlayed());
+                            modeleToView.add(redirectAction);
+                            break;
+                        default:
+                            modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
+                            break;
+                    }
                 }
-            } else {
-                Action a = controllerToModele.remove();
-                switch (a.getType()) {
-                    case Action.MOVE:
-                        k3.playMove((Move) a.getData());
-                        break;
-                    case Action.UNDO:
-                        k3.unPlay();
-                        break;
-                    case Action.REDO:
-                        k3.rePlay();
-                        break;
-                    default:
-                        redirectMessage(a);
-                        break;
-                }
+            } catch (Exception e) {
+                modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
             }
+
         }
+        modeleToView.add(new Action(Action.PRINT_WIN_MESSAGE, k3.getCurrentPlayer()));
         Config.debug("Fin phase 2");
     }
 
@@ -117,38 +140,5 @@ public class Game implements Runnable {
         Color c2 = currentPlayerToBuild.unbuildFromMoutain(s.getPos2().x, s.getPos2().y);
         currentPlayerToBuild.buildToMoutain(s.getPos1(), c2);
         currentPlayerToBuild.buildToMoutain(s.getPos2(), c);
-    }
-
-    public void redirectMessage(Action a) {
-        switch (a.getType()) {
-            case Action.PRINT_AI:
-            case Action.PRINT_COMMAND_ERROR:
-            case Action.PRINT_WAIT_COORDINATES:
-            case Action.PRINT_GOODBYE:
-            case Action.PRINT_HELP:
-            case Action.PRINT_LIST_MOVES:
-            case Action.PRINT_MOVE:
-            case Action.PRINT_MOVE_ERROR:
-            case Action.PRINT_NEXT_PLAYER:
-            case Action.PRINT_PLAYER:
-            case Action.PRINT_PLAYER_NAME:
-            case Action.PRINT_RANDOM:
-            case Action.PRINT_REDO:
-            case Action.PRINT_REDO_ERROR:
-            case Action.PRINT_START:
-            case Action.PRINT_STATE:
-            case Action.PRINT_SWAP:
-            case Action.PRINT_SWAP_ERROR:
-            case Action.PRINT_SWAP_SUCCESS:
-            case Action.PRINT_UNDO:
-            case Action.PRINT_UNDO_ERROR:
-            case Action.PRINT_VALIDATE:
-            case Action.PRINT_WELCOME:
-            case Action.PRINT_WIN_MESSAGE:
-            case Action.UPDATE:
-                modeleToView.add(a);
-            default:
-                break;
-        }
     }
 }

@@ -33,8 +33,7 @@ public class Action{
     public static final int PRINT_VALIDATE = 30;
     public static final int PRINT_WELCOME = 31;
     public static final int PRINT_WIN_MESSAGE = 32;
-    public static final int UPDATE = 33;
-
+    public static final int PRINT_FORBIDDEN_ACTION = 33;
     private int type;
     private Object data;
 
