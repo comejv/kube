@@ -41,7 +41,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
     public MinMaxAI() {
         r = new Random();
         setTime(3000);
-        //setHeuristic(this.moveSetSize);
+        //setHeuristic();
     }
 
     /**********
@@ -153,7 +153,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
         setSolution(new HashMap<>());
         setNoMoreTime(false);
 
-        horizon = 1;moveSetSize
+        horizon = 1;
 
         setTimer(new Timer(time, this));
         getTimer().start();
@@ -201,7 +201,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
             for (Move m : moves) {
                 k.playMove(m);
                 score = minMax(k, horizon - 1);
-                if (score == -1) { // TimoveSetSizemer's end
+                if (score == -1) { // Timer's end
                     return -1;
                 }
                 k.unPlay();
