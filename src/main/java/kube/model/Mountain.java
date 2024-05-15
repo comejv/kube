@@ -9,12 +9,14 @@ public class Mountain {
     /**********
      * ATTRIBUTES
      **********/
+
     private Color[][] content;
     private int baseSize;
 
     /**********
      * CONSTUCTOR
      **********/
+
     public Mountain(int size) {
         setBaseSize(size);
         setMountain(new Color[getBaseSize()][getBaseSize()]);
@@ -24,6 +26,7 @@ public class Mountain {
     /**********
      * SETTERS
      **********/
+
     public void setBaseSize(int size) {
         baseSize = size;
     }
@@ -43,6 +46,7 @@ public class Mountain {
     /**********
      * GETTERS
      **********/
+
     public int getBaseSize() {
         return baseSize;
     }
@@ -96,6 +100,7 @@ public class Mountain {
 
         r = new ArrayList<>();
 
+        // Loop through the mountain to add removable positions
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 isEmpty = getCase(i, j) == Color.EMPTY;
@@ -107,20 +112,28 @@ public class Mountain {
                 }
             }
         }
+
         return r;
     }
 
+    /**
+     * Give the list of compatible positions corresponding to the given color
+     * 
+     * @param c the color to check compatibility
+     * @return the list of compatible positions
+     */
     public ArrayList<Point> compatible(Color c) {
 
         ArrayList<Point> comp;
         Color natural, empty, bottomLeft, bottomRight;
         boolean isBottomLeftEmpty, isBottomRightEmpty, isBottomEmpty, isNatural, isBottomLeftCompatible,
                 isBottomRightCompatible, isCompatible;
-        comp = new ArrayList<>();
 
         empty = Color.EMPTY;
         natural = Color.NATURAL;
+        comp = new ArrayList<>();
 
+        // Loop through the mountain to add compatible positions
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (i == getBaseSize() - 1 && getCase(i, j) == empty) {
@@ -145,17 +158,36 @@ public class Mountain {
                 }
             }
         }
+
         return comp;
     }
 
+    /**
+     * Return if the given position creates a penality on the mountain
+     * 
+     * @param p the position to check
+     * @return true if the position creates a penality, false otherwise
+     */
     public boolean isPenality(Point p) {
         return isPenality(p.x, p.y);
     }
 
+    /**
+     * Return if the given position creates a penality on the mountain
+     * 
+     * @param x the x position to check
+     * @param y the y position to check
+     * @return true if the position creates a penality, false otherwise
+     */
     public boolean isPenality(int x, int y) {
         return getCase(x + 1, y) == getCase(x + 1, y + 1);
     }
 
+    /**
+     * Clear the mountain by setting all cases to empty
+     * 
+     * @return void
+     */
     public void clear() {
         content = new Color[getBaseSize()][getBaseSize()];
         for (int i = 0; i < getBaseSize(); i++) {
@@ -165,7 +197,12 @@ public class Mountain {
         }
     }
 
-    public Boolean isFull() {
+    /**
+     * Return if the mountain is full
+     * 
+     * @return true if the mountain is full, false otherwise
+     */
+    public boolean isFull() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) == Color.EMPTY) {
@@ -176,7 +213,12 @@ public class Mountain {
         return true;
     }
 
-    public Boolean isEmpty() {
+    /**
+     * Return if the mountain is empty
+     * 
+     * @return true if the mountain is empty, false otherwise
+     */
+    public boolean isEmpty() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 if (getCase(i, j) != Color.EMPTY) {
@@ -187,6 +229,11 @@ public class Mountain {
         return true;
     }
 
+    /**
+     * Give a String representation of the mountain for saving
+     * 
+     * @return the String representation of the mountain for saving
+     */
     public String forSave() {
         String s = "";
         // TODO: Implement this method
@@ -195,8 +242,12 @@ public class Mountain {
 
     @Override
     public String toString() {
-        String s = "";
-        boolean space = false;
+        String s;
+        boolean space;
+
+        s = "";
+        space = false;
+
         for (int i = 0; i < getBaseSize(); i++) {
             s += i + " ";
             for (int j = 0; j < getBaseSize() - i - 1; j++) {
@@ -209,6 +260,7 @@ public class Mountain {
 
             space = !space;
         }
+
         for (int i = 0; i < getBaseSize(); i++) {
             s += " " + i;
         }
@@ -216,21 +268,21 @@ public class Mountain {
         return s;
     }
 
-    public String forDisplay() {
-        String s = "";
-        // TODO: Implement this method
-        return s;
-    }
-
     @Override
     public boolean equals(Object o) {
+
+        Mountain m;
+
         if (this == o) {
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Mountain m = (Mountain) o;
+
+        m = (Mountain) o;
+
         if (getBaseSize() != m.getBaseSize()) {
             return false;
         }
@@ -252,12 +304,16 @@ public class Mountain {
 
     @Override
     public Mountain clone() {
-        Mountain copy = new Mountain(getBaseSize());
+
+        Mountain copy;
+
+        copy = new Mountain(getBaseSize());
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 copy.setCase(i, j, getCase(i, j));
             }
         }
+
         return copy;
     }
 }

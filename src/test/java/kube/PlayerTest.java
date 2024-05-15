@@ -53,27 +53,27 @@ public class PlayerTest {
         kube.distributeCubesToPlayers();
         // Distribution for player one: {RED=4, BLUE=2, WHITE=2, YELLOW=7, BLACK=3, NATURAL=2, GREEN=1} 
 
-        assertTrue(player.buildToMoutain(0, 0, Color.RED));
+        assertTrue(player.addToMountainFromAvailableToBuild(0, 0, Color.RED));
         assertEquals(Color.RED, player.getMountain().getCase(0, 0));
         assertEquals(3, player.getAvalaibleToBuild().get(Color.RED).intValue());
 
-        assertTrue(player.buildToMoutain(1, 0, Color.RED));
+        assertTrue(player.addToMountainFromAvailableToBuild(1, 0, Color.RED));
         assertEquals(Color.RED, player.getMountain().getCase(1, 0));
         assertEquals(2, player.getAvalaibleToBuild().get(Color.RED).intValue());
 
-        assertTrue(player.buildToMoutain(1, 1, Color.RED));
+        assertTrue(player.addToMountainFromAvailableToBuild(1, 1, Color.RED));
         assertEquals(Color.RED, player.getMountain().getCase(1, 1));
         assertEquals(1, player.getAvalaibleToBuild().get(Color.RED).intValue());
 
-        assertTrue(player.buildToMoutain(2, 0, Color.RED));
+        assertTrue(player.addToMountainFromAvailableToBuild(2, 0, Color.RED));
         assertEquals(Color.RED, player.getMountain().getCase(2, 0));
         assertEquals(0, player.getAvalaibleToBuild().get(Color.RED).intValue());
 
-        assertFalse(player.buildToMoutain(2, 1, Color.RED));
+        assertFalse(player.addToMountainFromAvailableToBuild(2, 1, Color.RED));
         assertEquals(Color.EMPTY, player.getMountain().getCase(2, 1));
         assertEquals(0, player.getAvalaibleToBuild().get(Color.RED).intValue());
 
-        assertTrue(player.buildToMoutain(0, 0, Color.BLUE));
+        assertTrue(player.addToMountainFromAvailableToBuild(0, 0, Color.BLUE));
         assertEquals(Color.BLUE, player.getMountain().getCase(0, 0));
         assertEquals(1, player.getAvalaibleToBuild().get(Color.BLUE).intValue());
         assertEquals(1, player.getAvalaibleToBuild().get(Color.RED).intValue());
@@ -90,10 +90,10 @@ public class PlayerTest {
         kube.distributeCubesToPlayers();
         // Distribution for player one: {RED=4, BLUE=2, WHITE=2, YELLOW=7, BLACK=3, NATURAL=2, GREEN=1} 
 
-        player.buildToMoutain(0, 0, Color.RED);
-        player.buildToMoutain(1, 0, Color.RED);
-        player.buildToMoutain(1, 1, Color.RED);
-        player.buildToMoutain(2, 0, Color.RED);
+        player.addToMountainFromAvailableToBuild(0, 0, Color.RED);
+        player.addToMountainFromAvailableToBuild(1, 0, Color.RED);
+        player.addToMountainFromAvailableToBuild(1, 1, Color.RED);
+        player.addToMountainFromAvailableToBuild(2, 0, Color.RED);
 
         assertEquals(Color.RED, player.removeFromMountain(0, 0));
         assertEquals(Color.EMPTY, player.getMountain().getCase(0, 0));
@@ -122,10 +122,10 @@ public class PlayerTest {
         kube.distributeCubesToPlayers();
         // Distribution for player one: {RED=4, BLUE=2, WHITE=2, YELLOW=7, BLACK=3, NATURAL=2, GREEN=1} 
 
-        player.buildToMoutain(0, 0, Color.RED);
-        player.buildToMoutain(1, 0, Color.RED);
-        player.buildToMoutain(1, 1, Color.RED);
-        player.buildToMoutain(2, 0, Color.RED);
+        player.addToMountainFromAvailableToBuild(0, 0, Color.RED);
+        player.addToMountainFromAvailableToBuild(1, 0, Color.RED);
+        player.addToMountainFromAvailableToBuild(1, 1, Color.RED);
+        player.addToMountainFromAvailableToBuild(2, 0, Color.RED);
 
         player.removeFromMountainToAvailableToBuild(0, 0);
         assertEquals(Color.EMPTY, player.getMountain().getCase(0, 0));

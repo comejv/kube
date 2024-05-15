@@ -19,6 +19,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
     /**********
      * ATTRIBUTES
      **********/
+
     private Kube k3;
     private Player iaPlayer;
     private Random r;
@@ -31,6 +32,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
     /**********
      * CONSTRUCTORS
      **********/
+
     public MinMaxAI(int time, int seed) {
         r = new Random(seed);
         setTime(time);
@@ -44,6 +46,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
     /**********
      * SETTERS
      **********/
+
     public void setK3(Kube k) {
         k3 = k;
     }
@@ -83,6 +86,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
     /**********
      * GETTERS
      **********/
+
     public Kube getK3() {
         return k3;
     }

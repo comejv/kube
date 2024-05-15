@@ -113,10 +113,10 @@ public class Game implements Runnable {
     }
 
     synchronized public void swap(Swap s) {
-        Color c = currentPlayerToBuild.unbuildFromMoutain(s.getPos1().x, s.getPos1().y);
-        Color c2 = currentPlayerToBuild.unbuildFromMoutain(s.getPos2().x, s.getPos2().y);
-        currentPlayerToBuild.buildToMoutain(s.getPos1(), c2);
-        currentPlayerToBuild.buildToMoutain(s.getPos2(), c);
+        Color c = currentPlayerToBuild.removeFromMountainToAvailableToBuild(s.getPos1().x, s.getPos1().y);
+        Color c2 = currentPlayerToBuild.removeFromMountainToAvailableToBuild(s.getPos2().x, s.getPos2().y);
+        currentPlayerToBuild.addToMountainFromAvailableToBuild(s.getPos1(), c2);
+        currentPlayerToBuild.addToMountainFromAvailableToBuild(s.getPos2(), c);
     }
 
     public void redirectMessage(Action a) {

@@ -7,6 +7,7 @@ public class AI extends Player {
     /**********
      * ATTRIBUTES
      **********/
+
     private abstractAI ai;
 
     /**********
@@ -20,7 +21,7 @@ public class AI extends Player {
      * @param ai the AI of the player
      * @param k3 the game
      */
-    AI(int id, abstractAI ai, Kube k3){
+    AI(int id, abstractAI ai, Kube k3) {
         super(id);
         ai.setK3(k3);
         ai.setPlayer(this);
@@ -30,14 +31,16 @@ public class AI extends Player {
     /**********
      * SETTER
      **********/
-    public void setAI(abstractAI ai){
+
+    public void setAI(abstractAI ai) {
         this.ai = ai;
     }
 
     /**********
      * GETTER
      **********/
-    public abstractAI getAI(){
+
+    public abstractAI getAI() {
         return ai;
     }
 
@@ -51,7 +54,7 @@ public class AI extends Player {
      * @return true
      */
     @Override
-    public boolean isAI(){
+    public boolean isAI() {
         return true;
     }
 }
