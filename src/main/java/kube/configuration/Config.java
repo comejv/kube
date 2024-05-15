@@ -4,8 +4,8 @@ public class Config {
     private static boolean mute = true;
     private static final boolean debug = true;
     private static final boolean showBorders = false;
-    private static final int initWidth = 800;
-    private static final int initHeight = 600;
+    private static final int initWidth = 1280;
+    private static final int initHeight = 900;
 
     public static boolean isJar() {
         return System.getProperty("java.class.path").contains(".jar");

@@ -62,8 +62,21 @@ public class Buttons {
 
     public static class ParameterButton extends JButton {
         public ParameterButton(Image image) {
-            super(new ImageIcon(image));
-            setPreferredSize(new Dimension(100, 100));
+            super();
+            Image scaledImg = image.getScaledInstance(
+                        (int) (0.15 * Config.getInitHeight()),
+                        (int) (0.15 * Config.getInitHeight()),
+                        Image.SCALE_SMOOTH);
+                
+            ImageIcon icon = new ImageIcon(scaledImg);
+            setIcon(icon);
+
+            setPreferredSize(new Dimension((int) (0.20 * Config.getInitHeight()),
+                                           (int) (0.20 * Config.getInitHeight())));
+
+            setOpaque(false);
+            setContentAreaFilled(false);
+            setBorderPainted(false);
         }
     }
 
