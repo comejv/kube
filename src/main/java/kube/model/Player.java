@@ -266,7 +266,7 @@ public class Player {
     public void addToAdditionals(Color color) throws UnsupportedOperationException {
         
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException("addToAdditionals: Forbidden operation, the player hasn't validate his building");
         }
 
         getAdditionals().add(color);
@@ -281,7 +281,7 @@ public class Player {
     public Color removeFromAdditionals(int pos) throws UnsupportedOperationException {
         
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException("removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
         }
 
         return getAdditionals().remove(pos);
@@ -296,7 +296,7 @@ public class Player {
     public Color removeFromMountain(Point point) throws UnsupportedOperationException {
         
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException("removeFromMountain: Forbidden operation, the player hasn't validate his building");
         }
 
         return removeFromMountain(point.x, point.y);
@@ -312,7 +312,7 @@ public class Player {
     public Color removeFromMountain(int l, int c) throws UnsupportedOperationException {
         
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException("removeFromMountain: Forbidden operation, the player hasn't validate his building");
         }
 
         Color col;
@@ -329,7 +329,7 @@ public class Player {
     public HashSet<Color> getPlayableColors() throws UnsupportedOperationException {
         
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException("getPlayableColors: Forbidden operation, the player hasn't validate his building");
         }
 
         HashSet<Color> playable;
@@ -446,6 +446,7 @@ public class Player {
         p.setName(getName());
         p.setWhiteUsed(getWhiteUsed());
         p.setMountain(getMountain().clone());
+        p.setHasValidateBuilding(getHasValidateBuilding());
         return p;
     }
 }

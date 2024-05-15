@@ -41,6 +41,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
     public MinMaxAI() {
         r = new Random();
         setTime(3000);
+        //setHeuristic();
     }
 
     /**********
@@ -244,5 +245,9 @@ public class MinMaxAI implements abstractAI, ActionListener {
     public void actionPerformed(ActionEvent arg0) {
         setNoMoreTime(true);
         getTimer().stop();
+    }
+
+    public int moveSetSize(){
+        return k3.moveSet().size();
     }
 }

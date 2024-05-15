@@ -2,7 +2,6 @@ package kube.view;
 
 import java.util.ArrayList;
 import java.awt.Point;
-import kube.configuration.*;
 import kube.model.*;
 import kube.model.Kube;
 import kube.model.Player;
@@ -24,6 +23,7 @@ public class TextualMode implements Runnable {
     public void run() {
         printWelcome();
         printStart();
+        printHelp();
         while (true) {
             Action action = events.remove();
             switch (action.getType()) {
@@ -36,6 +36,7 @@ public class TextualMode implements Runnable {
                     break;
                 case Action.PRINT_COMMAND_ERROR:
                     printCommandError();
+                    printHelp();
                     break;
                 case Action.PRINT_WAIT_COORDINATES:
                     printWaitCoordinates((int) action.getData());
@@ -44,15 +45,20 @@ public class TextualMode implements Runnable {
                     printGoodbye();
                     break;
                 case Action.PRINT_HELP:
+                    printHelp();
                     break;
                 case Action.PRINT_LIST_MOVES:
+                    printState();
                     printListMoves();
                     break;
                 case Action.PRINT_MOVE:
                     printMove((Move) action.getData());
+                    printState();
+                    printHelp();
                     break;
                 case Action.PRINT_MOVE_ERROR:
                     printMoveError();
+                    printHelp();
                     break;
                 case Action.PRINT_NEXT_PLAYER:
                     printNextPlayer();
@@ -66,34 +72,48 @@ public class TextualMode implements Runnable {
                     break;
                 case Action.PRINT_RANDOM:
                     printRandom();
+                    printState();
+                    printHelp();
                     break;
                 case Action.PRINT_REDO:
                     printRedo((Move) action.getData());
+                    printState();
+                    printHelp();
                     break;
                 case Action.PRINT_REDO_ERROR:
                     printRedoError();
+                    printState();
+                    printHelp();
                     break;
                 case Action.PRINT_STATE:
                     printState();
                     break;
                 case Action.PRINT_SWAP:
                     printSwap();
-                    break;
+                    printHelp();
+                     break;
                 case Action.PRINT_SWAP_ERROR:
                     printSwapError();
+                    printHelp();
                     break;
                 case Action.PRINT_SWAP_SUCCESS:
                     Swap s = (Swap) action.getData();
                     printSwapSuccess(s.getPos1(), s.getPos2());
+                    printHelp();
                     break;
                 case Action.PRINT_UNDO:
                     printUndo((Move) action.getData());
+                    printState();
+                    printHelp();
                     break;
                 case Action.PRINT_UNDO_ERROR:
+                    printState();
                     printUndoError();
+                    printHelp();
                     break;
                 case Action.PRINT_VALIDATE:
-                    printValidate();
+                    printValidate((boolean) action.getData());
+                    printHelp();
                     break;
                 case Action.PRINT_WELCOME:
                     printWelcome();
@@ -104,7 +124,6 @@ public class TextualMode implements Runnable {
                 default:
                     break;
             }
-            printHelp();
         }
 
     }
@@ -114,19 +133,21 @@ public class TextualMode implements Runnable {
                 "-random : construit aléatoirement une tour\n" +
                 "-echanger : permet d'échanger la position de 2 pièces de son choix\n" +
                 "-valider : valider que sa montagne est prête\n" +
-                "-afficher : affiche l'état de la base centrale et de sa montagne" +
+                "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
                 "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n" +
                 "Vous devez consruire votre montagne. \n");
     }
 
     public void printCommandPhase2() {
-        System.out.println("Commandes disponibles  : \n" +
+        String s = "Commandes disponibles  : \n" +
                 "-jouer : jouer un coup\n" +
                 "-annuler : annuler le dernier coup\n" +
                 "-rejouer : rejouer le dernier coup\n" +
                 "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
                 "-aide : affiche cette liste\n" +
-                "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n");
+                "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n" +
+                "Vous devez choisir une de vos pièces pour la mettre sur la montagne centrale.";
+        System.out.println(s);
     }
 
     public void printAI() {
@@ -184,9 +205,17 @@ public class TextualMode implements Runnable {
     }
 
     public void printNextPlayer() {
-        System.out.println("C'est au tour de " + game.getKube().getCurrentPlayer().getName());
+        if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
+            System.out.println("C'est au tour de " + game.getKube().getCurrentPlayer().getName());
+        } else {
+            System.out.println("C'est au tour de " + game.getKube().getCurrentPlayer().getName());
+        }
         printHelp();
         printState();
+    }
+
+    public void printPenality() {
+        System.out.println("Votre adversaire a une pénalitée, choisissez une pièce à récuperer");
     }
 
     public void printPlayer() {
@@ -216,11 +245,14 @@ public class TextualMode implements Runnable {
     public void printState() {
         if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
             System.out.println(game.getKube().getK3());
-            System.out.println(game.getCurrentPlayerToBuild());
+            System.out.println(game.getKube().getCurrentPlayer());
         } else {
             System.out.println(game.getKube().getK3());
             System.out.println(game.getKube().getP1());
             System.out.println(game.getKube().getP2());
+            if (game.getKube().getPenality()) {
+                printPenality();
+            }
         }
     }
 
@@ -249,8 +281,12 @@ public class TextualMode implements Runnable {
         System.out.println("Impossible d'annuler le coup");
     }
 
-    public void printValidate() {
-        System.out.println("Votre montagne a été validée");
+    public void printValidate(boolean b) {
+        if (b) {
+            System.out.println("Votre montagne a été validée");
+        } else {
+            System.out.println("Votre montagne n'est pas valide");
+        }
     }
 
     public void printWelcome() {
@@ -260,7 +296,7 @@ public class TextualMode implements Runnable {
 
     public void printWinMessage(Player winner) {
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
-        System.out.println("Plateau final : \n" + game.getKube() + "\n");
+        System.out.println("Plateau final : \n" + game.getKube().getK3() + "\n");
         System.out.println(game.getKube().getP1());
         System.out.println(game.getKube().getP2());
     }

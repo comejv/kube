@@ -34,6 +34,7 @@ public class Kube {
     private int phase;
     private Move lastMovePlayed;
 
+
     /**********
      * CONSTRUCTOR
      **********/
@@ -80,12 +81,7 @@ public class Kube {
             setP2(new Player(2));
         }
 
-        if (new Random().nextInt(2) == 0) {
-            setCurrentPlayer(getP1());
-        } else {
-            setCurrentPlayer(getP2());
-        }
-
+        setCurrentPlayer(getP1());
         distributeCubesToPlayers();
     }
 
@@ -97,7 +93,7 @@ public class Kube {
         bag = b;
     }
 
-    public void setCurrentPlayer(Player p) {
+    synchronized public void setCurrentPlayer(Player p) {
         currentPlayer = p;
     }
 
@@ -145,7 +141,7 @@ public class Kube {
         return bag;
     }
 
-    public Player getCurrentPlayer() {
+    synchronized public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
@@ -189,7 +185,7 @@ public class Kube {
         return player.getMountain().removable();
     }
 
-    public Move getLastMovePlayed(){
+    public Move getLastMovePlayed() {
         return lastMovePlayed;
     }
     
@@ -315,9 +311,12 @@ public class Kube {
      * 
      * @param move the move to check
      * @return true if the move is playable, false otherwise
-     * @throws UnsupportedOperationException if the phase is not the game phase
-     * @throws IllegalArgumentUnsupportedOperationException      if the move is not a MoveAA, MoveMA,
-     *                                       MoveAW, MoveMW, MoveAM or MoveMM
+     * @throws UnsupportedOperationException                if the phase is not the
+     *                                                      game phase
+     * @throws IllegalArgumentUnsupportedOperationException if the move is not a
+     *                                                      MoveAA, MoveMA,
+     *                                                      MoveAW, MoveMW, MoveAM
+     *                                                      or MoveMM
      */
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
 
@@ -814,6 +813,10 @@ public class Kube {
 
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
             setPhase(2);
+        } else if (isPreparationPhase && p1ValidateBuilding && !p2ValidateBuilding) {
+            setCurrentPlayer(getP2());
+        } else if (isPreparationPhase && !p1ValidateBuilding && p2ValidateBuilding) {
+            setCurrentPlayer(getP1());
         }
 
         return getPhase();
