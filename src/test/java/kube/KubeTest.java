@@ -1555,7 +1555,9 @@ public class KubeTest {
             { Color.RED, Color.BLUE, Color.GREEN, Color.WHITE, Color.EMPTY, Color.EMPTY },
             { Color.RED, Color.BLUE, Color.GREEN, Color.NATURAL, Color.YELLOW, Color.WHITE }
         };
+        
         kube.getP1().getMountain().setMountain(mountainP1);
+        kube.getP1().setHasValidateBuilding(true);
         kube.getP1().addToAdditionals(Color.NATURAL);
         kube.getP1().addToAdditionals(Color.WHITE);
         kube.getP1().addToAdditionals(Color.YELLOW);
@@ -1640,6 +1642,8 @@ public class KubeTest {
         k.getHistory().clear();
         k.setPhase(2);
         k.setCurrentPlayer(k.getP1());
+        k.getP1().setHasValidateBuilding(true);
+        k.getP2().setHasValidateBuilding(true);
         k.setPenality(false);
     }
 

@@ -14,6 +14,7 @@ public class PlayerTest {
     public void addToAdditionalsTest() {
 
         Player player = new Player(1);
+        player.setHasValidateBuilding(true);
         player.addToAdditionals(Color.RED);
         player.addToAdditionals(Color.BLUE);
         player.addToAdditionals(Color.GREEN);
@@ -29,6 +30,7 @@ public class PlayerTest {
     public void removeFromAdditionalsTest() {
             
         Player player = new Player(1);
+        player.setHasValidateBuilding(true);
         player.addToAdditionals(Color.RED);
         player.addToAdditionals(Color.BLUE);
         player.addToAdditionals(Color.GREEN);
@@ -43,7 +45,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void addToMountainTest() {
+    public void addToMountainFromAvailableToBuildTest() {
 
         Kube kube = new Kube();
         kube.setCurrentPlayer(kube.getP1());
@@ -94,6 +96,8 @@ public class PlayerTest {
         player.addToMountainFromAvailableToBuild(1, 0, Color.RED);
         player.addToMountainFromAvailableToBuild(1, 1, Color.RED);
         player.addToMountainFromAvailableToBuild(2, 0, Color.RED);
+
+        player.setHasValidateBuilding(true);
 
         assertEquals(Color.RED, player.removeFromMountain(0, 0));
         assertEquals(Color.EMPTY, player.getMountain().getCase(0, 0));
