@@ -124,10 +124,10 @@ public class Buttons {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // Darken the image on hover
-            float opacity = isHovered ? (isPressed ? 0.5f : 0.75f) : 1.0f;
+            float factor = isHovered ? (isPressed ? 0.75f : 1.1f) : 1.0f;
 
             if (isHovered) { // Draw darker image
-                float[] scales = { 1f, 1f, 1f, opacity };
+                float[] scales = { factor };
                 float[] offsets = new float[4];
                 RescaleOp rop = new RescaleOp(scales, offsets, null);
                 g2d.drawImage(originalImage, rop, 0, 0);
@@ -138,17 +138,26 @@ public class Buttons {
             g2d.dispose();
         }
 
-        // public void recolor(Color c) {
-        // int width = originalImage.getWidth();
-        // int height = originalImage.getHeight();
-        //
-        // for (int y = 0; y < height; y++) {
-        // for (int x = 0; x < width; x++) {
-        // int p = originalImage.getRGB(x, y);
-        //
-        // }
-        // }
-        // }
+        public void recolor(Color c) {
+            int width = originalImage.getWidth();
+            int height = originalImage.getHeight();
+
+            for (int y = 0; y < height; y++) {
+                for (int x = 0; x < width; x++) {
+                    if (originalImage.getRGB(x, y) == 0) {
+                        continue;
+                    }
+                    double[] hsl = GUIColors.rgbToHsl(originalImage.getRGB(x, y));
+                    hsl[0] = GUIColors.rgbToHsl(c.getRGB())[0];
+                    // hsl[0] = 0.3;
+                    int[] rgbArray = GUIColors.hslToRgb(hsl);
+                    int rgb = originalImage.getRGB(x, y) & (0xFF << 24) // Keep alpha
+                            | (rgbArray[0] << 16) | (rgbArray[1] << 8) | rgbArray[2]; // Set RGB
+                    originalImage.setRGB(x, y, rgb);
+                }
+            }
+            repaint();
+        }
 
         public void setHovered(boolean b) {
             isHovered = b;
