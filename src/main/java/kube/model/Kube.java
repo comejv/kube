@@ -310,9 +310,12 @@ public class Kube {
      * 
      * @param move the move to check
      * @return true if the move is playable, false otherwise
-     * @throws UnsupportedOperationException if the phase is not the game phase
-     * @throws IllegalArgumentUnsupportedOperationException      if the move is not a MoveAA, MoveMA,
-     *                                       MoveAW, MoveMW, MoveAM or MoveMM
+     * @throws UnsupportedOperationException                if the phase is not the
+     *                                                      game phase
+     * @throws IllegalArgumentUnsupportedOperationException if the move is not a
+     *                                                      MoveAA, MoveMA,
+     *                                                      MoveAW, MoveMW, MoveAM
+     *                                                      or MoveMM
      */
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
 
@@ -809,8 +812,10 @@ public class Kube {
 
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
             setPhase(2);
-        } else if (isPreparationPhase && p1ValidateBuilding){
+        } else if (isPreparationPhase && p1ValidateBuilding && !p2ValidateBuilding) {
             setCurrentPlayer(getP2());
+        } else if (isPreparationPhase && !p1ValidateBuilding && p2ValidateBuilding) {
+            setCurrentPlayer(getP1());
         }
 
         return getPhase();

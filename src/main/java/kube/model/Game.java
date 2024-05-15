@@ -4,6 +4,8 @@ import kube.model.ai.*;
 
 import java.util.Random;
 
+import javax.management.RuntimeErrorException;
+
 import kube.configuration.Config;
 import kube.model.action.*;
 import kube.model.action.move.Move;
@@ -37,15 +39,12 @@ public class Game implements Runnable {
     public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init();
+        k3.init(new MinMaxAI(), new RandomAI());
         // Construction phase
         while (k3.getPhase() == 1) {
             try {
                 if (k3.getCurrentPlayer().isAI()) {
                     k3.getCurrentPlayer().getAI().constructionPhase();
-                    if (k3.getCurrentPlayer().validateBuilding()) {
-                        Config.debug("Validation construction IA");
-                    }
                     k3.updatePhase();
                 } else {
                     Action a = controllerToModele.remove();
@@ -85,7 +84,8 @@ public class Game implements Runnable {
                     try {
                         k3.playMove(k3.getCurrentPlayer().getAI().nextMove());
                     } catch (Exception e) {
-                        System.err.println("Coup de l'IA impossible" + e);
+                        e.printStackTrace();
+                        System.exit(0);
                     }
                 } else {
                     Action a = controllerToModele.remove();
@@ -105,6 +105,7 @@ public class Game implements Runnable {
                     }
                 }
             } catch (Exception e) {
+                System.err.println(e);
                 modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
             }
 
