@@ -16,6 +16,7 @@ public class Kube {
     /**********
      * CONSTANTS
      **********/
+
     public static final int NB_CUBE_PER_COLOR = 9;
     public static final int PREPARATION_PHASE = 1;
     public static final int GAME_PHASE = 2;
@@ -23,6 +24,7 @@ public class Kube {
     /**********
      * ATTRIBUTES
      **********/
+
     private Player p1, p2, currentPlayer;
     private ArrayList<Color> bag;
     private boolean penality;
@@ -45,6 +47,7 @@ public class Kube {
     /**********
      * INITIALIZATION
      **********/
+
     public void init() {
         init(null, null);
     }
@@ -86,8 +89,57 @@ public class Kube {
     }
 
     /**********
+     * SETTERS
+     **********/
+
+    public void setBag(ArrayList<Color> b) {
+        bag = b;
+    }
+
+    public void setCurrentPlayer(Player p) {
+        currentPlayer = p;
+    }
+
+    public void setHistory(History h) {
+        history = h;
+    }
+
+    public void setK3(Mountain m) {
+        k3 = m;
+    }
+
+    public void setP1(Player p) {
+        p1 = p;
+    }
+
+    public void setP2(Player p) {
+        p2 = p;
+    }
+
+    public void setPhase(int p) {
+        phase = p;
+    }
+
+    public void setPenality(boolean p) {
+        penality = p;
+    }
+
+    public void setBaseSize(int b) {
+        baseSize = b;
+    }
+
+    public void setPlayerCase(Player player, Point point, Color color) {
+        player.getMountain().setCase(point, color);
+    }
+
+    public void setPlayerCase(Player player, int x, int y, Color color) {
+        player.getMountain().setCase(x, y, color);
+    }
+
+    /**********
      * GETTERS
      **********/
+
     public ArrayList<Color> getBag() {
         return bag;
     }
@@ -140,54 +192,8 @@ public class Kube {
         return lastMovePlayed;
     }
     
+
     /**********
-     * SETTERS
-     **********/
-    public void setBag(ArrayList<Color> b) {
-        bag = b;
-    }
-
-    public void setCurrentPlayer(Player p) {
-        currentPlayer = p;
-    }
-
-    public void setHistory(History h) {
-        history = h;
-    }
-
-    public void setK3(Mountain m) {
-        k3 = m;
-    }
-
-    public void setP1(Player p) {
-        p1 = p;
-    }
-
-    public void setP2(Player p) {
-        p2 = p;
-    }
-
-    public void setPhase(int p) {
-        phase = p;
-    }
-
-    public void setPenality(boolean p) {
-        penality = p;
-    }
-
-    public void setBaseSize(int b) {
-        baseSize = b;
-    }
-
-    public void setPlayerCase(Player player, Point point, Color color) {
-        player.getMountain().setCase(point, color);
-    }
-
-    public void setPlayerCase(Player player, int x, int y, Color color) {
-        player.getMountain().setCase(x, y, color);
-    }
-
-     /**********
      * PREPARATION PHASE METHODS
      **********/
 
@@ -674,7 +680,7 @@ public class Kube {
         Color cMountain;
         MoveAA aa;
         MoveMA ma;
-        
+
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
             throw new UnsupportedOperationException();
@@ -802,8 +808,8 @@ public class Kube {
 
         boolean p1ValidateBuilding, p2ValidateBuilding, isPreparationPhase;
 
-        p1ValidateBuilding = getP1() != null && getP1().hasValidateBuilding();
-        p2ValidateBuilding = getP2() != null && getP2().hasValidateBuilding();
+        p1ValidateBuilding = getP1() != null && getP1().getHasValidateBuilding();
+        p2ValidateBuilding = getP2() != null && getP2().getHasValidateBuilding();
         isPreparationPhase = getPhase() == PREPARATION_PHASE;
 
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {

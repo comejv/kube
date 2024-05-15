@@ -10,13 +10,14 @@ public class utilsAI {
 
     /**
      * Fill the mountain of the player with random colors
+     * 
      * @param player
      * @param r
      */
     public static void randomFillMountain(Player player, Random r) {
-        ArrayList<Color> colArr= new ArrayList<>();
-        // If the Mountain is already build 
-        if (player.getMountain().isFull()){
+        ArrayList<Color> colArr = new ArrayList<>();
+        // If the Mountain is already build
+        if (player.getMountain().isFull()) {
             for (int i = 0; i < player.getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {
                     colArr.add(player.getMountain().getCase(i, j));
@@ -24,7 +25,7 @@ public class utilsAI {
                 }
             }
         }
-        //If the Mountain is not build
+        // If the Mountain is not build
         else {
             for (Color color : player.getAvalaibleToBuild().keySet()) {
                 int n = player.getAvalaibleToBuild().get(color);
@@ -37,7 +38,7 @@ public class utilsAI {
         for (int i = 0; i < player.getMountain().getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 player.getMountain().setCase(i, j, colArr.remove(r.nextInt(colArr.size())));
-                }
             }
         }
     }
+}

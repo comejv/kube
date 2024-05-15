@@ -11,6 +11,7 @@ public class History {
     /**********
      * ATTRIBUTES
      **********/
+
     private int firstPlayer;
     private ArrayList<Move> done;
     private ArrayList<Move> undone;
@@ -31,6 +32,7 @@ public class History {
     /**********
      * SETTERS
      **********/
+
     public void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
@@ -46,6 +48,7 @@ public class History {
     /**********
      * GETTERS
      **********/
+
     public int getFirstPlayer() {
         return this.firstPlayer;
     }

@@ -9,6 +9,7 @@ public enum Color {
     /**********
      * ENUMERATION
      **********/
+
     EMPTY(0),
     WHITE(1),
     NATURAL(2),
@@ -21,6 +22,7 @@ public enum Color {
     /**********
      * ATTRIBUTE
      **********/
+
     int colorCode;
 
     /**********
@@ -29,6 +31,7 @@ public enum Color {
 
     /**
      * Constructor of the Color
+     * 
      * @param colorCode
      */
     Color(int colorCode) {
@@ -38,6 +41,7 @@ public enum Color {
     /**********
      * SETTER
      **********/
+
     public void setColorCode(int colorCode) {
         this.colorCode = colorCode;
     }
@@ -45,6 +49,7 @@ public enum Color {
     /**********
      * GETTER
      **********/
+
     public int getColorCode() {
         return this.colorCode;
     }
@@ -52,6 +57,7 @@ public enum Color {
     /**********
      * METHODS
      **********/
+
     @Override
     public String toString() {
         return this.name();

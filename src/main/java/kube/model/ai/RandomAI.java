@@ -12,18 +12,20 @@ public class RandomAI implements abstractAI {
     /**********
      * ATTRIBUTES
      **********/
+
     Kube k3;
     Player iaPlayer;
     Random r;
-    
+
     /**********
      * CONSTRUCTORS
      **********/
 
     /**
      * Constructor of the RandomAI class
-     * @param k the game
-     * @param p the player
+     * 
+     * @param k    the game
+     * @param p    the player
      * @param seed the seed of the random
      */
     public RandomAI(int seed) {
@@ -37,6 +39,7 @@ public class RandomAI implements abstractAI {
     /**********
      * SETTERS
      **********/
+
     public void setK3(Kube k) {
         k3 = k;
     }
@@ -52,6 +55,7 @@ public class RandomAI implements abstractAI {
     /**********
      * GETTERS
      **********/
+
     public Kube getK3() {
         return k3;
     }
@@ -83,14 +87,14 @@ public class RandomAI implements abstractAI {
      * Give the next move of the AI
      * 
      * @return the next move
-     * @throws Exception 
+     * @throws Exception
      */
     public Move nextMove() throws Exception {
         ArrayList<Move> moves;
 
         moves = k3.moveSet();
-        
-        if (moves.size() == 0){
+
+        if (moves.size() == 0) {
             throw new Exception("Aucun coup jouable");
         } else {
             return moves.get(r.nextInt(moves.size()));

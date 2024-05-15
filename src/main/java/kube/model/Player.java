@@ -11,24 +11,40 @@ import java.awt.Point;
 
 public class Player {
 
-    int id, whiteUsed;
+    /**********
+     * ATTRIBUTES
+     **********/
+
     String name;
+    int id, whiteUsed;
     Mountain mountain;
+    boolean hasValidateBuilding;
     ArrayList<Color> additionals;
     HashMap<Color, Integer> avalaibleToBuild;
-    boolean hasValidateBuilding;
 
-    // Constructor
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the class Player
+     * 
+     * @param id the player id
+     */
     public Player(int id) {
+
         setId(id);
         setWhiteUsed(0);
         setMountain(new Mountain(6));
         clearMountain();
         setAdditionals(new ArrayList<Color>());
-        hasValidateBuilding = false;
+        setHasValidateBuilding(false);
     }
 
-    // Setters
+    /**********
+     * SETTER
+     **********/
+
     public void setId(int id) {
         this.id = id;
     }
@@ -53,7 +69,14 @@ public class Player {
         this.avalaibleToBuild = avalaibleToBuild;
     }
 
-    // Getters
+    public void setHasValidateBuilding(boolean hasValidateBuilding) {
+        this.hasValidateBuilding = hasValidateBuilding;
+    }
+
+    /**********
+     * GETTER
+     **********/
+
     public int getId() {
         return this.id;
     }
@@ -81,32 +104,71 @@ public class Player {
         return this.avalaibleToBuild;
     }
 
-    // Methods
-    public void addToAdditionals(Color color) {
-        getAdditionals().add(color);
+    public boolean getHasValidateBuilding() {
+        return hasValidateBuilding;
     }
 
-    public Color removeFromAdditionals(int pos) {
-        return getAdditionals().remove(pos);
+    public boolean isAI() {
+        return false;
     }
 
-    public boolean buildToMoutain(Point point, Color color) {
-        return buildToMoutain(point.x, point.y, color);
+    public abstractAI getAI() {
+        return null;
     }
 
-    public boolean buildToMoutain(int l, int c, Color color) {
+    /**********
+     * BEFORE HAS VALIDATE BUILDING METHODS
+     **********/
 
-        if (hasValidateBuilding || l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
+    /**
+     * Check if the player can build a cube of the given color
+     * 
+     * @param c the color to check
+     * @return true if the player can build a cube of the given color, false
+     *         otherwise
+     */
+    public boolean isAvailableToBuild(Color c) {
+        return getAvalaibleToBuild().get(c) > 0;
+    }
+
+    /**
+     * Add a color to the player's mountain using available colors
+     * 
+     * @param point the position to build
+     * @param color the color to build
+     * @return true if the color has been built, false otherwise
+     */
+    public boolean addToMountainFromAvailableToBuild(Point point, Color color) {
+        return addToMountainFromAvailableToBuild(point.x, point.y, color);
+    }
+
+    /**
+     * Add a color to the player's mountain using available colors
+     * 
+     * @param l     the x position to build
+     * @param c     the y position to build
+     * @param color the color to build
+     * @return true if the color has been built, false otherwise
+     */
+    public boolean addToMountainFromAvailableToBuild(int l, int c, Color color) {
+
+        Color mountainColor;
+        Integer availableNumber;
+        boolean isInMountain;
+
+        isInMountain = l >= 0 && l < getMountain().getBaseSize() && c >= 0 && c <= l;
+        if (getHasValidateBuilding() || !isInMountain) {
             return false;
         }
 
-        Color mountainColor = getMountain().getCase(l, c);
+        mountainColor = getMountain().getCase(l, c);
         if (getAvalaibleToBuild().get(color) > 0) {
-            
-            getMountain().setCase(l, c, color);
 
+            getMountain().setCase(l, c, color);
             if (mountainColor != Color.EMPTY) {
-                getAvalaibleToBuild().put(mountainColor, getAvalaibleToBuild().get(mountainColor) + 1);
+
+                availableNumber = getAvalaibleToBuild().get(mountainColor) + 1;
+                getAvalaibleToBuild().put(mountainColor, availableNumber);
             }
 
             getAvalaibleToBuild().put(color, getAvalaibleToBuild().get(color) - 1);
@@ -116,15 +178,34 @@ public class Player {
         return false;
     }
 
-    public Color unbuildFromMoutain(int l, int c) {
+    /**
+     * Remove a color from the player's mountain to the available to build
+     * 
+     * @param point the position to remove
+     * @return the color removed
+     */
+    public Color removeFromMountainToAvailableToBuild(Point point) {
+        return removeFromMountainToAvailableToBuild(point.x, point.y);
+    }
 
-        if (hasValidateBuilding || l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
+    /**
+     * Remove a color from the player's mountain to the available to build
+     * 
+     * @param x the x position to remove
+     * @param y the y position to remove
+     * @return the color removed
+     */
+    public Color removeFromMountainToAvailableToBuild(int x, int y) {
+
+        Color mountainColor;
+
+        if (hasValidateBuilding || x < 0 || y < 0 || x < y || x >= getMountain().getBaseSize()) {
             return Color.EMPTY;
         }
 
-        Color mountainColor = getMountain().getCase(l, c);
+        mountainColor = getMountain().getCase(x, y);
         if (mountainColor != Color.EMPTY) {
-            getMountain().remove(l, c);
+            getMountain().remove(x, y);
             getAvalaibleToBuild().put(mountainColor, getAvalaibleToBuild().get(mountainColor) + 1);
             return mountainColor;
         }
@@ -132,47 +213,121 @@ public class Player {
         return mountainColor;
     }
 
+    /**********
+     * AFTER HAS VALIDATE BUILDING METHODS
+     **********/
 
-
-    public boolean isAvailableToBuild(Color c) {
-        return getAvalaibleToBuild().get(c) > 0;
+    /**
+     * Add a color to the player's additionals
+     * 
+     * @param color the color to add
+     */
+    public void addToAdditionals(Color color) {
+        getAdditionals().add(color);
     }
 
+    /**
+     * Remove a color from the player's additionals
+     * 
+     * @param pos the index of the color to remove
+     * @return the color removed
+     */
+    public Color removeFromAdditionals(int pos) {
+        return getAdditionals().remove(pos);
+    }
+
+    /**
+     * Remove a color from the player's mountain with the given position
+     * 
+     * @param point the position to remove
+     * @return the color removed
+     */
     public Color removeFromMountain(Point point) {
         return removeFromMountain(point.x, point.y);
     }
 
+    /**
+     * Remove a color from the player's mountain with the given position
+     * 
+     * @param l the x position to remove
+     * @param c the y position to remove
+     * @return the color removed
+     */
     public Color removeFromMountain(int l, int c) {
-        Color col = getMountain().getCase(l, c);
+        Color col;
+        col = getMountain().getCase(l, c);
         getMountain().remove(l, c);
         return col;
     }
 
-    public void removeFromMountainToAvailableToBuild(Point p) {
-        removeFromMountainToAvailableToBuild(p.x, p.y);
-    }
+    /**********
+     * OTHER METHODS
+     **********/
 
-    public void removeFromMountainToAvailableToBuild(int l, int c) {
-        Color color;
-        if ((color = getMountain().getCase(l, c)) != Color.EMPTY) {
-            getMountain().remove(l, c);
-            getAvalaibleToBuild().put(color, getAvalaibleToBuild().get(color) + 1);
-        }
-    }
-
+    /**
+     * Clear the mountain of the player
+     * 
+     * @return void
+     */
     public void clearMountain() {
         getMountain().clear();
     }
 
+    /**
+     * Check if the mountain of the player is full
+     * 
+     * @return true if the mountain is full, false otherwise
+     */
     public boolean isMountainFull() {
         return getMountain().isFull();
     }
 
+    /**
+     * Check if the mountain of the player is empty
+     * 
+     * @return true if the mountain is empty, false otherwise
+     */
     public boolean isMountainEmpty() {
         return getMountain().isEmpty();
     }
 
+    public HashSet<Color> getPlayableColors() {
+
+        HashSet<Color> playable;
+        HashSet<Color> toTest;
+        ArrayList<Point> removable;
+
+        toTest = new HashSet<>();
+        removable = new ArrayList<>();
+        for (Point p : removable) {
+            toTest.add(getMountain().getCase(p.x, p.y));
+        }
+
+        toTest.addAll(getAdditionals());
+
+        playable = new HashSet<>();
+        for (Color c : toTest) {
+            if (getMountain().compatible(c).size() >= 1) {
+                playable.add(c);
+            }
+        }
+        return playable;
+    }
+
+    public boolean validateBuilding() {
+        if (getMountain().isFull()) {
+            setHasValidateBuilding(true);
+        }
+        return getHasValidateBuilding();
+    }
+
+    /**
+     * Return a string representing the player for saving it
+     * 
+     * @return a string representing the player
+     */
     public String forSave() {
+
         String s = "{";
         s += getId() + "\n {";
         s += getMountain().forSave() + "}";
@@ -186,38 +341,17 @@ public class Player {
         return s;
     }
 
+    @Override
     public String toString() {
+
         String s = getName() + ":\n";
         s += getMountain().toString();
         s += "\nAdditionels: ";
         for (Color c : getAdditionals()) {
             s += c.forDisplay() + " ";
         }
-        s+= "\n";
+        s += "\n";
         return s;
-    }
-
-    public HashSet<Color> getPlayableColors() {
-
-        HashSet<Color> playable = new HashSet<>();
-        HashSet<Color> toTest = new HashSet<>();
-        ArrayList<Point> removable = getMountain().removable();
-
-        for (Point p : removable) {
-
-            toTest.add(getMountain().getCase(p.x, p.y));
-        }
-
-        toTest.addAll(getAdditionals());
-
-        for (Color c : toTest) {
-
-            if (getMountain().compatible(c).size() >= 1) {
-
-                playable.add(c);
-            }
-        }
-        return playable;
     }
 
     @Override
@@ -229,7 +363,7 @@ public class Player {
             return false;
         }
         Player p = (Player) o;
-        if (getId() != p.getId()){
+        if (getId() != p.getId()) {
             return false;
         }
         return getMountain().equals(p.getMountain());
@@ -241,31 +375,13 @@ public class Player {
     }
 
     @Override
-    public Player clone(){
+    public Player clone() {
+
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
         p.setName(getName());
         p.setWhiteUsed(getWhiteUsed());
         p.setMountain(getMountain().clone());
         return p;
-    }
-
-    public boolean validateBuilding(){
-        if (getMountain().isFull()){
-            hasValidateBuilding = true;
-        }
-        return hasValidateBuilding;
-    }
-
-    public boolean hasValidateBuilding(){
-        return hasValidateBuilding;
-    }
-
-    public boolean isAI(){
-        return false;
-    }
-
-    public abstractAI getAI(){
-        return null;
     }
 }
