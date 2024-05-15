@@ -41,7 +41,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
     public MinMaxAI() {
         r = new Random();
         setTime(3000);
-        setHeuristic(this.moveSetSize);
+        //setHeuristic(this.moveSetSize);
     }
 
     /**********
