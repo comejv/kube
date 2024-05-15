@@ -2,7 +2,6 @@ package kube.controller;
 
 import java.util.Scanner;
 
-import kube.configuration.Config;
 import kube.model.action.*;
 import kube.view.TextualMode;
 
@@ -22,6 +21,9 @@ public class CommandListener implements Runnable {
     @Override
     public void run() {
         Scanner sc = new Scanner(System.in);
+        /*
+        // Add the amount of players sector
+        */
         while (sc.hasNextLine()) {
             switch (sc.nextLine()) {
                 case "random":
@@ -35,7 +37,6 @@ public class CommandListener implements Runnable {
                     break;
                 case "valider":
                     eventsToModel.add(new Action(Action.VALIDATE));
-                    eventsToView.add(new Action(Action.PRINT_VALIDATE));
                     break;
                 case "jouer":
                     playMove(sc);

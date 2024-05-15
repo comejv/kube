@@ -33,6 +33,7 @@ public class Kube {
     private Mountain k3;
     private int phase;
     private Move lastMovePlayed;
+
     /**********
      * CONSTRUCTOR
      **********/
@@ -79,12 +80,7 @@ public class Kube {
             setP2(new Player(2));
         }
 
-        if (new Random().nextInt(2) == 0) {
-            setCurrentPlayer(getP1());
-        } else {
-            setCurrentPlayer(getP2());
-        }
-
+        setCurrentPlayer(getP1());
         distributeCubesToPlayers();
     }
 
@@ -96,7 +92,7 @@ public class Kube {
         bag = b;
     }
 
-    public void setCurrentPlayer(Player p) {
+    synchronized public void setCurrentPlayer(Player p) {
         currentPlayer = p;
     }
 
@@ -144,7 +140,7 @@ public class Kube {
         return bag;
     }
 
-    public Player getCurrentPlayer() {
+    synchronized public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
@@ -188,10 +184,9 @@ public class Kube {
         return player.getMountain().removable();
     }
 
-    public Move getLastMovePlayed(){
+    public Move getLastMovePlayed() {
         return lastMovePlayed;
     }
-    
 
     /**********
      * PREPARATION PHASE METHODS
@@ -814,6 +809,8 @@ public class Kube {
 
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
             setPhase(2);
+        } else if (isPreparationPhase && p1ValidateBuilding){
+            setCurrentPlayer(getP2());
         }
 
         return getPhase();
