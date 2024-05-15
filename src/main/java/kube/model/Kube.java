@@ -210,7 +210,7 @@ public class Kube {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
         }
 
         // Fill the bag with nCubePerColor cubes of each color
@@ -254,7 +254,7 @@ public class Kube {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
         }
 
         // Fill the base with the 9 first cubes of the bag
@@ -278,7 +278,7 @@ public class Kube {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
         }
 
         // Distribute the cubes to the players
@@ -316,7 +316,7 @@ public class Kube {
      * @param move the move to check
      * @return true if the move is playable, false otherwise
      * @throws UnsupportedOperationException if the phase is not the game phase
-     * @throws IllegalArgumentException      if the move is not a MoveAA, MoveMA,
+     * @throws IllegalArgumentUnsupportedOperationException      if the move is not a MoveAA, MoveMA,
      *                                       MoveAW, MoveMW, MoveAM or MoveMM
      */
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
@@ -330,7 +330,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         player = getCurrentPlayer();
@@ -416,7 +416,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         player = getCurrentPlayer();
@@ -508,7 +508,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         // Play the move
@@ -539,7 +539,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         player = move.getPlayer();
@@ -629,7 +629,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         // Un play the last move if there is one
@@ -655,7 +655,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         // Re play the last move that has been unplayed
@@ -683,7 +683,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         // Get the previousPlayer
@@ -725,7 +725,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         // If a penality is in progress, return the penality set
@@ -775,7 +775,7 @@ public class Kube {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException();
+            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
         return (moveSet().size() > 0);

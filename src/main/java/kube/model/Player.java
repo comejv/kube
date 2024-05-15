@@ -127,7 +127,12 @@ public class Player {
      * @return true if the player can build a cube of the given color, false
      *         otherwise
      */
-    public boolean isAvailableToBuild(Color c) {
+    public boolean isAvailableToBuild(Color c) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
         return getAvalaibleToBuild().get(c) > 0;
     }
 
@@ -138,7 +143,12 @@ public class Player {
      * @param color the color to build
      * @return true if the color has been built, false otherwise
      */
-    public boolean addToMountainFromAvailableToBuild(Point point, Color color) {
+    public boolean addToMountainFromAvailableToBuild(Point point, Color color) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
         return addToMountainFromAvailableToBuild(point.x, point.y, color);
     }
 
@@ -150,7 +160,11 @@ public class Player {
      * @param color the color to build
      * @return true if the color has been built, false otherwise
      */
-    public boolean addToMountainFromAvailableToBuild(int l, int c, Color color) {
+    public boolean addToMountainFromAvailableToBuild(int l, int c, Color color) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
 
         Color mountainColor;
         Integer availableNumber;
@@ -184,7 +198,12 @@ public class Player {
      * @param point the position to remove
      * @return the color removed
      */
-    public Color removeFromMountainToAvailableToBuild(Point point) {
+    public Color removeFromMountainToAvailableToBuild(Point point) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
         return removeFromMountainToAvailableToBuild(point.x, point.y);
     }
 
@@ -195,7 +214,11 @@ public class Player {
      * @param y the y position to remove
      * @return the color removed
      */
-    public Color removeFromMountainToAvailableToBuild(int x, int y) {
+    public Color removeFromMountainToAvailableToBuild(int x, int y) throws UnsupportedOperationException {
+        
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
 
         Color mountainColor;
 
@@ -213,6 +236,24 @@ public class Player {
         return mountainColor;
     }
 
+    /**
+     * Validdates the building of the player if the mountain is full
+     * 
+     * @return true if the building has been validated, false otherwise
+     */
+    public boolean validateBuilding() throws UnsupportedOperationException {
+        
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
+        if (getMountain().isFull()) {
+            setHasValidateBuilding(true);
+        }
+
+        return getHasValidateBuilding();
+    }
+
     /**********
      * AFTER HAS VALIDATE BUILDING METHODS
      **********/
@@ -222,7 +263,12 @@ public class Player {
      * 
      * @param color the color to add
      */
-    public void addToAdditionals(Color color) {
+    public void addToAdditionals(Color color) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+        }
+
         getAdditionals().add(color);
     }
 
@@ -232,7 +278,12 @@ public class Player {
      * @param pos the index of the color to remove
      * @return the color removed
      */
-    public Color removeFromAdditionals(int pos) {
+    public Color removeFromAdditionals(int pos) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+        }
+
         return getAdditionals().remove(pos);
     }
 
@@ -242,7 +293,12 @@ public class Player {
      * @param point the position to remove
      * @return the color removed
      */
-    public Color removeFromMountain(Point point) {
+    public Color removeFromMountain(Point point) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+        }
+
         return removeFromMountain(point.x, point.y);
     }
 
@@ -253,11 +309,49 @@ public class Player {
      * @param c the y position to remove
      * @return the color removed
      */
-    public Color removeFromMountain(int l, int c) {
+    public Color removeFromMountain(int l, int c) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+        }
+
         Color col;
         col = getMountain().getCase(l, c);
         getMountain().remove(l, c);
         return col;
+    }
+
+    /**
+     * Give the list of playable colors by player
+     * 
+     * @return the list of playable colors
+     */
+    public HashSet<Color> getPlayableColors() throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player hasn't validate his building");
+        }
+
+        HashSet<Color> playable;
+        HashSet<Color> toTest;
+        ArrayList<Point> removable;
+
+        toTest = new HashSet<>();
+        removable = new ArrayList<>();
+        for (Point p : removable) {
+            toTest.add(getMountain().getCase(p.x, p.y));
+        }
+
+        toTest.addAll(getAdditionals());
+
+        playable = new HashSet<>();
+        for (Color c : toTest) {
+            if (getMountain().compatible(c).size() >= 1) {
+                playable.add(c);
+            }
+        }
+
+        return playable;
     }
 
     /**********
@@ -289,36 +383,6 @@ public class Player {
      */
     public boolean isMountainEmpty() {
         return getMountain().isEmpty();
-    }
-
-    public HashSet<Color> getPlayableColors() {
-
-        HashSet<Color> playable;
-        HashSet<Color> toTest;
-        ArrayList<Point> removable;
-
-        toTest = new HashSet<>();
-        removable = new ArrayList<>();
-        for (Point p : removable) {
-            toTest.add(getMountain().getCase(p.x, p.y));
-        }
-
-        toTest.addAll(getAdditionals());
-
-        playable = new HashSet<>();
-        for (Color c : toTest) {
-            if (getMountain().compatible(c).size() >= 1) {
-                playable.add(c);
-            }
-        }
-        return playable;
-    }
-
-    public boolean validateBuilding() {
-        if (getMountain().isFull()) {
-            setHasValidateBuilding(true);
-        }
-        return getHasValidateBuilding();
     }
 
     /**
