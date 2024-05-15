@@ -33,6 +33,7 @@ public class Kube {
     private Mountain k3;
     private int phase;
     private Move lastMovePlayed;
+
     /**********
      * CONSTRUCTOR
      **********/
@@ -192,7 +193,6 @@ public class Kube {
         return lastMovePlayed;
     }
     
-
     /**********
      * PREPARATION PHASE METHODS
      **********/

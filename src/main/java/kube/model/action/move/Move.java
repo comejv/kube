@@ -62,12 +62,14 @@ public abstract class Move {
         return false;
     }
 
+    /**
+     * Give a string representation of the move for saving
+     * 
+     * @return a string representation of the move for saving
+     */
     public String forSave() {
-        String s = "{";
-        s += getPlayer().getId() + " ";
-        s += "(" + getFrom().x + "," + getFrom().y + ") ";
-        s += "(" + getTo().x + "," + getTo().y + ") ";
-        s += getColor().toString() + "}";
+        String s;
+        s= "{";
         return s;
     }
 
