@@ -138,16 +138,17 @@ public class Buttons {
             g2d.dispose();
         }
 
-        public void recolor(Color c) {
-            int width = originalImage.getWidth();
-            int height = originalImage.getHeight();
-
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    originalImage.getRGB()
-                }
-            }
-        }
+        // public void recolor(Color c) {
+        // int width = originalImage.getWidth();
+        // int height = originalImage.getHeight();
+        //
+        // for (int y = 0; y < height; y++) {
+        // for (int x = 0; x < width; x++) {
+        // int p = originalImage.getRGB(x, y);
+        //
+        // }
+        // }
+        // }
 
         public void setHovered(boolean b) {
             isHovered = b;
