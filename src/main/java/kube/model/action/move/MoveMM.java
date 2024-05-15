@@ -7,21 +7,48 @@ import kube.model.Color;
 
 public class MoveMM extends Move {
 
+    /**********
+     * ATTRIBUTES
+     **********/
+
     private Point from;
     private Point to;
+    
+    
+    /**********
+     * CONSTRUCTORS
+     **********/
 
-    // Constructors
+     /**
+      * Constructor of the class MoveAM
+      *
+      * @param from the source of the move
+      * @param to the destination of the move
+      * @param color the color of the moved cube
+      */
     public MoveMM(Point from, Point to, Color color) {
         super(color);
         setFrom(from);
         setTo(to);
     }
 
+    /**
+     * Constructor of the class MoveAM
+     * 
+     * @param fromX the x position of the source of the move
+     * @param fromY the y position of the source of the move
+     * @param toX   the x position of the destination of the move
+     * @param toY   the y position of the destination of the move
+     * @param color the color of the moved cube
+     */
     public MoveMM(int fromX, int fromY, int toX, int toY, Color color) {
         this(new Point(fromX, fromY), new Point(toX, toY), color);
     }
 
-    // Setters
+    /**********
+     * SETTERS
+     **********/
+
     public void setFrom(Point from) {
         this.from = from;
     }
@@ -30,7 +57,10 @@ public class MoveMM extends Move {
         this.to = to;
     }
 
-    // Getters
+    /**********
+     * GETTERS
+     **********/
+
     public Point getFrom() {
         return from;
     }
@@ -39,9 +69,30 @@ public class MoveMM extends Move {
         return to;
     }
 
-    // Methods
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Check if the move is a classic move
+     * 
+     * @return true if the move is a classic move, false otherwise
+     */
+    @Override
     public boolean isClassicMove() {
         return true;
+    }
+
+    /**
+     * Give a string representation of the move for saving
+     * 
+     * @return a string representation of the move for saving
+     */
+    @Override
+    public String forSave() {
+        return "{MM;" + super.forSave() + ";" +
+                "(" + getFrom().x + "," + getFrom().y + ");" +
+                "(" + getTo().x + "," + getTo().y + ")}";
     }
 
     @Override

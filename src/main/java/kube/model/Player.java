@@ -155,12 +155,12 @@ public class Player {
     /**
      * Add a color to the player's mountain using available colors
      * 
-     * @param l     the x position to build
-     * @param c     the y position to build
+     * @param x     the x position to build
+     * @param y     the y position to build
      * @param color the color to build
      * @return true if the color has been built, false otherwise
      */
-    public boolean addToMountainFromAvailableToBuild(int l, int c, Color color) throws UnsupportedOperationException {
+    public boolean addToMountainFromAvailableToBuild(int x, int y, Color color) throws UnsupportedOperationException {
 
         if (getHasValidateBuilding()) {
             throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
@@ -170,15 +170,15 @@ public class Player {
         Integer availableNumber;
         boolean isInMountain;
 
-        isInMountain = l >= 0 && l < getMountain().getBaseSize() && c >= 0 && c <= l;
+        isInMountain = x >= 0 && x < getMountain().getBaseSize() && y >= 0 && y <= x;
         if (getHasValidateBuilding() || !isInMountain) {
             return false;
         }
 
-        mountainColor = getMountain().getCase(l, c);
+        mountainColor = getMountain().getCase(x, y);
         if (getAvalaibleToBuild().get(color) > 0) {
 
-            getMountain().setCase(l, c, color);
+            getMountain().setCase(x, y, color);
             if (mountainColor != Color.EMPTY) {
 
                 availableNumber = getAvalaibleToBuild().get(mountainColor) + 1;

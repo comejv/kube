@@ -58,11 +58,6 @@ public enum Color {
      * METHODS
      **********/
 
-    @Override
-    public String toString() {
-        return this.name();
-    }
-
     /**
      * Give the color corresponding to the color code
      * 
@@ -93,7 +88,6 @@ public enum Color {
      * @return a random color
      */
     public static Color getRandomColor() {
-
         Random r = new Random();
         return Color.values()[r.nextInt(Color.values().length)];
     }
@@ -143,5 +137,14 @@ public enum Color {
             default:
                 return " ";
         }
+    }
+
+    /**
+     * Give a string representation of the color for saving
+     * 
+     * @return a string representation of the color for saving
+     */
+    public String forSave() {
+        return this.name();
     }
 }
