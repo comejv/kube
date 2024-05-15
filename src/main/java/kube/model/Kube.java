@@ -30,7 +30,7 @@ public class Kube {
     private int baseSize;
     private Mountain k3;
     private int phase;
-
+    private Move lastMovePlayed;
     /**********
      * CONSTRUCTOR
      **********/
@@ -135,6 +135,11 @@ public class Kube {
     public ArrayList<Point> getPlayerRemovable(Player player) {
         return player.getMountain().removable();
     }
+
+    public Move getLastMovePlayed(){
+        return lastMovePlayed;
+    }
+    
     /**********
      * SETTERS
      **********/
@@ -482,7 +487,7 @@ public class Kube {
         if (!move.isToAdditionals()) {
             nextPlayer();
         }
-
+        lastMovePlayed = move;
         return true;
     }
 
@@ -603,6 +608,7 @@ public class Kube {
                 nextPlayer();
             }
         }
+        lastMovePlayed = move;
     }
 
     /**
