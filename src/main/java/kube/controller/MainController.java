@@ -18,11 +18,13 @@ import kube.model.action.*;
 public class MainController {
     private GUI gui;
     private Game game;
+    Queue<Action> eventsToModel;
+    Queue<Action> eventsToView;
 
     public MainController() {
         Kube kube = new Kube();
-        Queue<Action> eventsToModel = new Queue<>();
-        Queue<Action> eventsToView = new Queue<>();
+        eventsToView = new Queue<>();
+        eventsToModel = new Queue<>();
 
         Game model = new Game(Game.local, kube, eventsToModel, eventsToView);
 
