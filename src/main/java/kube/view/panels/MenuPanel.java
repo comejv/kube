@@ -1,7 +1,6 @@
 package kube.view.panels;
 
 import java.awt.CardLayout;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -11,7 +10,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.awt.Insets;
 import java.awt.Image;
+import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -43,11 +44,24 @@ public class MenuPanel extends JPanel {
             System.err.println("Could not load buttons font, using default.");
         }
 
-        // Game title
-        JLabel title = new JLabel("KUBE", SwingConstants.CENTER);
-        title.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 6)));
+        //****************************************************************************************//
+        //                                        MENU                                            //
+        //****************************************************************************************//
 
+        // Buttons panel
+        JPanel buttonsPanel = new JPanel(new CardLayout());
         GridBagConstraints elemGBC = new GridBagConstraints();
+        elemGBC.gridx = 1;
+        elemGBC.gridy = 1;
+        elemGBC.anchor = GridBagConstraints.CENTER;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        elemGBC.weighty = .5;
+        elemGBC.weightx = 1;
+        add("buttonsPanel", buttonsPanel);
+
+        // Rules panel
+        JPanel rulesPanel = new JPanel(new GridBagLayout());
+        elemGBC = new GridBagConstraints();
         elemGBC.gridx = 0;
         elemGBC.gridy = 0;
         elemGBC.fill = GridBagConstraints.BOTH;
@@ -55,19 +69,9 @@ public class MenuPanel extends JPanel {
         elemGBC.anchor = GridBagConstraints.CENTER;
         elemGBC.weighty = .5;
         elemGBC.weightx = .5;
-        add(title, elemGBC);
-
-        // Buttons panel
-        JPanel buttonsPanel = new JPanel(new CardLayout());
-        elemGBC = new GridBagConstraints();
-        elemGBC.gridx = 1;
-        elemGBC.gridy = 1;
-        elemGBC.anchor = GridBagConstraints.CENTER;
-        elemGBC.fill = GridBagConstraints.HORIZONTAL;
-        elemGBC.weighty = .5;
-        elemGBC.weightx = 1;
-        add(buttonsPanel, elemGBC);
-
+        rulesPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+        rulesPanel.setBackground(new Color(0, 0 , 0 , 125));
+        
         // Local and Online buttons - fill entire row
         JPanel menuMainButtons = new JPanel();
         menuMainButtons.setLayout(new GridBagLayout());
@@ -78,6 +82,20 @@ public class MenuPanel extends JPanel {
         buttonsGBC.fill = GridBagConstraints.BOTH;
         buttonsGBC.insets = insets;
         buttonsPanel.add(menuMainButtons, "localOnlineButtons");
+        
+        // Game title
+        JLabel title = new JLabel("KUBE", SwingConstants.CENTER);
+        title.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 6)));
+
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridx = 0;
+        elemGBC.gridy = 0;
+        elemGBC.fill = GridBagConstraints.BOTH;
+        elemGBC.gridwidth = GridBagConstraints.REMAINDER;
+        elemGBC.anchor = GridBagConstraints.CENTER;
+        elemGBC.weighty = .5;
+        elemGBC.weightx = .5;
+        menuMainButtons.add(title, elemGBC);
 
         // Local button
         JButton local = new MenuButton("LOCAL");
@@ -95,30 +113,32 @@ public class MenuPanel extends JPanel {
             CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
             cl.show(buttonsPanel, "players");
         });
-        menuMainButtons.add(online, gbc1);
+        menuMainButtons.add(online, buttonsGBC);
         
         
         // Rules button
         JButton rules = new MenuButton("RULES");
         rules.addActionListener(e -> {
             // Switch to the rules pop up
-            CardLayout cl = (CardLayout) (this.getLayout());
-            cl.show(this, "rules");
+            CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
+            cl.show(buttonsPanel, "rules");
         });
-        menuMainButtons.add(rules, gbc1);
+        menuMainButtons.add(rules, buttonsGBC);
         
         // Quit button
         JButton quit = new MenuButton("QUIT");
         quit.addActionListener(e -> {
             System.exit(0);
         });
-        menuMainButtons.add(quit, gbc1);
+        menuMainButtons.add(quit, buttonsGBC);
         
         // Parameter button
-        Image img = ResourceLoader.lireImage("parameters");
+        Image img = ResourceLoader.getBufferedImage("parameters");
         JButton parameter = new ParameterButton(img);
-        gbc1.anchor = GridBagConstraints.LAST_LINE_END;
-        menuMainButtons.add(parameter, gbc1);
+        buttonsGBC.anchor = GridBagConstraints.LAST_LINE_END;
+        menuMainButtons.add(parameter, buttonsGBC);
+
+        buttonsPanel.add("rules", rulesPanel);
         
         //****************************************************************************************//
         //                                      LOCAL                                             //
@@ -150,6 +170,6 @@ public class MenuPanel extends JPanel {
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 2;
         elemGBC.gridy = 2;
-        add(settings, elemGBC);
+        add("settings", settings);
     }
 }
