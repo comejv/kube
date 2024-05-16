@@ -29,7 +29,6 @@ public class MainController {
                 default:
                     break;
             }
-            gui.showPanel(GUI.PHASE1);
         }
     }
 
@@ -37,7 +36,16 @@ public class MainController {
     public class phase1Listener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent evt) {
-            gui.showPanel(GUI.PHASE2);
+            switch (evt.getActionCommand()) {
+                case "phase2":
+                    gui.showPanel(GUI.PHASE2);
+                    break;
+                case "menu": //change to opts.
+                    gui.showPanel(GUI.MENU);
+
+                default:
+                    break;
+            }
         }
     }
 

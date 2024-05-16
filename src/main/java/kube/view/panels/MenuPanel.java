@@ -109,6 +109,8 @@ public class MenuPanel extends JPanel {
         playersButtons.add(playerTwo);
 
         JButton play = new MenuButton("PLAY");
+        play.addActionListener(buttonListener);
+        play.setActionCommand("play");
         playersButtons.add(play);
     }
 }
