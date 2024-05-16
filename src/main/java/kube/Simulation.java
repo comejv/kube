@@ -11,8 +11,27 @@ import kube.model.Mountain;
 public class Simulation {
     public static void main(String[] args) {
         Simulation s = new Simulation();
+        s.findSeedWithEquivalentDistributionToPlayers();
         s.simulateNumberOfCubeWithdrawable();
         s.simulateNumberOfSlotAvailable();
+    }
+
+    private void findSeedWithEquivalentDistributionToPlayers() {
+        int seed;
+        Random r = new Random();
+        while (true){
+            seed = r.nextInt(10000);
+            Kube k = new Kube();
+            k.fillBag(seed);
+            k.fillBase();
+            k.distributeCubesToPlayers();
+            if (k.getP1().getAvalaibleToBuild().equals(k.getP2().getAvalaibleToBuild())){
+                break;
+            }
+        }
+        System.out.println("Seed avec une même distribution de cube pour les joueurs :" + seed);
+
+
     }
 
     private void simulateNumberOfSlotAvailable() {
@@ -25,8 +44,9 @@ public class Simulation {
             k.fillBase();
             availaibleSum += randomAdd(m);
         }
-        System.out.println("Au total, sur " + (int) nTest + " simulations, il y a eu en moyenne " + availaibleSum / nTest
-        + " cases disponible à chaque coup");
+        System.out
+                .println("Au total, sur " + (int) nTest + " simulations, il y a eu en moyenne " + availaibleSum / nTest
+                        + " cases disponible à chaque coup");
     }
 
     private void simulateNumberOfCubeWithdrawable() {

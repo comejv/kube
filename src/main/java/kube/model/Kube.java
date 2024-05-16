@@ -34,7 +34,6 @@ public class Kube {
     private int phase;
     private Move lastMovePlayed;
 
-
     /**********
      * CONSTRUCTOR
      **********/
@@ -59,12 +58,16 @@ public class Kube {
     }
 
     public void init(abstractAI typeAI1, abstractAI typeAI2) {
+        init(typeAI1, typeAI2, null);
+    }
+
+    public void init(abstractAI typeAI1, abstractAI typeAI2, Integer seed) {
 
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
-        fillBag();
+        fillBag(seed);
         fillBase();
         setHistory(new History());
         setPenality(false);
@@ -189,10 +192,10 @@ public class Kube {
         return lastMovePlayed;
     }
 
-    public Player getPlayerById(int id){
-        if (id == 1){
+    public Player getPlayerById(int id) {
+        if (id == 1) {
             return getP1();
-        } else if (id == 2){
+        } else if (id == 2) {
             return getP2();
         } else {
             return null;
@@ -613,16 +616,7 @@ public class Kube {
         }
 
         // Set the next player
-        if (!move.isToAdditionals()) {
-            if (getHistory().getDone().size() > 0) {
-                lastMove = getHistory().getDone().get(getHistory().getDone().size() - 1);
-                if (!lastMove.isToAdditionals()) {
-                    nextPlayer();
-                }
-            } else {
-                nextPlayer();
-            }
-        }
+        setCurrentPlayer(move.getPlayer());
         lastMovePlayed = move;
     }
 

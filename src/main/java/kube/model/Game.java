@@ -4,7 +4,6 @@ import kube.model.ai.*;
 
 import java.util.Random;
 
-
 import kube.configuration.Config;
 import kube.model.action.*;
 import kube.model.action.move.Move;
@@ -38,12 +37,13 @@ public class Game implements Runnable {
     public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init();
+        k3.init(new abstractMiniMax(50, 1), new abstractMiniMax(50, 1), 104323227);
         // Construction phase
         while (k3.getPhase() == 1) {
             try {
                 if (k3.getCurrentPlayer().isAI()) {
                     k3.getCurrentPlayer().getAI().constructionPhase();
+                    modeleToView.add(new Action(Action.PRINT_VALIDATE, true));
                     k3.updatePhase();
                 } else {
                     Action a = controllerToModele.remove();
@@ -76,12 +76,14 @@ public class Game implements Runnable {
 
         Config.debug("Fin phase 1");
         // Game phase
-
+        modeleToView.add(new Action(Action.PRINT_STATE));
         while (k3.canCurrentPlayerPlay()) {
             try {
                 if (k3.getCurrentPlayer().isAI()) {
                     try {
-                        k3.playMove(k3.getCurrentPlayer().getAI().nextMove());
+                        Move move = k3.getCurrentPlayer().getAI().nextMove();
+                        k3.playMove(move);
+                        modeleToView.add(new Action(Action.PRINT_MOVE, move));
                     } catch (Exception e) {
                         e.printStackTrace();
                         System.exit(0);

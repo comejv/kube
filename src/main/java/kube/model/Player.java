@@ -334,11 +334,9 @@ public class Player {
 
         HashSet<Color> playable;
         HashSet<Color> toTest;
-        ArrayList<Point> removable;
 
         toTest = new HashSet<>();
-        removable = new ArrayList<>();
-        for (Point p : removable) {
+        for (Point p : getMountain().removable()) {
             toTest.add(getMountain().getCase(p.x, p.y));
         }
 

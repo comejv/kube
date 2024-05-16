@@ -23,7 +23,7 @@ public class TextualGame {
         MenuListener menuListener = new MenuListener(eventsToView,scanner);
         Game model = new Game(Game.local, kube, eventsToModel, eventsToView);
         TextualMode view = new TextualMode(model, eventsToView);
-        CommandListener controller = new CommandListener(eventsToModel, eventsToView,scanner);
+        CommandListener controller = new CommandListener(eventsToModel, eventsToView, scanner);
 
         Thread modelThread = new Thread(model);
         Thread controllerThread = new Thread(controller);
