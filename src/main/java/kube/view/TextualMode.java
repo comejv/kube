@@ -1,168 +1,318 @@
 package kube.view;
 
-import java.util.Scanner;
-
-import kube.controller.*;
+import java.util.ArrayList;
+import java.awt.Point;
+import kube.model.*;
+import kube.model.Kube;
 import kube.model.Player;
+import kube.model.action.move.Move;
+import kube.model.Mountain;
+import kube.model.action.*;
 
-public class TextualMode {
+public class TextualMode implements Runnable {
 
     Game game;
-    Scanner sc;
+    Queue<Action> events;
 
-    public static void main(String[] args) {
-        System.out.println("Bienvenue dans K3 !");
-        TextualMode tm = new TextualMode();
-        tm.sc = new Scanner(System.in);
-        String s;
-        boolean end = false;
-        System.out.println("Tapez 'start' pour commencer une partie ou 'exit' pour quitter");
-        while (!end) {
-            s = tm.sc.nextLine();
-            switch (s) {
-                case "start":
-                    tm.startGame();
-                    break;
-                case "exit":
-                    end = true;
-                    System.out.println("Merci d'avoir joué !");
-                    break;
-                default:
-                    System.out.println("Commande inconnue");
-            }
-        }
+    public TextualMode(Game g, Queue<Action> events) {
+        this.game = g;
+        this.events = events;
     }
 
-    public void startGame() {
-        game = new Game(askNbPlayers());
-
-        for (int i = 0; i < game.getNbPlayers(); i++) {
-            phase1();
-        }
-        Player winner = phase2();
-        System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
-    }
-
-    public int askNbPlayers() {
-        System.out.println("Combien de joueurs ?");
-        int nbPlayers;
-        String s = sc.next();
-        nbPlayers = Integer.parseInt(s);
-        while (nbPlayers < 0 || nbPlayers > 4) {
-            System.out.println("Le nombre de joueurs doit être compris entre 0 et 4");
-            nbPlayers = sc.nextInt();
-        }
-        return nbPlayers;
-    }
-
-    public static void afficherCommandePahse1() {
-        System.out.println("Tapez une des commandes suivantes : \n" +
-                "-random : construit aléatoirement une tour\n" +
-                "-echanger : permet d'échanger la position de 2 pièces de son choix\n" +
-                "-valider : valider que sa montagne est prête" +
-                "-afficher : affiche l'état de la base centrale et de sa montagne");
-    }
-
-    public void phase1() {
-        String s;
-        boolean end = false;
-        System.out.println("Première phase - Construction de la montagne du joueur "
-                + game.getKube().getCurrentPlayer().getId() + " :");
-        afficherCommandePahse1();
-        game.randomizeMoutain();
-        System.out.println("Voici la base centrale :\n" + game.printK3());
-        System.out.println("Votre montagne tirée de manière aléatoire :\n"
-                + game.getKube().getCurrentPlayer().getMountain().toString());
-        sc.reset();
-        while (sc.hasNextLine() && !end) {
-            s = sc.nextLine();
-            switch (s) {
-                case "random":
-                    game.randomizeMoutain();
-                case "afficher":
-                    System.out.print(game.getKube().getCurrentPlayer()); // Print the mountain & the additionals
-                    break;
-                case "echanger":
-                    try {
-                        System.out.println("Entrez les coordonnées de la première pièce :");
-                        s = sc.nextLine();
-                        String[] coords = s.split(" ");
-                        int x1 = Integer.parseInt(coords[0]);
-                        int y1 = Integer.parseInt(coords[1]);
-                        System.out.println("Entrez les coordonnées de la deuxième pièce :");
-                        s = sc.nextLine();
-                        coords = s.split(" ");
-                        int x2 = Integer.parseInt(coords[0]);
-                        int y2 = Integer.parseInt(coords[1]);
-                        System.out.println(game.swap(x1, y1, x2, y2));
-                    } catch (Exception e) {
-                        System.out.println("Erreur de saisie");
-                        break;
+    @Override
+    public void run() {
+        printWelcome();
+        printStart();
+        printHelp();
+        while (true) {
+            Action action = events.remove();
+            switch (action.getType()) {
+                case Action.PRINT_AI:
+                    if (action.getData() != null) {
+                        printAI();
+                    } else {
+                        printAI((int) action.getData());
                     }
                     break;
-                case "valider":
-                    end = true;
-                    System.out.println("");
+                case Action.PRINT_COMMAND_ERROR:
+                    printCommandError();
+                    printHelp();
                     break;
-                case "":
+                case Action.PRINT_WAIT_COORDINATES:
+                    printWaitCoordinates((int) action.getData());
+                    break;
+                case Action.PRINT_GOODBYE:
+                    printGoodbye();
+                    break;
+                case Action.PRINT_HELP:
+                    printHelp();
+                    break;
+                case Action.PRINT_LIST_MOVES:
+                    printState();
+                    printListMoves();
+                    break;
+                case Action.PRINT_MOVE:
+                    printMove((Move) action.getData());
+                    printState();
+                    printHelp();
+                    break;
+                case Action.PRINT_MOVE_ERROR:
+                    printMoveError();
+                    printHelp();
+                    break;
+                case Action.PRINT_NEXT_PLAYER:
+                    printNextPlayer();
+                    break;
+                case Action.PRINT_PLAYER:
+                    if (action.getData() != null) {
+                        printPlayer();
+                    } else {
+                        printPlayer((int) action.getData());
+                    }
+                    break;
+                case Action.PRINT_RANDOM:
+                    printRandom();
+                    printState();
+                    printHelp();
+                    break;
+                case Action.PRINT_REDO:
+                    printRedo((Move) action.getData());
+                    printState();
+                    printHelp();
+                    break;
+                case Action.PRINT_REDO_ERROR:
+                    printRedoError();
+                    printState();
+                    printHelp();
+                    break;
+                case Action.PRINT_STATE:
+                    printState();
+                    break;
+                case Action.PRINT_SWAP:
+                    printSwap();
+                    printHelp();
+                     break;
+                case Action.PRINT_SWAP_ERROR:
+                    printSwapError();
+                    printHelp();
+                    break;
+                case Action.PRINT_SWAP_SUCCESS:
+                    Swap s = (Swap) action.getData();
+                    printSwapSuccess(s.getPos1(), s.getPos2());
+                    printHelp();
+                    break;
+                case Action.PRINT_UNDO:
+                    printUndo((Move) action.getData());
+                    printState();
+                    printHelp();
+                    break;
+                case Action.PRINT_UNDO_ERROR:
+                    printState();
+                    printUndoError();
+                    printHelp();
+                    break;
+                case Action.PRINT_VALIDATE:
+                    printValidate((boolean) action.getData());
+                    printHelp();
+                    break;
+                case Action.PRINT_WELCOME:
+                    printWelcome();
+                    break;
+                case Action.PRINT_WIN_MESSAGE:
+                    printWinMessage((Player) action.getData());
+                    break;
+                case Action.PRINT_ASK_NB_PLAYERS:
+                    askNbPlayers();
+                    break;
+                case Action.PRINT_ASK_GAME_MODE:
+                    printGameMode();
                     break;
                 default:
-                    System.out.println("Commande inconnue");
                     break;
             }
         }
-        game.nextPlayer();
+
     }
 
-    // Return the winner
-    public Player phase2() {
-        String s;
-        boolean end = false;
-        System.out.println("Deuxième phase - Jeu :");
-        while (!game.isOver()) {
-            System.out.println("Tour du joueur " + game.getKube().getCurrentPlayer().getId());
-            System.out.println("Voici la base centrale :");
-            System.out.println(game.printK3());
-            System.out.println("Voici votre montagne :");
-            System.out.println(game.printMountain(game.getKube().getCurrentPlayer()));
+    public void printCommandPhase1() {
+        System.out.println("Commandes disponibles : \n" +
+                "-random : construit aléatoirement une tour\n" +
+                "-echanger : permet d'échanger la position de 2 pièces de son choix\n" +
+                "-valider : valider que sa montagne est prête\n" +
+                "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
+                "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n" +
+                "Vous devez consruire votre montagne. \n");
+    }
 
-            while (!end) {
-                s = sc.nextLine();
-                switch (s) {
-                    case "afficher":
-                        System.out.print(game.getKube().getCurrentPlayer());
-                        break;
-                    case "jouer":
-                        end = playMove();
-                        break;
-                    case "annuler":
-                        game.undo();
-                        break;
-                    case "rejouer":
-                        game.redo();
-                        break;
-                    case "":
-                        break;
-                    default:
-                        System.out.println("Commande inconnue");
-                        break;
-                }
+    public void printCommandPhase2() {
+        String s = "Commandes disponibles  : \n" +
+                "-jouer : jouer un coup\n" +
+                "-annuler : annuler le dernier coup\n" +
+                "-rejouer : rejouer le dernier coup\n" +
+                "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
+                "-aide : affiche cette liste\n" +
+                "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n" +
+                "Vous devez choisir une de vos pièces pour la mettre sur la montagne centrale.";
+        System.out.println(s);
+    }
+
+    public void askNbPlayers() {
+        System.out.println("Combien de joueurs? (0 -2)");
+    }
+
+    public void printAI() {
+        System.out.println("Difficultée de l'IA? (1-3)");
+    }
+
+    public void printAI(int n) {
+        System.out.println("Difficultée de l'IA" + n + "? (1-3)");
+    }
+
+    public void printCommandError() {
+        System.out.println("Commande invalide. Tapez -aide pour afficher la liste des commandes.");
+    }
+
+    public void printWaitCoordinates(int i) {
+        if (i == 1) {
+            System.out.println("Entrez les coordonnées de la première pièce à déplacer");
+        } else {
+            System.out.println("Entrez les coordonnées de la deuxième pièce à déplacer");
+        }
+    }
+
+    public void printGoodbye() {
+        System.out.println("Merci d'avoir joué à Kube !");
+    }
+
+    public void printHelp() {
+        if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
+            printCommandPhase1();
+        } else {
+            printCommandPhase2();
+        }
+    }
+
+    public ArrayList<Move> printListMoves() {
+        try {
+            ArrayList<Move> moves = game.getKube().moveSet();
+            System.out.println("Voici les coups possibles :");
+            for (int i = 0; i < moves.size(); i++) {
+                System.out.println(i + " : " + moves.get(i));
             }
-            end = false;
+            System.out.println("Entrez le numéro du coup que vous voulez jouer:");
+            return moves;
+        } catch (Exception e) {
+            return null;
         }
-        return game.getKube().getCurrentPlayer();
-
     }
 
-    public boolean playMove() {
-        System.out.println("Voici les coups possibles :");
-        System.out.println(game.listMove());
-        System.out.println("Entrez le numéro du coup que vous voulez jouer:");
-        String s = sc.nextLine();
-        if (!game.playMove(Integer.parseInt(s))) {
-            System.out.println("Numéro invalide invalide");
-            return false;
-        }
-        return true;
+    public void printMove(Move move) {
+        System.out.println("Vous avez joué : " + move);
     }
+
+    public void printMoveError() {
+        System.out.println("Numéro de coup invalide");
+    }
+
+    public void printNextPlayer() {
+        if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
+            System.out.println("C'est au tour de " + game.getKube().getCurrentPlayer().getName());
+        } else {
+            System.out.println("C'est au tour de " + game.getKube().getCurrentPlayer().getName());
+        }
+        printHelp();
+        printState();
+    }
+
+    public void printPenality() {
+        System.out.println("Votre adversaire a une pénalitée, choisissez une pièce à récuperer");
+    }
+
+    public void printPlayer() {
+        System.out.println("Nom du joueur?");
+    }
+
+    public void printPlayer(int n) {
+        System.out.println("Nom du joueur " + n + "?");
+    }
+
+    public void printRandom() {
+        System.out.println("Votre montagne a été mélangée");
+    }
+
+    public void printRedo(Move move) {
+        System.out.println("Coup " + move.toString() + " rejoué");
+    }
+
+    public void printRedoError() {
+        System.out.println("Impossible de rejouer le coup");
+    }
+
+    public void printStart() {
+        System.out.println("Combien de joueur?");
+    }
+
+    public void printState() {
+        if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
+            System.out.println(game.getKube().getK3());
+            System.out.println(game.getKube().getCurrentPlayer());
+        } else {
+            System.out.println(game.getKube().getK3());
+            System.out.println(game.getKube().getP1());
+            System.out.println(game.getKube().getP2());
+            if (game.getKube().getPenality()) {
+                printPenality();
+            }
+        }
+    }
+
+    public void printSwap() {
+        System.out.println("Entrez les coordonnées des deux pièces à échanger");
+    }
+
+    public void printSwapError() {
+        System.out.println("Les coordonnées entrées ne sont pas valides");
+    }
+
+    public void printSwapSuccess(Point p1, Point p2) {
+        printSwapSuccess(p1.x, p1.y, p2.x, p2.y);
+    }
+
+    public void printSwapSuccess(int x1, int y1, int x2, int y2) {
+        Mountain m = game.getKube().getCurrentPlayer().getMountain();
+        System.out.println("Les pièces " + m.getCase(x1, y1) + " et " + m.getCase(x2, y2) + "ont été échangées");
+    }
+
+    public void printUndo(Move move) {
+        System.out.println("Coup " + move.toString() + " annulé");
+    }
+
+    public void printUndoError() {
+        System.out.println("Impossible d'annuler le coup");
+    }
+
+    public void printValidate(boolean b) {
+        if (b) {
+            System.out.println("Votre montagne a été validée");
+        } else {
+            System.out.println("Votre montagne n'est pas valide");
+        }
+    }
+
+    public void printWelcome() {
+        System.out.println("Bienvenue dans le jeu Kube !");
+        System.out.println("Pour commencer, entrez 'start' ou 'exit' pour quitter.");
+    }
+
+    public void printWinMessage(Player winner) {
+        System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
+        System.out.println("Plateau final : \n" + game.getKube().getK3() + "\n");
+        System.out.println(game.getKube().getP1());
+        System.out.println(game.getKube().getP2());
+    }
+    public void printGameMode(){
+        System.out.println("Mode de jeu : 1 pour local, 2 pour en ligne");
+    }
+
+
 }

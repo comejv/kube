@@ -4,11 +4,20 @@ import kube.configuration.Config;
 import kube.view.GUIColors;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 
+import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
 
 /*
  * This class will have subclasses for all the buttons used.
@@ -62,8 +71,21 @@ public class Buttons {
 
     public static class ParameterButton extends JButton {
         public ParameterButton(Image image) {
-            super(new ImageIcon(image));
-            setPreferredSize(new Dimension(100, 100));
+            super();
+            Image scaledImg = image.getScaledInstance(
+                    (int) (0.15 * Config.getInitHeight()),
+                    (int) (0.15 * Config.getInitHeight()),
+                    Image.SCALE_SMOOTH);
+
+            ImageIcon icon = new ImageIcon(scaledImg);
+            setIcon(icon);
+
+            setPreferredSize(new Dimension((int) (0.20 * Config.getInitHeight()),
+                    (int) (0.20 * Config.getInitHeight())));
+
+            setOpaque(false);
+            setContentAreaFilled(false);
+            setBorderPainted(false);
         }
     }
 
@@ -87,26 +109,52 @@ public class Buttons {
         }
     }
 
-    // private static class RoundedBorder implements Border {
+    public static class ButtonIcon extends Icon {
+        private final String name;
+        private boolean isHovered = false;
+        private boolean isPressed = false;
 
-    // private int radius;
+        public ButtonIcon(String name, BufferedImage image, ActionListener mouseListener) {
+            super(image);
+            this.name = name;
 
-    // RoundedBorder(int radius) {
-    // this.radius = radius;
-    // }
+            // Apply the provided MouseListener
+            addMouseListener((MouseListener) mouseListener);
+        }
 
-    // public Insets getBorderInsets(Component c) {
-    // return new Insets(this.radius+1, this.radius+1, this.radius+2, this.radius);
-    // }
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    // public boolean isBorderOpaque() {
-    // return true;
-    // }
+            // Darken the image on hover
+            float factor = isHovered ? (isPressed ? 0.75f : 1.25f) : 1.0f;
 
-    // public void paintBorder(Component c, Graphics g, int x, int y, int width, int
-    // height) {
-    // g.drawRoundRect(x, y, width-1, height-1, radius, radius);
-    // }
-    // }
+            if (isHovered) { // Draw darker image
+                float[] scales = { factor };
+                float[] offsets = new float[4];
+                RescaleOp rop = new RescaleOp(scales, offsets, null);
+                g2d.drawImage(getImage(), rop, 0, 0);
+            } else { // Draw the original image
+                g2d.drawImage(getImage(), 0, 0, null);
+            }
 
+        }
+
+        public void setHovered(boolean b) {
+            isHovered = b;
+            repaint();
+        }
+
+        public void setPressed(boolean b) {
+            isPressed = b;
+            repaint();
+        }
+
+        public String getName() {
+            return name;
+        }
+
+    }
 }

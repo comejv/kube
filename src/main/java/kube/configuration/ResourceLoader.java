@@ -27,7 +27,7 @@ public class ResourceLoader {
         return resourceStream != null ? new BufferedInputStream(resourceStream) : null;
     }
 
-    static public BufferedImage lireImage(String nom) {
+    static public BufferedImage getBufferedImage(String nom) {
         String imgPath = "images/" + nom + ".png";
         InputStream in;
         try {

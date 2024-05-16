@@ -3,7 +3,7 @@ package kube.configuration;
 public class Config {
     private static boolean mute = true;
     private static final boolean debug = true;
-    private static final boolean showBorders = false;
+    private static final boolean showBorders = true;
     private static final int initWidth = 800;
     private static final int initHeight = 600;
 

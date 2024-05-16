@@ -3,26 +3,48 @@ package kube.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
+
+import kube.model.ai.abstractAI;
+
 import java.awt.Point;
 
 public class Player {
 
-    int id, whiteUsed;
+    /**********
+     * ATTRIBUTES
+     **********/
+
     String name;
+    int id, whiteUsed;
     Mountain mountain;
+    boolean hasValidateBuilding;
     ArrayList<Color> additionals;
     HashMap<Color, Integer> avalaibleToBuild;
 
-    // Constructor
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the class Player
+     * 
+     * @param id the player id
+     */
     public Player(int id) {
+
         setId(id);
         setWhiteUsed(0);
         setMountain(new Mountain(6));
         clearMountain();
         setAdditionals(new ArrayList<Color>());
+        setHasValidateBuilding(false);
     }
 
-    // Setters
+    /**********
+     * SETTER
+     **********/
+
     public void setId(int id) {
         this.id = id;
     }
@@ -43,11 +65,18 @@ public class Player {
         this.additionals = additionals;
     }
 
-    public void setAvalaibleToBuild(HashMap<Color, Integer> avalaibleToBuild) {
+    public void setAvailableToBuild(HashMap<Color, Integer> avalaibleToBuild) {
         this.avalaibleToBuild = avalaibleToBuild;
     }
 
-    // Getters
+    public void setHasValidateBuilding(boolean hasValidateBuilding) {
+        this.hasValidateBuilding = hasValidateBuilding;
+    }
+
+    /**********
+     * GETTER
+     **********/
+
     public int getId() {
         return this.id;
     }
@@ -61,6 +90,9 @@ public class Player {
     }
 
     public String getName() {
+        if (this.name == null) {
+            return "Joueur " + getId();
+        }
         return this.name;
     }
 
@@ -72,77 +104,294 @@ public class Player {
         return this.avalaibleToBuild;
     }
 
-    // Methods
-    public void addToAdditionals(Color color) {
-        getAdditionals().add(color);
+    public boolean getHasValidateBuilding() {
+        return hasValidateBuilding;
     }
 
-    public Color removeFromAdditionals(int pos) {
-        return getAdditionals().remove(pos);
-    }
-
-    public boolean addToMountain(Point point, Color color) {
-        return addToMountain(point.x, point.y, color);
-    }
-
-    public boolean addToMountain(int l, int c, Color color) {
-
-        if (l < 0 || c < 0 || l < c || l >= getMountain().getBaseSize()) {
-            return false;
-        }
-
-        int n;
-        Color colb = getMountain().getCase(l, c);
-        if ((n = getAvalaibleToBuild().get(color)) > 0) {
-            getMountain().setCase(l, c, color);
-            getAvalaibleToBuild().put(color, n);
-            if (colb != Color.EMPTY) {
-                getAvalaibleToBuild().put(colb, getAvalaibleToBuild().get(colb) + 1);
-            }
-            return true;
-        }
+    public boolean isAI() {
         return false;
     }
 
-    public boolean isAvailableToBuild(Color c) {
+    public abstractAI getAI() {
+        return null;
+    }
+
+    /**********
+     * BEFORE HAS VALIDATE BUILDING METHODS
+     **********/
+
+    /**
+     * Check if the player can build a cube of the given color
+     * 
+     * @param c the color to check
+     * @return true if the player can build a cube of the given color, false
+     *         otherwise
+     */
+    public boolean isAvailableToBuild(Color c) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
         return getAvalaibleToBuild().get(c) > 0;
     }
 
-    public Color removeFromMountain(Point point) {
+    /**
+     * Add a color to the player's mountain using available colors
+     * 
+     * @param point the position to build
+     * @param color the color to build
+     * @return true if the color has been built, false otherwise
+     */
+    public boolean addToMountainFromAvailableToBuild(Point point, Color color) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
+        return addToMountainFromAvailableToBuild(point.x, point.y, color);
+    }
+
+    /**
+     * Add a color to the player's mountain using available colors
+     * 
+     * @param x     the x position to build
+     * @param y     the y position to build
+     * @param color the color to build
+     * @return true if the color has been built, false otherwise
+     */
+    public boolean addToMountainFromAvailableToBuild(int x, int y, Color color) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
+        Color mountainColor;
+        Integer availableNumber;
+        boolean isInMountain;
+
+        isInMountain = x >= 0 && x < getMountain().getBaseSize() && y >= 0 && y <= x;
+        if (getHasValidateBuilding() || !isInMountain) {
+            return false;
+        }
+
+        mountainColor = getMountain().getCase(x, y);
+        if (getAvalaibleToBuild().get(color) > 0) {
+
+            getMountain().setCase(x, y, color);
+            if (mountainColor != Color.EMPTY) {
+
+                availableNumber = getAvalaibleToBuild().get(mountainColor) + 1;
+                getAvalaibleToBuild().put(mountainColor, availableNumber);
+            }
+
+            getAvalaibleToBuild().put(color, getAvalaibleToBuild().get(color) - 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove a color from the player's mountain to the available to build
+     * 
+     * @param point the position to remove
+     * @return the color removed
+     */
+    public Color removeFromMountainToAvailableToBuild(Point point) throws UnsupportedOperationException {
+
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
+        return removeFromMountainToAvailableToBuild(point.x, point.y);
+    }
+
+    /**
+     * Remove a color from the player's mountain to the available to build
+     * 
+     * @param x the x position to remove
+     * @param y the y position to remove
+     * @return the color removed
+     */
+    public Color removeFromMountainToAvailableToBuild(int x, int y) throws UnsupportedOperationException {
+        
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
+        Color mountainColor;
+
+        if (hasValidateBuilding || x < 0 || y < 0 || x < y || x >= getMountain().getBaseSize()) {
+            return Color.EMPTY;
+        }
+
+        mountainColor = getMountain().getCase(x, y);
+        if (mountainColor != Color.EMPTY) {
+            getMountain().remove(x, y);
+            getAvalaibleToBuild().put(mountainColor, getAvalaibleToBuild().get(mountainColor) + 1);
+            return mountainColor;
+        }
+
+        return mountainColor;
+    }
+
+    /**
+     * Validdates the building of the player if the mountain is full
+     * 
+     * @return true if the building has been validated, false otherwise
+     */
+    public boolean validateBuilding() throws UnsupportedOperationException {
+        
+        if (getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+        }
+
+        if (getMountain().isFull()) {
+            setHasValidateBuilding(true);
+        }
+
+        return getHasValidateBuilding();
+    }
+
+    /**********
+     * AFTER HAS VALIDATE BUILDING METHODS
+     **********/
+
+    /**
+     * Add a color to the player's additionals
+     * 
+     * @param color the color to add
+     */
+    public void addToAdditionals(Color color) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("addToAdditionals: Forbidden operation, the player hasn't validate his building");
+        }
+
+        getAdditionals().add(color);
+    }
+
+    /**
+     * Remove a color from the player's additionals
+     * 
+     * @param pos the index of the color to remove
+     * @return the color removed
+     */
+    public Color removeFromAdditionals(int pos) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
+        }
+
+        return getAdditionals().remove(pos);
+    }
+
+    /**
+     * Remove a color from the player's mountain with the given position
+     * 
+     * @param point the position to remove
+     * @return the color removed
+     */
+    public Color removeFromMountain(Point point) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("removeFromMountain: Forbidden operation, the player hasn't validate his building");
+        }
+
         return removeFromMountain(point.x, point.y);
     }
 
-    public Color removeFromMountain(int l, int c) {
-        Color col = getMountain().getCase(l, c);
+    /**
+     * Remove a color from the player's mountain with the given position
+     * 
+     * @param l the x position to remove
+     * @param c the y position to remove
+     * @return the color removed
+     */
+    public Color removeFromMountain(int l, int c) throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("removeFromMountain: Forbidden operation, the player hasn't validate his building");
+        }
+
+        Color col;
+        col = getMountain().getCase(l, c);
         getMountain().remove(l, c);
         return col;
     }
 
-    public void removeFromAvailableToBuild(Point p) {
-        removeFromAvailableToBuild(p.x, p.y);
-    }
-
-    public void removeFromAvailableToBuild(int l, int c) {
-        Color color;
-        if ((color = getMountain().getCase(l, c)) != Color.WHITE) {
-            getMountain().remove(l, c);
-            getAvalaibleToBuild().put(color, getAvalaibleToBuild().get(color) + 1);
+    /**
+     * Give the list of playable colors by player
+     * 
+     * @return the list of playable colors
+     */
+    public HashSet<Color> getPlayableColors() throws UnsupportedOperationException {
+        
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException("getPlayableColors: Forbidden operation, the player hasn't validate his building");
         }
+
+        HashSet<Color> playable;
+        HashSet<Color> toTest;
+        ArrayList<Point> removable;
+
+        toTest = new HashSet<>();
+        removable = new ArrayList<>();
+        for (Point p : removable) {
+            toTest.add(getMountain().getCase(p.x, p.y));
+        }
+
+        toTest.addAll(getAdditionals());
+
+        playable = new HashSet<>();
+        for (Color c : toTest) {
+            if (getMountain().compatible(c).size() >= 1) {
+                playable.add(c);
+            }
+        }
+
+        return playable;
     }
 
+    /**********
+     * OTHER METHODS
+     **********/
+
+    /**
+     * Clear the mountain of the player
+     * 
+     * @return void
+     */
     public void clearMountain() {
         getMountain().clear();
     }
 
+    /**
+     * Check if the mountain of the player is full
+     * 
+     * @return true if the mountain is full, false otherwise
+     */
     public boolean isMountainFull() {
         return getMountain().isFull();
     }
 
+    /**
+     * Check if the mountain of the player is empty
+     * 
+     * @return true if the mountain is empty, false otherwise
+     */
     public boolean isMountainEmpty() {
         return getMountain().isEmpty();
     }
 
+    /**
+     * Return a string representing the player for saving it
+     * 
+     * @return a string representing the player
+     */
     public String forSave() {
+
         String s = "{";
         s += getId() + "\n {";
         s += getMountain().forSave() + "}";
@@ -156,36 +405,48 @@ public class Player {
         return s;
     }
 
+    @Override
     public String toString() {
-        String s = "Player " + getId();
-        s += "\nMountain: \n" + getMountain().toString();
-        s += "\nAdditional: ";
+
+        String s = getName() + ":\n";
+        s += getMountain().toString();
+        s += "\nAdditionels: ";
         for (Color c : getAdditionals()) {
-            s += c.toString() + " ";
+            s += c.forDisplay() + " ";
         }
+        s += "\n";
         return s;
     }
 
-    public HashSet<Color> getPlayableColors() {
-
-        HashSet<Color> playable = new HashSet<>();
-        HashSet<Color> toTest = new HashSet<>();
-        ArrayList<Point> removable = getMountain().removable();
-
-        for (Point p : removable) {
-
-            toTest.add(getMountain().getCase(p.x, p.y));
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-
-        toTest.addAll(getAdditionals());
-
-        for (Color c : toTest) {
-
-            if (getMountain().compatible(c).size() >= 1) {
-
-                playable.add(c);
-            }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
-        return playable;
+        Player p = (Player) o;
+        if (getId() != p.getId() && isAI() != p.isAI()) {
+            return false;
+        }
+        return getMountain().equals(p.getMountain());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMountain(), getId());
+    }
+
+    @Override
+    public Player clone() {
+
+        Player p = new Player(getId());
+        p.setAdditionals(new ArrayList<>(getAdditionals()));
+        p.setName(getName());
+        p.setWhiteUsed(getWhiteUsed());
+        p.setMountain(getMountain().clone());
+        p.setHasValidateBuilding(getHasValidateBuilding());
+        return p;
     }
 }
