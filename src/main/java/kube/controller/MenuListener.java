@@ -19,15 +19,25 @@ public class MenuListener implements Runnable{
     @Override
     public void run() {
         int nb = askNbPlayer();
-        int mode = askGameMode();        
+        int mode = askGameMode();
+        if(mode==2){
+
+        }
+
     }
 
     public int askNbPlayer() {
         String s = "";
         controlerToView.add(new Action(Action.PRINT_ASK_NB_PLAYERS));
         s = scanner.nextLine();
+        int i;
         try {
-            return Integer.parseInt(s);
+            if((i= Integer.parseInt(s))<=2 && i>=0){
+                return i;
+            }
+            else{
+                return askNbPlayer();
+            }
         } catch (NumberFormatException e) {
             return askNbPlayer();
         }
@@ -35,6 +45,7 @@ public class MenuListener implements Runnable{
 
     public int askGameMode() {
         String s = "";
+        int i;
         s = scanner.nextLine();
         try {
             return Integer.parseInt(s);

@@ -2,7 +2,7 @@ package kube.services;
 
 import java.io.BufferedReader;
 import java.io.PrintWriter;
-import java.nio.Buffer;
+
 
 public abstract class Network implements Runnable {
     
@@ -10,6 +10,7 @@ public abstract class Network implements Runnable {
     private int port;
     private PrintWriter out;
     private BufferedReader in;
+
 
     public abstract boolean connect(String ip, int port);
     public abstract boolean disconnect();

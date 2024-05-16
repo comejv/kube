@@ -11,16 +11,21 @@ public class Server extends Network{
     private ServerSocket serverSocket;
     private Socket clientSocket;
 
-    public Server(int port){
-        try{
+    public Server(int port) {
+        init(port);
+    }
+
+
+    public void init(int port){
+        try {
             setServerSocket(new ServerSocket(port));
             setClientSocket(getServerSocket().accept());
             setOut(new PrintWriter(getClientSocket().getOutputStream(), true));
             setIn(new BufferedReader(new InputStreamReader(getClientSocket().getInputStream())));
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public ServerSocket getServerSocket() {
@@ -78,22 +83,6 @@ public class Server extends Network{
     
     @Override
     public void run() {
-        Object data=null;
-        do{
-            try{
-                data =  receive();
-                System.out.println("Received: " + data);
-                send("Echo: " + data);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }while (data != null);
-    }
 
-    public static void main(String[] args) {
-        Server server = new Server(1234);
-        server.run();
-    }
-    
+    }    
 }

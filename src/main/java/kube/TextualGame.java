@@ -12,18 +12,16 @@ import kube.view.TextualMode;
 
 public class TextualGame {
 
-   
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Kube kube = new Kube();
         Queue<Action> eventsToModel = new Queue<>();
         Queue<Action> eventsToView = new Queue<>();
-        
-        MenuListener menuListener = new MenuListener(eventsToView,scanner);
+
+        MenuListener menuListener = new MenuListener(eventsToView, scanner);
         Game model = new Game(Game.local, kube, eventsToModel, eventsToView);
         TextualMode view = new TextualMode(model, eventsToView);
-        CommandListener controller = new CommandListener(eventsToModel, eventsToView,scanner);
+        CommandListener controller = new CommandListener(eventsToModel, eventsToView, scanner);
 
         Thread modelThread = new Thread(model);
         Thread controllerThread = new Thread(controller);
@@ -34,7 +32,4 @@ public class TextualGame {
         modelThread.start();
     }
 
-
-
-
-}               
+}

@@ -1,6 +1,8 @@
 package kube.model;
 
 import kube.model.ai.*;
+import kube.services.Network;
+import kube.services.Server;
 
 import java.util.Random;
 
@@ -11,11 +13,16 @@ import kube.model.action.move.Move;
 
 public class Game implements Runnable {
     public static final int local = 1;
+    public static final int host = 2;
+    public static final int join = 3;
+
+    public static final int port = 1234;
 
     Queue<Action> controllerToModele;
     Queue<Action> modeleToView;
     private int gameType;
     private Kube k3;
+    private Network network;
 
     public Game(int gameType, Kube k3, Queue<Action> controllerToModele, Queue<Action> modeleToView) {
         this.gameType = gameType;
@@ -27,6 +34,11 @@ public class Game implements Runnable {
     @Override
     public void run() {
         switch (gameType) {
+            case host:
+                Config.debug("Démarrage de la partie en réseau en tant que serveur");
+                network = new Server(port);
+
+                break;
             case local:
                 localGame();
                 break;
@@ -72,6 +84,7 @@ public class Game implements Runnable {
             } catch (Exception e) {
                 modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
             }
+
         }
 
         Config.debug("Fin phase 1");
