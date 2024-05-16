@@ -1,7 +1,12 @@
 package kube.view;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UIManager.*;
@@ -56,9 +61,27 @@ public class GUI extends Thread {
         // add new phase 2 pannel
         SecondPhasePanel sP = new SecondPhasePanel(secondPhaseListener);
         mF.addPanel(sP, PHASE2);
+
+        if (Config.showBorders()) {
+            showAllBorders(mF);
+        }
+
+        mF.pack();
+        mF.repaint();
     }
 
     public void showPanel(String name) {
         mF.showPanel(name);
+    }
+
+    private void showAllBorders(Container container) {
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof Container) {
+                showAllBorders((Container) comp);
+            }
+            if (comp instanceof JPanel) {
+                ((JPanel) comp).setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+        }
     }
 }
