@@ -124,7 +124,7 @@ public class Buttons {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // Darken the image on hover
-            float factor = isHovered ? (isPressed ? 0.75f : 1.1f) : 1.0f;
+            float factor = isHovered ? (isPressed ? 0.75f : 1.15f) : 1.0f;
 
             if (isHovered) { // Draw darker image
                 float[] scales = { factor };
@@ -147,15 +147,28 @@ public class Buttons {
                     if (originalImage.getRGB(x, y) == 0) {
                         continue;
                     }
-                    double[] hsl = GUIColors.rgbToHsl(originalImage.getRGB(x, y));
-                    hsl[0] = GUIColors.rgbToHsl(c.getRGB())[0];
-                    // hsl[0] = 0.3;
-                    int[] rgbArray = GUIColors.hslToRgb(hsl);
+                    double[] imgHsl = GUIColors.rgbToHsl(originalImage.getRGB(x, y));
+                    double[] colHsl = GUIColors.rgbToHsl(c.getRGB());
+                    if (imgHsl[2] == 0) {
+                        imgHsl[2] = colHsl[2];
+                    }
+                    imgHsl[0] = colHsl[0];
+                    int[] rgbArray = GUIColors.hslToRgb(imgHsl);
                     int rgb = originalImage.getRGB(x, y) & (0xFF << 24) // Keep alpha
                             | (rgbArray[0] << 16) | (rgbArray[1] << 8) | rgbArray[2]; // Set RGB
                     originalImage.setRGB(x, y, rgb);
                 }
             }
+            repaint();
+        }
+
+        public void resizeIcon(int width, int height) {
+            Image resized = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+            originalImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = originalImage.createGraphics();
+            g2d.drawImage(resized, 0, 0, null);
+            g2d.dispose();
+            setPreferredSize(new Dimension(width, height));
             repaint();
         }
 

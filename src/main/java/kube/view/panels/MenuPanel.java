@@ -122,10 +122,20 @@ public class MenuPanel extends JPanel {
 
         // Settings
         ButtonIcon settings = new ButtonIcon("settings", ResourceLoader.getBufferedImage("gear"), buttonListener);
+        settings.resizeIcon(100, 100);
         settings.recolor(GUIColors.ACCENT);
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 2;
         elemGBC.gridy = 2;
         add(settings, elemGBC);
+
+        // Volume
+        ButtonIcon volume = new ButtonIcon("volume", ResourceLoader.getBufferedImage("volume"), buttonListener);
+        volume.resizeIcon(100, 100);
+        volume.recolor(GUIColors.ACCENT);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridx = 0;
+        elemGBC.gridy = 2;
+        add(volume, elemGBC);
     }
 }

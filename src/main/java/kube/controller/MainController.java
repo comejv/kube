@@ -8,6 +8,9 @@ import java.awt.event.MouseListener;
 import kube.view.GUI;
 import kube.configuration.Config;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.model.Kube;
+import kube.model.Game;
+import kube.model.action.*;
 
 /*
  * This class will create the view and handle user inputs through listeners implemented as subclasses.
@@ -17,7 +20,15 @@ public class MainController {
     private Game game;
 
     public MainController() {
-        game = new Game(2);
+        Kube kube = new Kube();
+        Queue<Action> eventsToModel = new Queue<>();
+        Queue<Action> eventsToView = new Queue<>();
+
+        Game model = new Game(Game.local, kube, eventsToModel, eventsToView);
+
+        Thread modelThread = new Thread(model);
+
+        modelThread.start();
         gui = new GUI(new menuListener(), new phase1Listener(), new phase2Listener());
     }
 
