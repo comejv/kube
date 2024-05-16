@@ -4,14 +4,12 @@ import kube.configuration.Config;
 import kube.view.GUIColors;
 
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;

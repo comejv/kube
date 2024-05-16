@@ -4,6 +4,7 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.view.GUIColors;
 import kube.view.components.Buttons;
+import kube.view.components.Icon;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -17,8 +18,7 @@ import javax.swing.*;
  */
 public class FirstPhasePanel extends JPanel {
     private GraphicsEnvironment ge;
-    BufferedImage hexa = ResourceLoader.getBufferedImage("zombie");
-    BufferedImage hexaReal = ResourceLoader.getBufferedImage("hexa");
+    Icon hexa;
 
     public FirstPhasePanel(ActionListener buttonListener) {
         try {
@@ -31,6 +31,9 @@ public class FirstPhasePanel extends JPanel {
             Config.debug("Error : ");
             System.err.println("Could not load buttons font, using default.");
         }
+
+        hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
+        hexa.resizeIcon(80, 80);
 
         setLayout(new GridBagLayout());
         setBackground(GUIColors.GAME_BG);
@@ -76,7 +79,7 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT);
         basePanel.add(baseLabel);
         for (int i = 0; i < 9; i++) {
-            basePanel.add(new paintHexa(hexa));
+            basePanel.add(hexa);
         }
         gamePanel.add(basePanel, BorderLayout.NORTH);
 
@@ -84,13 +87,13 @@ public class FirstPhasePanel extends JPanel {
         JPanel constructPanel = new JPanel();
         constructPanel.setLayout(new GridLayout(6, 6));
         GridBagConstraints cc = new GridBagConstraints();
-        paintHexa[][] hexaList = new paintHexa[6][6];
+        Icon[][] hexaList = new Icon[6][6];
         constructPanel.setBackground(GUIColors.GAME_BG_LIGHT);
         gamePanel.add(constructPanel, BorderLayout.CENTER);
         int last = 0;
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = new paintHexa(hexa);
+                hexaList[i][j] = hexa;
             }
         }
         for (int i = 0; i < 6; i++) {
@@ -121,7 +124,7 @@ public class FirstPhasePanel extends JPanel {
                 JPanel mini = new JPanel();
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                mini.add(new paintHexa(hexa));
+                mini.add(hexa);
                 mini.add(numOfPieces);
                 c.gridy = j;
                 c.gridx = i;
