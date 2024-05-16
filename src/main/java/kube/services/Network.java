@@ -48,4 +48,8 @@ public abstract class Network implements Runnable {
     public void setIn(BufferedReader in) {
         this.in = in;
     }
+
+    public boolean isServer() {
+        return false;
+    }
 }

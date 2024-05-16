@@ -5,6 +5,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import kube.configuration.Config;
+
 public class Client extends Network {
 
     private Socket socket;
@@ -48,6 +50,7 @@ public class Client extends Network {
 
     public boolean send(Object data) {
         try {
+            Config.debug("Client send" +  data);
             getOut().println(data);
         } catch (Exception e) {
             return false;
@@ -57,6 +60,7 @@ public class Client extends Network {
 
     public Object receive() {
         try {
+            Config.debug("Client receive");
             return getIn().readLine();
         } catch (Exception e) {
             return null;

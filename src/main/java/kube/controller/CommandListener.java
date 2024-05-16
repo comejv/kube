@@ -10,18 +10,19 @@ public class CommandListener implements Runnable {
     String command;
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
+    Queue<Action> eventsToController;
     Scanner sc;
     Network network = null;
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner sc) {
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Queue<Action> eventsToController, Scanner sc) {
         this.eventsToModel = eventsToModel;
         this.eventsToView = eventsToView;
         this.sc = sc;
 
     }
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner sc, Network network) {
-        this(eventsToModel , eventsToView, sc);
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Queue<Action> eventsToController, Scanner sc, Network network) {
+        this(eventsToModel , eventsToView,eventsToController, sc);
         this.network = network;
     }
 

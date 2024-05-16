@@ -37,6 +37,11 @@ public class Action{
     public static final int PRINT_ASK_NB_PLAYERS = 34;
     public static final int PRINT_ASK_PLAYER_NAME = 35;
     public static final int PRINT_ASK_GAME_MODE = 36;
+    public static final int PRINT_ASK_HOST_OR_JOIN = 37;
+    public static final int PRINT_ASK_IP = 38;
+    //NETWORK
+    public static final int INIT_K3 = 39;
+    public static final int OTHER_PLAYER_MOUNTAIN = 40;
 
     private int type;
     private Object data;
