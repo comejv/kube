@@ -8,13 +8,9 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.awt.image.WritableRaster;
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -75,8 +71,21 @@ public class Buttons {
 
     public static class ParameterButton extends JButton {
         public ParameterButton(Image image) {
-            super(new ImageIcon(image));
-            setPreferredSize(new Dimension(100, 100));
+            super();
+            Image scaledImg = image.getScaledInstance(
+                        (int) (0.15 * Config.getInitHeight()),
+                        (int) (0.15 * Config.getInitHeight()),
+                        Image.SCALE_SMOOTH);
+                
+            ImageIcon icon = new ImageIcon(scaledImg);
+            setIcon(icon);
+
+            setPreferredSize(new Dimension((int) (0.20 * Config.getInitHeight()),
+                                           (int) (0.20 * Config.getInitHeight())));
+
+            setOpaque(false);
+            setContentAreaFilled(false);
+            setBorderPainted(false);
         }
     }
 
