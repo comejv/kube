@@ -4,7 +4,6 @@ import kube.model.ai.*;
 
 import java.util.Random;
 
-import javax.management.RuntimeErrorException;
 
 import kube.configuration.Config;
 import kube.model.action.*;
@@ -39,7 +38,7 @@ public class Game implements Runnable {
     public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init(new MinMaxAI(), new RandomAI());
+        k3.init();
         // Construction phase
         while (k3.getPhase() == 1) {
             try {

@@ -188,6 +188,16 @@ public class Kube {
         return lastMovePlayed;
     }
 
+    public Player getPlayerById(int id){
+        if (id == 1){
+            return getP1();
+        } else if (id == 2){
+            return getP2();
+        } else {
+            return null;
+        }
+    }
+
     /**********
      * PREPARATION PHASE METHODS
      **********/

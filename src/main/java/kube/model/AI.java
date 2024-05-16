@@ -24,7 +24,7 @@ public class AI extends Player {
     AI(int id, abstractAI ai, Kube k3) {
         super(id);
         ai.setK3(k3);
-        ai.setPlayer(this);
+        ai.setPlayerId(this);
         setAI(ai);
     }
 

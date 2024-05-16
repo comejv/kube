@@ -14,7 +14,7 @@ public class RandomAI implements abstractAI {
      **********/
 
     Kube k3;
-    Player iaPlayer;
+    private int iaPlayerId;
     Random r;
 
     /**********
@@ -44,8 +44,8 @@ public class RandomAI implements abstractAI {
         k3 = k;
     }
 
-    public void setPlayer(Player p) {
-        iaPlayer = p;
+    public void setPlayerId(Player p) {
+        iaPlayerId = p.getId();
     }
 
     public void setR(Random r) {
@@ -60,8 +60,8 @@ public class RandomAI implements abstractAI {
         return k3;
     }
 
-    public Player getPlayer() {
-        return iaPlayer;
+    public Player getPlayer(Kube k) {
+        return k.getPlayerById(iaPlayerId);
     }
 
     public Random getR() {
@@ -78,8 +78,8 @@ public class RandomAI implements abstractAI {
      * @return void
      */
     public void constructionPhase() {
-        while (!getPlayer().validateBuilding()) {
-            utilsAI.randomFillMountain(getPlayer(), getR());
+        while (!getPlayer(k3).validateBuilding()) {
+            utilsAI.randomFillMountain(getPlayer(k3), getR());
         }
     }
 

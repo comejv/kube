@@ -18,33 +18,27 @@ public class MenuListener implements Runnable{
 
     @Override
     public void run() {
-        String s = "";
-        while(scanner.hasNextLine()){
-            
-        }
-        
+        int nb = askNbPlayer();
+        int mode = askGameMode();        
     }
 
     public int askNbPlayer() {
         String s = "";
-        System.out.println("Combien de joueurs ? (0-2)");
+        controlerToView.add(new Action(Action.PRINT_ASK_NB_PLAYERS));
         s = scanner.nextLine();
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException e) {
-            System.out.println("Veuillez entrer un nombre entre 0 et 2");
             return askNbPlayer();
         }
     }
 
     public int askGameMode() {
         String s = "";
-        System.out.println("Mode de jeu : 1 pour local, 2 pour en ligne");
         s = scanner.nextLine();
         try {
             return Integer.parseInt(s);
         } catch (NumberFormatException e) {
-            System.out.println("Veuillez entrer un nombre entre 1 et 2");
             return askGameMode();
         }
     }

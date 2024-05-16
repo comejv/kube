@@ -12,5 +12,5 @@ public interface abstractAI {
 
     public void setK3(Kube k);
 
-    public void setPlayer(Player p);
+    public void setPlayerId(Player p);
 }

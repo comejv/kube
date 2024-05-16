@@ -1,6 +1,5 @@
 package kube.model.ai;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -14,17 +13,16 @@ import kube.model.Kube;
 import kube.model.Player;
 import kube.model.action.move.Move;
 
-public class MinMaxAI implements abstractAI, ActionListener {
+public class abstractMiniMax implements abstractAI, ActionListener {
 
     /**********
      * ATTRIBUTES
      **********/
 
     private Kube k3;
-    private Player iaPlayer;
+    private int iaPlayerId;
     private Random r;
     private HashMap<Kube, Move> solution, tmp;
-    private Method heuristic;
     private int time; // in ms
     private boolean noMoreTime;
     private Timer timer;
@@ -33,15 +31,14 @@ public class MinMaxAI implements abstractAI, ActionListener {
      * CONSTRUCTORS
      **********/
 
-    public MinMaxAI(int time, int seed) {
+    public abstractMiniMax(int time, int seed) {
         r = new Random(seed);
         setTime(time);
     }
 
-    public MinMaxAI() {
+    public abstractMiniMax() {
         r = new Random();
-        setTime(3000);
-        //setHeuristic();
+        setTime(1000);
     }
 
     /**********
@@ -52,8 +49,8 @@ public class MinMaxAI implements abstractAI, ActionListener {
         k3 = k;
     }
 
-    public void setPlayer(Player p) {
-        iaPlayer = p;
+    public void setPlayerId(Player p) {
+        iaPlayerId = p.getId();
     }
 
     public void setR(Random r) {
@@ -66,10 +63,6 @@ public class MinMaxAI implements abstractAI, ActionListener {
 
     public void setTmp(HashMap<Kube, Move> t) {
         tmp = t;
-    }
-
-    public void setHeuristic(Method m) {
-        heuristic = m;
     }
 
     public void setTime(int t) {
@@ -92,8 +85,8 @@ public class MinMaxAI implements abstractAI, ActionListener {
         return k3;
     }
 
-    public Player getPlayer() {
-        return iaPlayer;
+    public Player getPlayer(Kube k) {
+        return k.getPlayerById(iaPlayerId);
     }
 
     public Random getR() {
@@ -106,10 +99,6 @@ public class MinMaxAI implements abstractAI, ActionListener {
 
     public HashMap<Kube, Move> getTmp() {
         return tmp;
-    }
-
-    public Method getHeuristic() {
-        return heuristic;
     }
 
     public int getTime() {
@@ -135,8 +124,8 @@ public class MinMaxAI implements abstractAI, ActionListener {
      */
     @Override
     public void constructionPhase() {
-        while (!getPlayer().validateBuilding()) {
-            utilsAI.randomFillMountain(getPlayer(), getR());
+        while (!getPlayer(k3).validateBuilding()) {
+            utilsAI.randomFillMountain(getPlayer(k3), getR());
         }
     }
 
@@ -160,14 +149,25 @@ public class MinMaxAI implements abstractAI, ActionListener {
 
         while (true) {
             setTmp(new HashMap<>());
-            minMax(getK3().clone(), horizon);
+            miniMax(getK3().clone(), horizon);
             if (getNoMoreTime()) {
+                System.out.println("Horizon max :" + horizon);
+                System.out.println(getSolution());
                 return getSolution().get(getK3());
             } else {
                 setSolution(getTmp());
+                setTmp(new HashMap<>());
+                System.out.println(getSolution());
                 horizon++;
             }
         }
+    }
+
+    public Move miniMax(Kube k, int horizon) {
+        Move bestMove = null;
+        int bestScore = 0;
+        ArrayList<Move> moves = k.moveSet();
+        return bestMove;
     }
 
     /**
@@ -177,7 +177,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
      * @param horizon the depth of the tree
      * @return the best value for a max node or the worst value for a min node
      */
-    public int minMax(Kube k, int horizon) {
+    public int miniMaxRec(Kube k, int horizon) {
 
         // Timer's end
         if (getNoMoreTime()) {
@@ -186,29 +186,26 @@ public class MinMaxAI implements abstractAI, ActionListener {
 
         ArrayList<Move> moves;
         int value, score;
-
+        Player p = k.getCurrentPlayer();
         // Leaf
-        if (horizon == 0) {
-            return evaluation(k);
-        } else if ((moves = k.moveSet()).size() == 0) {
+        if (horizon == 0 || (moves = k.moveSet()).size() == 0) {
             return evaluation(k);
         } else {
-            if (k.getCurrentPlayer() == getPlayer()) {
+            if (p == getPlayer(k)) {
                 value = Integer.MIN_VALUE;
             } else {
                 value = Integer.MAX_VALUE;
             }
             for (Move m : moves) {
                 k.playMove(m);
-                score = minMax(k, horizon - 1);
+                score = miniMaxRec(k, horizon - 1);
                 if (score == -1) { // Timer's end
                     return -1;
                 }
                 k.unPlay();
-                if (k.getCurrentPlayer() == getPlayer()) {
+                if (p == getPlayer(k)) {
                     if (score > value) {
                         value = score;
-                        getTmp().put(k.clone(), m);
                     }
                 } else {
                     if (score < value) {
@@ -227,12 +224,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
      * @return the value of the state
      */
     private int evaluation(Kube k) {
-        try {
-            return (int) heuristic.invoke(null, k); // Assuming heuristic method is static
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 0; // or handle the exception as appropriate
-        }
+        return 0;
     }
 
     @Override
@@ -247,7 +239,7 @@ public class MinMaxAI implements abstractAI, ActionListener {
         getTimer().stop();
     }
 
-    public int moveSetSize(){
+    public int moveSetSize() {
         return k3.moveSet().size();
     }
 }

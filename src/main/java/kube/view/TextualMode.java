@@ -121,6 +121,12 @@ public class TextualMode implements Runnable {
                 case Action.PRINT_WIN_MESSAGE:
                     printWinMessage((Player) action.getData());
                     break;
+                case Action.PRINT_ASK_NB_PLAYERS:
+                    askNbPlayers();
+                    break;
+                case Action.PRINT_ASK_GAME_MODE:
+                    printGameMode();
+                    break;
                 default:
                     break;
             }
@@ -148,6 +154,10 @@ public class TextualMode implements Runnable {
                 "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n" +
                 "Vous devez choisir une de vos pièces pour la mettre sur la montagne centrale.";
         System.out.println(s);
+    }
+
+    public void askNbPlayers() {
+        System.out.println("Combien de joueurs? (0 -2)");
     }
 
     public void printAI() {
@@ -300,5 +310,9 @@ public class TextualMode implements Runnable {
         System.out.println(game.getKube().getP1());
         System.out.println(game.getKube().getP2());
     }
+    public void printGameMode(){
+        System.out.println("Mode de jeu : 1 pour local, 2 pour en ligne");
+    }
+
 
 }

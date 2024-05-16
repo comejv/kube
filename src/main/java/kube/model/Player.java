@@ -427,7 +427,7 @@ public class Player {
             return false;
         }
         Player p = (Player) o;
-        if (getId() != p.getId()) {
+        if (getId() != p.getId() && isAI() != p.isAI()) {
             return false;
         }
         return getMountain().equals(p.getMountain());
