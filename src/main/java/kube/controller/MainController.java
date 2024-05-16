@@ -55,7 +55,12 @@ public class MainController {
                         Config.debug("Settings clicked");
                         break;
 
+                    case "volume":
+                        Config.debug("Volume clicked");
+                        break;
+
                     default:
+                        System.err.println("Unrecognised buttonIcon action.");
                         break;
                 }
             }

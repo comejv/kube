@@ -124,7 +124,7 @@ public class Buttons {
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
             // Darken the image on hover
-            float factor = isHovered ? (isPressed ? 0.75f : 1.15f) : 1.0f;
+            float factor = isHovered ? (isPressed ? 0.75f : 1.25f) : 1.0f;
 
             if (isHovered) { // Draw darker image
                 float[] scales = { factor };
