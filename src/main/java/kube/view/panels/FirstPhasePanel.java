@@ -8,7 +8,6 @@ import kube.view.components.Icon;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -18,7 +17,6 @@ import javax.swing.*;
  */
 public class FirstPhasePanel extends JPanel {
     private GraphicsEnvironment ge;
-    Icon hexa;
 
     public FirstPhasePanel(ActionListener buttonListener) {
         try {
@@ -31,9 +29,6 @@ public class FirstPhasePanel extends JPanel {
             Config.debug("Error : ");
             System.err.println("Could not load buttons font, using default.");
         }
-
-        hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
-        hexa.resizeIcon(80, 80);
 
         setLayout(new GridBagLayout());
         setBackground(GUIColors.GAME_BG);
@@ -79,7 +74,7 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT);
         basePanel.add(baseLabel);
         for (int i = 0; i < 9; i++) {
-            basePanel.add(hexa);
+            basePanel.add(newHexa(Color.WHITE));
         }
         gamePanel.add(basePanel, BorderLayout.NORTH);
 
@@ -93,7 +88,7 @@ public class FirstPhasePanel extends JPanel {
         int last = 0;
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = hexa;
+                hexaList[i][j] = newHexa();
             }
         }
         for (int i = 0; i < 6; i++) {
@@ -104,7 +99,7 @@ public class FirstPhasePanel extends JPanel {
                 }
             }
             if (i != 5) {
-                cc.insets = new Insets(0, hexa.getWidth() / 2, 0, hexa.getWidth() / 2);
+                cc.insets = new Insets(0, 80 / 2, 0, 80 / 2);
             }
             if (i % 2 == 1) {
                 last = i - (i - 5) * 2;
@@ -124,7 +119,7 @@ public class FirstPhasePanel extends JPanel {
                 JPanel mini = new JPanel();
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                mini.add(hexa);
+                mini.add(newHexa());
                 mini.add(numOfPieces);
                 c.gridy = j;
                 c.gridx = i;
@@ -165,30 +160,16 @@ public class FirstPhasePanel extends JPanel {
         return buttons;
     }
 
-    public class paintHexa extends JPanel {
-        private BufferedImage img;
-
-        public paintHexa(BufferedImage img) {
-            this.img = img;
-            setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
-        }
-
-        public void setImg(BufferedImage newImg) {
-            this.img = newImg;
-            repaint();
-        }
-
-        public BufferedImage getImg() {
-            return this.img;
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (img != null) {
-                g.drawImage(img, 0, 0, null);
-            }
-        }
+    public static Icon newHexa() {
+        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
+        hexa.resizeIcon(80, 80);
+        return hexa;
     }
 
+    public static Icon newHexa(Color c) {
+        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
+        hexa.resizeIcon(80, 80);
+        hexa.recolor(c);
+        return hexa;
+    }
 }
