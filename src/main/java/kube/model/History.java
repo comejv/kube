@@ -2,37 +2,37 @@ package kube.model;
 
 import java.util.ArrayList;
 
-import kube.model.move.Move;
+import kube.model.action.move.Move;
 
 import java.awt.Point;
 
 public class History {
-    // Attributes
+
+    /**********
+     * ATTRIBUTES
+     **********/
+
     private int firstPlayer;
     private ArrayList<Move> done;
     private ArrayList<Move> undone;
 
-    // Constructor
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the class History
+     */
     public History() {
         setFirstPlayer(0);
         setDone(new ArrayList<Move>());
         setUndone(new ArrayList<Move>());
     }
 
-    // Getters
-    public int getFirstPlayer() {
-        return this.firstPlayer;
-    }
+    /**********
+     * SETTERS
+     **********/
 
-    public ArrayList<Move> getDone() {
-        return this.done;
-    }
-
-    public ArrayList<Move> getUndone() {
-        return this.undone;
-    }
-
-    // Setters
     public void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
@@ -45,47 +45,114 @@ public class History {
         this.undone = undone;
     }
 
-    // Methods
+    /**********
+     * GETTERS
+     **********/
+
+    public int getFirstPlayer() {
+        return this.firstPlayer;
+    }
+
+    public ArrayList<Move> getDone() {
+        return this.done;
+    }
+
+    public ArrayList<Move> getUndone() {
+        return this.undone;
+    }
+
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Add a move to the history
+     *
+     * @param move the move to add
+     * @return void
+     */
     public void addMove(Move move) {
         getDone().add(move);
         clearUndone();
     }
 
+    /**
+     * Pop the last move from the done list and add it to the undone list
+     * 
+     * @return the last move of the history
+     */
     public Move undoMove() {
-        Move move = getDone().get(getDone().size() - 1);
-        getDone().remove(this.done.size() - 1);
+        Move move;
+        move = getDone().get(getDone().size() - 1);
+        getDone().remove(getDone().size() - 1);
         getUndone().add(move);
         return move;
     }
 
+    /**
+     * Pop the last move from the undone list and add it to the done list
+     * 
+     * @return the last move of the undone list
+     */
     public Move redoMove() {
-        Move move = getUndone().get(getUndone().size() - 1);
+        Move move;
+        move = getUndone().get(getUndone().size() - 1);
         getUndone().remove(getUndone().size() - 1);
         getDone().add(move);
         return move;
     }
 
+    /**
+     * Clear the history
+     * 
+     * @return void
+     */
     public void clear() {
         clearDone();
         clearUndone();
     }
 
+    /**
+     * Clear the undone list
+     * 
+     * @return void
+     */
     public void clearUndone() {
         getUndone().clear();
     }
 
+    /**
+     * Clear the done list
+     * 
+     * @return void
+     */
     public void clearDone() {
         getDone().clear();
     }
 
+    /**
+     * Check if the history can be undone
+     * 
+     * @return true if the history can be undone, false otherwise
+     */
     public boolean canUndo() {
         return getDone().size() > 0;
     }
 
+    /**
+     * Check if the history can be redone
+     * 
+     * @return true if the history can be redone, false otherwise
+     */
     public boolean canRedo() {
         return getUndone().size() > 0;
     }
 
+    /**
+     * Return a string representing the history for saving it
+     * 
+     * @return a string representing the history
+     */
     public String forSave() {
         String s = "";
         s += getFirstPlayer() + "\n{";
@@ -106,6 +173,12 @@ public class History {
         return s;
     }
 
+    /**
+     * Return a string representing the history for displaying it
+     * 
+     * @param IA true if the history is displayed for the IA, false otherwise
+     * @return a string representing the history
+     */
     public String forDisplay(boolean IA) {
         String s = "<html>";
         for (int i = done.size() - 1; i >= 0; i--) {
@@ -146,5 +219,4 @@ public class History {
         }
         return s;
     }
-
 }

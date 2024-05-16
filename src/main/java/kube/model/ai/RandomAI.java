@@ -5,40 +5,99 @@ import java.util.Random;
 
 import kube.model.Kube;
 import kube.model.Player;
-import kube.model.move.*;
+import kube.model.action.move.*;
 
-public class RandomAI implements AI {
+public class RandomAI implements abstractAI {
+
+    /**********
+     * ATTRIBUTES
+     **********/
+
     Kube k3;
-    Player iaPlayer;
+    private int iaPlayerId;
     Random r;
 
-    public RandomAI(Kube k, Player p, int seed) {
+    /**********
+     * CONSTRUCTORS
+     **********/
+
+    /**
+     * Constructor of the RandomAI class
+     * 
+     * @param k    the game
+     * @param p    the player
+     * @param seed the seed of the random
+     */
+    public RandomAI(int seed) {
+        setR(new Random(seed));
+    }
+
+    public RandomAI() {
+        setR(new Random());
+    }
+
+    /**********
+     * SETTERS
+     **********/
+
+    public void setK3(Kube k) {
         k3 = k;
-        iaPlayer = p;
-        r = new Random(seed);
     }
 
-    public RandomAI(Kube k, Player p) {
-        k3 = k;
-        iaPlayer = p;
-        r = new Random();
+    public void setPlayerId(Player p) {
+        iaPlayerId = p.getId();
     }
 
-    public void preparationPhase() {
-        utilsAI.randomFillMountain(iaPlayer, r);
+    public void setR(Random r) {
+        this.r = r;
     }
 
-    public void gamePhase() {
-        
+    /**********
+     * GETTERS
+     **********/
+
+    public Kube getK3() {
+        return k3;
     }
 
+    public Player getPlayer(Kube k) {
+        return k.getPlayerById(iaPlayerId);
+    }
+
+    public Random getR() {
+        return r;
+    }
+
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Fill the mountain with random mountains until the mountain is valid
+     * 
+     * @return void
+     */
+    public void constructionPhase() {
+        while (!getPlayer(k3).validateBuilding()) {
+            utilsAI.randomFillMountain(getPlayer(k3), getR());
+        }
+    }
+
+    /**
+     * Give the next move of the AI
+     * 
+     * @return the next move
+     * @throws Exception
+     */
     public Move nextMove() throws Exception {
-        ArrayList<Move> moves = k3.moveSet();
-        if (moves.size() == 0){
+        ArrayList<Move> moves;
+
+        moves = k3.moveSet();
+
+        if (moves.size() == 0) {
             throw new Exception("Aucun coup jouable");
         } else {
             return moves.get(r.nextInt(moves.size()));
         }
     }
-
 }

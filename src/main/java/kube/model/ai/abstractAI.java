@@ -1,0 +1,16 @@
+package kube.model.ai;
+
+import kube.model.Kube;
+import kube.model.Player;
+import kube.model.action.move.Move;
+
+public interface abstractAI {
+
+    public void constructionPhase();
+
+    public Move nextMove() throws Exception;
+
+    public void setK3(Kube k);
+
+    public void setPlayerId(Player p);
+}
