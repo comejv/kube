@@ -34,6 +34,7 @@ public class Kube {
     private int phase;
     private Move lastMovePlayed;
 
+
     /**********
      * CONSTRUCTOR
      **********/

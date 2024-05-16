@@ -6,41 +6,77 @@ import kube.model.Color;
 
 public class MoveAM extends Move {
 
-    Color color;
-    Point to;
+    /**********
+     * ATTRIBUTE
+     **********/
 
-    // Constructors
-    public MoveAM(Point to, Color color) {
-        super();
-        setColor(color);
+    private Point to;
+
+    /**********
+     * CONSTRUCTORS
+     **********/
+
+     /**
+      * Constructor of the class MoveAM
+      *
+      * @param to the destination of the move
+      * @param color the color of the moved cube
+      */
+    public MoveAM(Point to, Color c) {
+        super(c);
         setTo(to);
     }
 
-    public MoveAM(int x, int y, Color color) {
-        this(new Point(x, y), color);
+    /**
+     * Constructor of the class MoveAM
+     * 
+     * @param toX   the x position of the destination of the move
+     * @param toY   the y position of the destination of the move
+     * @param color the color of the moved cube
+     */
+    public MoveAM(int toX, int toY, Color color) {
+        this(new Point(toX, toY), color);
     }
 
-    // Setters
-    public void setColor(Color color) {
-        this.color = color;
-    }
+    /**********
+     * SETTER
+     **********/
 
     public void setTo(Point to) {
         this.to = to;
     }
 
-    // Getters
-    public Color getColor() {
-        return color;
-    }
+    /**********
+     * GETTER
+     **********/
 
     public Point getTo() {
         return to;
     }
 
-    // Methods
+    /**********
+     * METHODS
+     **********/
+
+     /**
+      * Check if the move is from the additionals 
+      *
+      * @return true if the move is from the additionals, false otherwise
+      */
+    @Override
     public boolean isFromAdditionals() {
         return true;
+    }
+
+    /**
+     * Give a string representation of the move for saving
+     * 
+     * @return a string representation of the move for saving
+     */
+    @Override
+    public String forSave() {
+        return "{AM;" + super.forSave() + ";" +
+                "(" + to.x + "," + to.y + ")}";
     }
 
     @Override
