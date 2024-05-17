@@ -8,11 +8,9 @@ import java.awt.event.ActionListener;
 import java.awt.GridBagConstraints;
 
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import javax.swing.border.LineBorder;
 
 import kube.configuration.Config;
 import kube.view.components.Buttons.RulesButton;

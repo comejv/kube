@@ -49,7 +49,7 @@ public class Buttons {
     public static class GameFirstPhaseButton extends JButton {
         public GameFirstPhaseButton(String name) {
             super(name);
-            setPreferredSize(new Dimension(300, 100));
+            setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
 
