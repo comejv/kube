@@ -33,19 +33,24 @@ public class Icon extends JLabel {
     public void recolor(HSL hsl) {
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
+        BufferedImage recoloredImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int c = originalImage.getRGB(x, y);
-                if (c == 0) {
-                    continue;
+                int rgb = originalImage.getRGB(x, y);
+                int alpha = (rgb >> 24) & 0xFF;
+                if (alpha == 0) {
+                    continue; // Skip transparent pixels
                 }
-                HSL imgHsl = new HSL(c);
-                imgHsl.setHue(hsl.getHue());
-                imgHsl.setSaturation(hsl.getSaturation() + 0.3);
-                originalImage.setRGB(x, y, c & (0xFF000000) | imgHsl.toRGB());
+
+                HSL pixelHsl = new HSL(rgb);
+                pixelHsl.setHue(hsl.getHue());
+                pixelHsl.setLuminance(hsl.getLuminance() * pixelHsl.getLuminance());
+                pixelHsl.setSaturation(hsl.getSaturation() * pixelHsl.getLuminance());
+                recoloredImage.setRGB(x, y, (alpha << 24) | pixelHsl.toRGB());
             }
         }
+        originalImage = recoloredImage;
         repaint();
     }
 
