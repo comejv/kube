@@ -11,6 +11,7 @@ import kube.model.action.Action;
 import kube.model.action.move.Move;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.midLevelAI;
+import kube.model.ai.presquemid;
 import kube.model.ai.randomAI;
 
 public class Simulation implements Runnable {
@@ -60,14 +61,16 @@ public class Simulation implements Runnable {
 
     private void aiTrainingGames() throws Exception {
         Kube k = new Kube(true);
-        int nGame = 5000;
-        for (int i = 0; i < nGame; i++) {
+        int nGames = 100;
+        for (int i = 0; i < nGames; i++) {
+            // Phase 1
             int seed = findSeedWithEquivalentDistributionToPlayers();
-            k.init(new randomAI(0, seed), new randomAI(0, seed), seed);
+            k.init( new midLevelAI(50), new midLevelAI(50), seed);
             k.getCurrentPlayer().getAI().constructionPhase();
             k.updatePhase();
             k.getCurrentPlayer().getAI().constructionPhase();
             k.updatePhase();
+            // Phsae 2
             k.setCurrentPlayer(k.getP1());
             while (k.canCurrentPlayerPlay()) {
                 Move move = k.getCurrentPlayer().getAI().nextMove();

@@ -2,6 +2,7 @@ package kube.model;
 
 import java.util.Random;
 
+
 import java.util.Comparator;
 
 public enum Color {
@@ -80,6 +81,10 @@ public enum Color {
      */
     public static Color[] getAllColored() {
         return new Color[] { RED, GREEN, BLUE, YELLOW, BLACK };
+    }
+
+    public static Color[] getAllColoredAndJokers() {
+        return new Color[] { RED, GREEN, BLUE, YELLOW, BLACK, WHITE, NATURAL };
     }
 
     /**
