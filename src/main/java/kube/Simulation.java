@@ -4,7 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 import kube.model.Kube;
 import kube.model.Mountain;
 
@@ -44,16 +44,16 @@ public class Simulation {
     }
 
     // A method to fill a moutain with random colors + 2 white and 2 natural
-    private void randomFillMountain(Mountain m, ArrayList<Color> bag) {
-        Color c;
+    private void randomFillMountain(Mountain m, ArrayList<ModelColor> bag) {
+        ModelColor c;
         int n_white = 2, n_natural = 2;
         for (int i = 0; i < m.getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                c = Color.getRandomColor();
-                if (c == Color.NATURAL && n_natural > 0) {
+                c = ModelColor.getRandomColor();
+                if (c == ModelColor.NATURAL && n_natural > 0) {
                     n_natural--;
                     m.setCase(i, j, c);
-                } else if (c == Color.WHITE && n_white > 0) {
+                } else if (c == ModelColor.WHITE && n_white > 0) {
                     n_white--;
                     m.setCase(i, j, c);
                 } else {
@@ -70,7 +70,7 @@ public class Simulation {
         while (removables.size() > 0) {
             removablesSum += removables.size();
             Point p = removables.remove(r.nextInt(removables.size()));
-            m.setCase(p.x, p.y, Color.EMPTY);
+            m.setCase(p.x, p.y, ModelColor.EMPTY);
             removables = m.removable();
         }
         return removablesSum / 21;
@@ -81,7 +81,7 @@ public class Simulation {
         Random r = new Random();
         int nMove = 0;
         float availableSum = 0;
-        Color c = Color.NATURAL;
+        ModelColor c = ModelColor.NATURAL;
         ArrayList<Point> addable = m.compatible(c);
         while (addable.size() > 0) {
             availableSum += addable.size();

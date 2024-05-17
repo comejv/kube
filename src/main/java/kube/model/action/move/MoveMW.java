@@ -2,7 +2,7 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveMW extends Move {
 
@@ -23,7 +23,7 @@ public class MoveMW extends Move {
       * @param color the color of the moved cube
       */
     public MoveMW(Point from) {
-        super(Color.WHITE);
+        super(ModelColor.WHITE);
         setFrom(from);
     }
 
@@ -42,12 +42,35 @@ public class MoveMW extends Move {
         this(new Point(fromX, fromY));
     }
 
+    /**
+     * Constructor of the class MoveMW from a save string
+     * 
+     * @param save the string to load
+     */
+    public MoveMW(String save) {
+
+        super(ModelColor.WHITE);
+
+        String from;
+        String[] parts, coords;
+
+        parts = save.split(";");
+        from = parts[2].substring(1, parts[2].length() - 1);
+
+        coords = from.split(",");
+        setFrom(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+    }
+
     /**********
      * SETTER
      **********/
 
     public void setFrom(Point from) {
         this.from = from;
+    }
+
+    public void setFrom(int x, int y) {
+        setFrom(new Point(x, y));
     }
 
     /**********
@@ -88,5 +111,5 @@ public class MoveMW extends Move {
         return "Passer son tour " +
                 getColor().forDisplay() +
                 " depuis (" + getFrom().x + ", " + getFrom().y + ")";
-    }
+    }   
 }

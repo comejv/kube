@@ -26,7 +26,7 @@ public class Kube {
      **********/
 
     private Player p1, p2, currentPlayer;
-    private ArrayList<Color> bag;
+    private ArrayList<ModelColor> bag;
     private boolean penality;
     private History history;
     private int baseSize;
@@ -63,7 +63,7 @@ public class Kube {
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
-        setBag(new ArrayList<Color>());
+        setBag(new ArrayList<ModelColor>());
         fillBag();
         fillBase();
         setHistory(new History());
@@ -89,7 +89,7 @@ public class Kube {
      * SETTERS
      **********/
 
-    public void setBag(ArrayList<Color> b) {
+    public void setBag(ArrayList<ModelColor> b) {
         bag = b;
     }
 
@@ -125,11 +125,11 @@ public class Kube {
         baseSize = b;
     }
 
-    public void setPlayerCase(Player player, Point point, Color color) {
+    public void setPlayerCase(Player player, Point point, ModelColor color) {
         player.getMountain().setCase(point, color);
     }
 
-    public void setPlayerCase(Player player, int x, int y, Color color) {
+    public void setPlayerCase(Player player, int x, int y, ModelColor color) {
         player.getMountain().setCase(x, y, color);
     }
 
@@ -137,7 +137,7 @@ public class Kube {
      * GETTERS
      **********/
 
-    public ArrayList<Color> getBag() {
+    public ArrayList<ModelColor> getBag() {
         return bag;
     }
 
@@ -173,11 +173,11 @@ public class Kube {
         return phase;
     }
 
-    public Color getPlayerCase(Player player, Point point) {
+    public ModelColor getPlayerCase(Player player, Point point) {
         return player.getMountain().getCase(point);
     }
 
-    public Color getPlayerCase(Player player, int x, int y) {
+    public ModelColor getPlayerCase(Player player, int x, int y) {
         return player.getMountain().getCase(x, y);
     }
 
@@ -221,7 +221,7 @@ public class Kube {
 
         // Fill the bag with nCubePerColor cubes of each color
         bag = new ArrayList<>();
-        for (Color c : Color.getAllColored()) {
+        for (ModelColor c : ModelColor.getAllColored()) {
             for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
                 bag.add(c);
             }
@@ -279,8 +279,8 @@ public class Kube {
      */
     public void distributeCubesToPlayers() throws UnsupportedOperationException {
 
-        HashMap<Color, Integer> p1Cubes, p2Cubes;
-        Color cAvailable;
+        HashMap<ModelColor, Integer> p1Cubes, p2Cubes;
+        ModelColor cAvailable;
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
@@ -291,12 +291,12 @@ public class Kube {
         p1Cubes = new HashMap<>();
         p2Cubes = new HashMap<>();
 
-        p1Cubes.put(Color.WHITE, 2);
-        p2Cubes.put(Color.WHITE, 2);
-        p1Cubes.put(Color.NATURAL, 2);
-        p2Cubes.put(Color.NATURAL, 2);
+        p1Cubes.put(ModelColor.WHITE, 2);
+        p2Cubes.put(ModelColor.WHITE, 2);
+        p1Cubes.put(ModelColor.NATURAL, 2);
+        p2Cubes.put(ModelColor.NATURAL, 2);
 
-        for (Color c : Color.getAllColored()) {
+        for (ModelColor c : ModelColor.getAllColored()) {
             p1Cubes.put(c, 0);
             p2Cubes.put(c, 0);
         }
@@ -334,7 +334,7 @@ public class Kube {
         Player previousPlayer;
         boolean cubeRemovable;
         boolean cubeCompatible;
-        ArrayList<Color> additionals;
+        ArrayList<ModelColor> additionals;
         boolean accessible, sameColor;
 
         // Check if the phase is the game phase
@@ -421,7 +421,7 @@ public class Kube {
 
         Player player;
         Player previousPlayer;
-        Color color;
+        ModelColor color;
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
@@ -582,7 +582,7 @@ public class Kube {
         // additionals)
         else if (move.isWhite() && move.isFromAdditionals()) {
             // Cancel the move
-            player.addToAdditionals(Color.WHITE);
+            player.addToAdditionals(ModelColor.WHITE);
             player.setWhiteUsed(player.getWhiteUsed() - 1);
         }
         // Catching if the move is a MoveMW (placing a white cube from player's
@@ -686,7 +686,7 @@ public class Kube {
 
         ArrayList<Move> moves;
         Player previousPlayer;
-        Color cMountain;
+        ModelColor cMountain;
         MoveAA aa;
         MoveMA ma;
 
@@ -705,7 +705,7 @@ public class Kube {
         moves = new ArrayList<>();
 
         // Adding the list of MoveAA
-        for (Color c : previousPlayer.getAdditionals()) {
+        for (ModelColor c : previousPlayer.getAdditionals()) {
             aa = new MoveAA(c);
             moves.add(aa);
         }
@@ -728,7 +728,7 @@ public class Kube {
      */
     synchronized public ArrayList<Move> moveSet() throws UnsupportedOperationException {
 
-        Color cMountain;
+        ModelColor cMountain;
         Move mm, mw, am, aw;
         ArrayList<Move> moves;
 
@@ -747,7 +747,7 @@ public class Kube {
         // Adding list of MoveMM and MoveMW moves
         for (Point start : getPlayerRemovable(getCurrentPlayer())) {
             cMountain = getPlayerCase(getCurrentPlayer(), start);
-            if (cMountain == Color.WHITE) {
+            if (cMountain == ModelColor.WHITE) {
                 mw = new MoveMW(start);
                 moves.add(mw);
             } else {
@@ -759,8 +759,8 @@ public class Kube {
         }
 
         // Adding the list AM/AW moves
-        for (Color cAdditionals : getCurrentPlayer().getAdditionals()) {
-            if (cAdditionals == Color.WHITE) {
+        for (ModelColor cAdditionals : getCurrentPlayer().getAdditionals()) {
+            if (cAdditionals == ModelColor.WHITE) {
                 aw = new MoveAW();
                 moves.add(aw);
             } else {

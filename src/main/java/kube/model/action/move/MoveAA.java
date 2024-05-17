@@ -1,8 +1,10 @@
 package kube.model.action.move;
 
-import kube.model.Color;
+import java.io.Serializable;
 
-public class MoveAA extends Move {
+import kube.model.ModelColor;
+
+public class MoveAA extends Move implements Serializable {
 
     /**********
      * CONSTRUCTOR
@@ -12,8 +14,24 @@ public class MoveAA extends Move {
       * Constructor of the class MoveAM
       * @param color the color of the moved cube
       */
-    public MoveAA(Color c) {
+    public MoveAA(ModelColor c) {
         super(c);
+    }
+
+    /**
+     * Constructor of the class MoveAM from a save string
+     * 
+     * @param save the string to load
+     */
+    public MoveAA(String save) {
+
+        String color;
+        String [] parts;
+
+        parts = save.split(";");
+        color = parts[1];
+
+        setColor(ModelColor.getColor(Integer.parseInt(color)));
     }
 
     /**********

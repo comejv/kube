@@ -219,8 +219,8 @@ public class Game implements Runnable {
     }
 
     synchronized public void swap(Swap s) {
-        Color c = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos1().x, s.getPos1().y);
-        Color c2 = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos2().x, s.getPos2().y);
+        ModelColor c = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos1().x, s.getPos1().y);
+        ModelColor c2 = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos2().x, s.getPos2().y);
         k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos1(), c2);
         k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos2(), c);
     }
