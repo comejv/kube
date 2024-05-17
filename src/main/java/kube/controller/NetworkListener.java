@@ -20,10 +20,11 @@ public class NetworkListener implements Runnable{
     public void run() {
         while(true){
             Action action = (Action) network.receive();
-            Config.debug("Received action: " + action);
             if (action != null) {
+                Config.debug("Received action: " + action);
                 networkToModel.add(action);
             }
+
         }
     }
     
