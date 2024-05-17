@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
+import kube.model.Kube;
 import kube.model.action.move.Move;
 
 public class RandomAI extends MiniMaxAI {
@@ -26,6 +27,11 @@ public class RandomAI extends MiniMaxAI {
         setR(new Random());
         setTime(1000);
     }
+    @Override
+    public int evaluation(Kube k){
+        return 0;
+    }
+    
     @Override
     public Move selectMove(HashMap<Move, Integer> movesMap) {
         ArrayList<Move> moves = getK3().moveSet();
