@@ -213,6 +213,14 @@ public class Kube {
         }
     }
 
+    public Player getRandomPlayer(){
+        if (new Random().nextInt(2) == 0){
+            return getP1();
+        } else {
+            return getP2();
+        }
+    }
+
     /**********
      * PREPARATION PHASE METHODS
      **********/

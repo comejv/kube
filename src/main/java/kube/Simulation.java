@@ -7,29 +7,87 @@ import java.util.Random;
 import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
-
+import kube.model.action.Action;
+import kube.model.action.move.Move;
 import kube.model.ai.MiniMaxAI;
+import kube.model.ai.midLevelAI;
+import kube.model.ai.randomAI;
 
-public class Simulation {
-    public static void main(String[] args) {
+public class Simulation implements Runnable {
+    int winJ1;
+    int winJ2;
+    public static void main(String[] args) throws Exception {
         Simulation s = new Simulation();
-        //s.findSeedWithEquivalentDistributionToPlayers();
-        //s.simulateNumberOfCubeWithdrawable();
-        //s.simulateNumberOfSlotAvailable();
-        s.testSeededRandom();
+        s.winJ1 = 0;
+        s.winJ2 = 0;
+        Thread t1 = new Thread(s);
+        Thread t2 = new Thread(s);
+        Thread t3 = new Thread(s);
+        Thread t4 = new Thread(s);
+        t1.start();
+        t2.start();
+        t3.start();
+        t4.start();
+        // Wait for each thread to finish
+        t1.join();
+        t2.join();
+        t3.join();
+        t4.join();
+        
+        // Print winJ1 and winJ2 after all threads have finished
+        System.out.println("Wins J1: " + s.winJ1);
+        System.out.println("Wins J2: " + s.winJ2);
+        System.out.println("Winrate J1: " + (double)s.winJ1 / (s.winJ1 + s.winJ2) * 100 + "%");
+        System.out.println("Winrate J2: " + (double)s.winJ2 / (s.winJ1 + s.winJ2) * 100 + "%");
     }
 
-    private void iaTrainingGames(){
+
+    @Override
+    public void run() {
+        try {
+            aiTrainingGames();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    synchronized void upWinJ1(){
+        winJ1++;
+    }
+    synchronized void upWinJ2(){
+        winJ2++;
+    }
+
+    private void aiTrainingGames() throws Exception {
         Kube k = new Kube(true);
-        k.init();
+        int nGame = 5000;
+        for (int i = 0; i < nGame; i++) {
+            int seed = findSeedWithEquivalentDistributionToPlayers();
+            k.init(new randomAI(0, seed), new randomAI(0, seed), seed);
+            k.getCurrentPlayer().getAI().constructionPhase();
+            k.updatePhase();
+            k.getCurrentPlayer().getAI().constructionPhase();
+            k.updatePhase();
+            k.setCurrentPlayer(k.getP1());
+            while (k.canCurrentPlayerPlay()) {
+                Move move = k.getCurrentPlayer().getAI().nextMove();
+                k.playMove(move);
+            }
+            if (k.getCurrentPlayer() == k.getP1()) {
+                upWinJ2();
+            } else {
+                upWinJ1();
+            }
+            System.out.println("Partie n°" + i + " finie");
+        }
     }
 
     private void testSeededRandom() {
         int seed = 180;
         Kube k = new Kube(true);
         Kube k2 = new Kube(true);
-        k.init(new MiniMaxAI(0,1), new MiniMaxAI(0,1), seed);
-        k2.init(new MiniMaxAI(0,1), new MiniMaxAI(0,1), seed);
+        k.init(new MiniMaxAI(0, 1), new MiniMaxAI(0, 1), seed);
+        k2.init(new MiniMaxAI(0, 1), new MiniMaxAI(0, 1), seed);
 
         k.getCurrentPlayer().getAI().constructionPhase();
         k.updatePhase();
@@ -47,10 +105,10 @@ public class Simulation {
     }
 
     private int findSeedWithEquivalentDistributionToPlayers() {
-        int  seed;
+        int seed;
         Random r = new Random();
         while (true) {
-            seed = r.nextInt(1000);
+            seed = r.nextInt();
             Kube k = new Kube();
             k.fillBag(seed);
             k.fillBase();
@@ -59,7 +117,7 @@ public class Simulation {
                 break;
             }
         }
-        System.out.println("Seed avec une même distribution de cube pour les joueurs :" + seed);
+        //System.out.println("Seed avec une même distribution de cube pour les joueurs :" + seed);
         return seed;
 
     }
@@ -143,4 +201,5 @@ public class Simulation {
         return availableSum / nMove;
 
     }
+
 }

@@ -37,7 +37,7 @@ public class Game implements Runnable {
     public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init(new midLevelAI(100), new RandomAI(100), 180);
+        k3.init(new randomAI(100), new midLevelAI(100), 180);
 
         // Construction phase
         while (k3.getPhase() == 1) {
@@ -76,7 +76,7 @@ public class Game implements Runnable {
         }
 
         Config.debug("Fin phase 1");
-        // Game phase
+        k3.setCurrentPlayer(k3.getRandomPlayer());
         modeleToView.add(new Action(Action.PRINT_STATE));
         while (k3.canCurrentPlayerPlay()) {
             try {

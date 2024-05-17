@@ -327,10 +327,6 @@ public class Player {
      * @return the list of playable colors
      */
     public HashSet<Color> getPlayableColors() throws UnsupportedOperationException {
-        
-        if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("getPlayableColors: Forbidden operation, the player hasn't validate his building");
-        }
 
         HashSet<Color> playable;
         HashSet<Color> toTest;
