@@ -39,11 +39,18 @@ public class Action implements Serializable{
     public static final int PRINT_ASK_NB_PLAYERS = 34;
     public static final int PRINT_ASK_PLAYER_NAME = 35;
     public static final int PRINT_ASK_GAME_MODE = 36;
+    //NETWORK
     public static final int PRINT_ASK_HOST_OR_JOIN = 37;
     public static final int PRINT_ASK_IP = 38;
-    //NETWORK
     public static final int INIT_K3 = 39;
     public static final int OTHER_PLAYER = 40;
+    public static final int PRINT_WAITING_FOR_CONNECTION = 41;
+    public static final int PRINT_CONNECTION_ETABLISHED = 42;
+    public static final int PRINT_CONNECTION_ERROR = 43;
+    public static final int PRINT_NOT_YOUR_TURN = 44;
+    public static final int MOVE_FROM_NETWORK = 45;
+
+
     private int type;
     private Object data;
 

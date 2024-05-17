@@ -4,21 +4,16 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import kube.model.action.Action;
-import kube.model.action.Queue;
 
 
-public abstract class Network implements Runnable{
+public abstract class Network {
     
     private String ip;
     private int port;
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-    private Queue<Action> networkToModel;
 
-    Network(Queue<Action> networkToModel) {
-        this.networkToModel = networkToModel;
-    }
 
     public abstract boolean connect(String ip, int port);
     public abstract boolean disconnect();
@@ -61,15 +56,6 @@ public abstract class Network implements Runnable{
         return false;
     }
     
-    @Override
-    public void run() {
-        while (true) {
-            Action action = receive();
-            if (action != null) {
-                System.out.println("Received action: " + action);
-                networkToModel.add(action);
-            }
-        }
-    }
+
     
 }

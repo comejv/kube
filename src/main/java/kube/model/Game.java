@@ -2,7 +2,6 @@ package kube.model;
 
 import kube.model.ai.*;
 
-
 import java.util.Random;
 
 import kube.configuration.Config;
@@ -136,21 +135,23 @@ public class Game implements Runnable {
     }
 
     public void onlineGame(int whoAmI) {
-        Config.debug("Démarrage de la partie en ligne en tant que "+ (whoAmI == host ? "hôte" : "invité")) ;
-        Player player;
+        Config.debug("Démarrage de la partie en ligne en tant que " + (whoAmI == host ? "hôte" : "invité"));
+        Player player,other;
         // Construction phase
         eventsToNetwork.add(new Action(Action.SHOW_ALL));
 
         if (whoAmI == host) {
-            
+
             player = k3.getP1();
+            other = k3.getP2();
             eventsToNetwork.add(new Action(Action.INIT_K3, k3.getK3()));
             eventsToNetwork.add(new Action(Action.OTHER_PLAYER, k3.getP2()));
         } else {
             player = k3.getP2();
+            other = k3.getP1();
 
         }
-        while (k3.getPhase() == 1) {
+        while (k3.getPhase() == 1 && player.getHasValidateBuilding() == false) {
             k3.setCurrentPlayer(player);
             try {
                 Action a = controllerToModele.remove();
@@ -162,12 +163,13 @@ public class Game implements Runnable {
                     case Action.VALIDATE:
                         boolean isValidated;
                         if ((isValidated = player.validateBuilding())) {
-                            Config.debug("Validation construction j" + player.getId());
+                            player.setHasValidateBuilding(true);
                             eventsToNetwork.add(new Action(Action.OTHER_PLAYER, player));
                         }
                         k3.updatePhase();
                         modeleToView.add(new Action(Action.PRINT_VALIDATE, isValidated));
                         break;
+
                     case Action.SHUFFLE:
                         utilsAI.randomFillMountain(player, new Random());
                         modeleToView.add(new Action(Action.PRINT_RANDOM));
@@ -181,18 +183,39 @@ public class Game implements Runnable {
                         } else {
                             k3.setP1((Player) a.getData());
                         }
-
                         k3.updatePhase();
                         break;
-                    
+
                     default:
                         modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
                         break;
                 }
             } catch (Exception e) {
-                modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
+                modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
             }
 
+        }
+        modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
+
+        while (k3.getPhase() == 1 && other.getHasValidateBuilding() == false) {
+            //Waiting for the other player to validate his building
+            Action a = controllerToModele.remove();
+            if (a.getType() == Action.OTHER_PLAYER) {
+                if (whoAmI == host) {
+                    k3.setP2((Player) a.getData());
+                } else {
+                    k3.setP1((Player) a.getData());
+                }
+                k3.updatePhase();
+            }
+            else {
+                modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
+            }
+
+
+        }
+        if (whoAmI == host) {
+            eventsToNetwork.add(new Action(Action.INIT_K3, k3.getK3()));
         }
         // END PHASE 1
 
@@ -200,7 +223,14 @@ public class Game implements Runnable {
             Action a = controllerToModele.remove();
             switch (a.getType()) {
                 case Action.MOVE:
-                    playMove(a);
+                    if (k3.getCurrentPlayer() == player) {
+                        playMove(a);
+                    }
+                    break;
+                case Action.MOVE_FROM_NETWORK:
+                    if (k3.getCurrentPlayer() == other) {
+                        playMove(a);
+                    }
                     break;
                 case Action.UNDO:
                     undo();
@@ -211,6 +241,9 @@ public class Game implements Runnable {
                 default:
                     modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
                     break;
+            }
+            if (k3.getCurrentPlayer() == other) {
+                modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
             }
         }
 

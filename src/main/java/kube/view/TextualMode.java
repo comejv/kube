@@ -132,6 +132,16 @@ public class TextualMode implements Runnable {
                 case Action.PRINT_ASK_IP:
                     printAskIP();
                     break;
+                case Action.PRINT_CONNECTION_ETABLISHED:
+                    printConnectionEtablished();
+                    break;
+                case Action.PRINT_WAITING_FOR_CONNECTION:
+                    printWaitingForConnection((int)action.getData());
+                    break;
+                case Action.PRINT_NOT_YOUR_TURN:
+                    printOhterPlayerTurn();
+                    break;
+
                 default:
                     break;
             }
@@ -328,4 +338,15 @@ public class TextualMode implements Runnable {
         System.out.println("Entrez 1 pour héberger, 2 pour rejoindre");
     }
 
+    private void printWaitingForConnection(int port) {
+        System.out.println("En attente de connexion sur le port " + port);
+    }
+
+    private void printConnectionEtablished() {
+        System.out.println("Connexion établie");
+    }
+
+    private void printOhterPlayerTurn() {
+        System.out.println("En attente de l'autre joueur");
+    }
 }

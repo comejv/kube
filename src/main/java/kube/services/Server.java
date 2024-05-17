@@ -1,8 +1,6 @@
 package kube.services;
 
-import kube.configuration.*;
 import kube.model.action.Action;
-import kube.model.action.Queue;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -14,8 +12,8 @@ public class Server extends Network {
     private ServerSocket serverSocket;
     private Socket clientSocket;
 
-    public Server(Queue<Action> networkToModel,int port) {
-        super(networkToModel);
+    public Server(int port) {
+        
         init(port);
     }
 
@@ -65,7 +63,6 @@ public class Server extends Network {
 
     public boolean send(Action data) {
         try {
-            Config.debug("Server send" + data);
             if (getOut() != null) {
                 getOut().writeObject(data);
             } else {
@@ -80,7 +77,6 @@ public class Server extends Network {
     public Action receive() {
         try {
             Action o = (Action) getIn().readObject();
-            Config.debug("Server receive " + o);
             return o;
         } catch (Exception e) {
             return null;
