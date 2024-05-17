@@ -8,8 +8,9 @@ import java.util.Objects;
 import kube.model.ai.abstractAI;
 
 import java.awt.Point;
+import java.io.Serializable;
 
-public class Player {
+public class Player implements Serializable {
 
     /**********
      * ATTRIBUTES

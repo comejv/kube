@@ -46,7 +46,7 @@ public class MoveAW extends Move {
      */
     @Override
     public String forSave() {
-        return "{AW;" + super.forSave() + "}";
+        return "{AW}";
     }
 
     @Override

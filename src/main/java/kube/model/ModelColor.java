@@ -145,6 +145,10 @@ public enum ModelColor {
      * @return a string representation of the color for saving
      */
     public String forSave() {
-        return this.name();
+        return getColorCode() + "";
+    }
+
+    public static ModelColor fromSave(String save) {
+        return getColor(Integer.parseInt(save));
     }
 }

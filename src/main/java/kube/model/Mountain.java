@@ -3,8 +3,9 @@ package kube.model;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.awt.Point;
+import java.io.Serializable;
 
-public class Mountain {
+public class Mountain implements Serializable {
 
     /**********
      * ATTRIBUTES

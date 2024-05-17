@@ -45,6 +45,30 @@ public class MoveMM extends Move {
         this(new Point(fromX, fromY), new Point(toX, toY), color);
     }
 
+    /**
+     * Constructor of the class MoveMM from a save string
+     * 
+     * @param save the string to load
+     */
+    public MoveMM(String save) {
+
+        String from, to, color;
+        String[] parts, coords;
+
+        parts = save.split(";");
+        color = parts[1];
+        from = parts[2].substring(1, parts[2].length() - 1);
+        to = parts[3].substring(1, parts[3].length() - 1);
+
+        setColor(ModelColor.getColor(Integer.parseInt(color)));
+
+        coords = from.split(",");
+        setFrom(new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
+
+        coords = to.split(",");
+        setTo(new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
+    }
+
     /**********
      * SETTERS
      **********/
@@ -102,5 +126,4 @@ public class MoveMM extends Move {
                 " depuis (" + getFrom().x + ", " + getFrom().y + ")" +
                 " en (" + getTo().x + ", " + getTo().y + ")";
     }
-
 }

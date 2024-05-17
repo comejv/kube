@@ -1,12 +1,12 @@
 package kube.model.action.move;
 
 import java.awt.Point;
+import java.io.Serializable;
 
-import kube.model.action.move.MoveMW;
 import kube.model.ModelColor;
 import kube.model.Player;
 
-public abstract class Move {
+public abstract class Move implements Serializable {
 
     /**********
      * ATTRIBUTES
@@ -105,9 +105,7 @@ public abstract class Move {
      * @return a string representation of the move for saving
      */
     public String forSave() {
-        // TODO: check if it is needed to add the player id
-        // or if we can get it from the first player of the game
-        return getPlayer().getId() + ";" + getColor().forSave();
+        return getColor().forSave();
     }
 
     @Override
@@ -134,25 +132,30 @@ public abstract class Move {
         return getColor() == that.getColor();
     }
 
-    static public Move fromSave(String save) {
+    public static Move fromSave(String save) throws IllegalArgumentException {
 
-        String moveType, color, player, from, to;
-        String [] parts, pointCoordinates;
+        String moveType;
+        String [] parts;
 
         save = save.substring(1, save.length() - 1);
         parts = save.split(";");
-
         moveType = parts[0];
-        player = parts[1];
-        color = parts[2];
 
         switch (moveType) {
             case "MW":
-                from = parts[3].substring(1, parts[2].length() - 1);
-                pointCoordinates = from.split(",");
-                return new MoveMW(Integer.parseInt(pointCoordinates[0]), Integer.parseInt(pointCoordinates[1]));
+                return new MoveMW(save);
+            case "MM":
+                return new MoveMM(save);
+            case "AM":
+                return new MoveAM(save);
+            case "AW":
+                return new MoveAW();
+            case "MA":
+                return new MoveMA(save);
+            case "AA":
+                return new MoveAA(save);
+            default:
+                throw new IllegalArgumentException("Unknown move type");
         }
-
-        return null;
     }
 }
