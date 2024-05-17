@@ -13,6 +13,7 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 import javax.swing.SwingConstants;
 
 import kube.configuration.Config;
@@ -27,7 +28,6 @@ public class MenuPanel extends JPanel {
     private GraphicsEnvironment ge;
 
     public MenuPanel(ActionListener buttonListener) {
-        setLayout(new CardLayout());
 
         try {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -40,28 +40,24 @@ public class MenuPanel extends JPanel {
             Config.debug("Error : ");
             System.err.println("Could not load buttons font, using default.");
         }
-
+        
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
-
+        
+        setLayout(new OverlayLayout(this));
+        
         JPanel modal = new JPanel();
         modal.setLayout(new GridBagLayout());
-        add("modal", modal);
 
-        // // Rules panel
-        // JPanel rulesPanel = new JPanel(new GridBagLayout());
-        // GridBagConstraints elemGBC = new GridBagConstraints();
-        // elemGBC.gridx = 0;
-        // elemGBC.gridy = 0;
-        // elemGBC.fill = GridBagConstraints.BOTH;
-        // elemGBC.gridwidth = GridBagConstraints.REMAINDER;
-        // elemGBC.anchor = GridBagConstraints.CENTER;
-        // elemGBC.weighty = .5;
-        // elemGBC.weightx = .5;
-        // rulesPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
-        // rulesPanel.setBackground(new Color(0, 0, 0, 125));
-        // add("rules", rulesPanel);
+        JPanel glassPane = new GlassPane();
+
+        // Rules panel
+        JPanel rulesPanel = new Overlay(null);
+        
+        add(rulesPanel);
+        add(glassPane);
+        add(modal);
 
         // Game title
         JLabel title = new JLabel("KUBE", SwingConstants.CENTER);
@@ -105,9 +101,9 @@ public class MenuPanel extends JPanel {
         elemGBC.weightx = 1;
         modal.add(buttonsPanel, elemGBC);
 
-        // ****************************************************************************************//
+        // ***************************************************************************************//
         // START BUTTONS //
-        // ****************************************************************************************//
+        // ***************************************************************************************//
         JPanel startButtons = new JPanel();
         startButtons.setLayout(new GridBagLayout());
         GridBagConstraints buttonsGBC = new GridBagConstraints();
@@ -124,26 +120,33 @@ public class MenuPanel extends JPanel {
             CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
             cl.show(buttonsPanel, "players");
         });
-        startButtons.add(local, buttonsGBC);
-
+        
         // Online button
         JButton online = new MenuButton("ONLINE");
-        startButtons.add(online, buttonsGBC);
-
-        // Rules button
-        JButton rules = new MenuButton("RULES");
-        startButtons.add(rules, buttonsGBC);
-
+        
+        
         // Quit button
         JButton quit = new MenuButton("QUIT");
+        
+        // Rules button
+        JButton rules = new MenuButton("RULES");
+        rules.addActionListener(e -> {
+            // Switch to the players panel
+            glassPane.setVisible(true);
+            rulesPanel.setVisible(true);
+        });
+        
+        startButtons.add(local, buttonsGBC);
+        startButtons.add(online, buttonsGBC);
+        startButtons.add(rules, buttonsGBC);
         startButtons.add(quit, buttonsGBC);
-
+        
         buttonsPanel.add("start", startButtons);
-
-        // ****************************************************************************************//
+        
+        // ***************************************************************************************//
         // LOCAL //
-        // ****************************************************************************************//
-
+        // ***************************************************************************************//
+        
         // Players buttons - fill entire row
         JPanel playersButtons = new JPanel();
         playersButtons.setLayout(new GridBagLayout());
@@ -153,18 +156,23 @@ public class MenuPanel extends JPanel {
         buttonsGBC.gridy = GridBagConstraints.RELATIVE;
         buttonsGBC.fill = GridBagConstraints.BOTH;
         buttonsGBC.insets = insets;
-
+        
         JButton playerOne = new MenuButton("JOUEUR 1");
         playersButtons.add(playerOne, buttonsGBC);
-
+        
         JButton playerTwo = new MenuButton("JOUEUR 2");
         playersButtons.add(playerTwo, buttonsGBC);
-
+        
         JButton play = new MenuButton("PLAY");
         playersButtons.add(play, buttonsGBC);
         play.addActionListener(buttonListener);
         play.setActionCommand("play");
-
+        
         buttonsPanel.add("players", playersButtons);
+        
+        // ***************************************************************************************//
+        // RULES //
+        // ***************************************************************************************//
+        
     }
 }
