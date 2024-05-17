@@ -10,34 +10,30 @@ public class MoveMW extends Move {
      * ATTRIBUTE
      **********/
 
-    Point from;
-    
+    private Point from;
+
     /**********
      * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-
-      * @param from the source of the move
-      * @param color the color of the moved cube
-      */
+    /**
+     * Constructor of the class MoveAM
+     * 
+     * @param from  the source of the move
+     * @param color the color of the moved cube
+     */
     public MoveMW(Point from) {
         super(ModelColor.WHITE);
         setFrom(from);
     }
 
-    /**********
-     * CONSTRUCTORS
-     **********/
-
-     /**
-      * Constructor of the class MoveAM
-
-      * @param fromX the x position of the source of the move
-      * @param fromY the y position of the source of the move
-      * @param color the color of the moved cube
-      */
+    /**
+     * Constructor of the class MoveAM
+     * 
+     * @param fromX the x position of the source of the move
+     * @param fromY the y position of the source of the move
+     * @param color the color of the moved cube
+     */
     public MoveMW(int fromX, int fromY) {
         this(new Point(fromX, fromY));
     }
@@ -62,7 +58,7 @@ public class MoveMW extends Move {
     }
 
     /**********
-     * SETTER
+     * SETTERS
      **********/
 
     public void setFrom(Point from) {
@@ -111,5 +107,5 @@ public class MoveMW extends Move {
         return "Passer son tour " +
                 getColor().forDisplay() +
                 " depuis (" + getFrom().x + ", " + getFrom().y + ")";
-    }   
+    }
 }

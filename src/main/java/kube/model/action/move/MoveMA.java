@@ -20,7 +20,7 @@ public class MoveMA extends Move {
     /**
      * Constructor of the class MoveMA
      * 
-     * @param from the source of the move
+     * @param from  the source of the move
      * @param color the color of the moved cube
      */
     public MoveMA(Point from, ModelColor color) {
@@ -44,7 +44,6 @@ public class MoveMA extends Move {
      * 
      * @param save the string to load
      */
-
     public MoveMA(String save) {
 
         String color, from;
@@ -61,7 +60,7 @@ public class MoveMA extends Move {
     }
 
     /**********
-     * SETTER
+     * SETTERS
      **********/
 
     public void setFrom(Point from) {
@@ -71,7 +70,7 @@ public class MoveMA extends Move {
     public void setFrom(int x, int y) {
         setFrom(new Point(x, y));
     }
-    
+
     /**********
      * GETTER
      **********/

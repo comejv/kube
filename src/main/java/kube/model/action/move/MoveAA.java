@@ -6,15 +6,16 @@ import kube.model.ModelColor;
 public class MoveAA extends Move {
 
     /**********
-     * CONSTRUCTOR
+     * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      * @param color the color of the moved cube
-      */
-    public MoveAA(ModelColor c) {
-        super(c);
+    /**
+     * Constructor of the class MoveAM
+     * 
+     * @param color the color of the moved cube
+     */
+    public MoveAA(ModelColor color) {
+        super(color);
     }
 
     /**
@@ -25,7 +26,7 @@ public class MoveAA extends Move {
     public MoveAA(String save) {
 
         String color;
-        String [] parts;
+        String[] parts;
 
         parts = save.split(";");
         color = parts[1];
@@ -38,10 +39,10 @@ public class MoveAA extends Move {
      **********/
 
     /**
-      * Check if the move is from the additionals 
-      *
-      * @return true if the move is from the additionals, false otherwise
-      */
+     * Check if the move is from the additionals
+     *
+     * @return true if the move is from the additionals, false otherwise
+     */
     @Override
     public boolean isFromAdditionals() {
         return true;

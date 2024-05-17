@@ -16,12 +16,12 @@ public class Player implements Serializable {
      * ATTRIBUTES
      **********/
 
-    String name;
-    int id, whiteUsed;
-    Mountain mountain;
-    boolean hasValidateBuilding;
-    ArrayList<ModelColor> additionals;
-    HashMap<ModelColor, Integer> avalaibleToBuild;
+    private String name;
+    private int id, whiteUsed;
+    private Mountain initialMountain, mountain;
+    private boolean hasValidateBuilding;
+    private ArrayList<ModelColor> additionals;
+    private HashMap<ModelColor, Integer> avalaibleToBuild;
 
     /**********
      * CONSTRUCTOR
@@ -43,7 +43,7 @@ public class Player implements Serializable {
     }
 
     /**********
-     * SETTER
+     * SETTERS
      **********/
 
     public void setId(int id) {
@@ -52,6 +52,10 @@ public class Player implements Serializable {
 
     public void setWhiteUsed(int whiteUsed) {
         this.whiteUsed = whiteUsed;
+    }
+
+    public void setInitialMountain(Mountain initialMountain) {
+        this.initialMountain = initialMountain;
     }
 
     public void setMountain(Mountain mountain) {
@@ -75,7 +79,7 @@ public class Player implements Serializable {
     }
 
     /**********
-     * GETTER
+     * GETTERS
      **********/
 
     public int getId() {
@@ -84,6 +88,10 @@ public class Player implements Serializable {
 
     public int getWhiteUsed() {
         return this.whiteUsed;
+    }
+
+    public Mountain getInitialMountain() {
+        return this.initialMountain;
     }
 
     public Mountain getMountain() {
@@ -131,7 +139,8 @@ public class Player implements Serializable {
     public boolean isAvailableToBuild(ModelColor c) throws UnsupportedOperationException {
 
         if (getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+            throw new UnsupportedOperationException(
+                    "Forbidden operation, the player has already validate his building");
         }
 
         return getAvalaibleToBuild().get(c) > 0;
@@ -144,10 +153,12 @@ public class Player implements Serializable {
      * @param color the color to build
      * @return true if the color has been built, false otherwise
      */
-    public boolean addToMountainFromAvailableToBuild(Point point, ModelColor color) throws UnsupportedOperationException {
+    public boolean addToMountainFromAvailableToBuild(Point point, ModelColor color)
+            throws UnsupportedOperationException {
 
         if (getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+            throw new UnsupportedOperationException(
+                    "Forbidden operation, the player has already validate his building");
         }
 
         return addToMountainFromAvailableToBuild(point.x, point.y, color);
@@ -161,10 +172,12 @@ public class Player implements Serializable {
      * @param color the color to build
      * @return true if the color has been built, false otherwise
      */
-    public boolean addToMountainFromAvailableToBuild(int x, int y, ModelColor color) throws UnsupportedOperationException {
+    public boolean addToMountainFromAvailableToBuild(int x, int y, ModelColor color)
+            throws UnsupportedOperationException {
 
         if (getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+            throw new UnsupportedOperationException(
+                    "Forbidden operation, the player has already validate his building");
         }
 
         ModelColor mountainColor;
@@ -202,7 +215,8 @@ public class Player implements Serializable {
     public ModelColor removeFromMountainToAvailableToBuild(Point point) throws UnsupportedOperationException {
 
         if (getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+            throw new UnsupportedOperationException(
+                    "Forbidden operation, the player has already validate his building");
         }
 
         return removeFromMountainToAvailableToBuild(point.x, point.y);
@@ -216,9 +230,10 @@ public class Player implements Serializable {
      * @return the color removed
      */
     public ModelColor removeFromMountainToAvailableToBuild(int x, int y) throws UnsupportedOperationException {
-        
+
         if (getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+            throw new UnsupportedOperationException(
+                    "Forbidden operation, the player has already validate his building");
         }
 
         ModelColor mountainColor;
@@ -243,13 +258,15 @@ public class Player implements Serializable {
      * @return true if the building has been validated, false otherwise
      */
     public boolean validateBuilding() throws UnsupportedOperationException {
-        
+
         if (getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("Forbidden operation, the player has already validate his building");
+            throw new UnsupportedOperationException(
+                    "Forbidden operation, the player has already validate his building");
         }
 
         if (getMountain().isFull()) {
             setHasValidateBuilding(true);
+            setInitialMountain(initialMountain.clone());
         }
 
         return getHasValidateBuilding();
@@ -265,9 +282,10 @@ public class Player implements Serializable {
      * @param color the color to add
      */
     public void addToAdditionals(ModelColor color) throws UnsupportedOperationException {
-        
+
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("addToAdditionals: Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException(
+                    "addToAdditionals: Forbidden operation, the player hasn't validate his building");
         }
 
         getAdditionals().add(color);
@@ -280,9 +298,10 @@ public class Player implements Serializable {
      * @return the color removed
      */
     public ModelColor removeFromAdditionals(int pos) throws UnsupportedOperationException {
-        
+
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException(
+                    "removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
         }
 
         return getAdditionals().remove(pos);
@@ -295,9 +314,10 @@ public class Player implements Serializable {
      * @return the color removed
      */
     public ModelColor removeFromMountain(Point point) throws UnsupportedOperationException {
-        
+
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("removeFromMountain: Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException(
+                    "removeFromMountain: Forbidden operation, the player hasn't validate his building");
         }
 
         return removeFromMountain(point.x, point.y);
@@ -311,9 +331,10 @@ public class Player implements Serializable {
      * @return the color removed
      */
     public ModelColor removeFromMountain(int l, int c) throws UnsupportedOperationException {
-        
+
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("removeFromMountain: Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException(
+                    "removeFromMountain: Forbidden operation, the player hasn't validate his building");
         }
 
         ModelColor col;
@@ -328,9 +349,10 @@ public class Player implements Serializable {
      * @return the list of playable colors
      */
     public HashSet<ModelColor> getPlayableColors() throws UnsupportedOperationException {
-        
+
         if (!getHasValidateBuilding()) {
-            throw new UnsupportedOperationException("getPlayableColors: Forbidden operation, the player hasn't validate his building");
+            throw new UnsupportedOperationException(
+                    "getPlayableColors: Forbidden operation, the player hasn't validate his building");
         }
 
         HashSet<ModelColor> playable;
