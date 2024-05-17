@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
-import kube.model.ai.abstractAI;
+import kube.model.ai.MiniMaxAI;
 
 import java.awt.Point;
 
@@ -112,7 +112,7 @@ public class Player {
         return false;
     }
 
-    public abstractAI getAI() {
+    public MiniMaxAI getAI() {
         return null;
     }
 

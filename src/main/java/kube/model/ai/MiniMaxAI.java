@@ -15,7 +15,7 @@ import kube.model.Kube;
 import kube.model.Player;
 import kube.model.action.move.Move;
 
-public class abstractMiniMax implements abstractAI, ActionListener {
+public class MiniMaxAI implements ActionListener {
 
     /**********
      * ATTRIBUTES
@@ -32,13 +32,23 @@ public class abstractMiniMax implements abstractAI, ActionListener {
      * CONSTRUCTORS
      **********/
 
-    public abstractMiniMax(int time, int seed) {
-        r = new Random(seed);
+     public MiniMaxAI(int time, Random r) {
+        setR(r);
         setTime(time);
     }
 
-    public abstractMiniMax() {
-        r = new Random();
+    public MiniMaxAI(int time, int seed) {
+        setR(new Random(seed));
+        setTime(time);
+    }
+
+    public MiniMaxAI(int time) {
+        setR(new Random());
+        setTime(time);
+    }
+
+    public MiniMaxAI() {
+        setR(new Random());
         setTime(1000);
     }
 
@@ -107,40 +117,9 @@ public class abstractMiniMax implements abstractAI, ActionListener {
      * 
      * @return void
      */
-    @Override
     public void constructionPhase() {
         while (!getPlayer(k3).validateBuilding()) {
             utilsAI.randomFillMountain(getPlayer(k3), getR());
-        }
-    }
-
-    /**
-     * Give the next move
-     * 
-     * @return the next move
-     */
-    @Override
-    public Move nextMove() throws Exception {
-
-        int horizon;
-        setNoMoreTime(false);
-        setTimer(new Timer(time, this));
-        getTimer().start();
-        horizon = 2;
-        HashMap<Move, Integer> solution = null, moveMap = null;
-        while (true) {
-            moveMap = miniMax(getK3().clone(), horizon);
-            if (getNoMoreTime()) {
-                Config.debug("Horizon max :" + horizon);
-                if (solution == null) {
-                    return selectMove(moveMap);
-                } else {
-                    return selectMove(solution);
-                }
-            } else {
-                solution = moveMap;
-                horizon++;
-            }
         }
     }
 
@@ -219,17 +198,17 @@ public class abstractMiniMax implements abstractAI, ActionListener {
      * @param k the current state of the game
      * @return the value of the state
      */
-    private int evaluation(Kube k) {
-        return getPlayer(k).getPlayableColors().size() + getPlayer(k).getAdditionals().size();
+    public int evaluation(Kube k) {
+        return 0;
     }
 
-    @Override
     /**
      * Action performed when the timer ends
      * 
      * @param arg0 the action event
      * @return void
      */
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         setNoMoreTime(true);
         getTimer().stop();
@@ -241,5 +220,34 @@ public class abstractMiniMax implements abstractAI, ActionListener {
 
     public Move selectMove(HashMap<Move, Integer> movesMap) {
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
+    }
+
+    /**
+     * Give the next move
+     * 
+     * @return the next move
+     */
+    public Move nextMove() throws Exception {
+
+        int horizon;
+        setNoMoreTime(false);
+        setTimer(new Timer(time, this));
+        getTimer().start();
+        horizon = 2;
+        HashMap<Move, Integer> solution = null, moveMap = null;
+        while (true) {
+            moveMap = miniMax(getK3().clone(), horizon);
+            if (getNoMoreTime()) {
+                Config.debug("Horizon max :" + horizon);
+                if (solution == null) {
+                    return selectMove(moveMap);
+                } else {
+                    return selectMove(solution);
+                }
+            } else {
+                solution = moveMap;
+                horizon++;
+            }
+        }
     }
 }

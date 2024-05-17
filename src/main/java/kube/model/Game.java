@@ -37,7 +37,8 @@ public class Game implements Runnable {
     public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init(new abstractMiniMax(50, 1), new abstractMiniMax(50, 1), 104323227);
+        k3.init(new midLevelAI(100), new RandomAI(100), 180);
+
         // Construction phase
         while (k3.getPhase() == 1) {
             try {

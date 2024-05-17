@@ -1,7 +1,8 @@
 package kube.model;
 
+import kube.configuration.Config;
 import kube.model.action.move.*;
-import kube.model.ai.abstractAI;
+import kube.model.ai.MiniMaxAI;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -45,29 +46,39 @@ public class Kube {
         init();
     }
 
+    public Kube(boolean empty) {
+        if (!empty) {
+            init();
+        }
+    }
+
     /**********
      * INITIALIZATION
      **********/
 
     public void init() {
-        init(null, null);
+        init(null, null, new Random());
     }
 
-    public void init(abstractAI typeAI1) {
-        init(typeAI1, null);
+    public void init(MiniMaxAI typeAI1) {
+        init(typeAI1, null, new Random());
     }
 
-    public void init(abstractAI typeAI1, abstractAI typeAI2) {
-        init(typeAI1, typeAI2, null);
+    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2) {
+        init(typeAI1, typeAI2, new Random());
     }
 
-    public void init(abstractAI typeAI1, abstractAI typeAI2, Integer seed) {
+    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, int seed) {
+        init(typeAI1, typeAI2, new Random(seed));
+    }
+
+    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, Random r) {
 
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<Color>());
-        fillBag(seed);
+        fillBag(r);
         fillBase();
         setHistory(new History());
         setPenality(false);
@@ -215,7 +226,7 @@ public class Kube {
      * @throws UnsupportedOperationException if the phase is not the preparation
      *                                       phase
      */
-    public void fillBag(Integer seed) throws UnsupportedOperationException {
+    public void fillBag(Random r) throws UnsupportedOperationException {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
@@ -229,14 +240,13 @@ public class Kube {
                 bag.add(c);
             }
         }
-
-        // Shuffle the bag until the 9 first cubes have 4 differents colors
-        while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
-            if (seed != null) {
-                Collections.shuffle(bag, new Random(seed));
-            } else {
-                Collections.shuffle(bag);
+        try {
+            // Shuffle the bag until the 9 first cubes have 4 differents colors
+            while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
+                Collections.shuffle(bag, r);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -249,7 +259,19 @@ public class Kube {
      *                                       phase
      */
     public void fillBag() throws UnsupportedOperationException {
-        fillBag(null);
+        fillBag(new Random());
+    }
+
+    /**
+     * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
+     * 9 first cubes have 4 differents colors
+     * 
+     * @return void
+     * @throws UnsupportedOperationException if the phase is not the preparation
+     *                                       phase
+     */
+    public void fillBag(int seed) throws UnsupportedOperationException {
+        fillBag(new Random(seed));
     }
 
     /**
@@ -542,7 +564,6 @@ public class Kube {
     private void unPlayWithoutHistory(Move move) throws UnsupportedOperationException {
 
         Player player, previousPlayer;
-        Move lastMove;
         MoveAA aa;
         MoveMA ma;
         MoveMW mw;
@@ -861,8 +882,8 @@ public class Kube {
 
         Kube kopy;
 
-        kopy = new Kube();
-
+        kopy = new Kube(true);
+        kopy.setHistory(new History());
         kopy.setP1(getP1().clone());
         kopy.setP2(getP2().clone());
 

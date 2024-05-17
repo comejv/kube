@@ -1,6 +1,6 @@
 package kube.model;
 
-import kube.model.ai.abstractAI;
+import kube.model.ai.MiniMaxAI;
 
 public class AI extends Player {
 
@@ -8,7 +8,7 @@ public class AI extends Player {
      * ATTRIBUTES
      **********/
 
-    private abstractAI ai;
+    private MiniMaxAI ai;
 
     /**********
      * CONSTRUCTOR
@@ -21,7 +21,7 @@ public class AI extends Player {
      * @param ai the AI of the player
      * @param k3 the game
      */
-    AI(int id, abstractAI ai, Kube k3) {
+    AI(int id, MiniMaxAI ai, Kube k3) {
         super(id);
         ai.setK3(k3);
         ai.setPlayerId(this);
@@ -32,7 +32,7 @@ public class AI extends Player {
      * SETTER
      **********/
 
-    public void setAI(abstractAI ai) {
+    public void setAI(MiniMaxAI ai) {
         this.ai = ai;
     }
 
@@ -40,7 +40,7 @@ public class AI extends Player {
      * GETTER
      **********/
 
-    public abstractAI getAI() {
+    public MiniMaxAI getAI() {
         return ai;
     }
 

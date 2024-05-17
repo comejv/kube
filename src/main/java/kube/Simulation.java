@@ -8,34 +8,64 @@ import kube.model.Color;
 import kube.model.Kube;
 import kube.model.Mountain;
 
+import kube.model.ai.MiniMaxAI;
+
 public class Simulation {
     public static void main(String[] args) {
         Simulation s = new Simulation();
-        s.findSeedWithEquivalentDistributionToPlayers();
-        s.simulateNumberOfCubeWithdrawable();
-        s.simulateNumberOfSlotAvailable();
+        //s.findSeedWithEquivalentDistributionToPlayers();
+        //s.simulateNumberOfCubeWithdrawable();
+        //s.simulateNumberOfSlotAvailable();
+        s.testSeededRandom();
     }
 
-    private void findSeedWithEquivalentDistributionToPlayers() {
-        int seed;
+    private void iaTrainingGames(){
+        Kube k = new Kube(true);
+        k.init();
+    }
+
+    private void testSeededRandom() {
+        int seed = 180;
+        Kube k = new Kube(true);
+        Kube k2 = new Kube(true);
+        k.init(new MiniMaxAI(0,1), new MiniMaxAI(0,1), seed);
+        k2.init(new MiniMaxAI(0,1), new MiniMaxAI(0,1), seed);
+
+        k.getCurrentPlayer().getAI().constructionPhase();
+        k.updatePhase();
+        k.getCurrentPlayer().getAI().constructionPhase();
+
+        k2.getCurrentPlayer().getAI().constructionPhase();
+        k2.updatePhase();
+        k2.getCurrentPlayer().getAI().constructionPhase();
+
+        System.out.println(k.getP1());
+        System.out.println(k.getP2());
+        System.out.println(k2.getP1());
+        System.out.println(k2.getP2());
+        System.out.println("Seed:" + seed + " " + k.getP1().getMountain().equals(k2.getP1().getMountain()));
+    }
+
+    private int findSeedWithEquivalentDistributionToPlayers() {
+        int  seed;
         Random r = new Random();
-        while (true){
-            seed = r.nextInt(10000);
+        while (true) {
+            seed = r.nextInt(1000);
             Kube k = new Kube();
             k.fillBag(seed);
             k.fillBase();
             k.distributeCubesToPlayers();
-            if (k.getP1().getAvalaibleToBuild().equals(k.getP2().getAvalaibleToBuild())){
+            if (k.getP1().getAvalaibleToBuild().equals(k.getP2().getAvalaibleToBuild())) {
                 break;
             }
         }
         System.out.println("Seed avec une même distribution de cube pour les joueurs :" + seed);
-
+        return seed;
 
     }
 
     private void simulateNumberOfSlotAvailable() {
-        float nTest = 100000;
+        float nTest = 1000;
         float availaibleSum = 0;
         for (int i = 0; i < nTest; i++) {
             Kube k = new Kube();
@@ -50,7 +80,7 @@ public class Simulation {
     }
 
     private void simulateNumberOfCubeWithdrawable() {
-        float nTest = 100000;
+        float nTest = 1000;
         float removableSum = 0;
         Mountain m = new Mountain(6);
         Kube k = new Kube();

@@ -9,7 +9,7 @@ import java.util.Scanner;
 import kube.controller.CommandListener;
 import kube.view.TextualMode;
 
-public class TextualGame {
+public class QuickGame {
 
    
 
@@ -26,10 +26,10 @@ public class TextualGame {
         Thread modelThread = new Thread(model);
         Thread controllerThread = new Thread(controller);
         Thread viewThread = new Thread(view);
-
+        
+        modelThread.start();
         viewThread.start();
         controllerThread.start();
-        modelThread.start();
     }
 
 
