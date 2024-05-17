@@ -90,7 +90,7 @@ public class Buttons {
     public static class RulesButton extends JButton {
         public RulesButton(String name) {
             super(name);
-            setPreferredSize(new Dimension(300, 100));
+            setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT);
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
