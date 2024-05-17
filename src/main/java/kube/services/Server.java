@@ -4,11 +4,13 @@ import kube.configuration.*;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server extends Network{
+public class Server extends Network {
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
@@ -17,13 +19,12 @@ public class Server extends Network{
         init(port);
     }
 
-
-    public void init(int port){
+    public void init(int port) {
         try {
             setServerSocket(new ServerSocket(port));
             setClientSocket(getServerSocket().accept());
-            setOut(new PrintWriter(getClientSocket().getOutputStream(), true));
-            setIn(new BufferedReader(new InputStreamReader(getClientSocket().getInputStream())));
+            setOut(new ObjectOutputStream(getClientSocket().getOutputStream()));
+            setIn(new ObjectInputStream(getClientSocket().getInputStream()));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -33,6 +34,7 @@ public class Server extends Network{
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
+
     public void setServerSocket(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
@@ -40,58 +42,54 @@ public class Server extends Network{
     public Socket getClientSocket() {
         return clientSocket;
     }
+
     public void setClientSocket(Socket clientSocket) {
         this.clientSocket = clientSocket;
     }
-
-
-
 
     public boolean connect(String ip, int port) {
         return false;
     }
 
     public boolean disconnect() {
-        try{
+        try {
             getOut().close();
             getIn().close();
             getClientSocket().close();
             getServerSocket().close();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
         return true;
     }
 
     public boolean send(Object data) {
-        try{
-            Config.debug("Server send" +  data);
-            getOut().println(data);
-        }
-        catch(Exception e){
+        try {
+            Config.debug("Server send" + data);
+            if (getOut() != null) {
+                getOut().writeObject(data);
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
         return true;
     }
 
     public Object receive() {
-        try{
-            Config.debug("Server receive");
-            return getIn().readLine();
-        }
-        catch(Exception e){
+        try {
+            Object o = getIn().readObject();
+            Config.debug("Server receive " + o);
+            return o;
+        } catch (Exception e) {
             return null;
         }
     }
 
     @Override
-    public boolean isServer(){
+    public boolean isServer() {
         return true;
     }
-    
-    @Override
-    public void run() {
 
-    }    
 }

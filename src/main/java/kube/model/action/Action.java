@@ -41,8 +41,7 @@ public class Action{
     public static final int PRINT_ASK_IP = 38;
     //NETWORK
     public static final int INIT_K3 = 39;
-    public static final int OTHER_PLAYER_MOUNTAIN = 40;
-
+    public static final int OTHER_PLAYER = 40;
     private int type;
     private Object data;
 

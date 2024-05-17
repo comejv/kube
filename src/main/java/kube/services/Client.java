@@ -2,6 +2,9 @@ package kube.services;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
@@ -29,8 +32,8 @@ public class Client extends Network {
             setIp(ip);
             setPort(port);
             setSocket(new Socket(ip, port));
-            setOut(new PrintWriter(getSocket().getOutputStream(), true));
-            setIn(new BufferedReader(new InputStreamReader(getSocket().getInputStream())));
+            setOut(new ObjectOutputStream(getSocket().getOutputStream()));
+            setIn(new ObjectInputStream(getSocket().getInputStream()));
         } catch (Exception e) {
             return false;
         }
@@ -51,7 +54,11 @@ public class Client extends Network {
     public boolean send(Object data) {
         try {
             Config.debug("Client send" +  data);
-            getOut().println(data);
+            if (getOut() != null) {
+                getOut().writeObject(data);
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             return false;
         }
@@ -60,15 +67,12 @@ public class Client extends Network {
 
     public Object receive() {
         try {
+            Object o = getIn().readObject();
             Config.debug("Client receive");
-            return getIn().readLine();
+            return o;
         } catch (Exception e) {
             return null;
         }
-    }
-
-    @Override
-    public void run() {
     }
 
 }

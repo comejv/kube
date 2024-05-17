@@ -17,6 +17,7 @@ public class MenuListener implements Runnable {
     Queue<Action> eventsToView;
     Queue<Action> eventsToModel;
     Queue<Action> eventsToController;
+    Queue<Action> eventsToNetwork;
     Kube kube;
     Scanner scanner;
 
@@ -32,10 +33,12 @@ public class MenuListener implements Runnable {
     @Override
     public void run() {
         CommandListener controller = null;
+        NetworkListener networkListener = null;
+        NetworkSender networkSender = null;
         int mode, nb,type;
         mode = askGameMode();
         if (mode == 1) {
-            controller = new CommandListener(eventsToModel, eventsToView, eventsToController, scanner);
+            controller = new CommandListener(eventsToModel, eventsToView, scanner);
             type = Game.local;
             nb = askNbPlayer();
             if (nb == 2) {
@@ -57,10 +60,17 @@ public class MenuListener implements Runnable {
                 network = askIP();
                 type = Game.join;
             }
-            controller = new CommandListener(eventsToModel, eventsToView, eventsToController, scanner, network);
+            eventsToNetwork = new Queue<>();
+            controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, scanner);
+            networkListener = new NetworkListener(network, eventsToModel);
+            networkSender = new NetworkSender(network, eventsToNetwork);
+            Thread networkThread = new Thread(networkListener);
+            Thread networkSenderThread = new Thread(networkSender);
+            networkSenderThread.start();
+            networkThread.start();
         }
 
-        Game model = new Game(type, kube, eventsToModel, eventsToView, eventsToController);
+        Game model = new Game(type, kube, eventsToModel, eventsToView, eventsToNetwork);
         Thread modelThread = new Thread(model);
         modelThread.start();
 

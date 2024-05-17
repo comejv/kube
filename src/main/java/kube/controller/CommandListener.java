@@ -3,27 +3,25 @@ package kube.controller;
 import java.util.Scanner;
 
 import kube.model.action.*;
-import kube.services.Network;
 
 public class CommandListener implements Runnable {
 
     String command;
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
-    Queue<Action> eventsToController;
+    Queue<Action> eventsToNetwork;
     Scanner sc;
-    Network network = null;
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Queue<Action> eventsToController, Scanner sc) {
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Scanner sc) {
         this.eventsToModel = eventsToModel;
         this.eventsToView = eventsToView;
         this.sc = sc;
 
     }
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Queue<Action> eventsToController, Scanner sc, Network network) {
-        this(eventsToModel , eventsToView,eventsToController, sc);
-        this.network = network;
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Queue<Action> eventsToNetwork, Scanner sc) {
+        this(eventsToModel , eventsToView, sc);
+        this.eventsToNetwork = eventsToNetwork;
     }
 
     @Override
@@ -31,7 +29,7 @@ public class CommandListener implements Runnable {
         while (sc.hasNextLine()) {
             switch (sc.nextLine()) {
                 case "random":
-                    eventsToModel(new Action(Action.SHUFFLE));
+                    eventsToModel.add(new Action(Action.SHUFFLE));
                     break;
                 case "echanger":
                     swap(sc);
@@ -99,8 +97,8 @@ public class CommandListener implements Runnable {
 
     private void eventsToModel(Action action) {
         eventsToModel.add(action);
-        if(network != null) {
-            network.send(action);
+        if(eventsToNetwork != null) {
+            eventsToNetwork.add(action);
         }
     }
 }
