@@ -28,8 +28,8 @@ public class Buttons {
 
             setPreferredSize(new Dimension(Config.getInitWidth() / 2,
                     Config.getInitWidth() / 12));
-            setBackground(GUIColors.ACCENT);
-            setForeground(GUIColors.TEXT);
+            setBackground(GUIColors.ACCENT.toColor());
+            setForeground(GUIColors.TEXT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
         }
@@ -39,8 +39,8 @@ public class Buttons {
         public LocalButton(String name) {
             super(name);
             setPreferredSize(new Dimension(Config.getInitWidth() / 2, Config.getInitWidth() / 6));
-            setBackground(GUIColors.ACCENT);
-            setForeground(GUIColors.TEXT);
+            setBackground(GUIColors.ACCENT.toColor());
+            setForeground(GUIColors.TEXT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
@@ -50,8 +50,8 @@ public class Buttons {
         public GameFirstPhaseButton(String name) {
             super(name);
             setPreferredSize(new Dimension(300, 100));
-            setBackground(GUIColors.ACCENT);
-            setForeground(GUIColors.TEXT);
+            setBackground(GUIColors.ACCENT.toColor());
+            setForeground(GUIColors.TEXT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
@@ -61,7 +61,7 @@ public class Buttons {
         public GameSecondPhaseButton(String name) {
             super(name);
             setPreferredSize(new Dimension(300, 100));
-            setBackground(GUIColors.ACCENT);
+            setBackground(GUIColors.ACCENT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
@@ -91,7 +91,7 @@ public class Buttons {
         public RulesButton(String name) {
             super(name);
             setPreferredSize(new Dimension(300, 100));
-            setBackground(GUIColors.ACCENT);
+            setBackground(GUIColors.ACCENT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
@@ -101,7 +101,7 @@ public class Buttons {
         public InGameMenuButton(String name) {
             super(name);
             setPreferredSize(new Dimension(Config.getInitWidth() / 4, Config.getInitHeight() / 8));
-            setBackground(GUIColors.ACCENT);
+            setBackground(GUIColors.ACCENT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }

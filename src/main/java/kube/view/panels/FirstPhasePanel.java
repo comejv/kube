@@ -3,6 +3,7 @@ package kube.view.panels;
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.view.GUIColors;
+import kube.view.HSL;
 import kube.view.components.Buttons;
 import kube.view.components.Icon;
 
@@ -31,11 +32,11 @@ public class FirstPhasePanel extends JPanel {
         }
 
         setLayout(new GridBagLayout());
-        setBackground(GUIColors.GAME_BG);
+        setBackground(GUIColors.GAME_BG.toColor());
 
         /* Buttons panel construction */
         JPanel eastColPanel = new JPanel();
-        eastColPanel.setBackground(GUIColors.GAME_BG);
+        eastColPanel.setBackground(GUIColors.GAME_BG.toColor());
         JPanel buttonsPanel = createButtons(buttonListener);
         eastColPanel.add(buttonsPanel, BorderLayout.NORTH);
         GridBagConstraints c1 = new GridBagConstraints();
@@ -68,13 +69,13 @@ public class FirstPhasePanel extends JPanel {
 
         // TOP BAR - GAME BASE
         JPanel basePanel = new JPanel();
-        basePanel.setBackground(GUIColors.GAME_BG_DARK);
+        basePanel.setBackground(GUIColors.GAME_BG_DARK.toColor());
         JLabel baseLabel = new JLabel("Base Centrale: ");
         baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
-        baseLabel.setForeground(GUIColors.TEXT);
+        baseLabel.setForeground(GUIColors.TEXT.toColor());
         basePanel.add(baseLabel);
         for (int i = 0; i < 9; i++) {
-            basePanel.add(newHexa(Color.WHITE));
+            basePanel.add(newHexa(GUIColors.WHITE_HEX));
         }
         gamePanel.add(basePanel, BorderLayout.NORTH);
 
@@ -83,7 +84,7 @@ public class FirstPhasePanel extends JPanel {
         constructPanel.setLayout(new GridLayout(6, 6));
         GridBagConstraints cc = new GridBagConstraints();
         Icon[][] hexaList = new Icon[6][6];
-        constructPanel.setBackground(GUIColors.GAME_BG_LIGHT);
+        constructPanel.setBackground(GUIColors.GAME_BG_LIGHT.toColor());
         gamePanel.add(constructPanel, BorderLayout.CENTER);
         int last = 0;
         for (int i = 5; i >= 0; i--) {
@@ -126,7 +127,7 @@ public class FirstPhasePanel extends JPanel {
                 piecesPanel.add(mini);
             }
         }
-        piecesPanel.setBackground(GUIColors.TEXT_HOVER);
+        piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
         gamePanel.add(piecesPanel, BorderLayout.EAST);
         return gamePanel;
     }
@@ -135,7 +136,7 @@ public class FirstPhasePanel extends JPanel {
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1));
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
-        buttons.setBackground(GUIColors.GAME_BG);
+        buttons.setBackground(GUIColors.GAME_BG.toColor());
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Options");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
@@ -161,15 +162,15 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public static Icon newHexa() {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
+        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaGray"));
         hexa.resizeIcon(80, 80);
         return hexa;
     }
 
-    public static Icon newHexa(Color c) {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
+    public static Icon newHexa(HSL hsl) {
+        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaGray"));
         hexa.resizeIcon(80, 80);
-        hexa.recolor(c);
+        hexa.recolor(hsl);
         return hexa;
     }
 }

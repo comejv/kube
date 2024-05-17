@@ -1,6 +1,5 @@
 package kube.view.components;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -10,7 +9,7 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JLabel;
 
-import kube.view.GUIColors;
+import kube.view.HSL;
 
 public class Icon extends JLabel {
     private BufferedImage originalImage;
@@ -31,25 +30,20 @@ public class Icon extends JLabel {
         g2d.dispose();
     }
 
-    public void recolor(Color c) {
+    public void recolor(HSL hsl) {
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (originalImage.getRGB(x, y) == 0) {
+                int c = originalImage.getRGB(x, y);
+                if (c == 0) {
                     continue;
                 }
-                double[] imgHsl = GUIColors.rgbToHsl(originalImage.getRGB(x, y));
-                double[] colHsl = GUIColors.rgbToHsl(c.getRGB());
-                if (imgHsl[2] == 0) {
-                    imgHsl[2] = colHsl[2];
-                }
-                imgHsl[0] = colHsl[0];
-                int[] rgbArray = GUIColors.hslToRgb(imgHsl);
-                int rgb = originalImage.getRGB(x, y) & (0xFF << 24) // Keep alpha
-                        | (rgbArray[0] << 16) | (rgbArray[1] << 8) | rgbArray[2]; // Set RGB
-                originalImage.setRGB(x, y, rgb);
+                HSL imgHsl = new HSL(c);
+                imgHsl.setHue(hsl.getHue());
+                imgHsl.setSaturation(hsl.getSaturation() + 0.3);
+                originalImage.setRGB(x, y, c & (0xFF000000) | imgHsl.toRGB());
             }
         }
         repaint();
