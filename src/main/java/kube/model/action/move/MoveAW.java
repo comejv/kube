@@ -1,6 +1,6 @@
 package kube.model.action.move;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveAW extends Move {
 
@@ -12,7 +12,7 @@ public class MoveAW extends Move {
       * Constructor of the class MoveAM
       */
     public MoveAW() {
-        super(Color.WHITE);
+        super(ModelColor.WHITE);
     }
 
     /**********

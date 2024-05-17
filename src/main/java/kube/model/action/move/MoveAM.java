@@ -2,7 +2,7 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveAM extends Move {
 
@@ -22,7 +22,7 @@ public class MoveAM extends Move {
       * @param to the destination of the move
       * @param color the color of the moved cube
       */
-    public MoveAM(Point to, Color c) {
+    public MoveAM(Point to, ModelColor c) {
         super(c);
         setTo(to);
     }
@@ -34,7 +34,7 @@ public class MoveAM extends Move {
      * @param toY   the y position of the destination of the move
      * @param color the color of the moved cube
      */
-    public MoveAM(int toX, int toY, Color color) {
+    public MoveAM(int toX, int toY, ModelColor color) {
         this(new Point(toX, toY), color);
     }
 

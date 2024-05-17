@@ -2,7 +2,7 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveMW extends Move {
 
@@ -23,7 +23,7 @@ public class MoveMW extends Move {
       * @param color the color of the moved cube
       */
     public MoveMW(Point from) {
-        super(Color.WHITE);
+        super(ModelColor.WHITE);
         setFrom(from);
     }
 

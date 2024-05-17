@@ -2,7 +2,8 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
-import kube.model.Color;
+import kube.model.action.move.MoveMW;
+import kube.model.ModelColor;
 import kube.model.Player;
 
 public abstract class Move {
@@ -12,17 +13,17 @@ public abstract class Move {
      **********/
 
     private Player player;
-    private Color color;
+    private ModelColor color;
 
     /**********
      * CONSTRUCTORS
      **********/
 
     public Move() {
-        setColor(Color.EMPTY);
+        setColor(ModelColor.EMPTY);
     }
 
-    public Move(Color color) {
+    public Move(ModelColor color) {
         setColor(color);
     }
 
@@ -34,7 +35,7 @@ public abstract class Move {
         this.player = p;
     }
 
-    public void setColor(Color c) {
+    public void setColor(ModelColor c) {
         this.color = c;
     }
 
@@ -46,7 +47,7 @@ public abstract class Move {
         return this.player;
     }
 
-    public Color getColor() {
+    public ModelColor getColor() {
         return this.color;
     }
 
@@ -131,5 +132,27 @@ public abstract class Move {
             return false;
 
         return getColor() == that.getColor();
+    }
+
+    static public Move fromSave(String save) {
+
+        String moveType, color, player, from, to;
+        String [] parts, pointCoordinates;
+
+        save = save.substring(1, save.length() - 1);
+        parts = save.split(";");
+
+        moveType = parts[0];
+        player = parts[1];
+        color = parts[2];
+
+        switch (moveType) {
+            case "MW":
+                from = parts[3].substring(1, parts[2].length() - 1);
+                pointCoordinates = from.split(",");
+                return new MoveMW(Integer.parseInt(pointCoordinates[0]), Integer.parseInt(pointCoordinates[1]));
+        }
+
+        return null;
     }
 }

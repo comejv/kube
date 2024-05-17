@@ -7,7 +7,7 @@ import java.awt.Point;
 
 import org.junit.Test;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 import kube.model.action.move.MoveAA;
 import kube.model.action.move.MoveAM;
 import kube.model.action.move.MoveAW;
@@ -25,11 +25,11 @@ public class MoveTest {
         assertTrue(mw.isWhite());
 
         // MoveAM
-        MoveAM am = new MoveAM(0, 0, Color.RED);
+        MoveAM am = new MoveAM(0, 0, ModelColor.RED);
         assertFalse(am.isWhite());
         
         // MoveMM
-        MoveMM mm = new MoveMM(0, 0, 0, 0, Color.RED);
+        MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
         assertFalse(mm.isWhite());
 
         // MoveAW
@@ -45,11 +45,11 @@ public class MoveTest {
         assertFalse(mw.isClassicMove());
 
         // MoveAM
-        MoveAM am = new MoveAM(0, 0, Color.RED);
+        MoveAM am = new MoveAM(0, 0, ModelColor.RED);
         assertFalse(am.isClassicMove());
         
         // MoveMM
-        MoveMM mm = new MoveMM(0, 0, 0, 0, Color.RED);
+        MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
         assertTrue(mm.isClassicMove());
 
         // MoveAW
@@ -65,11 +65,11 @@ public class MoveTest {
         assertFalse(mw.isFromAdditionals());
 
         // MoveAM
-        MoveAM am = new MoveAM(0, 0, Color.RED);
+        MoveAM am = new MoveAM(0, 0, ModelColor.RED);
         assertTrue(am.isFromAdditionals());
         
         // MoveMM
-        MoveMM mm = new MoveMM(0, 0, 0, 0, Color.RED);
+        MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
         assertFalse(mm.isFromAdditionals());
 
         // MoveAW
@@ -79,12 +79,12 @@ public class MoveTest {
 
     @Test
     public void isToAdditionalsTest(){
-        MoveAA aa = new MoveAA(Color.RED);
+        MoveAA aa = new MoveAA(ModelColor.RED);
         assertTrue(aa.isToAdditionals());
         assertFalse(aa.isClassicMove());
         assertTrue(aa.isFromAdditionals());
 
-        MoveMA ma = new MoveMA(new Point(1, 1), Color.BLACK);
+        MoveMA ma = new MoveMA(new Point(1, 1), ModelColor.BLACK);
         assertTrue(ma.isToAdditionals());
         assertFalse(ma.isClassicMove());
         assertFalse(ma.isFromAdditionals());
