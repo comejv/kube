@@ -1,6 +1,6 @@
 package kube.model.action.move;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveAW extends Move {
 
@@ -8,11 +8,11 @@ public class MoveAW extends Move {
      * CONSTRUCTOR
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      */
+    /**
+     * Constructor of the class MoveAM
+     */
     public MoveAW() {
-        super(Color.WHITE);
+        super(ModelColor.WHITE);
     }
 
     /**********
@@ -20,7 +20,7 @@ public class MoveAW extends Move {
      **********/
 
     /**
-     * Check if the move is from the additionals 
+     * Check if the move is from the additionals
      *
      * @return true if the move is from the additionals, false otherwise
      */
@@ -46,7 +46,7 @@ public class MoveAW extends Move {
      */
     @Override
     public String forSave() {
-        return "{AW;" + super.forSave() + "}";
+        return "{AW}";
     }
 
     @Override

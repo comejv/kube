@@ -17,7 +17,7 @@ public class History {
     private ArrayList<Move> undone;
 
     /**********
-     * CONSTRUCTOR
+     * CONSTRUCTORS
      **********/
 
     /**
@@ -29,6 +29,35 @@ public class History {
         setUndone(new ArrayList<Move>());
     }
 
+    /**
+     * Constructor of the class History from a save string
+     * 
+     * @param save the string to load
+     */
+    public History(String save) {
+
+        String player, doneString, undoneString;
+        String[] parts, done, undone;
+
+        parts = save.split("\n");
+
+        player = parts[0];
+        setFirstPlayer(Integer.parseInt(player));
+
+        doneString = parts[1].substring(1, parts[1].length() - 1);
+        done = doneString.split(" ");
+        setDone(new ArrayList<Move>());
+        for (String move : done) {
+            getDone().add(Move.fromSave(move));
+        }
+
+        undoneString = parts[2].substring(1, parts[2].length() - 1);
+        undone = undoneString.split(" ");
+        setUndone(new ArrayList<Move>());
+        for (String move : undone) {
+            getUndone().add(Move.fromSave(move));
+        }
+    }
     /**********
      * SETTERS
      **********/
@@ -154,23 +183,28 @@ public class History {
      * @return a string representing the history
      */
     public String forSave() {
-        String s = "";
-        s += getFirstPlayer() + "\n{";
+
+        String save;
+        // Saving the first player
+        save = getFirstPlayer() + "\n[";
+        // Saving the done moves
         for (Move move : getDone()) {
-            s += move.forSave() + ";";
+            save += move.forSave() + " ";
         }
         if (canUndo()) {
-            s = s.substring(0, s.length() - 1);
+            save = save.substring(0, save.length() - 1);
         }
-        s += "}\n{";
+        // Saving the undone moves
+        save += "]\n[";
         for (Move move : getUndone()) {
-            s += move.forSave() + ";";
+            save += move.forSave() + " ";
         }
         if (canRedo()) {
-            s = s.substring(0, s.length() - 1);
+            save = save.substring(0, save.length() - 1);
         }
-        s += "}";
-        return s;
+
+        save += "]";
+        return save;
     }
 
     /**

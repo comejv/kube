@@ -9,19 +9,23 @@ public class CommandListener implements Runnable {
     String command;
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
+    Queue<Action> eventsToNetwork;
     Scanner sc;
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner sc) {
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Scanner sc) {
         this.eventsToModel = eventsToModel;
         this.eventsToView = eventsToView;
         this.sc = sc;
+
+    }
+
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Queue<Action> eventsToNetwork, Scanner sc) {
+        this(eventsToModel , eventsToView, sc);
+        this.eventsToNetwork = eventsToNetwork;
     }
 
     @Override
     public void run() {
-        /*
-        // Add the amount of players sector
-        */
         while (sc.hasNextLine()) {
             switch (sc.nextLine()) {
                 case "random":
@@ -34,16 +38,16 @@ public class CommandListener implements Runnable {
                     eventsToView.add(new Action(Action.PRINT_STATE));
                     break;
                 case "valider":
-                    eventsToModel.add(new Action(Action.VALIDATE));
+                    eventsToModel(new Action(Action.VALIDATE));
                     break;
                 case "jouer":
                     playMove(sc);
                     break;
                 case "annuler":
-                    eventsToModel.add(new Action(Action.UNDO));
+                    eventsToModel(new Action(Action.UNDO));
                     break;
                 case "rejouer":
-                    eventsToModel.add(new Action(Action.REDO));
+                    eventsToModel(new Action(Action.REDO));
                     break;
                 case "aide":
                 case "":
@@ -56,7 +60,7 @@ public class CommandListener implements Runnable {
         }
     }
 
-    public boolean swap(Scanner sc) {
+    private boolean swap(Scanner sc) {
         try {
             eventsToView.add(new Action(Action.PRINT_WAIT_COORDINATES, 1));
             String s = sc.nextLine();
@@ -69,7 +73,7 @@ public class CommandListener implements Runnable {
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
-            eventsToModel.add(new Action(Action.SWAP, swap));
+            eventsToModel(new Action(Action.SWAP, swap));
             eventsToView.add(new Action(Action.PRINT_SWAP, swap));
             return true;
         } catch (Exception e) {
@@ -78,16 +82,23 @@ public class CommandListener implements Runnable {
         }
     }
 
-    public boolean playMove(Scanner sc) {
+    private boolean playMove(Scanner sc) {
         eventsToView.add(new Action(Action.PRINT_LIST_MOVES));
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel.add(new Action(Action.MOVE,n));
+            eventsToModel(new Action(Action.MOVE,n));
             return true;
         } catch (Exception e) {
             eventsToView.add(new Action(Action.PRINT_MOVE_ERROR));
             return false;
+        }
+    }
+
+    private void eventsToModel(Action action) {
+        eventsToModel.add(action);
+        if(eventsToNetwork != null) {
+            eventsToNetwork.add(action);
         }
     }
 }

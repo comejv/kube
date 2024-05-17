@@ -5,12 +5,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
 public class midLevelAI extends MiniMaxAI {
-    ArrayList<Color> colors;
+    ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
 
     /**********
@@ -42,11 +42,11 @@ public class midLevelAI extends MiniMaxAI {
      **********/
     @Override
     public void constructionPhase() {
-        HashMap<Color, Float> probs = getBaseRepartiton();
+        HashMap<ModelColor, Float> probs = getBaseRepartiton();
         calculateCumulativeSums(probs);
         for (int i = 0; i < getPlayer(getK3()).getMountain().getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                Color c = getColorBasedOnProbabilities();
+                ModelColor c = getColorBasedOnProbabilities();
                 getPlayer(getK3()).addToMountainFromAvailableToBuild(i, j, c);
                 redistributeProbs(c);
             }
@@ -66,20 +66,20 @@ public class midLevelAI extends MiniMaxAI {
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
 
-    private HashMap<Color, Float> getBaseRepartiton() {
+    private HashMap<ModelColor, Float> getBaseRepartiton() {
         int baseSize = getK3().getBaseSize();
-        HashMap<Color, Float> probs = new HashMap<>();
-        for (Color c : Color.getAllColoredAndJokers()) {
+        HashMap<ModelColor, Float> probs = new HashMap<>();
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             probs.put(c, 0f);
         }
         for (int i = 0; i < baseSize; i++) {
-            Color c = getK3().getK3().getCase(baseSize - 1, i);
+            ModelColor c = getK3().getK3().getCase(baseSize - 1, i);
             probs.put(c, probs.get(c) + (float) 1 / baseSize);
         }
         return probs;
     }
 
-    private void calculateCumulativeSums(HashMap<Color, Float> probabilities) {
+    private void calculateCumulativeSums(HashMap<ModelColor, Float> probabilities) {
         ArrayList<Float> values = new ArrayList<>(probabilities.values());
         Collections.sort(values);
         cumulativesProbabilities = new ArrayList<>();
@@ -87,7 +87,7 @@ public class midLevelAI extends MiniMaxAI {
         float sum = 0f;
         for (float f : values) {
             sum += f;
-            for (Color c : Color.getAllColoredAndJokers()) {
+            for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
                 if (probabilities.get(c) == f) {
                     cumulativesProbabilities.add(sum);
                     colors.add(c);
@@ -96,12 +96,12 @@ public class midLevelAI extends MiniMaxAI {
                 }
             }
         }
-        for (Color c : Color.getAllColoredAndJokers()) {
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             redistributeProbs(c);
         }
     }
 
-    private void redistributeProbs(Color c) {
+    private void redistributeProbs(ModelColor c) {
         if (getPlayer(getK3()).getAvalaibleToBuild().get(c) == 0) {
             int i = 0;
             while (colors.get(i)!= c) {
@@ -120,7 +120,7 @@ public class midLevelAI extends MiniMaxAI {
         }
     }
 
-    private Color getColorBasedOnProbabilities() {
+    private ModelColor getColorBasedOnProbabilities() {
         float f = getR().nextFloat();
         int i = 0;
         while (cumulativesProbabilities.get(i) <= f) {

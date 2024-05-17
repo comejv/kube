@@ -18,9 +18,10 @@ public class QuickGame {
         Kube kube = new Kube();
         Queue<Action> eventsToModel = new Queue<>();
         Queue<Action> eventsToView = new Queue<>();
-        
-        Game model = new Game(Game.local, kube, eventsToModel, eventsToView);
-        TextualMode view = new TextualMode(model, eventsToView);
+        Queue<Action> eventsToNetwork = new Queue<>();
+
+        Game model = new Game(Game.local, kube, eventsToModel, eventsToView, eventsToNetwork);
+        TextualMode view = new TextualMode(kube, eventsToView);
         CommandListener controller = new CommandListener(eventsToModel, eventsToView, scanner);
 
         Thread modelThread = new Thread(model);

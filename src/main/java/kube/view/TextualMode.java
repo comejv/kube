@@ -2,7 +2,6 @@ package kube.view;
 
 import java.util.ArrayList;
 import java.awt.Point;
-import kube.model.*;
 import kube.model.Kube;
 import kube.model.Player;
 import kube.model.action.move.Move;
@@ -11,11 +10,11 @@ import kube.model.action.*;
 
 public class TextualMode implements Runnable {
 
-    Game game;
+    Kube kube;
     Queue<Action> events;
 
-    public TextualMode(Game g, Queue<Action> events) {
-        this.game = g;
+    public TextualMode(Kube kube, Queue<Action> events) {
+        this.kube = kube;
         this.events = events;
     }
 
@@ -91,7 +90,7 @@ public class TextualMode implements Runnable {
                 case Action.PRINT_SWAP:
                     printSwap();
                     printHelp();
-                     break;
+                    break;
                 case Action.PRINT_SWAP_ERROR:
                     printSwapError();
                     printHelp();
@@ -127,6 +126,12 @@ public class TextualMode implements Runnable {
                 case Action.PRINT_ASK_GAME_MODE:
                     printGameMode();
                     break;
+                case Action.PRINT_ASK_HOST_OR_JOIN:
+                    printHostOrJoin();
+                    break;
+                case Action.PRINT_ASK_IP:
+                    printAskIP();
+                    break;
                 default:
                     break;
             }
@@ -140,7 +145,7 @@ public class TextualMode implements Runnable {
                 "-echanger : permet d'échanger la position de 2 pièces de son choix\n" +
                 "-valider : valider que sa montagne est prête\n" +
                 "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
-                "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n" +
+                "Tour de " + kube.getCurrentPlayer().getName() + "\n" +
                 "Vous devez consruire votre montagne. \n");
     }
 
@@ -151,7 +156,7 @@ public class TextualMode implements Runnable {
                 "-rejouer : rejouer le dernier coup\n" +
                 "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
                 "-aide : affiche cette liste\n" +
-                "Tour de " + game.getKube().getCurrentPlayer().getName() + "\n" +
+                "Tour de " + kube.getCurrentPlayer().getName() + "\n" +
                 "Vous devez choisir une de vos pièces pour la mettre sur la montagne centrale.";
         System.out.println(s);
     }
@@ -185,7 +190,7 @@ public class TextualMode implements Runnable {
     }
 
     public void printHelp() {
-        if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
+        if (kube.getPhase() == Kube.PREPARATION_PHASE) {
             printCommandPhase1();
         } else {
             printCommandPhase2();
@@ -194,7 +199,7 @@ public class TextualMode implements Runnable {
 
     public ArrayList<Move> printListMoves() {
         try {
-            ArrayList<Move> moves = game.getKube().moveSet();
+            ArrayList<Move> moves = kube.moveSet();
             System.out.println("Voici les coups possibles :");
             for (int i = 0; i < moves.size(); i++) {
                 System.out.println(i + " : " + moves.get(i));
@@ -215,10 +220,10 @@ public class TextualMode implements Runnable {
     }
 
     public void printNextPlayer() {
-        if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
-            System.out.println("C'est au tour de " + game.getKube().getCurrentPlayer().getName());
+        if (kube.getPhase() == Kube.PREPARATION_PHASE) {
+            System.out.println("C'est au tour de " + kube.getCurrentPlayer().getName());
         } else {
-            System.out.println("C'est au tour de " + game.getKube().getCurrentPlayer().getName());
+            System.out.println("C'est au tour de " + kube.getCurrentPlayer().getName());
         }
         printHelp();
         printState();
@@ -253,14 +258,14 @@ public class TextualMode implements Runnable {
     }
 
     public void printState() {
-        if (game.getKube().getPhase() == Kube.PREPARATION_PHASE) {
-            System.out.println(game.getKube().getK3());
-            System.out.println(game.getKube().getCurrentPlayer());
+        if (kube.getPhase() == Kube.PREPARATION_PHASE) {
+            System.out.println(kube.getK3());
+            System.out.println(kube.getCurrentPlayer());
         } else {
-            System.out.println(game.getKube().getK3());
-            System.out.println(game.getKube().getP1());
-            System.out.println(game.getKube().getP2());
-            if (game.getKube().getPenality()) {
+            System.out.println(kube.getK3());
+            System.out.println(kube.getP1());
+            System.out.println(kube.getP2());
+            if (kube.getPenality()) {
                 printPenality();
             }
         }
@@ -279,7 +284,7 @@ public class TextualMode implements Runnable {
     }
 
     public void printSwapSuccess(int x1, int y1, int x2, int y2) {
-        Mountain m = game.getKube().getCurrentPlayer().getMountain();
+        Mountain m = kube.getCurrentPlayer().getMountain();
         System.out.println("Les pièces " + m.getCase(x1, y1) + " et " + m.getCase(x2, y2) + "ont été échangées");
     }
 
@@ -306,13 +311,21 @@ public class TextualMode implements Runnable {
 
     public void printWinMessage(Player winner) {
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
-        System.out.println("Plateau final : \n" + game.getKube().getK3() + "\n");
-        System.out.println(game.getKube().getP1());
-        System.out.println(game.getKube().getP2());
+        System.out.println("Plateau final : \n" + kube.getK3() + "\n");
+        System.out.println(kube.getP1());
+        System.out.println(kube.getP2());
     }
-    public void printGameMode(){
+
+    public void printGameMode() {
         System.out.println("Mode de jeu : 1 pour local, 2 pour en ligne");
     }
 
+    private void printAskIP() {
+        System.out.println("Entrez l'adresse IP du serveur");
+    }
+
+    private void printHostOrJoin() {
+        System.out.println("Entrez 1 pour héberger, 2 pour rejoindre");
+    }
 
 }

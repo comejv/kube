@@ -1,28 +1,29 @@
 package kube.model.action.move;
 
 import java.awt.Point;
+import java.io.Serializable;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 import kube.model.Player;
 
-public abstract class Move {
+public abstract class Move implements Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
     private Player player;
-    private Color color;
+    private ModelColor color;
 
     /**********
      * CONSTRUCTORS
      **********/
 
     public Move() {
-        setColor(Color.EMPTY);
+        setColor(ModelColor.EMPTY);
     }
 
-    public Move(Color color) {
+    public Move(ModelColor color) {
         setColor(color);
     }
 
@@ -30,12 +31,12 @@ public abstract class Move {
      * SETTERS
      **********/
 
-    public void setPlayer(Player p) {
-        this.player = p;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
-    public void setColor(Color c) {
-        this.color = c;
+    public void setColor(ModelColor color) {
+        this.color = color;
     }
 
     /**********
@@ -46,7 +47,7 @@ public abstract class Move {
         return this.player;
     }
 
-    public Color getColor() {
+    public ModelColor getColor() {
         return this.color;
     }
 
@@ -62,11 +63,11 @@ public abstract class Move {
      * METHODS
      **********/
 
-     /**
-      * Check if the move is from the additionals 
-      *
-      * @return true if the move is from the additionals, false otherwise
-      */
+    /**
+     * Check if the move is from the additionals
+     *
+     * @return true if the move is from the additionals, false otherwise
+     */
     public boolean isFromAdditionals() {
         return false;
     }
@@ -104,9 +105,7 @@ public abstract class Move {
      * @return a string representation of the move for saving
      */
     public String forSave() {
-        // TODO: check if it is needed to add the player id
-        // or if we can get it from the first player of the game
-        return getPlayer().getId() + ";" + getColor().forSave();
+        return getColor().forSave();
     }
 
     @Override
@@ -131,5 +130,32 @@ public abstract class Move {
             return false;
 
         return getColor() == that.getColor();
+    }
+
+    public static Move fromSave(String save) throws IllegalArgumentException {
+
+        String moveType;
+        String[] parts;
+
+        save = save.substring(1, save.length() - 1);
+        parts = save.split(";");
+        moveType = parts[0];
+
+        switch (moveType) {
+            case "MW":
+                return new MoveMW(save);
+            case "MM":
+                return new MoveMM(save);
+            case "AM":
+                return new MoveAM(save);
+            case "AW":
+                return new MoveAW();
+            case "MA":
+                return new MoveMA(save);
+            case "AA":
+                return new MoveAA(save);
+            default:
+                throw new IllegalArgumentException("Unknown move type");
+        }
     }
 }

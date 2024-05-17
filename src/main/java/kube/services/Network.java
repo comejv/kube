@@ -1,15 +1,17 @@
 package kube.services;
 
 import java.io.BufferedReader;
-import java.io.PrintWriter;
-import java.nio.Buffer;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
-public abstract class Network implements Runnable {
+
+public abstract class Network{
     
     private String ip;
     private int port;
-    private PrintWriter out;
-    private BufferedReader in;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+
 
     public abstract boolean connect(String ip, int port);
     public abstract boolean disconnect();
@@ -24,11 +26,11 @@ public abstract class Network implements Runnable {
         return port;
     }
 
-    public PrintWriter getOut() {
+    public ObjectOutputStream getOut() {
         return out;
     }
 
-    public BufferedReader getIn() {
+    public ObjectInputStream getIn() {
         return in;
     }
 
@@ -40,11 +42,15 @@ public abstract class Network implements Runnable {
         this.port = port;
     }
 
-    public void setOut(PrintWriter out) {
+    public void setOut(ObjectOutputStream out) {
         this.out = out;
     }
 
-    public void setIn(BufferedReader in) {
+    public void setIn(ObjectInputStream in) {
         this.in = in;
+    }
+
+    public boolean isServer() {
+        return false;
     }
 }

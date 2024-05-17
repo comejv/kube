@@ -5,7 +5,7 @@ import java.util.Random;
 
 import java.util.Comparator;
 
-public enum Color {
+public enum ModelColor {
 
     /**********
      * ENUMERATION
@@ -35,7 +35,7 @@ public enum Color {
      * 
      * @param colorCode
      */
-    Color(int colorCode) {
+    ModelColor(int colorCode) {
         setColorCode(colorCode);
     }
 
@@ -65,8 +65,8 @@ public enum Color {
      * @param colorCode the color code
      * @return the color that corresponds to the color code
      */
-    public static Color getColor(int colorCode) {
-        for (Color c : Color.values()) {
+    public static ModelColor getColor(int colorCode) {
+        for (ModelColor c : ModelColor.values()) {
             if (c.getColorCode() == colorCode) {
                 return c;
             }
@@ -79,12 +79,12 @@ public enum Color {
      * 
      * @return all the colored colors
      */
-    public static Color[] getAllColored() {
-        return new Color[] { RED, GREEN, BLUE, YELLOW, BLACK };
+    public static ModelColor[] getAllColored() {
+        return new ModelColor[] { RED, GREEN, BLUE, YELLOW, BLACK };
     }
 
-    public static Color[] getAllColoredAndJokers() {
-        return new Color[] { RED, GREEN, BLUE, YELLOW, BLACK, WHITE, NATURAL };
+    public static ModelColor[] getAllColoredAndJokers() {
+        return new ModelColor[] { RED, GREEN, BLUE, YELLOW, BLACK, WHITE, NATURAL };
     }
 
     /**
@@ -92,15 +92,15 @@ public enum Color {
      * 
      * @return a random color
      */
-    public static Color getRandomColor() {
+    public static ModelColor getRandomColor() {
         Random r = new Random();
-        return Color.values()[r.nextInt(Color.values().length)];
+        return ModelColor.values()[r.nextInt(ModelColor.values().length)];
     }
 
     /**
      * Compare the colors by their color code
      */
-    public static Comparator<Color> compareByValue = new Comparator<Color>() {
+    public static Comparator<ModelColor> compareByValue = new Comparator<ModelColor>() {
 
         /**
          * Compare the colors by their color code
@@ -110,7 +110,7 @@ public enum Color {
          * @return the difference between the color codes
          */
         @Override
-        public int compare(Color c1, Color c2) {
+        public int compare(ModelColor c1, ModelColor c2) {
             return c1.getColorCode() - c2.getColorCode();
         }
     };
@@ -150,6 +150,10 @@ public enum Color {
      * @return a string representation of the color for saving
      */
     public String forSave() {
-        return this.name();
+        return getColorCode() + "";
+    }
+
+    public static ModelColor fromSave(String save) {
+        return getColor(Integer.parseInt(save));
     }
 }
