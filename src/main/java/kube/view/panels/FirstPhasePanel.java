@@ -81,26 +81,29 @@ public class FirstPhasePanel extends JPanel {
 
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
         JPanel constructPanel = new JPanel();
+        constructPanel.setBackground(GUIColors.TEXT.toColor());
         constructPanel.setLayout(new GridLayout(6, 6));
         GridBagConstraints cc = new GridBagConstraints();
         Icon[][] hexaList = new Icon[6][6];
         constructPanel.setBackground(GUIColors.GAME_BG_LIGHT.toColor());
         gamePanel.add(constructPanel, BorderLayout.CENTER);
         int last = 0;
+        // RANDOM LIST;
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = newHexa();
+                hexaList[i][j] = newHexa(true);
             }
         }
         for (int i = 0; i < 6; i++) {
             JPanel lineHexa = new JPanel();
+            lineHexa.setBackground(GUIColors.TEXT.toColor());
             for (int j = 5; j >= 0; j--) {
                 if (hexaList[i][j] != null) {
                     lineHexa.add(hexaList[i][j]);
                 }
             }
             if (i != 5) {
-                cc.insets = new Insets(0, 80 / 2, 0, 80 / 2);
+                cc.insets = new Insets(0, 60 / 2, 0, 60 / 2);
             }
             if (i % 2 == 1) {
                 last = i - (i - 5) * 2;
@@ -113,21 +116,22 @@ public class FirstPhasePanel extends JPanel {
         // SIDE BAR - PIECES AVAILABLE
         // for this part need: getAvailableColors() and loop on it
         JPanel piecesPanel = new JPanel();
+        piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
         piecesPanel.setLayout(new GridLayout(4, 2));
         GridBagConstraints c = new GridBagConstraints();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 2; j++) {
                 JPanel mini = new JPanel();
+                mini.setBackground(GUIColors.TEXT_HOVER.toColor());
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                mini.add(newHexa());
+                mini.add(newHexa(false));
                 mini.add(numOfPieces);
                 c.gridy = j;
                 c.gridx = i;
                 piecesPanel.add(mini);
             }
         }
-        piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
         gamePanel.add(piecesPanel, BorderLayout.EAST);
         return gamePanel;
     }
@@ -161,16 +165,21 @@ public class FirstPhasePanel extends JPanel {
         return buttons;
     }
 
-    public static Icon newHexa() {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaGray"));
-        hexa.resizeIcon(80, 80);
+    public static Icon newHexa(boolean opt) {
+        Icon hexa;
+        if (opt) {
+            hexa = new Icon(ResourceLoader.getBufferedImage("hexaVide"));
+        } else {
+            hexa = new Icon(ResourceLoader.getBufferedImage("hexaGray"));
+        }
+        hexa.resizeIcon(60, 60);
         return hexa;
     }
 
-    public static Icon newHexa(HSL hsl) {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaGray"));
-        hexa.resizeIcon(80, 80);
-        hexa.recolor(hsl);
+    public static Icon newHexa(HSL c) {
+        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
+        hexa.resizeIcon(60, 60);
+        hexa.recolor(c);
         return hexa;
     }
 }
