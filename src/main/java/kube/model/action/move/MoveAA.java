@@ -1,5 +1,6 @@
 package kube.model.action.move;
 
+
 import kube.model.ModelColor;
 
 public class MoveAA extends Move {

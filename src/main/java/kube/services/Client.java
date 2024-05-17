@@ -1,20 +1,19 @@
 package kube.services;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 
 import kube.configuration.Config;
+import kube.model.action.Action;
+import kube.model.action.Queue;
 
 public class Client extends Network {
 
     private Socket socket;
     
-    public Client(String ip, int port){
+    public Client(Queue<Action> networkToModel,String ip, int port){
+        super(networkToModel);
         connect(ip, port);
     }
 
@@ -51,28 +50,31 @@ public class Client extends Network {
         return true;
     }
 
-    public boolean send(Object data) {
+    public boolean send(Action data) {
+        Config.debug(data);
         try {
-            Config.debug("Client send" +  data);
             if (getOut() != null) {
                 getOut().writeObject(data);
+                Config.debug("Client send" + data);
+
             } else {
                 return false;
             }
         } catch (Exception e) {
+            System.out.println(e);
             return false;
         }
+
         return true;
     }
 
-    public Object receive() {
+    public Action receive() {
         try {
-            Object o = getIn().readObject();
-            Config.debug("Client receive");
+            Action o = (Action) getIn().readObject();
+            Config.debug("Client receive" + o);
             return o;
         } catch (Exception e) {
             return null;
         }
     }
-
 }
