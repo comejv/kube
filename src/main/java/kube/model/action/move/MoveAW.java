@@ -8,9 +8,9 @@ public class MoveAW extends Move {
      * CONSTRUCTOR
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      */
+    /**
+     * Constructor of the class MoveAM
+     */
     public MoveAW() {
         super(ModelColor.WHITE);
     }
@@ -20,7 +20,7 @@ public class MoveAW extends Move {
      **********/
 
     /**
-     * Check if the move is from the additionals 
+     * Check if the move is from the additionals
      *
      * @return true if the move is from the additionals, false otherwise
      */

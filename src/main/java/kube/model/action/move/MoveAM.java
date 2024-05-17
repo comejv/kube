@@ -35,8 +35,7 @@ public class MoveAM extends Move {
      * @param color the color of the moved cube
      */
     public MoveAM(int toX, int toY, ModelColor color) {
-        super(color);
-        setTo(new Point(toX, toY));
+        this(new Point(toX, toY), color);
     }
 
     /**
@@ -56,7 +55,7 @@ public class MoveAM extends Move {
         setColor(ModelColor.getColor(Integer.parseInt(color)));
 
         coords = to.split(",");
-        setTo(new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
+        setTo(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
     }
 
     /**********
@@ -65,6 +64,10 @@ public class MoveAM extends Move {
 
     public void setTo(Point to) {
         this.to = to;
+    }
+
+    public void setTo(int toX, int toY) {
+        setTo(new Point(toX, toY));
     }
 
     /**********
@@ -106,5 +109,4 @@ public class MoveAM extends Move {
                 getColor().forDisplay() +
                 ", en (" + to.x + ", " + to.y + ")";
     }
-
 }

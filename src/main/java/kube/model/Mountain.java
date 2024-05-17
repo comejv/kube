@@ -15,13 +15,45 @@ public class Mountain implements Serializable {
     private int baseSize;
 
     /**********
-     * CONSTUCTOR
+     * CONSTUCTORS
      **********/
 
+    /**
+     * Constructor of the class Mountain
+     * 
+     * @param size the size of the mountain's base
+     */
     public Mountain(int size) {
         setBaseSize(size);
         setMountain(new ModelColor[getBaseSize()][getBaseSize()]);
         clear();
+    }
+
+    /**
+     * Constructor of the class Mountain from a save string
+     * 
+     * @param save the string to load
+     */
+    public Mountain(String save) {
+
+        String[] parts, cases;
+        int size, i, j, k;
+
+        parts = save.split(";");
+        size = Integer.parseInt(parts[0]);
+
+        setBaseSize(size);
+        setMountain(new ModelColor[getBaseSize()][getBaseSize()]);
+
+        cases = parts[1].split(",");
+
+        k = 0;
+        for (i = 0; i < getBaseSize(); i++) {
+            for (j = 0; j < i + 1; j++) {
+                setCase(i, j, ModelColor.fromSave(cases[k]));
+                k++;
+            }
+        }
     }
 
     /**********
@@ -236,9 +268,25 @@ public class Mountain implements Serializable {
      * @return the String representation of the mountain for saving
      */
     public String forSave() {
-        String s = "";
-        // TODO: Implement this method
-        return s;
+        
+        String save;
+        int i, j;
+
+        save = "{" + getBaseSize() + ";";
+        
+        for (i = 0; i < getBaseSize(); i++) {
+            for (j = 0; j < i + 1; j++) {
+                save += getCase(i, j).forSave() + ",";
+            }
+        }
+
+        if (getBaseSize() > 0) {
+            save = save.substring(0, save.length() - 1);
+        }
+
+        save += "}";
+
+        return save;
     }
 
     @Override

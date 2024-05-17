@@ -31,12 +31,12 @@ public abstract class Move implements Serializable {
      * SETTERS
      **********/
 
-    public void setPlayer(Player p) {
-        this.player = p;
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 
-    public void setColor(ModelColor c) {
-        this.color = c;
+    public void setColor(ModelColor color) {
+        this.color = color;
     }
 
     /**********
@@ -63,11 +63,11 @@ public abstract class Move implements Serializable {
      * METHODS
      **********/
 
-     /**
-      * Check if the move is from the additionals 
-      *
-      * @return true if the move is from the additionals, false otherwise
-      */
+    /**
+     * Check if the move is from the additionals
+     *
+     * @return true if the move is from the additionals, false otherwise
+     */
     public boolean isFromAdditionals() {
         return false;
     }
@@ -135,7 +135,7 @@ public abstract class Move implements Serializable {
     public static Move fromSave(String save) throws IllegalArgumentException {
 
         String moveType;
-        String [] parts;
+        String[] parts;
 
         save = save.substring(1, save.length() - 1);
         parts = save.split(";");

@@ -13,19 +13,18 @@ public class MoveMM extends Move {
 
     private Point from;
     private Point to;
-    
-    
+
     /**********
      * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      *
-      * @param from the source of the move
-      * @param to the destination of the move
-      * @param color the color of the moved cube
-      */
+    /**
+     * Constructor of the class MoveAM
+     *
+     * @param from  the source of the move
+     * @param to    the destination of the move
+     * @param color the color of the moved cube
+     */
     public MoveMM(Point from, Point to, ModelColor color) {
         super(color);
         setFrom(from);
@@ -63,10 +62,10 @@ public class MoveMM extends Move {
         setColor(ModelColor.getColor(Integer.parseInt(color)));
 
         coords = from.split(",");
-        setFrom(new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
+        setFrom(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 
         coords = to.split(",");
-        setTo(new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1])));
+        setTo(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
     }
 
     /**********
@@ -77,8 +76,16 @@ public class MoveMM extends Move {
         this.from = from;
     }
 
+    public void setFrom(int x, int y) {
+        setFrom(new Point(x, y));
+    }
+
     public void setTo(Point to) {
         this.to = to;
+    }
+
+    public void setTo(int x, int y) {
+        setTo(new Point(x, y));
     }
 
     /**********
