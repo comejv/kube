@@ -1,10 +1,9 @@
 package kube.model.action.move;
 
-import java.io.Serializable;
 
 import kube.model.ModelColor;
 
-public class MoveAA extends Move implements Serializable {
+public class MoveAA extends Move {
 
     /**********
      * CONSTRUCTOR

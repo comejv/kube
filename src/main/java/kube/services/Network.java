@@ -1,22 +1,29 @@
 package kube.services;
 
-import java.io.BufferedReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import kube.model.action.Action;
+import kube.model.action.Queue;
 
-public abstract class Network{
+
+public abstract class Network implements Runnable{
     
     private String ip;
     private int port;
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+    private Queue<Action> networkToModel;
+
+    Network(Queue<Action> networkToModel) {
+        this.networkToModel = networkToModel;
+    }
 
     public abstract boolean connect(String ip, int port);
     public abstract boolean disconnect();
-    public abstract boolean send(Object data);
-    public abstract Object receive();
+    public abstract boolean send(Action data);
+    public abstract Action receive();
     
     public String getIp() {
         return ip;
@@ -53,4 +60,16 @@ public abstract class Network{
     public boolean isServer() {
         return false;
     }
+    
+    @Override
+    public void run() {
+        while (true) {
+            Action action = receive();
+            if (action != null) {
+                System.out.println("Received action: " + action);
+                networkToModel.add(action);
+            }
+        }
+    }
+    
 }

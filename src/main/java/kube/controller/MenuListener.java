@@ -54,20 +54,20 @@ public class MenuListener implements Runnable {
             mode = askHostOrJoin();
             Network network = null;
             if (mode == 1) {
-                network = new Server(PORT);
+                network = new Server(eventsToModel,PORT);
                 type = Game.host;
             } else {
-                network = askIP();
+                network = askIP(eventsToModel);
                 type = Game.join;
             }
             eventsToNetwork = new Queue<>();
             controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, scanner);
-            networkListener = new NetworkListener(network, eventsToModel);
             networkSender = new NetworkSender(network, eventsToNetwork);
-            Thread networkThread = new Thread(networkListener);
+            
+            Thread networkListenerThread = new Thread(network);
             Thread networkSenderThread = new Thread(networkSender);
             networkSenderThread.start();
-            networkThread.start();
+            networkListenerThread.start();
         }
 
         Game model = new Game(type, kube, eventsToModel, eventsToView, eventsToNetwork);
@@ -127,11 +127,11 @@ public class MenuListener implements Runnable {
         }
     }
 
-    private Network askIP() {
+    private Network askIP(Queue<Action> networkToModel) {
         String s = "";
         eventsToView.add(new Action(Action.PRINT_ASK_IP));
         s = scanner.nextLine();
-        Network network = new Client(s, PORT);
+        Network network = new Client(networkToModel, s,PORT);
         eventsToView.add(new Action(Action.PRINT_START));
         return network;
     }

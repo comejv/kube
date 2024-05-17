@@ -1,8 +1,6 @@
 package kube.model;
 
 import kube.model.ai.*;
-import kube.services.Network;
-import kube.services.Server;
 
 import java.util.Random;
 
@@ -131,9 +129,10 @@ public class Game implements Runnable {
     }
 
     public void onlineGame(int whoAmI) {
-        Config.debug("Démarrage de la partie en ligne");
+        Config.debug("Démarrage de la partie en ligne en tant que "+ (whoAmI == host ? "hôte" : "invité")) ;
         Player player;
         // Construction phase
+        eventsToNetwork.add(new Action(Action.SHOW_ALL));
 
         if (whoAmI == host) {
             

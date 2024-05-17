@@ -1,6 +1,8 @@
 package kube.model.action;
 
-public class Action{
+import java.io.Serializable;
+
+public class Action implements Serializable{
     public static final int SHOW_ALL = 0;
     public static final int SHOW_MOUNTAIN = 1;
     public static final int SWAP = 2;
