@@ -1,14 +1,13 @@
 package kube.model.ai;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.Timer;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import kube.model.Kube;
 import kube.model.Player;
@@ -33,23 +32,23 @@ public class MiniMaxAI implements ActionListener {
      **********/
 
      public MiniMaxAI(int time, Random r) {
-        setR(r);
-        setTime(time);
+        this.r =r;
+        this.time = time;
     }
 
     public MiniMaxAI(int time, int seed) {
-        setR(new Random(seed));
-        setTime(time);
+        this.r = new Random(seed);
+        this.time = time;
     }
 
     public MiniMaxAI(int time) {
-        setR(new Random());
-        setTime(time);
+        this.r = new Random();
+        this.time = time;
     }
 
     public MiniMaxAI() {
-        setR(new Random());
-        setTime(1000);
+        this.r = new Random();
+        this.time = 1000;
     }
 
     /**********

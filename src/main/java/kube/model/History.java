@@ -1,10 +1,9 @@
 package kube.model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 
 import kube.model.action.move.Move;
-
-import java.awt.Point;
 
 public class History {
 
@@ -24,9 +23,9 @@ public class History {
      * Constructor of the class History
      */
     public History() {
-        setFirstPlayer(0);
-        setDone(new ArrayList<Move>());
-        setUndone(new ArrayList<Move>());
+        this.firstPlayer=0;
+        this.done = new ArrayList<>();
+        this.undone = new ArrayList<>();
     }
 
     /**
@@ -37,25 +36,25 @@ public class History {
     public History(String save) {
 
         String player, doneString, undoneString;
-        String[] parts, done, undone;
+        String[] parts, doneStringTab, undoneStringTab;
 
         parts = save.split("\n");
 
         player = parts[0];
-        setFirstPlayer(Integer.parseInt(player));
+        this.firstPlayer=Integer.parseInt(player);
 
         doneString = parts[1].substring(1, parts[1].length() - 1);
-        done = doneString.split(" ");
-        setDone(new ArrayList<Move>());
-        for (String move : done) {
-            getDone().add(Move.fromSave(move));
+        doneStringTab = doneString.split(" ");
+        this.done = new ArrayList<>();
+        for (String move : doneStringTab) {
+            this.done.add(Move.fromSave(move));
         }
 
         undoneString = parts[2].substring(1, parts[2].length() - 1);
-        undone = undoneString.split(" ");
-        setUndone(new ArrayList<Move>());
-        for (String move : undone) {
-            getUndone().add(Move.fromSave(move));
+        undoneStringTab = undoneString.split(" ");
+        this.undone = new ArrayList<>();
+        for (String move : undoneStringTab) {
+            this.undone.add(Move.fromSave(move));
         }
     }
     /**********

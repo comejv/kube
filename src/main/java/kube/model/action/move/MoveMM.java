@@ -27,8 +27,8 @@ public class MoveMM extends Move {
      */
     public MoveMM(Point from, Point to, ModelColor color) {
         super(color);
-        setFrom(from);
-        setTo(to);
+        this.from = from;
+        this.to = to;
     }
 
     /**
@@ -51,21 +51,21 @@ public class MoveMM extends Move {
      */
     public MoveMM(String save) {
 
-        String from, to, color;
+        String fromString, toString, color;
         String[] parts, coords;
 
         parts = save.split(";");
         color = parts[1];
-        from = parts[2].substring(1, parts[2].length() - 1);
-        to = parts[3].substring(1, parts[3].length() - 1);
+        fromString = parts[2].substring(1, parts[2].length() - 1);
+        toString = parts[3].substring(1, parts[3].length() - 1);
 
         setColor(ModelColor.getColor(Integer.parseInt(color)));
 
-        coords = from.split(",");
-        setFrom(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+        coords = fromString.split(",");
+        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 
-        coords = to.split(",");
-        setTo(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+        coords = toString.split(",");
+        this.to= new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
     }
 
     /**********

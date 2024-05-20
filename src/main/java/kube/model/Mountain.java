@@ -1,9 +1,9 @@
 package kube.model;
 
-import java.util.ArrayList;
-import java.util.Objects;
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class Mountain implements Serializable {
 
@@ -24,8 +24,8 @@ public class Mountain implements Serializable {
      * @param size the size of the mountain's base
      */
     public Mountain(int size) {
-        setBaseSize(size);
-        setMountain(new ModelColor[getBaseSize()][getBaseSize()]);
+        this.baseSize = size;
+        this.content = new ModelColor[size][size];
         clear();
     }
 
@@ -42,13 +42,13 @@ public class Mountain implements Serializable {
         parts = save.split(";");
         size = Integer.parseInt(parts[0]);
 
-        setBaseSize(size);
-        setMountain(new ModelColor[getBaseSize()][getBaseSize()]);
+        this.baseSize  = size;
+        this.content = new ModelColor[size][size];
 
         cases = parts[1].split(",");
 
         k = 0;
-        for (i = 0; i < getBaseSize(); i++) {
+        for (i = 0; i < this.baseSize; i++) {
             for (j = 0; j < i + 1; j++) {
                 setCase(i, j, ModelColor.fromSave(cases[k]));
                 k++;
@@ -72,7 +72,7 @@ public class Mountain implements Serializable {
         setCase(p.x, p.y, c);
     }
 
-    public void setCase(int x, int y, ModelColor c) {
+    public final void setCase(int x, int y, ModelColor c) {
         content[x][y] = c;
     }
 

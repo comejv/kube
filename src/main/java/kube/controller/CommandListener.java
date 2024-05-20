@@ -2,11 +2,12 @@ package kube.controller;
 
 import java.util.Scanner;
 
-import kube.model.action.*;
+import kube.model.action.Action;
+import kube.model.action.Queue;
+import kube.model.action.Swap;
 
 public class CommandListener implements Runnable {
 
-    String command;
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
     Queue<Action> eventsToNetwork;
@@ -77,7 +78,7 @@ public class CommandListener implements Runnable {
             eventsToModel.add(new Action(Action.SWAP, swap));
             eventsToView.add(new Action(Action.PRINT_SWAP, swap));
             return true;
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             eventsToView.add(new Action(Action.PRINT_SWAP_ERROR));
             return false;
         }
@@ -90,7 +91,7 @@ public class CommandListener implements Runnable {
             int n = Integer.parseInt(s);
             eventsToModel(new Action(Action.MOVE, n));
             return true;
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             eventsToView.add(new Action(Action.PRINT_MOVE_ERROR));
             return false;
         }

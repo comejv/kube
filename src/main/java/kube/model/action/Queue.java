@@ -24,9 +24,9 @@ public class Queue<E> {
         while (head == null) {
             try {
                 wait();
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
             }
-            ;
+
         }
         Maillon<E> m = head;
         head = head.next;

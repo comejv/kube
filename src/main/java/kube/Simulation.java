@@ -4,15 +4,13 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-import kube.model.ModelColor;
 import kube.model.Kube;
+import kube.model.ModelColor;
 import kube.model.Mountain;
-import kube.model.action.Action;
 import kube.model.action.move.Move;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.betterConstruct;
 import kube.model.ai.midLevelAI;
-import kube.model.ai.randomAI;
 
 public class Simulation implements Runnable {
     int winJ1;

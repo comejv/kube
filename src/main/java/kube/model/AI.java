@@ -25,7 +25,7 @@ public class AI extends Player {
         super(id);
         ai.setK3(k3);
         ai.setPlayerId(id);
-        setAI(ai);
+        this.ai = ai;
     }
 
     /**********

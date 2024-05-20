@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Random;
 
 import kube.model.Kube;
-import kube.model.Player;
 import kube.model.action.move.Move;
 
 public class randomAI extends MiniMaxAI {
@@ -40,7 +39,7 @@ public class randomAI extends MiniMaxAI {
 
     @Override
     public void constructionPhase() {
-        while (getPlayer(getK3()).getPlayableColors().size() == 0 && !getPlayer(getK3()).validateBuilding()) {
+        while (getPlayer(getK3()).getPlayableColors().isEmpty() && !getPlayer(getK3()).validateBuilding()) {
             utilsAI.randomFillMountain(getPlayer(getK3()), getR());
         }
     }

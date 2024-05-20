@@ -25,7 +25,7 @@ public class MoveMA extends Move {
      */
     public MoveMA(Point from, ModelColor color) {
         super(color);
-        setFrom(from);
+        this.from= from;
     }
 
     /**
@@ -46,17 +46,17 @@ public class MoveMA extends Move {
      */
     public MoveMA(String save) {
 
-        String color, from;
+        String color, fromString;
         String[] parts, coords;
 
         parts = save.split(";");
         color = parts[1];
-        from = parts[2].substring(1, parts[2].length() - 1);
+        fromString = parts[2].substring(1, parts[2].length() - 1);
 
         setColor(ModelColor.getColor(Integer.parseInt(color)));
 
-        coords = from.split(",");
-        setFrom(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+        coords = fromString.split(",");
+        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
     }
 
     /**********

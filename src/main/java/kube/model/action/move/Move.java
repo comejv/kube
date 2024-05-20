@@ -20,17 +20,18 @@ public abstract class Move implements Serializable {
      **********/
 
     public Move() {
-        setColor(ModelColor.EMPTY);
+        this.color = ModelColor.EMPTY;
     }
 
     public Move(ModelColor color) {
-        setColor(color);
+        this.color = color;
     }
 
     /**********
      * SETTERS
      **********/
 
+     
     public void setPlayer(Player player) {
         this.player = player;
     }

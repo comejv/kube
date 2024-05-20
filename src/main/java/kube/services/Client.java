@@ -1,10 +1,10 @@
 package kube.services;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import kube.configuration.Config;
 import kube.model.action.Action;
 
 public class Client extends Network {
@@ -27,30 +27,33 @@ public class Client extends Network {
         this.socket = socket;
     }
 
-    public boolean connect(String ip, int port) {
+    @Override
+    public final boolean connect(String ip, int port) {
         try {
             setIp(ip);
             setPort(port);
             setSocket(new Socket(ip, port));
             setOut(new ObjectOutputStream(getSocket().getOutputStream()));
             setIn(new ObjectInputStream(getSocket().getInputStream()));
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
         return true;
     }
 
+    @Override
     public boolean disconnect() {
         try {
             getOut().close();
             getIn().close();
             getSocket().close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
         return true;
     }
 
+    @Override
     public boolean send(Action data) {
         try {
             if (getOut() != null) {
@@ -59,7 +62,7 @@ public class Client extends Network {
             } else {
                 return false;
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             System.out.println(e);
             return false;
         }
@@ -67,11 +70,12 @@ public class Client extends Network {
         return true;
     }
 
+    @Override
     public Action receive() {
         try {
             Action o = (Action) getIn().readObject();
             return o;
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             return null;
         }
     }
