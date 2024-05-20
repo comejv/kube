@@ -1,14 +1,13 @@
 package kube.model;
 
+import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
 import kube.model.ai.MiniMaxAI;
-
-import java.awt.Point;
-import java.io.Serializable;
 
 public class Player implements Serializable {
 
@@ -34,12 +33,12 @@ public class Player implements Serializable {
      */
     public Player(int id) {
 
-        setId(id);
-        setWhiteUsed(0);
-        setMountain(new Mountain(6));
+        this.id=id;
+        this.whiteUsed=0;
+        this.mountain = new Mountain(6);
         clearMountain();
-        setAdditionals(new ArrayList<ModelColor>());
-        setHasValidateBuilding(false);
+        this.additionals = new ArrayList<>();
+        this.hasValidateBuilding = false;
     }
 
     /**********
@@ -380,7 +379,7 @@ public class Player implements Serializable {
      * 
      * @return void
      */
-    public void clearMountain() {
+    public final void clearMountain() {
         getMountain().clear();
     }
 

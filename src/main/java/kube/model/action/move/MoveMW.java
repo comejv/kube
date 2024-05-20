@@ -24,7 +24,7 @@ public class MoveMW extends Move {
      */
     public MoveMW(Point from) {
         super(ModelColor.WHITE);
-        setFrom(from);
+        this.from = from;
     }
 
     /**
@@ -47,14 +47,14 @@ public class MoveMW extends Move {
 
         super(ModelColor.WHITE);
 
-        String from;
+        String fromString;
         String[] parts, coords;
 
         parts = save.split(";");
-        from = parts[2].substring(1, parts[2].length() - 1);
+        fromString = parts[2].substring(1, parts[2].length() - 1);
 
-        coords = from.split(",");
-        setFrom(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+        coords = fromString.split(",");
+        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
     }
 
     /**********

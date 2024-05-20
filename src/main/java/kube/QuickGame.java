@@ -1,12 +1,12 @@
 package kube;
 
-import kube.model.Kube;
-import kube.model.Game;
-import kube.model.action.*;
-
 import java.util.Scanner;
 
 import kube.controller.CommandListener;
+import kube.model.Game;
+import kube.model.Kube;
+import kube.model.action.Action;
+import kube.model.action.Queue;
 import kube.view.TextualMode;
 
 public class QuickGame {
@@ -20,7 +20,7 @@ public class QuickGame {
         Queue<Action> eventsToView = new Queue<>();
         Queue<Action> eventsToNetwork = new Queue<>();
 
-        Game model = new Game(Game.local, kube, eventsToModel, eventsToView, eventsToNetwork);
+        Game model = new Game(Game.LOCAL, kube, eventsToModel, eventsToView, eventsToNetwork);
         TextualMode view = new TextualMode(kube, eventsToView);
         CommandListener controller = new CommandListener(eventsToModel, eventsToView, scanner);
 

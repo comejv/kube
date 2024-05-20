@@ -55,8 +55,8 @@ public class Action implements Serializable{
     private Object data;
 
     public Action(int type, Object data){
-        setType(type);
-        setData(data);
+        this.type = type;
+        this.data = data;
     }
 
     public Action(int type){
@@ -75,10 +75,11 @@ public class Action implements Serializable{
         return data;
     }
 
-    public void setData(Object data){
+    public void setData(Object data) {
         this.data = data;
     }
 
+    @Override
     public String toString(){
         String s = "Action{type = " + type;
         if(data != null){

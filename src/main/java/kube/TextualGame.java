@@ -2,10 +2,10 @@ package kube;
 
 import java.util.Scanner;
 
-import kube.model.Kube;
-import kube.model.action.*;
-
 import kube.controller.MenuListener;
+import kube.model.Kube;
+import kube.model.action.Action;
+import kube.model.action.Queue;
 import kube.view.TextualMode;
 
 public class TextualGame {
@@ -16,9 +16,8 @@ public class TextualGame {
 
         Queue<Action> eventsToModel = new Queue<>();
         Queue<Action> eventsToView = new Queue<>();
-        Queue<Action> eventsToController = new Queue<>();
 
-        MenuListener menuListener = new MenuListener(kube, eventsToView, eventsToModel, eventsToController, scanner);
+        MenuListener menuListener = new MenuListener(kube, eventsToView, eventsToModel, scanner);
         TextualMode view = new TextualMode(kube, eventsToView);
 
         Thread viewThread = new Thread(view);

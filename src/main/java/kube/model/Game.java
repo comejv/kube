@@ -1,25 +1,28 @@
 package kube.model;
 
-import kube.model.ai.*;
-
 import java.util.Random;
 
 import kube.configuration.Config;
-import kube.model.action.*;
+import kube.model.action.Action;
+import kube.model.action.Queue;
+import kube.model.action.Swap;
 import kube.model.action.move.Move;
+import kube.model.ai.midLevelAI;
+import kube.model.ai.randomAI;
+import kube.model.ai.utilsAI;
 
 public class Game implements Runnable {
-    public static final int local = 1;
-    public static final int host = 2;
-    public static final int join = 3;
+    public static final int LOCAL = 1;
+    public static final int HOST = 2;
+    public static final int JOIN = 3;
 
-    public static final int port = 1234;
+    public static final int PORT = 1234;
 
     Queue<Action> controllerToModele;
     Queue<Action> modeleToView;
     Queue<Action> eventsToNetwork;
     private int gameType;
-    private Kube k3;
+    private final Kube k3;
 
     public Game(int gameType, Kube k3, Queue<Action> controllerToModele, Queue<Action> modeleToView,
             Queue<Action> eventsToNetwork) {
@@ -33,18 +36,22 @@ public class Game implements Runnable {
     @Override
     public void run() {
         switch (gameType) {
-            case local:
+            case LOCAL:
                 localGame();
                 break;
-            case host:
-                onlineGame(host);
+            case HOST:
+                onlineGame(HOST);
                 break;
-            case join:
-                onlineGame(join);
+            case JOIN:
+                onlineGame(JOIN);
                 break;
             default:
                 break;
         }
+    }
+
+    public void setGameType(int gameType) {
+        this.gameType = gameType;
     }
 
     public void localGame() {
@@ -83,7 +90,7 @@ public class Game implements Runnable {
                             break;
                     }
                 }
-            } catch (Exception e) {
+            } catch (UnsupportedOperationException e) {
                 modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
             }
 
@@ -100,7 +107,6 @@ public class Game implements Runnable {
                         k3.playMove(move);
                         modeleToView.add(new Action(Action.PRINT_MOVE, move));
                     } catch (Exception e) {
-                        e.printStackTrace();
                         System.exit(0);
                     }
                 } else {
@@ -135,12 +141,12 @@ public class Game implements Runnable {
     }
 
     public void onlineGame(int whoAmI) {
-        Config.debug("Démarrage de la partie en ligne en tant que " + (whoAmI == host ? "hôte" : "invité"));
+        Config.debug("Démarrage de la partie en ligne en tant que " + (whoAmI == HOST ? "hôte" : "invité"));
         Player player,other;
         // Construction phase
         eventsToNetwork.add(new Action(Action.SHOW_ALL));
 
-        if (whoAmI == host) {
+        if (whoAmI == HOST) {
 
             player = k3.getP1();
             other = k3.getP2();
@@ -178,7 +184,7 @@ public class Game implements Runnable {
                         k3.setK3((Mountain) a.getData());
                         break;
                     case Action.OTHER_PLAYER:
-                        if (whoAmI == host) {
+                        if (whoAmI == HOST) {
                             k3.setP2((Player) a.getData());
                         } else {
                             k3.setP1((Player) a.getData());
@@ -190,7 +196,7 @@ public class Game implements Runnable {
                         modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
                         break;
                 }
-            } catch (Exception e) {
+            } catch (UnsupportedOperationException e) {
                 modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
             }
 
@@ -201,7 +207,7 @@ public class Game implements Runnable {
             //Waiting for the other player to validate his building
             Action a = controllerToModele.remove();
             if (a.getType() == Action.OTHER_PLAYER) {
-                if (whoAmI == host) {
+                if (whoAmI == HOST) {
                     k3.setP2((Player) a.getData());
                 } else {
                     k3.setP1((Player) a.getData());
@@ -214,7 +220,7 @@ public class Game implements Runnable {
 
 
         }
-        if (whoAmI == host) {
+        if (whoAmI == HOST) {
             eventsToNetwork.add(new Action(Action.INIT_K3, k3.getK3()));
         }
         // END PHASE 1
@@ -272,7 +278,7 @@ public class Game implements Runnable {
             } else {
                 modeleToView.add(new Action(Action.PRINT_MOVE_ERROR, move));
             }
-        } catch (Exception e) {
+        } catch (UnsupportedOperationException e) {
             modeleToView.add(new Action(Action.PRINT_MOVE_ERROR));
         }
     }
@@ -292,4 +298,5 @@ public class Game implements Runnable {
             modeleToView.add(new Action(Action.PRINT_REDO_ERROR));
         }
     }
+
 }

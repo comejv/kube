@@ -1,8 +1,5 @@
 package kube.model;
 
-import kube.model.action.move.*;
-import kube.model.ai.MiniMaxAI;
-
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +7,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
+
+import kube.model.action.move.Move;
+import kube.model.action.move.MoveAA;
+import kube.model.action.move.MoveAM;
+import kube.model.action.move.MoveAW;
+import kube.model.action.move.MoveMA;
+import kube.model.action.move.MoveMM;
+import kube.model.action.move.MoveMW;
+import kube.model.ai.MiniMaxAI;
 
 public class Kube {
 
@@ -55,7 +61,7 @@ public class Kube {
      * INITIALIZATION
      **********/
 
-    public void init() {
+    public final void init() {
         init(null, null, new Random());
     }
 
@@ -76,7 +82,7 @@ public class Kube {
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
-        setBag(new ArrayList<ModelColor>());
+        setBag(new ArrayList<>());
         fillBag(r);
         fillBase();
         setHistory(new History());
@@ -355,7 +361,8 @@ public class Kube {
      * @return true if the move is playable, false otherwise
      * @throws UnsupportedOperationException                if the phase is not the
      *                                                      game phase
-     * @throws IllegalArgumentUnsupportedOperationException if the move is not a
+     * @throws IllegalArgumentException                     if the move is not a
+     * @throws UnsupportedOperationException                if the move is not a
      *                                                      MoveAA, MoveMA,
      *                                                      MoveAW, MoveMW, MoveAM
      *                                                      or MoveMM
@@ -461,7 +468,6 @@ public class Kube {
         }
 
         player = getCurrentPlayer();
-        previousPlayer = null;
         color = move.getColor();
 
         // Get the previous player
@@ -809,7 +815,7 @@ public class Kube {
             throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
-        return (moveSet().size() > 0);
+        return (!moveSet().isEmpty());
     }
 
     /**********

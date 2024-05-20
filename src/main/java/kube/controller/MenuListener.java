@@ -16,58 +16,64 @@ public class MenuListener implements Runnable {
     private static final int PORT = 1234;
     Queue<Action> eventsToView;
     Queue<Action> eventsToModel;
-    Queue<Action> eventsToController;
+    
     Queue<Action> eventsToNetwork;
     Kube kube;
     Scanner scanner;
 
-    public MenuListener(Kube kube, Queue<Action> eventsToView, Queue<Action> eventsToModel,
-            Queue<Action> eventsToController, Scanner scanner) {
+    public MenuListener(Kube kube, Queue<Action> eventsToView, Queue<Action> eventsToModel, Scanner scanner) {
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
-        this.eventsToController = eventsToController;
+        
         this.kube = kube;
         this.scanner = scanner;
     }
 
     @Override
     public void run() {
-        CommandListener controller = null;
-        NetworkListener networkListener = null;
-        NetworkSender networkSender = null;
-        int mode, nb,type;
+        CommandListener controller;
+        NetworkListener networkListener;
+        NetworkSender networkSender;
+        int mode, nb, type;
         mode = askGameMode();
         if (mode == 1) {
             controller = new CommandListener(eventsToModel, eventsToView, scanner);
-            type = Game.local;
+            type = Game.LOCAL;
             nb = askNbPlayer();
-            if (nb == 2) {
-                kube.init();
-            } else if (nb == 1) {
-                kube.init(new randomAI());
-            } else if (nb == 0) {
-                kube.init(new randomAI(), new randomAI());
+            switch (nb) {
+                case 0:
+                    kube.init(new randomAI(), new randomAI());
+                    break;
+                case 1:
+                    kube.init(new randomAI());
+                    break;
+                case 2:
+                    kube.init();
+                    break;
+
+                default:
+                    break;
             }
 
         } else {
             kube.init();
             mode = askHostOrJoin();
-            Network network = null;
+            Network network;
             if (mode == 1) {
-                eventsToView.add(new Action(Action.PRINT_WAITING_FOR_CONNECTION,PORT));
+                eventsToView.add(new Action(Action.PRINT_WAITING_FOR_CONNECTION, PORT));
                 network = new Server(PORT);
                 eventsToView.add(new Action(Action.PRINT_CONNECTION_ETABLISHED));
-                type = Game.host;
+                type = Game.HOST;
             } else {
                 network = askIP();
                 eventsToView.add(new Action(Action.PRINT_CONNECTION_ETABLISHED));
-                type = Game.join;
+                type = Game.JOIN;
             }
             eventsToNetwork = new Queue<>();
             controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, scanner);
             networkSender = new NetworkSender(network, eventsToNetwork);
             networkListener = new NetworkListener(network, eventsToModel);
-            
+
             Thread networkListenerThread = new Thread(networkListener);
             Thread networkSenderThread = new Thread(networkSender);
             networkSenderThread.start();
@@ -84,8 +90,8 @@ public class MenuListener implements Runnable {
     }
 
     public int askNbPlayer() {
-        String s = "";
-        eventsToView.add(new Action(Action.PRINT_ASK_NB_PLAYERS));
+        String s;
+                eventsToView.add(new Action(Action.PRINT_ASK_NB_PLAYERS));
         s = scanner.nextLine();
         int i;
         try {
@@ -100,7 +106,7 @@ public class MenuListener implements Runnable {
     }
 
     public int askGameMode() {
-        String s = "";
+        String s;
         int i;
         eventsToView.add(new Action(Action.PRINT_ASK_GAME_MODE));
         s = scanner.nextLine();
@@ -116,7 +122,7 @@ public class MenuListener implements Runnable {
     }
 
     private int askHostOrJoin() {
-        String s = "";
+        String s;
         eventsToView.add(new Action(Action.PRINT_ASK_HOST_OR_JOIN));
         s = scanner.nextLine();
         int i;
@@ -132,15 +138,14 @@ public class MenuListener implements Runnable {
     }
 
     private Network askIP() {
-        String s = "";
+        String s;
         Network network = new Client();
         eventsToView.add(new Action(Action.PRINT_ASK_IP));
         s = scanner.nextLine();
         if (!network.connect(s, PORT)) {
             eventsToView.add(new Action(Action.PRINT_CONNECTION_ERROR));
             return askIP();
-        }
-        else {
+        } else {
             eventsToView.add(new Action(Action.PRINT_START));
             return network;
         }
