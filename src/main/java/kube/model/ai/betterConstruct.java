@@ -14,7 +14,7 @@ import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
-public class midLevelAI extends MiniMaxAI {
+public class betterConstruct extends MiniMaxAI {
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;
@@ -23,20 +23,20 @@ public class midLevelAI extends MiniMaxAI {
      * CONSTRUCTORS
      **********/
 
-    public midLevelAI(int time, Random r) {
+    public betterConstruct(int time, Random r) {
         super(time, r);
     }
 
-    public midLevelAI(int time, int seed) {
+    public betterConstruct(int time, int seed) {
         super(time, seed);
 
     }
 
-    public midLevelAI(int time) {
+    public betterConstruct(int time) {
         super(time);
     }
 
-    public midLevelAI() {
+    public betterConstruct() {
         super();
     }
 
@@ -72,13 +72,25 @@ public class midLevelAI extends MiniMaxAI {
 
     private HashMap<ModelColor, Float> getBaseRepartiton() {
         int baseSize = getK3().getBaseSize();
+        float nEmplacements = 0f;
         probabilities = new HashMap<>();
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             probabilities.put(c, 0f);
         }
-        for (int i = 0; i < baseSize; i++) {
-            ModelColor c = getK3().getK3().getCase(baseSize - 1, i);
-            probabilities.put(c, probabilities.get(c) + (float) 1 / baseSize);
+        for (int i = 1; i < baseSize; i++) {
+            ModelColor c1 = getK3().getK3().getCase(baseSize - 1, i);
+            ModelColor c2 = getK3().getK3().getCase(baseSize - 1, i - 1);
+            if (c1 != c2) {
+                probabilities.put(c1, probabilities.get(c1) + 1);
+                probabilities.put(c2, probabilities.get(c2) + 1);
+                nEmplacements += 2;
+            } else {
+                probabilities.put(c1, probabilities.get(c1) + 1);
+                nEmplacements += 1;
+            }
+        }
+        for (ModelColor c : ModelColor.getAllColored()) {
+            probabilities.put(c, probabilities.get(c) / nEmplacements);
         }
         for (ModelColor c : ModelColor.getAllColored()) {
             redistributeProbs(c);
