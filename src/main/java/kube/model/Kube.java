@@ -842,7 +842,6 @@ public class Kube {
         p1ValidateBuilding = getP1() != null && getP1().getHasValidateBuilding();
         p2ValidateBuilding = getP2() != null && getP2().getHasValidateBuilding();
         isPreparationPhase = getPhase() == PREPARATION_PHASE;
-
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
             setPhase(2);
         } else if (isPreparationPhase && p1ValidateBuilding && !p2ValidateBuilding) {

@@ -32,9 +32,10 @@ public class Simulation implements Runnable {
         Thread t3 = new Thread(s);
         Thread t4 = new Thread(s);
         t1.start();
-        t2.start();
-        t3.start();
-        t4.start();
+        //t2.start();
+        //t3.start();
+        //t4.start();
+
         // Wait for each thread to finish
         t1.join();
         t2.join();
@@ -97,10 +98,13 @@ public class Simulation implements Runnable {
             // Phase 1
             int seed = findSeedWithEquivalentDistributionToPlayers();
             k.init( new midLevelAI(50), new midLevelAI(50), seed);
-            k.getCurrentPlayer().getAI().constructionPhase();
+            k.getP1().getAI().constructionPhase();
             k.updatePhase();
-            k.getCurrentPlayer().getAI().constructionPhase();
+            k.getP2().getAI().constructionPhase();
             k.updatePhase();
+            System.out.println(k.getK3());
+            System.out.println(k.getP1());
+            System.out.println(k.getP2());
             // Phsae 2
             k.setCurrentPlayer(k.getP1());
             while (k.canCurrentPlayerPlay()) {
@@ -115,8 +119,8 @@ public class Simulation implements Runnable {
             } else {
                 upWinJ1();
             }
-            addNbMovesJ1(k.getP1().getAI().getNbMove());
-            addNbMovesJ2(k.getP2().getAI().getNbMove());
+            addNbMovesJ1(k.getP1().getAI().getNbMoves());
+            addNbMovesJ2(k.getP2().getAI().getNbMoves());
             incrnGamesFinished();
             System.out.print("\rPartie n°" + getnGamesFinished() + " finie");
         }

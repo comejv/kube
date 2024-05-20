@@ -5,27 +5,26 @@ import java.util.HashMap;
 import java.util.Random;
 
 import kube.model.Kube;
+import kube.model.Player;
 import kube.model.action.move.Move;
 
 public class randomAI extends MiniMaxAI {
+    
     public randomAI(int time, Random r) {
-        setR(r);
-        setTime(time);
+        super(time, r);
     }
 
     public randomAI(int time, int seed) {
-        setR(new Random(seed));
-        setTime(time);
+        super(time, seed);
+
     }
 
     public randomAI(int time) {
-        setR(new Random());
-        setTime(time);
+        super(time);
     }
 
     public randomAI() {
-        setR(new Random());
-        setTime(1000);
+        super();
     }
 
     @Override

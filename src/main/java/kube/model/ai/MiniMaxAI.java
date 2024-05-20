@@ -26,7 +26,7 @@ public class MiniMaxAI implements ActionListener {
     private int time; // in ms
     private boolean noMoreTime;
     private Timer timer;
-
+    private int nbMoves;
     /**********
      * CONSTRUCTORS
      **********/
@@ -59,8 +59,8 @@ public class MiniMaxAI implements ActionListener {
         k3 = k;
     }
 
-    public void setPlayerId(Player p) {
-        iaPlayerId = p.getId();
+    public void setPlayerId(int id) {
+        iaPlayerId = id;
     }
 
     public void setR(Random r) {
@@ -79,6 +79,9 @@ public class MiniMaxAI implements ActionListener {
         timer = t;
     }
 
+    public void incrNbMoves(){
+        nbMoves++;
+    }
     /**********
      * GETTERS
      **********/
@@ -107,6 +110,9 @@ public class MiniMaxAI implements ActionListener {
         return timer;
     }
 
+    public int getNbMoves(){
+        return nbMoves;
+    }
     /**********
      * METHODS
      **********/
@@ -227,7 +233,7 @@ public class MiniMaxAI implements ActionListener {
      * @return the next move
      */
     public Move nextMove() throws Exception {
-
+        incrNbMoves();
         int horizon;
         setNoMoreTime(false);
         setTimer(new Timer(time, this));
