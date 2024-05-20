@@ -265,11 +265,12 @@ public class Player implements Serializable {
         }
 
         if (getMountain().isFull()) {
-            setHasValidateBuilding(true);
+            //setHasValidateBuilding(true); //TODO: uncomment this line ?
             setInitialMountain(getMountain().clone());
         }
 
-        return getHasValidateBuilding();
+        //return getHasValidateBuilding();
+        return getMountain().isFull();
     }
 
     /**********

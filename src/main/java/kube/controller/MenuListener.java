@@ -54,17 +54,21 @@ public class MenuListener implements Runnable {
             mode = askHostOrJoin();
             Network network = null;
             if (mode == 1) {
-                network = new Server(eventsToModel,PORT);
+                eventsToView.add(new Action(Action.PRINT_WAITING_FOR_CONNECTION,PORT));
+                network = new Server(PORT);
+                eventsToView.add(new Action(Action.PRINT_CONNECTION_ETABLISHED));
                 type = Game.host;
             } else {
-                network = askIP(eventsToModel);
+                network = askIP();
+                eventsToView.add(new Action(Action.PRINT_CONNECTION_ETABLISHED));
                 type = Game.join;
             }
             eventsToNetwork = new Queue<>();
             controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, scanner);
             networkSender = new NetworkSender(network, eventsToNetwork);
+            networkListener = new NetworkListener(network, eventsToModel);
             
-            Thread networkListenerThread = new Thread(network);
+            Thread networkListenerThread = new Thread(networkListener);
             Thread networkSenderThread = new Thread(networkSender);
             networkSenderThread.start();
             networkListenerThread.start();
@@ -127,12 +131,18 @@ public class MenuListener implements Runnable {
         }
     }
 
-    private Network askIP(Queue<Action> networkToModel) {
+    private Network askIP() {
         String s = "";
+        Network network = new Client();
         eventsToView.add(new Action(Action.PRINT_ASK_IP));
         s = scanner.nextLine();
-        Network network = new Client(networkToModel, s,PORT);
-        eventsToView.add(new Action(Action.PRINT_START));
-        return network;
+        if (!network.connect(s, PORT)) {
+            eventsToView.add(new Action(Action.PRINT_CONNECTION_ERROR));
+            return askIP();
+        }
+        else {
+            eventsToView.add(new Action(Action.PRINT_START));
+            return network;
+        }
     }
 }

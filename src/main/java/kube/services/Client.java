@@ -6,14 +6,15 @@ import java.net.Socket;
 
 import kube.configuration.Config;
 import kube.model.action.Action;
-import kube.model.action.Queue;
 
 public class Client extends Network {
 
     private Socket socket;
     
-    public Client(Queue<Action> networkToModel,String ip, int port){
-        super(networkToModel);
+    public Client() {
+    }
+    
+    public Client(String ip, int port){
         connect(ip, port);
     }
 
@@ -51,11 +52,9 @@ public class Client extends Network {
     }
 
     public boolean send(Action data) {
-        Config.debug(data);
         try {
             if (getOut() != null) {
                 getOut().writeObject(data);
-                Config.debug("Client send" + data);
 
             } else {
                 return false;
@@ -71,7 +70,6 @@ public class Client extends Network {
     public Action receive() {
         try {
             Action o = (Action) getIn().readObject();
-            Config.debug("Client receive" + o);
             return o;
         } catch (Exception e) {
             return null;

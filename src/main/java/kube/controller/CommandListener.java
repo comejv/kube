@@ -12,15 +12,16 @@ public class CommandListener implements Runnable {
     Queue<Action> eventsToNetwork;
     Scanner sc;
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Scanner sc) {
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner sc) {
         this.eventsToModel = eventsToModel;
         this.eventsToView = eventsToView;
         this.sc = sc;
 
     }
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView,Queue<Action> eventsToNetwork, Scanner sc) {
-        this(eventsToModel , eventsToView, sc);
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,
+            Scanner sc) {
+        this(eventsToModel, eventsToView, sc);
         this.eventsToNetwork = eventsToNetwork;
     }
 
@@ -38,7 +39,7 @@ public class CommandListener implements Runnable {
                     eventsToView.add(new Action(Action.PRINT_STATE));
                     break;
                 case "valider":
-                    eventsToModel(new Action(Action.VALIDATE));
+                    eventsToModel.add(new Action(Action.VALIDATE));
                     break;
                 case "jouer":
                     playMove(sc);
@@ -67,13 +68,13 @@ public class CommandListener implements Runnable {
             String[] coords = s.split(" ");
             int x1 = Integer.parseInt(coords[0]);
             int y1 = Integer.parseInt(coords[1]);
-            eventsToView.add(new Action(Action.PRINT_WAIT_COORDINATES,2));
+            eventsToView.add(new Action(Action.PRINT_WAIT_COORDINATES, 2));
             s = sc.nextLine();
             coords = s.split(" ");
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
-            eventsToModel(new Action(Action.SWAP, swap));
+            eventsToModel.add(new Action(Action.SWAP, swap));
             eventsToView.add(new Action(Action.PRINT_SWAP, swap));
             return true;
         } catch (Exception e) {
@@ -87,7 +88,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(Action.MOVE,n));
+            eventsToModel(new Action(Action.MOVE, n));
             return true;
         } catch (Exception e) {
             eventsToView.add(new Action(Action.PRINT_MOVE_ERROR));
@@ -97,8 +98,12 @@ public class CommandListener implements Runnable {
 
     private void eventsToModel(Action action) {
         eventsToModel.add(action);
-        if(eventsToNetwork != null) {
-            eventsToNetwork.add(action);
+        if (eventsToNetwork != null) {
+            if (action.getType() == Action.MOVE) {
+                eventsToNetwork.add(new Action(Action.MOVE_FROM_NETWORK, action.getData()));
+            } else {
+                eventsToNetwork.add(action);
+            }
         }
     }
 }
