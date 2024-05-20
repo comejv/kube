@@ -2,6 +2,7 @@ package kube.view.panels;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.controller.MainController;
 import kube.model.Game;
 import kube.view.GUIColors;
 import kube.view.components.Buttons;
@@ -11,6 +12,7 @@ import kube.view.components.Icon;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -21,12 +23,11 @@ import javax.swing.*;
 public class FirstPhasePanel extends JPanel {
     private GraphicsEnvironment ge;
     private Game model;
-    ActionListener buttonListener;
-    MouseAdapter hexaListener;
+    MainController controller;
 
-    public FirstPhasePanel(Game model, ActionListener buttonListener, MouseAdapter hexaListener) {
+    public FirstPhasePanel(Game model, MainController controller) {
         this.model = model;
-        this.hexaListener = hexaListener;
+        this.controller = controller;
         try {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             Font buttonsFont = Font.createFont(Font.TRUETYPE_FONT,
@@ -44,7 +45,7 @@ public class FirstPhasePanel extends JPanel {
         /* Buttons panel construction */
         JPanel eastColPanel = new JPanel();
         eastColPanel.setBackground(GUIColors.GAME_BG.toColor());
-        JPanel buttonsPanel = createButtons(buttonListener);
+        JPanel buttonsPanel = createButtons();
         eastColPanel.add(buttonsPanel, BorderLayout.NORTH);
         GridBagConstraints c1 = new GridBagConstraints();
         c1.gridy = 0;
@@ -82,9 +83,7 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         basePanel.add(baseLabel);
         for (int i = 0; i < 9; i++) {
-            HexIcon h = newHexa(false);
-            h.addMouseListener(hexaListener);
-            basePanel.add(h);
+            basePanel.add(newHexa(false, false));
         }
         gamePanel.add(basePanel, BorderLayout.NORTH);
 
@@ -100,7 +99,7 @@ public class FirstPhasePanel extends JPanel {
         // RANDOM LIST;
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = newHexa(true);
+                hexaList[i][j] = newHexa(true, true);
             }
         }
         for (int i = 0; i < 6; i++) {
@@ -134,7 +133,7 @@ public class FirstPhasePanel extends JPanel {
                 mini.setOpaque(false);
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                mini.add(newHexa(false));
+                mini.add(newHexa(false, true));
                 mini.add(numOfPieces);
                 c.gridy = j;
                 c.gridx = i;
@@ -145,7 +144,7 @@ public class FirstPhasePanel extends JPanel {
         return gamePanel;
     }
 
-    private JPanel createButtons(ActionListener a) {
+    private JPanel createButtons() {
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1));
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
@@ -154,7 +153,7 @@ public class FirstPhasePanel extends JPanel {
         JButton optButton = new Buttons.GameFirstPhaseButton("Options");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("Menu");
-        optButton.addActionListener(a);
+        optButton.addActionListener(controller.phase1Listener);
         buttons.add(optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
@@ -169,21 +168,23 @@ public class FirstPhasePanel extends JPanel {
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
         validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         validerButton.setActionCommand("phase2");
-        validerButton.addActionListener(a);
+        validerButton.addActionListener(controller.phase1Listener);
         buttons.add(validerButton);
         return buttons;
     }
 
-    private HexIcon newHexa(boolean empty) {
+    private HexIcon newHexa(boolean empty, boolean actionable) {
         HexIcon hexa;
         if (empty) {
             hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), false);
         } else {
             hexa = new HexIcon(ResourceLoader.getBufferedImage("greenHexa"), true);
-            hexa.addMouseListener(hexaListener);
-            hexa.addMouseMotionListener(hexaListener);
+        }
+        if (actionable) {
+            hexa.addMouseListener(controller.phase1Listener);
         }
         hexa.resizeIcon(60, 60);
+        hexa.setActionable(actionable);
         return hexa;
     }
 }

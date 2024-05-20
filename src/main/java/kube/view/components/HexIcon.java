@@ -1,18 +1,17 @@
 package kube.view.components;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
+import kube.configuration.Config;
+
 public class HexIcon extends Icon {
     private boolean isActionable;
     private boolean isHovered;
     private boolean isPressed;
-    private boolean isGrabbed;
 
     private int offsetX;
     private int offsetY;
@@ -28,20 +27,20 @@ public class HexIcon extends Icon {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (isHovered) { // Draw darker image
+        if (isActionable() && isHovered) { // Draw darker image
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor };
             float[] offsets = new float[4];
             RescaleOp rop = new RescaleOp(scales, offsets, null);
-            if (isGrabbed) {
-                g2d.setColor(Color.RED);
-                g2d.setStroke(new BasicStroke(5));
-            }
             g2d.drawImage(getImage(), rop, 0, 0);
         } else { // Draw the original image
             g2d.drawImage(getImage(), 0, 0, null);
         }
 
+    }
+
+    public HexIcon clone() {
+        return new HexIcon(getImage(), isActionable());
     }
 
     public void setActionable(boolean b) {
@@ -50,11 +49,6 @@ public class HexIcon extends Icon {
 
     public void setPressed(boolean b) {
         isPressed = b;
-        repaint();
-    }
-
-    public void setGrabbed(boolean b) {
-        isGrabbed = b;
         repaint();
     }
 
@@ -74,6 +68,7 @@ public class HexIcon extends Icon {
     public void setOffset(int x, int y) {
         offsetX = x;
         offsetY = y;
+        repaint();
     }
 
     public int getXOffset() {

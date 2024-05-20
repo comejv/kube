@@ -39,7 +39,6 @@ public class HSL {
 
         if (vmax == vmin) { // Achromatic
             this.hue = 0;
-            this.saturation = 1;
             return;
         }
 

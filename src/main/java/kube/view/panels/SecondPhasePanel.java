@@ -1,23 +1,23 @@
 package kube.view.panels;
 
-import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import kube.controller.MainController;
 
 /*
  * This class extends JPanel and creates the GUI for the second phase of the game.
  */
 public class SecondPhasePanel extends JPanel {
-    private ActionListener buttonListener;
+    private MainController controller;
 
-    public SecondPhasePanel(ActionListener aL) {
-        buttonListener = aL;
+    public SecondPhasePanel(MainController controller) {
+        this.controller = controller;
         add(new JLabel("Phase 2"));
         JButton b = new JButton("Menu");
         b.setActionCommand("menu");
-        b.addActionListener(buttonListener);
+        b.addActionListener(controller.phase2Listener);
         add(b);
     }
     // b = new JButton()

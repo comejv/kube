@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 
 import kube.view.GUI;
 import kube.configuration.Config;
+import kube.configuration.ResourceLoader;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.model.Kube;
@@ -27,7 +28,17 @@ public class MainController {
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
 
+    public menuListener menuListener;
+    public overlayedHexaListener overlayedHexaListener;
+    public phase1Listener phase1Listener;
+    public phase2Listener phase2Listener;
+
     public MainController() {
+        menuListener = new menuListener();
+        overlayedHexaListener = new overlayedHexaListener();
+        phase1Listener = new phase1Listener();
+        phase2Listener = new phase2Listener();
+
         Kube kube = new Kube();
         eventsToView = new Queue<>();
         eventsToModel = new Queue<>();
@@ -37,80 +48,41 @@ public class MainController {
         Thread modelThread = new Thread(model);
 
         modelThread.start();
-        gui = new GUI(model, new menuListener(), new phase1Listener(), new hexaListener(), new phase2Listener());
+        gui = new GUI(model, this);
     }
 
-    public class hexaListener extends MouseAdapter {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            Object source = e.getSource();
-            if (SwingUtilities.isLeftMouseButton(e)) {
-                if (source instanceof HexIcon) {
-                    HexIcon h = (HexIcon) source;
-                    h.setPressed(true);
-                    h.setOffset(e.getX(), e.getY());
-                }
-            }
-        }
-
+    private class overlayedHexaListener extends MouseAdapter {
         @Override
         public void mouseReleased(MouseEvent e) {
+            Config.debug("Mouse released");
             Object source = e.getSource();
-            if (SwingUtilities.isLeftMouseButton(e)) {
-                if (source instanceof HexIcon) {
-                    HexIcon h = (HexIcon) source;
-                    h.setPressed(false);
-                    h.setGrabbed(false);
+            HexIcon h = (HexIcon) source;
+            h.setPressed(false);
 
-                    // Get dropoff location
-                    Container parent = h.getParent();
-                    if (parent != null && parent.getLayout() instanceof GridLayout) {
-                        int gridX = (h.getX() + h.getXOffset()) / (parent.getWidth() / parent.getComponentCount());
-                        int gridY = (h.getY() + h.getYOffset()) / (parent.getHeight() / parent.getComponentCount());
+            // Get dropoff location
+            Container parent = h.getParent();
+            if (parent != null && parent.getLayout() instanceof GridLayout) {
+                int gridX = (h.getX() + h.getXOffset()) / (parent.getWidth() / parent.getComponentCount());
+                int gridY = (h.getY() + h.getYOffset()) / (parent.getHeight() / parent.getComponentCount());
 
-                        System.out.println("Dropped at grid cell: (" + gridX + ", " + gridY + ")");
-                    }
-                }
+                Config.debug("Dropped at grid cell: (" + gridX + ", " + gridY + ")");
             }
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-            Object source = e.getSource();
-            if (source instanceof HexIcon) {
-                HexIcon h = (HexIcon) source;
-                h.setHovered(true);
-            }
+            gui.removeOverlay();
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
+            Config.debug("Mouse mouseDragged");
             Object source = e.getSource();
 
-            if (source instanceof HexIcon) {
-                HexIcon h = (HexIcon) source;
-                if (h.isPressed()) {
-                    int newX = h.getX() + e.getX() - h.getXOffset();
-                    int newY = h.getY() + e.getY() - h.getYOffset();
-
-                    h.setLocation(newX, newY);
-                }
-            }
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-            Object source = e.getSource();
-            if (source instanceof ButtonIcon) {
-                ButtonIcon b = (ButtonIcon) source;
-                b.setHovered(false);
-            }
+            HexIcon h = (HexIcon) source;
+            h.setLocation(e.getX(), e.getY());
+            h.repaint();
         }
     }
 
     // menu listeners
-    public class menuListener implements ActionListener, MouseListener {
-        @Override
+    private class menuListener implements ActionListener, MouseListener {
         public void actionPerformed(ActionEvent evt) {
             switch (evt.getActionCommand()) {
                 case "play":
@@ -122,7 +94,6 @@ public class MainController {
             }
         }
 
-        @Override
         public void mouseClicked(MouseEvent e) {
             Object source = e.getSource();
             if (source instanceof ButtonIcon) {
@@ -143,7 +114,6 @@ public class MainController {
             }
         }
 
-        @Override
         public void mousePressed(MouseEvent e) {
             Object source = e.getSource();
             if (SwingUtilities.isLeftMouseButton(e)) {
@@ -154,7 +124,6 @@ public class MainController {
             }
         }
 
-        @Override
         public void mouseReleased(MouseEvent e) {
             Object source = e.getSource();
             if (SwingUtilities.isLeftMouseButton(e)) {
@@ -165,7 +134,6 @@ public class MainController {
             }
         }
 
-        @Override
         public void mouseEntered(MouseEvent e) {
             Object source = e.getSource();
             if (source instanceof ButtonIcon) {
@@ -174,7 +142,6 @@ public class MainController {
             }
         }
 
-        @Override
         public void mouseExited(MouseEvent e) {
             Object source = e.getSource();
             if (source instanceof ButtonIcon) {
@@ -185,8 +152,7 @@ public class MainController {
     }
 
     // phase 1 listener
-    public class phase1Listener implements ActionListener {
-        @Override
+    private class phase1Listener implements ActionListener, MouseListener {
         public void actionPerformed(ActionEvent evt) {
             switch (evt.getActionCommand()) {
                 case "phase2":
@@ -199,11 +165,35 @@ public class MainController {
                     break;
             }
         }
+
+        public void mouseClicked(MouseEvent e) {
+        }
+
+        public void mousePressed(MouseEvent e) {
+            Object source = e.getSource();
+            if (source instanceof HexIcon) {
+                Config.debug("Hexa pressed");
+                HexIcon h = (HexIcon) source;
+                HexIcon clone = new HexIcon(ResourceLoader.getBufferedImage("blackHexa"), false);
+                clone.setLocation(e.getX(), e.getY());
+                clone.addMouseListener(overlayedHexaListener);
+                clone.addMouseMotionListener(overlayedHexaListener);
+                gui.addOverlay(clone);
+            }
+        }
+
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        public void mouseExited(MouseEvent e) {
+        }
     }
 
     // phase 2 listener
-    public class phase2Listener implements ActionListener {
-        @Override
+    private class phase2Listener implements ActionListener {
         public void actionPerformed(ActionEvent evt) {
             gui.showPanel(GUI.MENU);
         }
