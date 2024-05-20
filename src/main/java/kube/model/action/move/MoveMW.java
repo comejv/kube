@@ -2,7 +2,7 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveMW extends Move {
 
@@ -10,44 +10,63 @@ public class MoveMW extends Move {
      * ATTRIBUTE
      **********/
 
-    Point from;
-    
+    private Point from;
+
     /**********
      * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-
-      * @param from the source of the move
-      * @param color the color of the moved cube
-      */
+    /**
+     * Constructor of the class MoveAM
+     * 
+     * @param from  the source of the move
+     * @param color the color of the moved cube
+     */
     public MoveMW(Point from) {
-        super(Color.WHITE);
-        setFrom(from);
+        super(ModelColor.WHITE);
+        this.from = from;
     }
 
-    /**********
-     * CONSTRUCTORS
-     **********/
-
-     /**
-      * Constructor of the class MoveAM
-
-      * @param fromX the x position of the source of the move
-      * @param fromY the y position of the source of the move
-      * @param color the color of the moved cube
-      */
+    /**
+     * Constructor of the class MoveAM
+     * 
+     * @param fromX the x position of the source of the move
+     * @param fromY the y position of the source of the move
+     * @param color the color of the moved cube
+     */
     public MoveMW(int fromX, int fromY) {
         this(new Point(fromX, fromY));
     }
 
+    /**
+     * Constructor of the class MoveMW from a save string
+     * 
+     * @param save the string to load
+     */
+    public MoveMW(String save) {
+
+        super(ModelColor.WHITE);
+
+        String fromString;
+        String[] parts, coords;
+
+        parts = save.split(";");
+        fromString = parts[2].substring(1, parts[2].length() - 1);
+
+        coords = fromString.split(",");
+        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+    }
+
     /**********
-     * SETTER
+     * SETTERS
      **********/
 
     public void setFrom(Point from) {
         this.from = from;
+    }
+
+    public void setFrom(int x, int y) {
+        setFrom(new Point(x, y));
     }
 
     /**********

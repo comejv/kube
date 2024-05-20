@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -13,6 +14,7 @@ import javax.swing.UIManager.*;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import kube.configuration.Config;
+import kube.model.Game;
 import kube.view.panels.*;
 
 public class GUI extends Thread {
@@ -22,11 +24,15 @@ public class GUI extends Thread {
 
     MainFrame mF;
     ActionListener menuListener, firstPhaseListener, secondPhaseListener;
+    MouseAdapter hexaListener;
+    Game model;
 
-    public GUI(ActionListener mL, ActionListener fL, ActionListener sL) {
+    public GUI(Game model, ActionListener mL, ActionListener fL, MouseAdapter hexaListener, ActionListener sL) {
         this.menuListener = mL;
         this.firstPhaseListener = fL;
+        this.hexaListener = hexaListener;
         this.secondPhaseListener = sL;
+        this.model = model;
         try {
             boolean nimbusFound = false;
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -56,7 +62,7 @@ public class GUI extends Thread {
         MenuPanel mP = new MenuPanel(menuListener);
         mF.addPanel(mP, MENU);
         // add new phase 1 pannel
-        FirstPhasePanel fP = new FirstPhasePanel(firstPhaseListener);
+        FirstPhasePanel fP = new FirstPhasePanel(model, firstPhaseListener, hexaListener);
         mF.addPanel(fP, PHASE1);
         // add new phase 2 pannel
         SecondPhasePanel sP = new SecondPhasePanel(secondPhaseListener);

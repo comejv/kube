@@ -3,7 +3,7 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveMM extends Move {
 
@@ -13,23 +13,22 @@ public class MoveMM extends Move {
 
     private Point from;
     private Point to;
-    
-    
+
     /**********
      * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      *
-      * @param from the source of the move
-      * @param to the destination of the move
-      * @param color the color of the moved cube
-      */
-    public MoveMM(Point from, Point to, Color color) {
+    /**
+     * Constructor of the class MoveAM
+     *
+     * @param from  the source of the move
+     * @param to    the destination of the move
+     * @param color the color of the moved cube
+     */
+    public MoveMM(Point from, Point to, ModelColor color) {
         super(color);
-        setFrom(from);
-        setTo(to);
+        this.from = from;
+        this.to = to;
     }
 
     /**
@@ -41,8 +40,32 @@ public class MoveMM extends Move {
      * @param toY   the y position of the destination of the move
      * @param color the color of the moved cube
      */
-    public MoveMM(int fromX, int fromY, int toX, int toY, Color color) {
+    public MoveMM(int fromX, int fromY, int toX, int toY, ModelColor color) {
         this(new Point(fromX, fromY), new Point(toX, toY), color);
+    }
+
+    /**
+     * Constructor of the class MoveMM from a save string
+     * 
+     * @param save the string to load
+     */
+    public MoveMM(String save) {
+
+        String fromString, toString, color;
+        String[] parts, coords;
+
+        parts = save.split(";");
+        color = parts[1];
+        fromString = parts[2].substring(1, parts[2].length() - 1);
+        toString = parts[3].substring(1, parts[3].length() - 1);
+
+        setColor(ModelColor.getColor(Integer.parseInt(color)));
+
+        coords = fromString.split(",");
+        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+
+        coords = toString.split(",");
+        this.to= new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
     }
 
     /**********
@@ -53,8 +76,16 @@ public class MoveMM extends Move {
         this.from = from;
     }
 
+    public void setFrom(int x, int y) {
+        setFrom(new Point(x, y));
+    }
+
     public void setTo(Point to) {
         this.to = to;
+    }
+
+    public void setTo(int x, int y) {
+        setTo(new Point(x, y));
     }
 
     /**********
@@ -102,5 +133,4 @@ public class MoveMM extends Move {
                 " depuis (" + getFrom().x + ", " + getFrom().y + ")" +
                 " en (" + getTo().x + ", " + getTo().y + ")";
     }
-
 }

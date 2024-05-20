@@ -1,19 +1,19 @@
 package kube.model.ai;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 
 import javax.swing.Timer;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import kube.model.Kube;
 import kube.model.Player;
 import kube.model.action.move.Move;
 
-public class abstractMiniMax implements abstractAI, ActionListener {
+public class MiniMaxAI implements ActionListener {
 
     /**********
      * ATTRIBUTES
@@ -22,23 +22,32 @@ public class abstractMiniMax implements abstractAI, ActionListener {
     private Kube k3;
     private int iaPlayerId;
     private Random r;
-    private HashMap<Kube, Move> solution, tmp;
     private int time; // in ms
     private boolean noMoreTime;
     private Timer timer;
-
+    private int nbMoves;
     /**********
      * CONSTRUCTORS
      **********/
 
-    public abstractMiniMax(int time, int seed) {
-        r = new Random(seed);
-        setTime(time);
+     public MiniMaxAI(int time, Random r) {
+        this.r =r;
+        this.time = time;
     }
 
-    public abstractMiniMax() {
-        r = new Random();
-        setTime(1000);
+    public MiniMaxAI(int time, int seed) {
+        this.r = new Random(seed);
+        this.time = time;
+    }
+
+    public MiniMaxAI(int time) {
+        this.r = new Random();
+        this.time = time;
+    }
+
+    public MiniMaxAI() {
+        this.r = new Random();
+        this.time = 1000;
     }
 
     /**********
@@ -49,20 +58,12 @@ public class abstractMiniMax implements abstractAI, ActionListener {
         k3 = k;
     }
 
-    public void setPlayerId(Player p) {
-        iaPlayerId = p.getId();
+    public void setPlayerId(int id) {
+        iaPlayerId = id;
     }
 
     public void setR(Random r) {
         this.r = r;
-    }
-
-    public void setSolution(HashMap<Kube, Move> s) {
-        solution = s;
-    }
-
-    public void setTmp(HashMap<Kube, Move> t) {
-        tmp = t;
     }
 
     public void setTime(int t) {
@@ -77,6 +78,9 @@ public class abstractMiniMax implements abstractAI, ActionListener {
         timer = t;
     }
 
+    public void incrNbMoves(){
+        nbMoves++;
+    }
     /**********
      * GETTERS
      **********/
@@ -93,14 +97,6 @@ public class abstractMiniMax implements abstractAI, ActionListener {
         return r;
     }
 
-    public HashMap<Kube, Move> getSolution() {
-        return solution;
-    }
-
-    public HashMap<Kube, Move> getTmp() {
-        return tmp;
-    }
-
     public int getTime() {
         return time;
     }
@@ -113,6 +109,9 @@ public class abstractMiniMax implements abstractAI, ActionListener {
         return timer;
     }
 
+    public int getNbMoves(){
+        return nbMoves;
+    }
     /**********
      * METHODS
      **********/
@@ -122,7 +121,6 @@ public class abstractMiniMax implements abstractAI, ActionListener {
      * 
      * @return void
      */
-    @Override
     public void constructionPhase() {
         while (!getPlayer(k3).validateBuilding()) {
             utilsAI.randomFillMountain(getPlayer(k3), getR());
@@ -130,44 +128,25 @@ public class abstractMiniMax implements abstractAI, ActionListener {
     }
 
     /**
-     * Give the next move
+     * MinMax algorithm
      * 
-     * @return the next move
+     * @param k       the current state of the game
+     * @param horizon the depth of the tree
+     * @return an hashmap of each move doable and it score
      */
-    @Override
-    public Move nextMove() throws Exception {
-
-        int horizon;
-
-        setSolution(new HashMap<>());
-        setNoMoreTime(false);
-
-        horizon = 1;
-
-        setTimer(new Timer(time, this));
-        getTimer().start();
-
-        while (true) {
-            setTmp(new HashMap<>());
-            miniMax(getK3().clone(), horizon);
-            if (getNoMoreTime()) {
-                System.out.println("Horizon max :" + horizon);
-                System.out.println(getSolution());
-                return getSolution().get(getK3());
-            } else {
-                setSolution(getTmp());
-                setTmp(new HashMap<>());
-                System.out.println(getSolution());
-                horizon++;
-            }
-        }
-    }
-
-    public Move miniMax(Kube k, int horizon) {
-        Move bestMove = null;
-        int bestScore = 0;
+    public HashMap<Move, Integer> miniMax(Kube k, int horizon) {
+        HashMap<Move, Integer> map = new HashMap<>();
         ArrayList<Move> moves = k.moveSet();
-        return bestMove;
+        for (Move m : moves) {
+            if (getNoMoreTime()) {
+                return null;
+            }
+            k.playMove(m);
+            map.put(m, miniMaxRec(k.clone(), horizon));
+            k.unPlay();
+
+        }
+        return map;
     }
 
     /**
@@ -185,35 +164,35 @@ public class abstractMiniMax implements abstractAI, ActionListener {
         }
 
         ArrayList<Move> moves;
-        int value, score;
+        int bestScore, score;
         Player p = k.getCurrentPlayer();
         // Leaf
         if (horizon == 0 || (moves = k.moveSet()).size() == 0) {
             return evaluation(k);
         } else {
             if (p == getPlayer(k)) {
-                value = Integer.MIN_VALUE;
+                bestScore = Integer.MIN_VALUE;
             } else {
-                value = Integer.MAX_VALUE;
+                bestScore = Integer.MAX_VALUE;
             }
             for (Move m : moves) {
                 k.playMove(m);
                 score = miniMaxRec(k, horizon - 1);
-                if (score == -1) { // Timer's end
+                if (getNoMoreTime()) { // Timer's end
                     return -1;
                 }
                 k.unPlay();
                 if (p == getPlayer(k)) {
-                    if (score > value) {
-                        value = score;
+                    if (score > bestScore) {
+                        bestScore = score;
                     }
                 } else {
-                    if (score < value) {
-                        value = score;
+                    if (score < bestScore) {
+                        bestScore = score;
                     }
                 }
             }
-            return value;
+            return bestScore;
         }
     }
 
@@ -223,17 +202,17 @@ public class abstractMiniMax implements abstractAI, ActionListener {
      * @param k the current state of the game
      * @return the value of the state
      */
-    private int evaluation(Kube k) {
+    public int evaluation(Kube k) {
         return 0;
     }
 
-    @Override
     /**
      * Action performed when the timer ends
      * 
      * @param arg0 the action event
      * @return void
      */
+    @Override
     public void actionPerformed(ActionEvent arg0) {
         setNoMoreTime(true);
         getTimer().stop();
@@ -241,5 +220,38 @@ public class abstractMiniMax implements abstractAI, ActionListener {
 
     public int moveSetSize() {
         return k3.moveSet().size();
+    }
+
+    public Move selectMove(HashMap<Move, Integer> movesMap) {
+        return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
+    }
+
+    /**
+     * Give the next move
+     * 
+     * @return the next move
+     */
+    public Move nextMove() throws Exception {
+        incrNbMoves();
+        int horizon;
+        setNoMoreTime(false);
+        setTimer(new Timer(time, this));
+        getTimer().start();
+        horizon = 2;
+        HashMap<Move, Integer> solution = null, moveMap = null;
+        while (true) {
+            moveMap = miniMax(getK3().clone(), horizon);
+            if (getNoMoreTime()) {
+                //Config.debug("Horizon max :" + horizon);
+                if (solution == null) {
+                    return selectMove(moveMap);
+                } else {
+                    return selectMove(solution);
+                }
+            } else {
+                solution = moveMap;
+                horizon++;
+            }
+        }
     }
 }

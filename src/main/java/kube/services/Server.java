@@ -1,31 +1,38 @@
 package kube.services;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import kube.model.action.Action;
+
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server extends Network{
+public class Server extends Network {
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
 
-    public Server(int port){
-        try{
+    public Server(int port) {
+        
+        init(port);
+    }
+
+    public void init(int port) {
+        try {
             setServerSocket(new ServerSocket(port));
             setClientSocket(getServerSocket().accept());
-            setOut(new PrintWriter(getClientSocket().getOutputStream(), true));
-            setIn(new BufferedReader(new InputStreamReader(getClientSocket().getInputStream())));
-        }
-        catch(Exception e){
+            setOut(new ObjectOutputStream(getClientSocket().getOutputStream()));
+            setIn(new ObjectInputStream(getClientSocket().getInputStream()));
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     public ServerSocket getServerSocket() {
         return serverSocket;
     }
+
     public void setServerSocket(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
@@ -33,67 +40,54 @@ public class Server extends Network{
     public Socket getClientSocket() {
         return clientSocket;
     }
+
     public void setClientSocket(Socket clientSocket) {
         this.clientSocket = clientSocket;
     }
-
-
-
 
     public boolean connect(String ip, int port) {
         return false;
     }
 
     public boolean disconnect() {
-        try{
+        try {
             getOut().close();
             getIn().close();
             getClientSocket().close();
             getServerSocket().close();
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             return false;
         }
         return true;
     }
 
-    public boolean send(Object data) {
-        try{
-            getOut().println(data);
-        }
-        catch(Exception e){
+    public boolean send(Action data) {
+        try {
+            if (getOut() != null) {
+                getOut().writeObject(data);
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
             return false;
         }
         return true;
     }
 
-    public Object receive() {
-        try{
-            return getIn().readLine();
-        }
-        catch(Exception e){
+    public Action receive() {
+        try {
+            Action o = (Action) getIn().readObject();
+            return o;
+        } catch (Exception e) {
             return null;
         }
     }
-    
+
     @Override
-    public void run() {
-        Object data=null;
-        do{
-            try{
-                data =  receive();
-                System.out.println("Received: " + data);
-                send("Echo: " + data);
-            }
-            catch(Exception e){
-                e.printStackTrace();
-            }
-        }while (data != null);
+    public boolean isServer() {
+        return true;
     }
 
-    public static void main(String[] args) {
-        Server server = new Server(1234);
-        server.run();
-    }
-    
+
+
 }

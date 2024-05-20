@@ -1,8 +1,5 @@
 package kube.model;
 
-import kube.model.action.move.*;
-import kube.model.ai.abstractAI;
-
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +7,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
+
+import kube.model.action.move.Move;
+import kube.model.action.move.MoveAA;
+import kube.model.action.move.MoveAM;
+import kube.model.action.move.MoveAW;
+import kube.model.action.move.MoveMA;
+import kube.model.action.move.MoveMM;
+import kube.model.action.move.MoveMW;
+import kube.model.ai.MiniMaxAI;
 
 public class Kube {
 
@@ -26,14 +32,13 @@ public class Kube {
      **********/
 
     private Player p1, p2, currentPlayer;
-    private ArrayList<Color> bag;
+    private ArrayList<ModelColor> bag;
     private boolean penality;
     private History history;
     private int baseSize;
     private Mountain k3;
     private int phase;
     private Move lastMovePlayed;
-
 
     /**********
      * CONSTRUCTOR
@@ -46,25 +51,39 @@ public class Kube {
         init();
     }
 
+    public Kube(boolean empty) {
+        if (!empty) {
+            init();
+        }
+    }
+
     /**********
      * INITIALIZATION
      **********/
 
-    public void init() {
-        init(null, null);
+    public final void init() {
+        init(null, null, new Random());
     }
 
-    public void init(abstractAI typeAI1) {
-        init(typeAI1, null);
+    public void init(MiniMaxAI typeAI1) {
+        init(typeAI1, null, new Random());
     }
 
-    public void init(abstractAI typeAI1, abstractAI typeAI2) {
+    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2) {
+        init(typeAI1, typeAI2, new Random());
+    }
+
+    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, int seed) {
+        init(typeAI1, typeAI2, new Random(seed));
+    }
+
+    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, Random r) {
 
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
-        setBag(new ArrayList<Color>());
-        fillBag();
+        setBag(new ArrayList<>());
+        fillBag(r);
         fillBase();
         setHistory(new History());
         setPenality(false);
@@ -89,7 +108,7 @@ public class Kube {
      * SETTERS
      **********/
 
-    public void setBag(ArrayList<Color> b) {
+    public void setBag(ArrayList<ModelColor> b) {
         bag = b;
     }
 
@@ -125,11 +144,11 @@ public class Kube {
         baseSize = b;
     }
 
-    public void setPlayerCase(Player player, Point point, Color color) {
+    public void setPlayerCase(Player player, Point point, ModelColor color) {
         player.getMountain().setCase(point, color);
     }
 
-    public void setPlayerCase(Player player, int x, int y, Color color) {
+    public void setPlayerCase(Player player, int x, int y, ModelColor color) {
         player.getMountain().setCase(x, y, color);
     }
 
@@ -137,7 +156,7 @@ public class Kube {
      * GETTERS
      **********/
 
-    public ArrayList<Color> getBag() {
+    public ArrayList<ModelColor> getBag() {
         return bag;
     }
 
@@ -173,11 +192,11 @@ public class Kube {
         return phase;
     }
 
-    public Color getPlayerCase(Player player, Point point) {
+    public ModelColor getPlayerCase(Player player, Point point) {
         return player.getMountain().getCase(point);
     }
 
-    public Color getPlayerCase(Player player, int x, int y) {
+    public ModelColor getPlayerCase(Player player, int x, int y) {
         return player.getMountain().getCase(x, y);
     }
 
@@ -189,13 +208,21 @@ public class Kube {
         return lastMovePlayed;
     }
 
-    public Player getPlayerById(int id){
-        if (id == 1){
+    public Player getPlayerById(int id) {
+        if (id == 1) {
             return getP1();
-        } else if (id == 2){
+        } else if (id == 2) {
             return getP2();
         } else {
             return null;
+        }
+    }
+
+    public Player getRandomPlayer(){
+        if (new Random().nextInt(2) == 0){
+            return getP1();
+        } else {
+            return getP2();
         }
     }
 
@@ -212,7 +239,7 @@ public class Kube {
      * @throws UnsupportedOperationException if the phase is not the preparation
      *                                       phase
      */
-    public void fillBag(Integer seed) throws UnsupportedOperationException {
+    public void fillBag(Random r) throws UnsupportedOperationException {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
@@ -221,19 +248,18 @@ public class Kube {
 
         // Fill the bag with nCubePerColor cubes of each color
         bag = new ArrayList<>();
-        for (Color c : Color.getAllColored()) {
+        for (ModelColor c : ModelColor.getAllColored()) {
             for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
                 bag.add(c);
             }
         }
-
-        // Shuffle the bag until the 9 first cubes have 4 differents colors
-        while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
-            if (seed != null) {
-                Collections.shuffle(bag, new Random(seed));
-            } else {
-                Collections.shuffle(bag);
+        try {
+            // Shuffle the bag until the 9 first cubes have 4 differents colors
+            while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
+                Collections.shuffle(bag, r);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -246,7 +272,19 @@ public class Kube {
      *                                       phase
      */
     public void fillBag() throws UnsupportedOperationException {
-        fillBag(null);
+        fillBag(new Random());
+    }
+
+    /**
+     * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
+     * 9 first cubes have 4 differents colors
+     * 
+     * @return void
+     * @throws UnsupportedOperationException if the phase is not the preparation
+     *                                       phase
+     */
+    public void fillBag(int seed) throws UnsupportedOperationException {
+        fillBag(new Random(seed));
     }
 
     /**
@@ -279,8 +317,8 @@ public class Kube {
      */
     public void distributeCubesToPlayers() throws UnsupportedOperationException {
 
-        HashMap<Color, Integer> p1Cubes, p2Cubes;
-        Color cAvailable;
+        HashMap<ModelColor, Integer> p1Cubes, p2Cubes;
+        ModelColor cAvailable;
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
@@ -291,12 +329,12 @@ public class Kube {
         p1Cubes = new HashMap<>();
         p2Cubes = new HashMap<>();
 
-        p1Cubes.put(Color.WHITE, 2);
-        p2Cubes.put(Color.WHITE, 2);
-        p1Cubes.put(Color.NATURAL, 2);
-        p2Cubes.put(Color.NATURAL, 2);
+        p1Cubes.put(ModelColor.WHITE, 2);
+        p2Cubes.put(ModelColor.WHITE, 2);
+        p1Cubes.put(ModelColor.NATURAL, 2);
+        p2Cubes.put(ModelColor.NATURAL, 2);
 
-        for (Color c : Color.getAllColored()) {
+        for (ModelColor c : ModelColor.getAllColored()) {
             p1Cubes.put(c, 0);
             p2Cubes.put(c, 0);
         }
@@ -323,7 +361,8 @@ public class Kube {
      * @return true if the move is playable, false otherwise
      * @throws UnsupportedOperationException                if the phase is not the
      *                                                      game phase
-     * @throws IllegalArgumentUnsupportedOperationException if the move is not a
+     * @throws IllegalArgumentException                     if the move is not a
+     * @throws UnsupportedOperationException                if the move is not a
      *                                                      MoveAA, MoveMA,
      *                                                      MoveAW, MoveMW, MoveAM
      *                                                      or MoveMM
@@ -334,7 +373,7 @@ public class Kube {
         Player previousPlayer;
         boolean cubeRemovable;
         boolean cubeCompatible;
-        ArrayList<Color> additionals;
+        ArrayList<ModelColor> additionals;
         boolean accessible, sameColor;
 
         // Check if the phase is the game phase
@@ -421,7 +460,7 @@ public class Kube {
 
         Player player;
         Player previousPlayer;
-        Color color;
+        ModelColor color;
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
@@ -429,7 +468,6 @@ public class Kube {
         }
 
         player = getCurrentPlayer();
-        previousPlayer = null;
         color = move.getColor();
 
         // Get the previous player
@@ -539,7 +577,6 @@ public class Kube {
     private void unPlayWithoutHistory(Move move) throws UnsupportedOperationException {
 
         Player player, previousPlayer;
-        Move lastMove;
         MoveAA aa;
         MoveMA ma;
         MoveMW mw;
@@ -582,7 +619,7 @@ public class Kube {
         // additionals)
         else if (move.isWhite() && move.isFromAdditionals()) {
             // Cancel the move
-            player.addToAdditionals(Color.WHITE);
+            player.addToAdditionals(ModelColor.WHITE);
             player.setWhiteUsed(player.getWhiteUsed() - 1);
         }
         // Catching if the move is a MoveMW (placing a white cube from player's
@@ -613,16 +650,7 @@ public class Kube {
         }
 
         // Set the next player
-        if (!move.isToAdditionals()) {
-            if (getHistory().getDone().size() > 0) {
-                lastMove = getHistory().getDone().get(getHistory().getDone().size() - 1);
-                if (!lastMove.isToAdditionals()) {
-                    nextPlayer();
-                }
-            } else {
-                nextPlayer();
-            }
-        }
+        setCurrentPlayer(move.getPlayer());
         lastMovePlayed = move;
     }
 
@@ -686,7 +714,7 @@ public class Kube {
 
         ArrayList<Move> moves;
         Player previousPlayer;
-        Color cMountain;
+        ModelColor cMountain;
         MoveAA aa;
         MoveMA ma;
 
@@ -705,7 +733,7 @@ public class Kube {
         moves = new ArrayList<>();
 
         // Adding the list of MoveAA
-        for (Color c : previousPlayer.getAdditionals()) {
+        for (ModelColor c : previousPlayer.getAdditionals()) {
             aa = new MoveAA(c);
             moves.add(aa);
         }
@@ -728,7 +756,7 @@ public class Kube {
      */
     synchronized public ArrayList<Move> moveSet() throws UnsupportedOperationException {
 
-        Color cMountain;
+        ModelColor cMountain;
         Move mm, mw, am, aw;
         ArrayList<Move> moves;
 
@@ -747,7 +775,7 @@ public class Kube {
         // Adding list of MoveMM and MoveMW moves
         for (Point start : getPlayerRemovable(getCurrentPlayer())) {
             cMountain = getPlayerCase(getCurrentPlayer(), start);
-            if (cMountain == Color.WHITE) {
+            if (cMountain == ModelColor.WHITE) {
                 mw = new MoveMW(start);
                 moves.add(mw);
             } else {
@@ -759,8 +787,8 @@ public class Kube {
         }
 
         // Adding the list AM/AW moves
-        for (Color cAdditionals : getCurrentPlayer().getAdditionals()) {
-            if (cAdditionals == Color.WHITE) {
+        for (ModelColor cAdditionals : getCurrentPlayer().getAdditionals()) {
+            if (cAdditionals == ModelColor.WHITE) {
                 aw = new MoveAW();
                 moves.add(aw);
             } else {
@@ -787,7 +815,7 @@ public class Kube {
             throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
         }
 
-        return (moveSet().size() > 0);
+        return (!moveSet().isEmpty());
     }
 
     /**********
@@ -820,7 +848,6 @@ public class Kube {
         p1ValidateBuilding = getP1() != null && getP1().getHasValidateBuilding();
         p2ValidateBuilding = getP2() != null && getP2().getHasValidateBuilding();
         isPreparationPhase = getPhase() == PREPARATION_PHASE;
-
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
             setPhase(2);
         } else if (isPreparationPhase && p1ValidateBuilding && !p2ValidateBuilding) {
@@ -867,8 +894,8 @@ public class Kube {
 
         Kube kopy;
 
-        kopy = new Kube();
-
+        kopy = new Kube(true);
+        kopy.setHistory(new History());
         kopy.setP1(getP1().clone());
         kopy.setP2(getP2().clone());
 

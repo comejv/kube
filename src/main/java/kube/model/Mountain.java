@@ -1,26 +1,59 @@
 package kube.model;
 
+import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
-import java.awt.Point;
 
-public class Mountain {
+public class Mountain implements Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
-    private Color[][] content;
+    private ModelColor[][] content;
     private int baseSize;
 
     /**********
-     * CONSTUCTOR
+     * CONSTUCTORS
      **********/
 
+    /**
+     * Constructor of the class Mountain
+     * 
+     * @param size the size of the mountain's base
+     */
     public Mountain(int size) {
-        setBaseSize(size);
-        setMountain(new Color[getBaseSize()][getBaseSize()]);
+        this.baseSize = size;
+        this.content = new ModelColor[size][size];
         clear();
+    }
+
+    /**
+     * Constructor of the class Mountain from a save string
+     * 
+     * @param save the string to load
+     */
+    public Mountain(String save) {
+
+        String[] parts, cases;
+        int size, i, j, k;
+
+        parts = save.split(";");
+        size = Integer.parseInt(parts[0]);
+
+        this.baseSize  = size;
+        this.content = new ModelColor[size][size];
+
+        cases = parts[1].split(",");
+
+        k = 0;
+        for (i = 0; i < this.baseSize; i++) {
+            for (j = 0; j < i + 1; j++) {
+                setCase(i, j, ModelColor.fromSave(cases[k]));
+                k++;
+            }
+        }
     }
 
     /**********
@@ -31,15 +64,15 @@ public class Mountain {
         baseSize = size;
     }
 
-    public void setMountain(Color[][] mountain) {
+    public void setMountain(ModelColor[][] mountain) {
         content = mountain;
     }
 
-    public void setCase(Point p, Color c) {
+    public void setCase(Point p, ModelColor c) {
         setCase(p.x, p.y, c);
     }
 
-    public void setCase(int x, int y, Color c) {
+    public final void setCase(int x, int y, ModelColor c) {
         content[x][y] = c;
     }
 
@@ -51,15 +84,15 @@ public class Mountain {
         return baseSize;
     }
 
-    public Color[][] getMountain() {
+    public ModelColor[][] getMountain() {
         return content;
     }
 
-    public Color getCase(Point p) {
+    public ModelColor getCase(Point p) {
         return getCase(p.x, p.y);
     }
 
-    public Color getCase(int x, int y) {
+    public ModelColor getCase(int x, int y) {
         return content[x][y];
     }
 
@@ -85,7 +118,7 @@ public class Mountain {
      * @return void
      */
     public void remove(int x, int y) {
-        setCase(x, y, Color.EMPTY);
+        setCase(x, y, ModelColor.EMPTY);
     }
 
     /**
@@ -103,10 +136,10 @@ public class Mountain {
         // Loop through the mountain to add removable positions
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                isEmpty = getCase(i, j) == Color.EMPTY;
+                isEmpty = getCase(i, j) == ModelColor.EMPTY;
                 isAtPeak = i == 0;
-                isTopLeftEmpty = j == 0 || getCase(i - 1, j - 1) == Color.EMPTY;
-                isTopRightEmpty = j == i || getCase(i - 1, j) == Color.EMPTY;
+                isTopLeftEmpty = j == 0 || getCase(i - 1, j - 1) == ModelColor.EMPTY;
+                isTopRightEmpty = j == i || getCase(i - 1, j) == ModelColor.EMPTY;
                 if (!isEmpty && (isAtPeak || (isTopLeftEmpty && isTopRightEmpty))) {
                     r.add(new Point(i, j));
                 }
@@ -122,15 +155,15 @@ public class Mountain {
      * @param c the color to check compatibility
      * @return the list of compatible positions
      */
-    public ArrayList<Point> compatible(Color c) {
+    public ArrayList<Point> compatible(ModelColor c) {
 
         ArrayList<Point> comp;
-        Color natural, empty, bottomLeft, bottomRight;
+        ModelColor natural, empty, bottomLeft, bottomRight;
         boolean isBottomLeftEmpty, isBottomRightEmpty, isBottomEmpty, isNatural, isBottomLeftCompatible,
                 isBottomRightCompatible, isCompatible;
 
-        empty = Color.EMPTY;
-        natural = Color.NATURAL;
+        empty = ModelColor.EMPTY;
+        natural = ModelColor.NATURAL;
         comp = new ArrayList<>();
 
         // Loop through the mountain to add compatible positions
@@ -189,10 +222,10 @@ public class Mountain {
      * @return void
      */
     public void clear() {
-        content = new Color[getBaseSize()][getBaseSize()];
+        content = new ModelColor[getBaseSize()][getBaseSize()];
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < getBaseSize(); j++) {
-                content[i][j] = Color.EMPTY;
+                content[i][j] = ModelColor.EMPTY;
             }
         }
     }
@@ -205,7 +238,7 @@ public class Mountain {
     public boolean isFull() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (getCase(i, j) == Color.EMPTY) {
+                if (getCase(i, j) == ModelColor.EMPTY) {
                     return false;
                 }
             }
@@ -221,7 +254,7 @@ public class Mountain {
     public boolean isEmpty() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (getCase(i, j) != Color.EMPTY) {
+                if (getCase(i, j) != ModelColor.EMPTY) {
                     return false;
                 }
             }
@@ -235,9 +268,25 @@ public class Mountain {
      * @return the String representation of the mountain for saving
      */
     public String forSave() {
-        String s = "";
-        // TODO: Implement this method
-        return s;
+        
+        String save;
+        int i, j;
+
+        save = "{" + getBaseSize() + ";";
+        
+        for (i = 0; i < getBaseSize(); i++) {
+            for (j = 0; j < i + 1; j++) {
+                save += getCase(i, j).forSave() + ",";
+            }
+        }
+
+        if (getBaseSize() > 0) {
+            save = save.substring(0, save.length() - 1);
+        }
+
+        save += "}";
+
+        return save;
     }
 
     @Override

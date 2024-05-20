@@ -21,6 +21,10 @@ public class Icon extends JLabel {
         setOpaque(false);
     }
 
+    public Icon(BufferedImage bufferedImage, boolean actionable) {
+        this(bufferedImage);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -42,7 +46,6 @@ public class Icon extends JLabel {
                 }
                 HSL imgHsl = new HSL(c);
                 imgHsl.setHue(hsl.getHue());
-                imgHsl.setSaturation(hsl.getSaturation() + 0.3);
                 originalImage.setRGB(x, y, c & (0xFF000000) | imgHsl.toRGB());
             }
         }

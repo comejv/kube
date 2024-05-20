@@ -2,13 +2,15 @@ package kube.view.panels;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.model.Game;
 import kube.view.GUIColors;
-import kube.view.HSL;
 import kube.view.components.Buttons;
+import kube.view.components.HexIcon;
 import kube.view.components.Icon;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -18,8 +20,13 @@ import javax.swing.*;
  */
 public class FirstPhasePanel extends JPanel {
     private GraphicsEnvironment ge;
+    private Game model;
+    ActionListener buttonListener;
+    MouseAdapter hexaListener;
 
-    public FirstPhasePanel(ActionListener buttonListener) {
+    public FirstPhasePanel(Game model, ActionListener buttonListener, MouseAdapter hexaListener) {
+        this.model = model;
+        this.hexaListener = hexaListener;
         try {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             Font buttonsFont = Font.createFont(Font.TRUETYPE_FONT,
@@ -75,7 +82,9 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         basePanel.add(baseLabel);
         for (int i = 0; i < 9; i++) {
-            basePanel.add(newHexa(GUIColors.WHITE_HEX));
+            HexIcon h = newHexa(false);
+            h.addMouseListener(hexaListener);
+            basePanel.add(h);
         }
         gamePanel.add(basePanel, BorderLayout.NORTH);
 
@@ -122,7 +131,7 @@ public class FirstPhasePanel extends JPanel {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 2; j++) {
                 JPanel mini = new JPanel();
-                mini.setBackground(GUIColors.TEXT_HOVER.toColor());
+                mini.setOpaque(false);
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
                 mini.add(newHexa(false));
@@ -165,21 +174,16 @@ public class FirstPhasePanel extends JPanel {
         return buttons;
     }
 
-    public static Icon newHexa(boolean opt) {
-        Icon hexa;
-        if (opt) {
-            hexa = new Icon(ResourceLoader.getBufferedImage("hexaVide"));
+    private HexIcon newHexa(boolean empty) {
+        HexIcon hexa;
+        if (empty) {
+            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), false);
         } else {
-            hexa = new Icon(ResourceLoader.getBufferedImage("hexaGray"));
+            hexa = new HexIcon(ResourceLoader.getBufferedImage("greenHexa"), true);
+            hexa.addMouseListener(hexaListener);
+            hexa.addMouseMotionListener(hexaListener);
         }
         hexa.resizeIcon(60, 60);
-        return hexa;
-    }
-
-    public static Icon newHexa(HSL c) {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
-        hexa.resizeIcon(60, 60);
-        hexa.recolor(c);
         return hexa;
     }
 }

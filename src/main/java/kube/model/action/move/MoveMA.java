@@ -3,7 +3,7 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
-import kube.model.Color;
+import kube.model.ModelColor;
 
 public class MoveMA extends Move {
 
@@ -20,12 +20,12 @@ public class MoveMA extends Move {
     /**
      * Constructor of the class MoveMA
      * 
-     * @param from the source of the move
+     * @param from  the source of the move
      * @param color the color of the moved cube
      */
-    public MoveMA(Point from, Color color) {
+    public MoveMA(Point from, ModelColor color) {
         super(color);
-        setFrom(from);
+        this.from= from;
     }
 
     /**
@@ -35,18 +35,42 @@ public class MoveMA extends Move {
      * @param fromY the y position of the source of the move
      * @param color the color of the moved cube
      */
-    public MoveMA(int fromX, int fromY, Color color) {
+    public MoveMA(int fromX, int fromY, ModelColor color) {
         this(new Point(fromX, fromY), color);
     }
 
+    /**
+     * Constructor of the class MoveMA from a save string
+     * 
+     * @param save the string to load
+     */
+    public MoveMA(String save) {
+
+        String color, fromString;
+        String[] parts, coords;
+
+        parts = save.split(";");
+        color = parts[1];
+        fromString = parts[2].substring(1, parts[2].length() - 1);
+
+        setColor(ModelColor.getColor(Integer.parseInt(color)));
+
+        coords = fromString.split(",");
+        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+    }
+
     /**********
-     * SETTER
+     * SETTERS
      **********/
 
     public void setFrom(Point from) {
         this.from = from;
     }
-    
+
+    public void setFrom(int x, int y) {
+        setFrom(new Point(x, y));
+    }
+
     /**********
      * GETTER
      **********/
@@ -77,7 +101,7 @@ public class MoveMA extends Move {
     @Override
     public String forSave() {
         return "{MA;" + super.forSave() + ";" +
-                "(" + getFrom().x + ";" + getFrom().y + ")}";
+                "(" + getFrom().x + "," + getFrom().y + ")}";
     }
 
     @Override
