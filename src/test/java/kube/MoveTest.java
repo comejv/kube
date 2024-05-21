@@ -90,29 +90,30 @@ public class MoveTest {
     public void forSaveTest() {
         
         MoveMW mw = new MoveMW(0, 0);
-        assertEquals("{MW;1;(0,0)}", mw.forSave());
+        assertEquals("{MW;" + ModelColor.WHITE.getColorCode() + ";(0,0)}", mw.forSave());
 
         MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
-        assertEquals("{MM;3;(0,0);(0,0)}", mm.forSave());
+        assertEquals("{MM;" + ModelColor.RED.getColorCode() + ";(0,0);(0,0)}", mm.forSave());
 
         MoveAM am = new MoveAM(0, 0, ModelColor.RED);
-        assertEquals("{AM;3;(0,0)}", am.forSave());
+        assertEquals("{AM;" + ModelColor.RED.getColorCode() + ";(0,0)}", am.forSave());
 
         MoveAW aw = new MoveAW();
         assertEquals("{AW}", aw.forSave());
 
         MoveMA ma = new MoveMA(new Point(1, 1), ModelColor.BLACK);
-        assertEquals("{MA;7;(1,1)}", ma.forSave());
+        assertEquals("{MA;" + ModelColor.BLACK.getColorCode() + ";(1,1)}", ma.forSave());
 
         MoveAA aa = new MoveAA(ModelColor.RED);
-        assertEquals("{AA;3}", aa.forSave());
+        assertEquals("{AA;" + ModelColor.RED.getColorCode() + "}", aa.forSave());
     }
 
     @Test
     public void fromSaveTest() {
 
         MoveMW mw = new MoveMW(0, 0);
-        Move m = Move.fromSave(mw.forSave());
+        String save = mw.forSave();
+        Move m = Move.fromSave(save);
         assertTrue(m instanceof MoveMW);
         assertEquals(m, mw);
 

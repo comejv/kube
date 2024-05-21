@@ -859,6 +859,20 @@ public class Kube {
         return getPhase();
     }
 
+    /**
+     * Give a String representation of the Kube for saving
+     * 
+     * @return the String representation of the Kube for saving
+     */
+    public String forSave() {
+        
+        String save;
+
+        save = "";
+
+        return save;
+    }
+
     @Override
     public boolean equals(Object o) {
 

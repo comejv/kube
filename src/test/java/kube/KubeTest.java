@@ -1,6 +1,7 @@
 package kube;
 
 import org.junit.Test;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -204,13 +205,13 @@ public class KubeTest {
 
         // Verifying the players have the right number of cubes
         int sum = 0;
-        for (int n : kube.getP1().getAvalaibleToBuild().values()) {
+        for (int n : kube.getP1().getAvailaibleToBuild().values()) {
             sum += n;
         }
         assertEquals(21, sum);
 
         sum = 0;
-        for (int n : kube.getP2().getAvalaibleToBuild().values()) {
+        for (int n : kube.getP2().getAvailaibleToBuild().values()) {
             sum += n;
         }
         assertEquals(21, sum);

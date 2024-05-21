@@ -39,6 +39,8 @@ public class Mountain implements Serializable {
         String[] parts, cases;
         int size, i, j, k;
 
+        save = save.substring(1, save.length() - 1);
+
         parts = save.split(";");
         size = Integer.parseInt(parts[0]);
 
@@ -291,6 +293,7 @@ public class Mountain implements Serializable {
 
     @Override
     public String toString() {
+        
         String s;
         boolean space;
 
