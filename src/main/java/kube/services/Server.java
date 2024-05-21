@@ -1,30 +1,30 @@
 package kube.services;
 
-import kube.model.action.Action;
-
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+
+import kube.model.action.Action;
 
 public class Server extends Network {
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
 
-    public Server(int port) {
-        
+    public Server(int port) {    
         init(port);
     }
 
-    public void init(int port) {
+    public final void init(int port) {
         try {
             setServerSocket(new ServerSocket(port));
             setClientSocket(getServerSocket().accept());
             setOut(new ObjectOutputStream(getClientSocket().getOutputStream()));
             setIn(new ObjectInputStream(getClientSocket().getInputStream()));
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            System.err.println("Could not listen on port: " + port +"\n" + e.getMessage());
         }
 
     }
@@ -45,22 +45,27 @@ public class Server extends Network {
         this.clientSocket = clientSocket;
     }
 
+
+    @Override
     public boolean connect(String ip, int port) {
-        return false;
+        return clientSocket.isConnected();
     }
 
+    @Override
     public boolean disconnect() {
         try {
             getOut().close();
             getIn().close();
             getClientSocket().close();
             getServerSocket().close();
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.err.println("Could not close the connection\n" + e.getMessage());
             return false;
         }
         return true;
     }
 
+    @Override
     public boolean send(Action data) {
         try {
             if (getOut() != null) {
@@ -68,17 +73,18 @@ public class Server extends Network {
             } else {
                 return false;
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             return false;
         }
         return true;
     }
 
+    @Override
     public Action receive() {
         try {
             Action o = (Action) getIn().readObject();
             return o;
-        } catch (Exception e) {
+        } catch (IOException | ClassNotFoundException e) {
             return null;
         }
     }
