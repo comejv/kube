@@ -135,7 +135,7 @@ public class FirstPhasePanel extends JPanel {
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
-        JButton optButton = new Buttons.GameFirstPhaseButton("Options");
+        JButton optButton = new Buttons.GameFirstPhaseButton("Menu");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("Menu");
         optButton.addActionListener(a);
@@ -143,7 +143,6 @@ public class FirstPhasePanel extends JPanel {
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
         sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-
         buttons.add(sugIaButton);
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
