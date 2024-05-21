@@ -4,6 +4,7 @@ public class Config {
     private static boolean mute = true;
     private static final boolean debug = true;
     private static final boolean showBorders = false;
+    private static String language = "fr_FR";
     private static final int initWidth = 800;
     private static final int initHeight = 600;
 
@@ -33,6 +34,14 @@ public class Config {
 
     public static int getInitHeight() {
         return initHeight;
+    }
+
+    public static String getLanguage(){
+        return language;
+    }
+
+    public static void setLanguage(String lang){
+        language = lang;
     }
 
     public static void debug(Object... args) {

@@ -1,0 +1,4 @@
+Le jeu se déroule en 2 phases.
+
+Le but est de bloquer votre (ou vos) adversaire(s)
+lors de la seconde phase. 

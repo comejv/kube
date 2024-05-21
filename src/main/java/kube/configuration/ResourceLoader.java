@@ -2,9 +2,12 @@ package kube.configuration;
 
 import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -52,5 +55,13 @@ public class ResourceLoader {
         }
         // If loading failed
         return null;
+    }
+
+    static public String getText(String name) {
+        String result;
+        String relativePath = "texts/" + Config.getLanguage() + "/" + name + ".txt";
+        BufferedReader buf = new BufferedReader(new InputStreamReader(getResourceAsStream(relativePath)));
+        result = buf.lines().collect(Collectors.joining("\n"));
+        return result;
     }
 }
