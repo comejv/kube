@@ -710,7 +710,7 @@ public class Kube {
      * @return the list of moves that can be played as a penality
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    private ArrayList<Move> penalitySet() throws UnsupportedOperationException {
+    private ArrayList<Move> penalitySet(Player player) throws UnsupportedOperationException {
 
         ArrayList<Move> moves;
         Player previousPlayer;
@@ -724,7 +724,7 @@ public class Kube {
         }
 
         // Get the previousPlayer
-        if (getCurrentPlayer() == getP1()) {
+        if (player == getP1()) {
             previousPlayer = getP2();
         } else {
             previousPlayer = getP1();
@@ -754,7 +754,17 @@ public class Kube {
      * @return the list of moves that can be played
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    synchronized public ArrayList<Move> moveSet() throws UnsupportedOperationException {
+    synchronized public ArrayList<Move> moveSet(){
+        return moveSet(getCurrentPlayer());
+    }
+
+    /**
+     * Return the list of moves that can be played by the player p
+     * 
+     * @return the list of moves that can be played
+     * @throws UnsupportedOperationException if the phase is not the game phase
+     */
+    synchronized public ArrayList<Move> moveSet(Player p) throws UnsupportedOperationException {
 
         ModelColor cMountain;
         Move mm, mw, am, aw;
@@ -767,14 +777,14 @@ public class Kube {
 
         // If a penality is in progress, return the penality set
         if (getPenality()) {
-            return penalitySet();
+            return penalitySet(p);
         }
 
         moves = new ArrayList<>();
 
         // Adding list of MoveMM and MoveMW moves
-        for (Point start : getPlayerRemovable(getCurrentPlayer())) {
-            cMountain = getPlayerCase(getCurrentPlayer(), start);
+        for (Point start : getPlayerRemovable(p)) {
+            cMountain = getPlayerCase(p, start);
             if (cMountain == ModelColor.WHITE) {
                 mw = new MoveMW(start);
                 moves.add(mw);
@@ -787,7 +797,7 @@ public class Kube {
         }
 
         // Adding the list AM/AW moves
-        for (ModelColor cAdditionals : getCurrentPlayer().getAdditionals()) {
+        for (ModelColor cAdditionals : p.getAdditionals()) {
             if (cAdditionals == ModelColor.WHITE) {
                 aw = new MoveAW();
                 moves.add(aw);
@@ -798,7 +808,6 @@ public class Kube {
                 }
             }
         }
-
         return moves;
     }
 
