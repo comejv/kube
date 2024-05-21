@@ -170,7 +170,7 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public static Icon newHexa(HSL c) {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaWhite"));
+        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaWhiteTextured"));
         hexa.resizeIcon(60, 60);
         hexa.recolor(c);
         return hexa;

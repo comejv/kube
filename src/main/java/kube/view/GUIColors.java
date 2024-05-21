@@ -11,10 +11,10 @@ public class GUIColors {
     public static final HSL GAME_BG = new HSL(0x7D939F);
 
     public static final HSL WHITE_HEX = new HSL(26, 0, 1);
-    public static final HSL RED_HEX = new HSL(360, 0.8, 0.5);
-    public static final HSL GREEN_HEX = new HSL(130, 0.9, 0.4);
-    public static final HSL BLUE_HEX = new HSL(220, 0.9, 0.5);
-    public static final HSL YELLOW_HEX = new HSL(50, 1, 0.5);
-    public static final HSL NATURAL_HEX = new HSL(30, 0.5, 0.6);
-    public static final HSL BLACK_HEX = new HSL(0, 0, 0.25);
+    public static final HSL RED_HEX = new HSL(360, 0.7, 0.65);
+    public static final HSL GREEN_HEX = new HSL(95, 0.5, 0.8);
+    public static final HSL BLUE_HEX = new HSL(220, 0.5, 0.8);
+    public static final HSL YELLOW_HEX = new HSL(45, 0.7, 0.85);
+    public static final HSL NATURAL_HEX = new HSL(30, 0.4, 0.7);
+    public static final HSL BLACK_HEX = new HSL(0, 0, 0.35);
 }
