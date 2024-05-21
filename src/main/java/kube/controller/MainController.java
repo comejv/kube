@@ -7,12 +7,13 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.SwingUtilities;
+import java.awt.Component;
 
 import kube.view.GUI;
 import kube.configuration.Config;
-import kube.configuration.ResourceLoader;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.model.Kube;
@@ -59,24 +60,21 @@ public class MainController {
             HexIcon h = (HexIcon) source;
             h.setPressed(false);
 
-            // Get dropoff location
-            Container parent = h.getParent();
-            if (parent != null && parent.getLayout() instanceof GridLayout) {
-                int gridX = (h.getX() + h.getXOffset()) / (parent.getWidth() / parent.getComponentCount());
-                int gridY = (h.getY() + h.getYOffset()) / (parent.getHeight() / parent.getComponentCount());
-
-                Config.debug("Dropped at grid cell: (" + gridX + ", " + gridY + ")");
-            }
             gui.removeOverlay();
         }
 
         @Override
         public void mouseDragged(MouseEvent e) {
-            Config.debug("Mouse mouseDragged");
+            Config.debug("Mouse dragged in hex");
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            Config.debug("Mouse moved in hex");
             Object source = e.getSource();
 
             HexIcon h = (HexIcon) source;
-            h.setLocation(e.getX(), e.getY());
+            h.setOffset(e.getX(), e.getY());
             h.repaint();
         }
     }
@@ -152,7 +150,7 @@ public class MainController {
     }
 
     // phase 1 listener
-    private class phase1Listener implements ActionListener, MouseListener {
+    private class phase1Listener implements ActionListener, MouseListener, MouseMotionListener {
         public void actionPerformed(ActionEvent evt) {
             switch (evt.getActionCommand()) {
                 case "phase2":
@@ -174,15 +172,38 @@ public class MainController {
             if (source instanceof HexIcon) {
                 Config.debug("Hexa pressed");
                 HexIcon h = (HexIcon) source;
-                HexIcon clone = new HexIcon(ResourceLoader.getBufferedImage("blackHexa"), false);
-                clone.setLocation(e.getX(), e.getY());
+                HexIcon clone = h.clone();
+                clone.setOffset(e.getX(), e.getY());
                 clone.addMouseListener(overlayedHexaListener);
                 clone.addMouseMotionListener(overlayedHexaListener);
                 gui.addOverlay(clone);
             }
         }
 
+        public void mouseMoved(MouseEvent e) {
+
+        }
+
+        public void mouseDragged(MouseEvent e) {
+
+        }
+
         public void mouseReleased(MouseEvent e) {
+            Config.debug("Mouse released");
+            if (e.getSource() instanceof Component) {
+                // Get dropoff location
+                Component source = (Component) e.getSource();
+                Container grid = source.getParent().getParent();
+                Config.debug(grid.getComponentCount());
+                if (grid != null && grid.getLayout() instanceof GridLayout) {
+                    Config.debug("mouse x " + e.getX());
+                    Config.debug("mouse y " + e.getY());
+                    int gridX = (e.getX()) / (grid.getWidth() / grid.getComponentCount());
+                    int gridY = (e.getY()) / (grid.getHeight() / grid.getComponentCount());
+                    Config.debug("Dropped in grid cell (" + gridX + ", " + gridY + ")");
+                }
+            }
+            gui.removeOverlay();
         }
 
         public void mouseEntered(MouseEvent e) {

@@ -6,8 +6,6 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
-import kube.configuration.Config;
-
 public class HexIcon extends Icon {
     private boolean isActionable;
     private boolean isHovered;
@@ -32,9 +30,9 @@ public class HexIcon extends Icon {
             float[] scales = { factor };
             float[] offsets = new float[4];
             RescaleOp rop = new RescaleOp(scales, offsets, null);
-            g2d.drawImage(getImage(), rop, 0, 0);
+            g2d.drawImage(getImage(), rop, offsetX, offsetY);
         } else { // Draw the original image
-            g2d.drawImage(getImage(), 0, 0, null);
+            g2d.drawImage(getImage(), offsetX, offsetY, null);
         }
 
     }

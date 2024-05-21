@@ -7,11 +7,11 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import kube.view.HSL;
 
-public class Icon extends JLabel {
+public class Icon extends JPanel {
     private BufferedImage originalImage;
 
     public Icon(BufferedImage bufferedImage) {

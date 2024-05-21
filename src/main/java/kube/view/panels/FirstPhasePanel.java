@@ -10,9 +10,6 @@ import kube.view.components.HexIcon;
 import kube.view.components.Icon;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.swing.*;
@@ -99,7 +96,7 @@ public class FirstPhasePanel extends JPanel {
         // RANDOM LIST;
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = newHexa(true, true);
+                hexaList[i][j] = newHexa(true, false);
             }
         }
         for (int i = 0; i < 6; i++) {

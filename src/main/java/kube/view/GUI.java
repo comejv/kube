@@ -3,6 +3,7 @@ package kube.view;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.event.MouseMotionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -81,6 +82,10 @@ public class GUI extends Thread {
 
     public void removeOverlay() {
         mF.removeOverlay();
+    }
+
+    public Component getOverlayComponent() {
+        return mF.getOverlayComponent();
     }
 
     private void showAllBorders(Container container) {

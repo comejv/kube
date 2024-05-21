@@ -13,6 +13,7 @@ public class MainFrame extends JFrame {
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private JPanel framePanel;
+    private JPanel overlayPanel;
     private Component overlay;
 
     public MainFrame() {
@@ -24,11 +25,16 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension((int) (Config.getInitWidth() / 1.5), Config.getInitHeight()));
         setLocationRelativeTo(null);
         framePanel = new JPanel();
+        overlayPanel = new JPanel();
+        overlayPanel.setVisible(false);
+        overlayPanel.setOpaque(false);
+        overlayPanel.setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
         OverlayLayout overlay = new OverlayLayout(framePanel);
         framePanel.setLayout(overlay);
         framePanel.setVisible(true);
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
+        framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
         add(framePanel, BorderLayout.CENTER);
         setVisible(true);
@@ -44,19 +50,25 @@ public class MainFrame extends JFrame {
 
     public void addOverlay(Component p) {
         Config.debug("Added new overlay");
-        framePanel.add(p);
-        p.setVisible(true);
-        overlay = p;
+        overlayPanel.add(p);
+        overlayPanel.setVisible(true);
         framePanel.revalidate();
         framePanel.repaint();
+        overlay = p;
     }
 
     public void removeOverlay() {
         if (overlay != null) {
-            framePanel.remove(overlay);
+            Config.debug("Removed overlay");
+            overlayPanel.remove(overlay);
+            overlayPanel.setVisible(false);
             framePanel.revalidate();
             framePanel.repaint();
             overlay = null;
         }
+    }
+
+    public Component getOverlayComponent() {
+        return overlay;
     }
 }
