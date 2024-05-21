@@ -58,9 +58,17 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
-        for (int i = 0; i < 9; i++) {
-            topPanel.add(newHexa(GUIColors.WHITE_HEX));
-        }
+
+        topPanel.add(newHexa(GUIColors.YELLOW_HEX));
+        topPanel.add(newHexa(GUIColors.BLACK_HEX));
+        topPanel.add(newHexa(GUIColors.BLUE_HEX));
+        topPanel.add(newHexa(GUIColors.RED_HEX));
+        topPanel.add(newHexa(GUIColors.GREEN_HEX));
+        topPanel.add(newHexa(GUIColors.RED_HEX));
+        topPanel.add(newHexa(GUIColors.BLUE_HEX));
+        topPanel.add(newHexa(GUIColors.BLUE_HEX));
+        topPanel.add(newHexa(GUIColors.YELLOW_HEX));
+
         gamePanel.add(topPanel, BorderLayout.NORTH);
 
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
@@ -107,7 +115,12 @@ public class FirstPhasePanel extends JPanel {
                 mini.setOpaque(false);
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                mini.add(newHexa(GUIColors.NATURAL_HEX));
+                if (i==2){
+                    mini.add(newHexa(GUIColors.NATURAL_HEX));
+                }
+                else{
+                    mini.add(newHexa(GUIColors.WHITE_HEX));
+                }
                 mini.add(numOfPieces);
                 piecesPanel.add(mini);
             }
@@ -148,16 +161,16 @@ public class FirstPhasePanel extends JPanel {
     public static Icon newHexa(boolean opt) {
         Icon hexa;
         if (opt) {
-            hexa = new Icon(ResourceLoader.getBufferedImage("hexaVide"));
+            hexa = new Icon(ResourceLoader.getBufferedImage("hexaEmpty"));
         } else {
-            hexa = new Icon(ResourceLoader.getBufferedImage("hexaGray"));
+            hexa = new Icon(ResourceLoader.getBufferedImage("hexaGrayTextured"));
         }
         hexa.resizeIcon(60, 60);
         return hexa;
     }
 
     public static Icon newHexa(HSL c) {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaBlanc"));
+        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaWhite"));
         hexa.resizeIcon(60, 60);
         hexa.recolor(c);
         return hexa;

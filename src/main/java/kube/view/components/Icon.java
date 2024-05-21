@@ -45,8 +45,8 @@ public class Icon extends JLabel {
 
                 HSL pixelHsl = new HSL(rgb);
                 pixelHsl.setHue(hsl.getHue());
+                pixelHsl.setSaturation(hsl.getSaturation());
                 pixelHsl.setLuminance(hsl.getLuminance() * pixelHsl.getLuminance());
-                pixelHsl.setSaturation(hsl.getSaturation() * pixelHsl.getLuminance());
                 recoloredImage.setRGB(x, y, (alpha << 24) | pixelHsl.toRGB());
             }
         }
