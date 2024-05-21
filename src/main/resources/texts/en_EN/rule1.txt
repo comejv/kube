@@ -1,0 +1,4 @@
+The game takes place in 2 phases.
+
+The goal is to block your opponents during the
+second phase.
