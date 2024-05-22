@@ -1,5 +1,7 @@
 package kube.model;
 
+import java.awt.Desktop;
+import java.io.ObjectInputFilter;
 import java.util.Random;
 
 import kube.configuration.Config;
@@ -35,19 +37,7 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
-        switch (gameType) {
-            case LOCAL:
-                localGame(LOCAL);
-                break;
-            case HOST:
-                localGame(HOST);
-                break;
-            case JOIN:
-                localGame(JOIN);
-                break;
-            default:
-                break;
-        }
+        localGame(gameType);
     }
 
     public void setGameType(int gameType) {
@@ -103,7 +93,7 @@ public class Game implements Runnable {
                                     Config.debug("Validation construction j" + k3.getCurrentPlayer().getId());
                                 }
                                 k3.updatePhase();
-                                modeleToView.add(new Action(Action.PRINT_VALIDATE, isValidated));
+                                modeleToView.add(new Action(Action.VALIDATE, isValidated));
                                 break;
                             case Action.SHUFFLE:
                                 utilsAI.randomFillMountain(k3.getCurrentPlayer(), new Random());
@@ -122,7 +112,6 @@ public class Game implements Runnable {
             }
         }
 
-
         Config.debug("Fin phase 1");
         k3.setCurrentPlayer(k3.getRandomPlayer());
         modeleToView.add(new Action(Action.PRINT_STATE));
@@ -137,9 +126,8 @@ public class Game implements Runnable {
                         System.exit(0);
                     }
                 } else {
-
                     Action a = controllerToModele.remove();
-                    if (a.getPlayer() == k3.getCurrentPlayer().getId() || a.getPlayer() == 0) {
+                      if (a.getPlayer() == k3.getCurrentPlayer().getId() || a.getPlayer() == 0) {
                         switch (a.getType()) {
                             case Action.MOVE:
                                 playMove(a);
@@ -172,126 +160,7 @@ public class Game implements Runnable {
         Config.debug("Fin phase 2");
     }
 
-    public void onlineGame(int whoAmI) {
-        Config.debug("Démarrage de la partie en ligne en tant que " + (whoAmI == HOST ? "hôte" : "invité"));
-        Player player, other;
-        if (whoAmI == HOST) {
-
-            player = k3.getP1();
-            other = k3.getP2();
-            eventsToNetwork.add(new Action(Action.INIT_K3, k3.getK3()));
-            eventsToNetwork.add(new Action(Action.OTHER_PLAYER, k3.getP2()));
-        } else {
-            player = k3.getP2();
-            other = k3.getP1();
-
-        }
-                        modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
-
-        // Construction phase
-        eventsToNetwork.add(new Action(Action.SHOW_ALL));
-
-        while (k3.getPhase() == 1 && player.getHasValidateBuilding() == false) {
-            k3.setCurrentPlayer(player);
-            try {
-                Action a = controllerToModele.remove();
-                switch (a.getType()) {
-                    case Action.SWAP:
-                        swap((Swap) a.getData());
-                        modeleToView.add(a);
-                        break;
-                    case Action.VALIDATE:
-                        boolean isValidated;
-                        if ((isValidated = player.validateBuilding())) {
-                            player.validate();
-                            eventsToNetwork.add(new Action(Action.OTHER_PLAYER, player));
-                        }
-                        k3.updatePhase();
-                        modeleToView.add(new Action(Action.VALIDATE, isValidated));
-                        break;
-
-                    case Action.SHUFFLE:
-                        utilsAI.randomFillMountain(player, new Random());
-                        modeleToView.add(new Action(Action.SHUFFLE));
-                        break;
-                    case Action.INIT_K3:
-                        k3.setK3((Mountain) a.getData());
-                        break;
-                    case Action.OTHER_PLAYER:
-                        if (whoAmI == HOST) {
-                            k3.setP2((Player) a.getData());
-                        } else {
-                            k3.setP1((Player) a.getData());
-                        }
-                        k3.updatePhase();
-                        break;
-
-                    default:
-                        modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
-                        break;
-                }
-            } catch (UnsupportedOperationException e) {
-                modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
-            }
-
-        }
-        modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
-
-        while (k3.getPhase() == 1 && other.getHasValidateBuilding() == false) {
-            //Waiting for the other player to validate his building
-            Action a = controllerToModele.remove();
-            if (a.getType() == Action.OTHER_PLAYER) {
-                if (whoAmI == HOST) {
-                    k3.setP2((Player) a.getData());
-                } else {
-                    k3.setP1((Player) a.getData());
-                }
-                k3.updatePhase();
-            } else {
-                modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
-            }
-
-        }
-        // if (whoAmI == HOST) {
-        //     eventsToNetwork.add(new Action(Action.INIT_K3, k3.getK3()));
-        // }
-        // END PHASE 1
-
-        while (k3.canCurrentPlayerPlay()) {
-            Action a = controllerToModele.remove();
-            switch (a.getType()) {
-                case Action.MOVE:
-                    if (k3.getCurrentPlayer() == player) {
-                        playMove(a);
-                    }
-                    break;
-                case Action.MOVE_FROM_NETWORK:
-                    if (k3.getCurrentPlayer() == other) {
-                        playMove(a);
-                    }
-                    break;
-                case Action.UNDO:
-                    undo();
-                    break;
-                case Action.REDO:
-                    redo();
-                    break;
-                default:
-                    modeleToView.add(new Action(Action.PRINT_FORBIDDEN_ACTION));
-                    break;
-            }
-            if (k3.getCurrentPlayer() == other) {
-                modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
-            }
-        }
-
-        if (k3.getCurrentPlayer() == k3.getP1()) {
-            modeleToView.add(new Action(Action.PRINT_WIN_MESSAGE, k3.getP2()));
-        } else {
-            modeleToView.add(new Action(Action.PRINT_WIN_MESSAGE, k3.getP1()));
-        }
-
-    }
+   
 
     synchronized public void swap(Swap s) {
         ModelColor c = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos1().x, s.getPos1().y);
@@ -301,6 +170,7 @@ public class Game implements Runnable {
     }
 
     public void playMove(Action a) {
+        Config.debug(a);
         try {
             Move move = k3.moveSet().get((int) a.getData());
             if (k3.playMove(move)) {
@@ -311,6 +181,8 @@ public class Game implements Runnable {
         } catch (UnsupportedOperationException e) {
             modeleToView.add(new Action(Action.MOVE, null));
         }
+        Config.debug(a);
+
     }
 
     public void undo() {

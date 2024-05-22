@@ -3,6 +3,7 @@ package kube.view;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.Player;
@@ -54,6 +55,7 @@ public class TextualMode implements Runnable {
                     printListMoves();
                     break;
                 case Action.MOVE:
+                    Config.debug(action);
                     if (action.getData() == null) {
                         printMoveError();
                         printHelp();

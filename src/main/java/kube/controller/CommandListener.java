@@ -2,6 +2,7 @@ package kube.controller;
 
 import java.util.Scanner;
 
+import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
@@ -101,7 +102,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(Action.MOVE, n));
+            eventsToModel(new Action(Action.MOVE,(Integer) n));
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(Action.MOVE));
@@ -110,6 +111,7 @@ public class CommandListener implements Runnable {
     }
 
     private void eventsToModel(Action action) {
+
         eventsToModel.add(action);
         if (eventsToNetwork != null) {
                 action.setPlayer(whoAmI);
