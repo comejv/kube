@@ -17,7 +17,6 @@ import kube.view.GUI;
 import kube.configuration.Config;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
-import kube.model.Kube;
 import kube.model.Game;
 import kube.model.action.*;
 
@@ -26,7 +25,6 @@ import kube.model.action.*;
  */
 public class MainController {
     private GUI gui;
-    private Game model;
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
     Queue<Action> eventsToNetwork;
@@ -37,22 +35,6 @@ public class MainController {
     public phase2Listener phase2Listener;
 
     public MainController() {
-        menuListener = new menuListener();
-        overlayedHexaListener = new overlayedHexaListener();
-        phase1Listener = new phase1Listener();
-        phase2Listener = new phase2Listener();
-
-        Kube kube = new Kube();
-        eventsToModel = new Queue<>();
-        eventsToView = new Queue<>();
-        eventsToNetwork = new Queue<>();
-
-        model = new Game(Game.LOCAL, kube, eventsToModel, eventsToView, eventsToNetwork);
-
-        Thread modelThread = new Thread(model);
-
-        modelThread.start();
-        gui = new GUI(model, this);
     }
 
     private class overlayedHexaListener extends MouseAdapter {
@@ -169,7 +151,7 @@ public class MainController {
         public void actionPerformed(ActionEvent evt) {
             switch (evt.getActionCommand()) {
                 case "phase2":
-                    eventsToView.add(new Action(Action.VALIDATE));
+                    eventsToView.add(new Action(ActionType.VALIDATE));
                     gui.showPanel(GUI.PHASE2);
                     break;
                 case "menu": // change to opts.

@@ -20,6 +20,11 @@ public class HexDnDController extends MouseAdapter {
     }
 
     @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
     public void mouseReleased(MouseEvent e) {
         Config.debug("Mouse released");
         // Get dropoff location

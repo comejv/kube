@@ -7,15 +7,17 @@ public enum ActionType {
     SET_BUTTON_RELEASED,
     SET_BUTTON_CLICKED,
     SET_BUTTON_DEFAULT,
+    SETTINGS,
 
     // Menu
     PLAY_ONLINE,
     PLAY_LOCAL,
     RULES,
-    SETTINGS,
     VOLUME,
 
     // Phase 1
+    GRAB_HEX,
+    VALIDATE,
 
     // Phase 2
 
