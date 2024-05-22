@@ -10,6 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.SwingUtilities;
+
 import java.awt.Component;
 
 import kube.view.GUI;
@@ -28,6 +29,7 @@ public class MainController {
     private Game model;
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
+    Queue<Action> eventsToNetwork;
 
     public menuListener menuListener;
     public overlayedHexaListener overlayedHexaListener;
@@ -41,10 +43,11 @@ public class MainController {
         phase2Listener = new phase2Listener();
 
         Kube kube = new Kube();
-        eventsToView = new Queue<>();
         eventsToModel = new Queue<>();
+        eventsToView = new Queue<>();
+        eventsToNetwork = new Queue<>();
 
-        // model = new Game(Game.LOCAL, kube, eventsToModel, eventsToView);
+        model = new Game(Game.LOCAL, kube, eventsToModel, eventsToView, eventsToNetwork);
 
         Thread modelThread = new Thread(model);
 
@@ -56,26 +59,36 @@ public class MainController {
         @Override
         public void mouseReleased(MouseEvent e) {
             Config.debug("Mouse released");
-            Object source = e.getSource();
-            HexIcon h = (HexIcon) source;
-            h.setPressed(false);
-
+            // Get dropoff location
+            Component source = (Component) e.getSource();
+            Container grid = source.getParent().getParent();
+            Config.debug(grid.getComponentCount());
+            if (grid != null && grid.getLayout() instanceof GridLayout) {
+                Config.debug("mouse x " + e.getX());
+                Config.debug("mouse y " + e.getY());
+                int gridX = (e.getX()) / (grid.getWidth() / grid.getComponentCount());
+                int gridY = (e.getY()) / (grid.getHeight() / grid.getComponentCount());
+                Config.debug("Dropped in grid cell (" + gridX + ", " + gridY + ")");
+            }
             gui.removeOverlay();
         }
 
         @Override
-        public void mouseDragged(MouseEvent e) {
-            Config.debug("Mouse dragged in hex");
-        }
-
-        @Override
         public void mouseMoved(MouseEvent e) {
-            Config.debug("Mouse moved in hex");
             Object source = e.getSource();
 
             HexIcon h = (HexIcon) source;
             h.setOffset(e.getX(), e.getY());
-            h.repaint();
+        }
+
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            // Not detected because click in other pannel
+            Config.debug("Mouse draggued in overlay");
+            Object source = e.getSource();
+
+            HexIcon h = (HexIcon) source;
+            h.setOffset(e.getX(), e.getY());
         }
     }
 
@@ -151,9 +164,12 @@ public class MainController {
 
     // phase 1 listener
     private class phase1Listener implements ActionListener, MouseListener, MouseMotionListener {
+        private HexIcon overlay;
+
         public void actionPerformed(ActionEvent evt) {
             switch (evt.getActionCommand()) {
                 case "phase2":
+                    eventsToView.add(new Action(Action.VALIDATE));
                     gui.showPanel(GUI.PHASE2);
                     break;
                 case "menu": // change to opts.
@@ -165,51 +181,53 @@ public class MainController {
         }
 
         public void mouseClicked(MouseEvent e) {
-        }
-
-        public void mousePressed(MouseEvent e) {
             Object source = e.getSource();
             if (source instanceof HexIcon) {
                 Config.debug("Hexa pressed");
-                HexIcon h = (HexIcon) source;
-                HexIcon clone = h.clone();
-                clone.setOffset(e.getX(), e.getY());
-                clone.addMouseListener(overlayedHexaListener);
-                clone.addMouseMotionListener(overlayedHexaListener);
-                gui.addOverlay(clone);
+                HexIcon hex = (HexIcon) source;
+                overlay = hex.clone();
+                overlay.setLocation(0, 0);
+                overlay.setPreferredSize(gui.getFrameSize());
+                overlay.setOffset(e.getXOnScreen(), e.getYOnScreen());
+                overlay.addMouseListener(overlayedHexaListener);
+                overlay.addMouseMotionListener(overlayedHexaListener);
+                gui.addOverlay(overlay);
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {
+            if (e.getSource() instanceof HexIcon) {
+                HexIcon h = (HexIcon) e.getSource();
+                h.setPressed(true);
             }
         }
 
         public void mouseMoved(MouseEvent e) {
-
+            overlay.dispatchEvent(e);
         }
 
         public void mouseDragged(MouseEvent e) {
-
         }
 
         public void mouseReleased(MouseEvent e) {
-            Config.debug("Mouse released");
-            if (e.getSource() instanceof Component) {
-                // Get dropoff location
-                Component source = (Component) e.getSource();
-                Container grid = source.getParent().getParent();
-                Config.debug(grid.getComponentCount());
-                if (grid != null && grid.getLayout() instanceof GridLayout) {
-                    Config.debug("mouse x " + e.getX());
-                    Config.debug("mouse y " + e.getY());
-                    int gridX = (e.getX()) / (grid.getWidth() / grid.getComponentCount());
-                    int gridY = (e.getY()) / (grid.getHeight() / grid.getComponentCount());
-                    Config.debug("Dropped in grid cell (" + gridX + ", " + gridY + ")");
-                }
+            if (e.getSource() instanceof HexIcon) {
+                HexIcon h = (HexIcon) e.getSource();
+                h.setPressed(false);
             }
-            gui.removeOverlay();
         }
 
         public void mouseEntered(MouseEvent e) {
+            if (e.getSource() instanceof HexIcon) {
+                HexIcon h = (HexIcon) e.getSource();
+                h.setHovered(true);
+            }
         }
 
         public void mouseExited(MouseEvent e) {
+            if (e.getSource() instanceof HexIcon) {
+                HexIcon h = (HexIcon) e.getSource();
+                h.setHovered(false);
+            }
         }
     }
 

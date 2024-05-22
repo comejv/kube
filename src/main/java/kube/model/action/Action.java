@@ -2,7 +2,7 @@ package kube.model.action;
 
 import java.io.Serializable;
 
-public class Action implements Serializable{
+public class Action implements Serializable {
     public static final int SHOW_ALL = 0;
     public static final int SHOW_MOUNTAIN = 1;
     public static final int SWAP = 2;
@@ -13,7 +13,7 @@ public class Action implements Serializable{
     public static final int REDO = 8;
     public static final int PRINT_AI = 9;
     public static final int PRINT_COMMAND_ERROR = 10;
-    public static final int PRINT_WAIT_COORDINATES = 11; 
+    public static final int PRINT_WAIT_COORDINATES = 11;
     public static final int PRINT_GOODBYE = 12;
     public static final int PRINT_HELP = 13;
     public static final int PRINT_LIST_MOVES = 14;
@@ -39,7 +39,7 @@ public class Action implements Serializable{
     public static final int PRINT_ASK_NB_PLAYERS = 34;
     public static final int PRINT_ASK_PLAYER_NAME = 35;
     public static final int PRINT_ASK_GAME_MODE = 36;
-    //NETWORK
+    // NETWORK
     public static final int PRINT_ASK_HOST_OR_JOIN = 37;
     public static final int PRINT_ASK_IP = 38;
     public static final int INIT_K3 = 39;
@@ -50,28 +50,27 @@ public class Action implements Serializable{
     public static final int PRINT_NOT_YOUR_TURN = 44;
     public static final int MOVE_FROM_NETWORK = 45;
 
-
     private int type;
     private Object data;
 
-    public Action(int type, Object data){
+    public Action(int type, Object data) {
         this.type = type;
         this.data = data;
     }
 
-    public Action(int type){
+    public Action(int type) {
         this(type, null);
     }
 
-    public void setType(int type){
+    public void setType(int type) {
         this.type = type;
     }
 
-    public int getType(){
+    public int getType() {
         return type;
     }
 
-    public Object getData(){
+    public Object getData() {
         return data;
     }
 
@@ -80,13 +79,12 @@ public class Action implements Serializable{
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         String s = "Action{type = " + type;
-        if(data != null){
+        if (data != null) {
             s += ", data = " + data.toString();
         }
         s += "}";
         return s;
     }
-        
 }

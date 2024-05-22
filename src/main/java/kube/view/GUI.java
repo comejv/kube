@@ -3,7 +3,7 @@ package kube.view;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.event.MouseMotionListener;
+import java.awt.Dimension;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -97,5 +97,9 @@ public class GUI extends Thread {
                 ((JPanel) comp).setBorder(BorderFactory.createLineBorder(Color.red));
             }
         }
+    }
+
+    public Dimension getFrameSize() {
+        return mF.getSize();
     }
 }

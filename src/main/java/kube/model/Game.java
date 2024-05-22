@@ -142,7 +142,7 @@ public class Game implements Runnable {
 
     public void onlineGame(int whoAmI) {
         Config.debug("Démarrage de la partie en ligne en tant que " + (whoAmI == HOST ? "hôte" : "invité"));
-        Player player,other;
+        Player player, other;
         // Construction phase
         eventsToNetwork.add(new Action(Action.SHOW_ALL));
 
@@ -204,7 +204,7 @@ public class Game implements Runnable {
         modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
 
         while (k3.getPhase() == 1 && other.getHasValidateBuilding() == false) {
-            //Waiting for the other player to validate his building
+            // Waiting for the other player to validate his building
             Action a = controllerToModele.remove();
             if (a.getType() == Action.OTHER_PLAYER) {
                 if (whoAmI == HOST) {
@@ -213,11 +213,9 @@ public class Game implements Runnable {
                     k3.setP1((Player) a.getData());
                 }
                 k3.updatePhase();
-            }
-            else {
+            } else {
                 modeleToView.add(new Action(Action.PRINT_NOT_YOUR_TURN));
             }
-
 
         }
         if (whoAmI == HOST) {

@@ -25,12 +25,12 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension((int) (Config.getInitWidth() / 1.5), Config.getInitHeight()));
         setLocationRelativeTo(null);
         framePanel = new JPanel();
+        OverlayLayout overlay = new OverlayLayout(framePanel);
+        framePanel.setLayout(overlay);
         overlayPanel = new JPanel();
         overlayPanel.setVisible(false);
         overlayPanel.setOpaque(false);
         overlayPanel.setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
-        OverlayLayout overlay = new OverlayLayout(framePanel);
-        framePanel.setLayout(overlay);
         framePanel.setVisible(true);
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);

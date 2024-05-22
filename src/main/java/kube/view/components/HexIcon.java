@@ -11,8 +11,8 @@ public class HexIcon extends Icon {
     private boolean isHovered;
     private boolean isPressed;
 
-    private int offsetX;
-    private int offsetY;
+    private double offsetX;
+    private double offsetY;
 
     public HexIcon(BufferedImage img, boolean actionable) {
         super(img);
@@ -21,18 +21,17 @@ public class HexIcon extends Icon {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (isActionable() && isHovered) { // Draw darker image
             float factor = isPressed ? 0.75f : 1.25f;
-            float[] scales = { factor };
-            float[] offsets = new float[4];
+            float[] scales = { factor }; // Multiply all bands of each pixel by factor
+            float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
             RescaleOp rop = new RescaleOp(scales, offsets, null);
-            g2d.drawImage(getImage(), rop, offsetX, offsetY);
+            g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
         } else { // Draw the original image
-            g2d.drawImage(getImage(), offsetX, offsetY, null);
+            g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
         }
 
     }
@@ -63,17 +62,17 @@ public class HexIcon extends Icon {
         return isActionable;
     }
 
-    public void setOffset(int x, int y) {
-        offsetX = x;
-        offsetY = y;
+    public void setOffset(double x, double y) {
+        offsetX = x - getImage().getWidth() / 2;
+        offsetY = y - getImage().getHeight() / 2;
         repaint();
     }
 
-    public int getXOffset() {
+    public double getXOffset() {
         return offsetX;
     }
 
-    public int getYOffset() {
+    public double getYOffset() {
         return offsetY;
     }
 }

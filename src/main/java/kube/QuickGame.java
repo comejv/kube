@@ -11,8 +11,6 @@ import kube.view.TextualMode;
 
 public class QuickGame {
 
-   
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Kube kube = new Kube();
@@ -27,13 +25,10 @@ public class QuickGame {
         Thread modelThread = new Thread(model);
         Thread controllerThread = new Thread(controller);
         Thread viewThread = new Thread(view);
-        
+
         modelThread.start();
         viewThread.start();
         controllerThread.start();
     }
 
-
-
-
-}               
+}
