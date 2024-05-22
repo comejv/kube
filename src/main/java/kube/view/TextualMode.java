@@ -53,14 +53,15 @@ public class TextualMode implements Runnable {
                     printState();
                     printListMoves();
                     break;
-                case Action.PRINT_MOVE:
-                    printMove((Move) action.getData());
-                    printState();
-                    printHelp();
-                    break;
-                case Action.PRINT_MOVE_ERROR:
-                    printMoveError();
-                    printHelp();
+                case Action.MOVE:
+                    if (action.getData() == null) {
+                        printMoveError();
+                        printHelp();
+                    } else {
+                        printMove((Move) action.getData());
+                        printState();
+                        printHelp();
+                    }
                     break;
                 case Action.PRINT_NEXT_PLAYER:
                     printNextPlayer();
@@ -72,48 +73,54 @@ public class TextualMode implements Runnable {
                         printPlayer((int) action.getData());
                     }
                     break;
-                case Action.PRINT_RANDOM:
+                case Action.SHUFFLE:
                     printRandom();
                     printState();
                     printHelp();
                     break;
-                case Action.PRINT_REDO:
-                    printRedo((Move) action.getData());
-                    printState();
-                    printHelp();
+                case Action.REDO:
+                    if (action.getData() == null) {
+                        printRedoError();
+                        printState();
+                        printHelp();
+                    } else {
+                        printRedo((Move) action.getData());
+                        printState();
+                        printHelp();
+                    }
                     break;
-                case Action.PRINT_REDO_ERROR:
-                    printRedoError();
-                    printState();
-                    printHelp();
-                    break;
+
                 case Action.PRINT_STATE:
                     printState();
                     break;
-                case Action.PRINT_SWAP:
-                    printSwap();
-                    printHelp();
+                // case Action.ASK_SWAP:
+                // printSwap();
+                // printHelp();
+                // break;
+                case Action.SWAP:
+                    if (action.getData() == null) {
+                        printSwapError();
+                        printHelp();
+                    } else {
+                        Swap s = (Swap) action.getData();
+                        printSwapSuccess(s.getPos1(), s.getPos2());
+                        printHelp();
+                    }
                     break;
-                case Action.PRINT_SWAP_ERROR:
-                    printSwapError();
-                    printHelp();
+
+                case Action.UNDO:
+                    if (action.getData() == null) {
+                        printState();
+                        printUndoError();
+                        printHelp();
+                    } else {
+                        printUndo((Move) action.getData());
+                        printState();
+                        printHelp();
+                    }
                     break;
-                case Action.PRINT_SWAP_SUCCESS:
-                    Swap s = (Swap) action.getData();
-                    printSwapSuccess(s.getPos1(), s.getPos2());
-                    printHelp();
-                    break;
-                case Action.PRINT_UNDO:
-                    printUndo((Move) action.getData());
-                    printState();
-                    printHelp();
-                    break;
-                case Action.PRINT_UNDO_ERROR:
-                    printState();
-                    printUndoError();
-                    printHelp();
-                    break;
-                case Action.PRINT_VALIDATE:
+
+                case Action.VALIDATE:
                     printValidate((boolean) action.getData());
                     printHelp();
                     break;
@@ -139,7 +146,7 @@ public class TextualMode implements Runnable {
                     printConnectionEtablished();
                     break;
                 case Action.PRINT_WAITING_FOR_CONNECTION:
-                    printWaitingForConnection((int)action.getData());
+                    printWaitingForConnection((int) action.getData());
                     break;
                 case Action.PRINT_NOT_YOUR_TURN:
                     printOhterPlayerTurn();
@@ -298,7 +305,7 @@ public class TextualMode implements Runnable {
 
     private void printSwapSuccess(int x1, int y1, int x2, int y2) {
         Mountain m = kube.getCurrentPlayer().getMountain();
-        System.out.println("Les pièces " + m.getCase(x1, y1) + " et " + m.getCase(x2, y2) + "ont été échangées");
+        System.out.println("Les pièces " + m.getCase(x1, y1).forDisplay() + " et " + m.getCase(x2, y2).forDisplay() + " ont été échangées");
     }
 
     private void printUndo(Move move) {

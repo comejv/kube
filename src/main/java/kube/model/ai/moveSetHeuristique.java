@@ -105,7 +105,7 @@ public class moveSetHeuristique extends MiniMaxAI {
     }
 
     private void redistributeProbs(ModelColor c) {
-        if (getPlayer(getK3()).getAvalaibleToBuild().get(c) == 0) {
+        if (getPlayer(getK3()).getAvailaibleToBuild().get(c) == 0) {
             float probs = probabilities.get(c);
             probabilities.remove(c);
             for (ModelColor col : probabilities.keySet()) {
