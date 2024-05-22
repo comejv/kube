@@ -2,6 +2,8 @@ package kube.model.action;
 
 import java.io.Serializable;
 
+import kube.model.Player;
+
 public class Action implements Serializable{
     public static final int SHOW_ALL = 0;
     public static final int SHOW_MOUNTAIN = 1;
@@ -53,18 +55,36 @@ public class Action implements Serializable{
 
     private int type;
     private Object data;
+    private int player;
 
-    public Action(int type, Object data){
+    public Action(int type, Object data, int player){
         this.type = type;
         this.data = data;
+        this.player = player;
+    }
+
+    public Action(int type, int player){
+        this(type, null, player);
+    }
+
+    public Action(int type, Object data){
+        this(type, data, 0);
     }
 
     public Action(int type){
-        this(type, null);
+        this(type, null,0);
     }
 
     public void setType(int type){
         this.type = type;
+    }
+
+    public int getPlayer(){
+        return player;
+    }
+
+    public void setPlayer(int player){
+        this.player = player;
     }
 
     public int getType(){

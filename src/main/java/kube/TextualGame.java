@@ -22,6 +22,7 @@ public class TextualGame {
 
         Thread viewThread = new Thread(view);
         Thread menuThread = new Thread(menuListener);
+        
         viewThread.start();
         menuThread.start();
     }

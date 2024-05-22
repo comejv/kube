@@ -5,12 +5,13 @@ import java.util.Scanner;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
-
+ 
 public class CommandListener implements Runnable {
 
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
     Queue<Action> eventsToNetwork;
+    int whoAmI;
     Scanner sc;
 
     public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner sc) {
@@ -20,10 +21,12 @@ public class CommandListener implements Runnable {
 
     }
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,int whoAmI,
             Scanner sc) {
         this(eventsToModel, eventsToView, sc);
         this.eventsToNetwork = eventsToNetwork;
+        this.whoAmI = whoAmI;
+
     }
 
     @Override
@@ -100,11 +103,8 @@ public class CommandListener implements Runnable {
     private void eventsToModel(Action action) {
         eventsToModel.add(action);
         if (eventsToNetwork != null) {
-            if (action.getType() == Action.MOVE) {
-                eventsToNetwork.add(new Action(Action.MOVE_FROM_NETWORK, action.getData()));
-            } else {
+                action.setPlayer(whoAmI);
                 eventsToNetwork.add(action);
             }
         }
-    }
 }

@@ -70,8 +70,8 @@ public class MenuListener implements Runnable {
                 type = Game.JOIN;
             }
             eventsToNetwork = new Queue<>();
-            controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, scanner);
-            networkSender = new NetworkSender(network, eventsToNetwork);
+            controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork,type, scanner);
+            networkSender = new NetworkSender(network, eventsToNetwork,type);
             networkListener = new NetworkListener(network, eventsToModel);
 
             Thread networkListenerThread = new Thread(networkListener);
