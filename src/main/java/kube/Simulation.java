@@ -191,7 +191,7 @@ public class Simulation implements Runnable {
             k.fillBag(seed);
             k.fillBase();
             k.distributeCubesToPlayers();
-            if (k.getP1().getAvalaibleToBuild().equals(k.getP2().getAvalaibleToBuild())) {
+            if (k.getP1().getAvailaibleToBuild().equals(k.getP2().getAvailaibleToBuild())) {
                 break;
             }
         }
