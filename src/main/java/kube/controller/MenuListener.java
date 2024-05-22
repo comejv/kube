@@ -60,7 +60,7 @@ public class MenuListener implements Runnable {
             mode = askHostOrJoin();
             Network network;
             if (mode == 1) {
-                eventsToView.add(new Action(Action.PRINT_WAITING_FOR_CONNECTION, PORT));
+                eventsToView.add(new Action(Action.PRINT_WAITING_FOR_CONNECTION,(Integer) PORT));
                 network = new Server(PORT);
                 eventsToView.add(new Action(Action.PRINT_CONNECTION_ETABLISHED));
                 type = Game.HOST;
