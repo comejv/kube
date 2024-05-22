@@ -2,7 +2,7 @@ package kube;
 
 import java.util.Scanner;
 
-import kube.controller.CommandListener;
+import kube.controller.textual.CommandListener;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
