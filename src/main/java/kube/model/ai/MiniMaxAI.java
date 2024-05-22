@@ -26,6 +26,7 @@ public class MiniMaxAI implements ActionListener {
     private boolean noMoreTime;
     private Timer timer;
     private int nbMoves;
+    private int horizonMax;
     /**********
      * CONSTRUCTORS
      **********/
@@ -81,6 +82,10 @@ public class MiniMaxAI implements ActionListener {
     public void incrNbMoves(){
         nbMoves++;
     }
+
+    public void setHorizonMax(int h){
+        horizonMax = h;
+    }
     /**********
      * GETTERS
      **********/
@@ -88,7 +93,12 @@ public class MiniMaxAI implements ActionListener {
     public Kube getK3() {
         return k3;
     }
-
+    public Player getOtherPlayer(Kube k){
+        if (k.getP1().getId() == iaPlayerId){
+            return k.getP2();
+        } 
+        return k.getP1();
+    }
     public Player getPlayer(Kube k) {
         return k.getPlayerById(iaPlayerId);
     }
@@ -111,6 +121,10 @@ public class MiniMaxAI implements ActionListener {
 
     public int getNbMoves(){
         return nbMoves;
+    }
+
+    public int getHorizonMax(){
+        return horizonMax;
     }
     /**********
      * METHODS
@@ -142,7 +156,7 @@ public class MiniMaxAI implements ActionListener {
                 return null;
             }
             k.playMove(m);
-            map.put(m, miniMaxRec(k.clone(), horizon));
+            map.put(m, miniMaxRec(k.clone(), horizon, Integer.MIN_VALUE, Integer.MAX_VALUE));
             k.unPlay();
 
         }
@@ -156,7 +170,7 @@ public class MiniMaxAI implements ActionListener {
      * @param horizon the depth of the tree
      * @return the best value for a max node or the worst value for a min node
      */
-    public int miniMaxRec(Kube k, int horizon) {
+    public int miniMaxRec(Kube k, int horizon, int alpha, int beta) {
 
         // Timer's end
         if (getNoMoreTime()) {
@@ -166,8 +180,8 @@ public class MiniMaxAI implements ActionListener {
         ArrayList<Move> moves;
         int bestScore, score;
         Player p = k.getCurrentPlayer();
-        // Leaf
-        if (horizon == 0 || (moves = k.moveSet()).size() == 0) {
+        // Avoid evaluation of penality moves, because that false the game state
+        if (!k.getPenality() && horizon <= 0 || (moves = k.moveSet()).size() == 0) {
             return evaluation(k);
         } else {
             if (p == getPlayer(k)) {
@@ -177,18 +191,24 @@ public class MiniMaxAI implements ActionListener {
             }
             for (Move m : moves) {
                 k.playMove(m);
-                score = miniMaxRec(k, horizon - 1);
+                score = miniMaxRec(k, horizon - 1, alpha, beta);
                 if (getNoMoreTime()) { // Timer's end
                     return -1;
                 }
                 k.unPlay();
+                // Noeud max 
                 if (p == getPlayer(k)) {
-                    if (score > bestScore) {
-                        bestScore = score;
+                    bestScore = Math.max(score, bestScore);
+                    alpha = Math.max(score, alpha);
+                    if (beta <= alpha){
+                        break;
                     }
+                // Noeud min
                 } else {
-                    if (score < bestScore) {
-                        bestScore = score;
+                    bestScore = Math.min(score, bestScore);
+                    beta = Math.min(score, beta);
+                    if (beta <= alpha){
+                        break;
                     }
                 }
             }
@@ -250,6 +270,7 @@ public class MiniMaxAI implements ActionListener {
                 }
             } else {
                 solution = moveMap;
+                setHorizonMax(horizon);
                 horizon++;
             }
         }
