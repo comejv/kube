@@ -39,23 +39,26 @@ public class Action implements Serializable {
     public static final int PRINT_NOT_YOUR_TURN = 44;
     public static final int MOVE_FROM_NETWORK = 45;
 
-    private int type;
+    // View
+    public static final int REMOVE_OVERLAY = 46;
+
+    private ActionType type;
     private Object data;
 
-    public Action(int type, Object data) {
+    public Action(ActionType type, Object data) {
         this.type = type;
         this.data = data;
     }
 
-    public Action(int type) {
+    public Action(ActionType type) {
         this(type, null);
     }
 
-    public void setType(int type) {
+    public void setType(ActionType type) {
         this.type = type;
     }
 
-    public int getType() {
+    public ActionType getType() {
         return type;
     }
 
