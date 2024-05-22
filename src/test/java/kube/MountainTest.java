@@ -1,5 +1,6 @@
 package kube;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -28,7 +29,8 @@ public class MountainTest {
         m1.remove(0, 0);
         assertTrue(m1.getCase(0, 0) == ModelColor.EMPTY);
         Mountain m2 = new Mountain(5);
-        assertTrue(areSameMountain(m1, m2));
+
+        assertEquals(m1, m2);
     }
 
     @Test
@@ -49,7 +51,7 @@ public class MountainTest {
         m2.setCase(3, 0, ModelColor.YELLOW);
         m2.setCase(0, 0, ModelColor.BLUE);
 
-        assertTrue(areSameMountain(m1, m2));
+        assertEquals(m1, m2);
     }
 
     @Test
@@ -70,7 +72,7 @@ public class MountainTest {
         m1.remove(3, 0);
         m1.remove(4, 0);
 
-        assertTrue(areSameMountain(m1, m2));
+        assertEquals(m1, m2);
     }
 
     @Test
@@ -87,7 +89,7 @@ public class MountainTest {
 
         m1.clear();
 
-        assertTrue(areSameMountain(m1, m2));
+        assertEquals(m1, m2);
     }
 
     @Test
@@ -293,17 +295,17 @@ public class MountainTest {
         assertTrue(m.isPenality(3, 3));
     }
 
-    private boolean areSameMountain(Mountain m1, Mountain m2) {
-        if (m1.getBaseSize() != m2.getBaseSize()) {
-            return false;
-        }
-        for (int i = 0; i < m1.getBaseSize(); i++) {
-            for (int j = 0; j < m1.getBaseSize(); j++) {
-                if (m1.getCase(i, j) != m2.getCase(i, j)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    @Test
+    public void SaveTest() {
+
+        Mountain m = new Mountain(5);
+
+        m.setCase(4, 0, ModelColor.BLUE);
+        m.setCase(4, 1, ModelColor.RED);
+        m.setCase(4, 2, ModelColor.RED);
+        m.setCase(4, 3, ModelColor.NATURAL);
+        m.setCase(4, 4, ModelColor.NATURAL);
+
+        assertEquals(m, new Mountain(m.forSave()));
     }
 }

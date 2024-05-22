@@ -7,8 +7,7 @@ import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
 import kube.model.action.move.Move;
-import kube.model.ai.midLevelAI;
-import kube.model.ai.randomAI;
+import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.utilsAI;
 
 public class Game implements Runnable {
@@ -70,7 +69,7 @@ public class Game implements Runnable {
             try {
                 if (k3.getCurrentPlayer().isAI()) {
                     k3.getCurrentPlayer().getAI().constructionPhase();
-                    modeleToView.add(new Action(Action.PRINT_VALIDATE, true));
+                    modeleToView.add(new Action(Action.VALIDATE, true));
                     k3.updatePhase();
                 } else {
                     Action a = controllerToModele.remove();
@@ -133,7 +132,7 @@ public class Game implements Runnable {
                     try {
                         Move move = k3.getCurrentPlayer().getAI().nextMove();
                         k3.playMove(move);
-                        modeleToView.add(new Action(Action.PRINT_MOVE, move));
+                        modeleToView.add(new Action(Action.MOVE, move));
                     } catch (Exception e) {
                         System.exit(0);
                     }
@@ -208,12 +207,12 @@ public class Game implements Runnable {
                             eventsToNetwork.add(new Action(Action.OTHER_PLAYER, player));
                         }
                         k3.updatePhase();
-                        modeleToView.add(new Action(Action.PRINT_VALIDATE, isValidated));
+                        modeleToView.add(new Action(Action.VALIDATE, isValidated));
                         break;
 
                     case Action.SHUFFLE:
                         utilsAI.randomFillMountain(player, new Random());
-                        modeleToView.add(new Action(Action.PRINT_RANDOM));
+                        modeleToView.add(new Action(Action.SHUFFLE));
                         break;
                     case Action.INIT_K3:
                         k3.setK3((Mountain) a.getData());
@@ -305,28 +304,31 @@ public class Game implements Runnable {
         try {
             Move move = k3.moveSet().get((int) a.getData());
             if (k3.playMove(move)) {
-                modeleToView.add(new Action(Action.PRINT_MOVE, move));
+                modeleToView.add(new Action(Action.MOVE, move));
             } else {
-                modeleToView.add(new Action(Action.PRINT_MOVE_ERROR, move));
+                modeleToView.add(new Action(Action.MOVE, move));
             }
         } catch (UnsupportedOperationException e) {
-            modeleToView.add(new Action(Action.PRINT_MOVE_ERROR));
+            modeleToView.add(new Action(Action.MOVE, null));
         }
     }
 
     public void undo() {
-        if (k3.unPlay()) {
-            modeleToView.add(new Action(Action.PRINT_UNDO, k3.getLastMovePlayed()));
+        if (k3.getHistory().canUndo() && k3.unPlay()) {
+            while (k3.getCurrentPlayer().isAI() && k3.getHistory().canUndo()){
+                k3.unPlay();
+            }
+            modeleToView.add(new Action(Action.UNDO, k3.getLastMovePlayed()));
         } else {
-            modeleToView.add(new Action(Action.PRINT_UNDO_ERROR));
+            modeleToView.add(new Action(Action.UNDO, null));
         }
     }
 
     public void redo() {
-        if (k3.rePlay()) {
-            modeleToView.add(new Action(Action.PRINT_REDO, k3.getLastMovePlayed()));
+        if (k3.getHistory().canRedo() && k3.rePlay()) {
+            modeleToView.add(new Action(Action.REDO, k3.getLastMovePlayed()));
         } else {
-            modeleToView.add(new Action(Action.PRINT_REDO_ERROR));
+            modeleToView.add(new Action(Action.REDO, null));
         }
     }
 

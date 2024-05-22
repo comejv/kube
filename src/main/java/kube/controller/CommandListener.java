@@ -34,27 +34,37 @@ public class CommandListener implements Runnable {
         while (sc.hasNextLine()) {
             switch (sc.nextLine()) {
                 case "random":
+                case "shuffle":
                     eventsToModel.add(new Action(Action.SHUFFLE));
                     break;
                 case "echanger":
+                case "swap":
                     swap(sc);
                     break;
                 case "afficher":
+                case "print":
+                case "display":
                     eventsToView.add(new Action(Action.PRINT_STATE));
                     break;
                 case "valider":
+                case "validate":
                     eventsToModel.add(new Action(Action.VALIDATE));
                     break;
                 case "jouer":
+                case "play":
                     playMove(sc);
                     break;
                 case "annuler":
+                case "cancel":
+                case "undo":
                     eventsToModel(new Action(Action.UNDO));
                     break;
                 case "rejouer":
+                case "replay":
                     eventsToModel(new Action(Action.REDO));
                     break;
                 case "aide":
+                case "help":
                 case "":
                     eventsToView.add(new Action(Action.PRINT_HELP));
                     break;
@@ -78,11 +88,10 @@ public class CommandListener implements Runnable {
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
-            eventsToModel.add(new Action(Action.SWAP, swap));
-            eventsToView.add(new Action(Action.PRINT_SWAP, swap));
+            eventsToView.add(new Action(Action.SWAP, swap));
             return true;
         } catch (NumberFormatException e) {
-            eventsToView.add(new Action(Action.PRINT_SWAP_ERROR));
+            eventsToView.add(new Action(Action.SWAP));
             return false;
         }
     }
@@ -95,7 +104,7 @@ public class CommandListener implements Runnable {
             eventsToModel(new Action(Action.MOVE, n));
             return true;
         } catch (NumberFormatException e) {
-            eventsToView.add(new Action(Action.PRINT_MOVE_ERROR));
+            eventsToView.add(new Action(Action.MOVE));
             return false;
         }
     }

@@ -27,12 +27,12 @@ public class utilsAI {
         }
         // If the Mountain is not build
         else {
-            for (ModelColor color : player.getAvalaibleToBuild().keySet()) {
-                int n = player.getAvalaibleToBuild().get(color);
+            for (ModelColor color : player.getAvailaibleToBuild().keySet()) {
+                int n = player.getAvailaibleToBuild().get(color);
                 for (int i = 0; i < n; i++) {
                     colArr.add(color);
                 }
-                player.getAvalaibleToBuild().put(color, 0);
+                player.getAvailaibleToBuild().put(color, 0);
             }
         }
         for (int i = 0; i < player.getMountain().getBaseSize(); i++) {
