@@ -1,4 +1,4 @@
-package kube.controller;
+package kube.controller.network;
 
 import kube.model.action.Action;
 import kube.model.action.Queue;

@@ -1,7 +1,9 @@
-package kube.controller;
+package kube.controller.textual;
 
 import java.util.Scanner;
 
+import kube.controller.network.NetworkListener;
+import kube.controller.network.NetworkSender;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;

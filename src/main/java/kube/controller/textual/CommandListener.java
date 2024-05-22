@@ -1,4 +1,4 @@
-package kube.controller;
+package kube.controller.textual;
 
 import java.util.Scanner;
 
