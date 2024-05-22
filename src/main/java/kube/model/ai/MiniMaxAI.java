@@ -93,7 +93,12 @@ public class MiniMaxAI implements ActionListener {
     public Kube getK3() {
         return k3;
     }
-
+    public Player getOtherPlayer(Kube k){
+        if (k.getP1().getId() == iaPlayerId){
+            return k.getP2();
+        } 
+        return k.getP1();
+    }
     public Player getPlayer(Kube k) {
         return k.getPlayerById(iaPlayerId);
     }

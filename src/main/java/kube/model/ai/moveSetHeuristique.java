@@ -11,7 +11,7 @@ import kube.model.ModelColor;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
-public class betterConstruct extends MiniMaxAI {
+public class moveSetHeuristique extends MiniMaxAI {
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;
@@ -20,20 +20,20 @@ public class betterConstruct extends MiniMaxAI {
      * CONSTRUCTORS
      **********/
 
-    public betterConstruct(int time, Random r) {
+    public moveSetHeuristique(int time, Random r) {
         super(time, r);
     }
 
-    public betterConstruct(int time, int seed) {
+    public moveSetHeuristique(int time, int seed) {
         super(time, seed);
 
     }
 
-    public betterConstruct(int time) {
+    public moveSetHeuristique(int time) {
         super(time);
     }
 
-    public betterConstruct() {
+    public moveSetHeuristique() {
         super();
     }
 
@@ -55,7 +55,16 @@ public class betterConstruct extends MiniMaxAI {
 
     @Override
     public int evaluation(Kube k) {
-        return getPlayer(k).getPlayableColors().size() + getPlayer(k).getAdditionals().size();
+        //System.out.println(k.getK3());
+        //System.out.println(getPlayer(k));
+        //wSystem.out.println(k.moveSet(getPlayer(k)));
+        if (k.moveSet(getPlayer(k)).size() == 0){
+            return Integer.MIN_VALUE;
+        } 
+        if (k.moveSet(getOtherPlayer(k)).size() == 0){
+            return Integer.MAX_VALUE;
+        }
+        return k.moveSet(getPlayer(k)).size() + getPlayer(k).getAdditionals().size() - getPlayer(k).getWhiteUsed();
     }
 
     @Override

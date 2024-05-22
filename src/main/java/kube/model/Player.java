@@ -21,6 +21,7 @@ public class Player implements Serializable {
     private boolean hasValidateBuilding;
     private ArrayList<ModelColor> additionals;
     private HashMap<ModelColor, Integer> avalaibleToBuild;
+    private HashMap<ModelColor, Integer> usedPiece;
 
     /**********
      * CONSTRUCTOR
@@ -39,6 +40,10 @@ public class Player implements Serializable {
         clearMountain();
         this.additionals = new ArrayList<>();
         this.hasValidateBuilding = false;
+        this.usedPiece = new HashMap<>();
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()){
+            usedPiece.put(c, 0);
+        }
     }
 
     /**********
@@ -47,10 +52,6 @@ public class Player implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setWhiteUsed(int whiteUsed) {
-        this.whiteUsed = whiteUsed;
     }
 
     public void setInitialMountain(Mountain initialMountain) {
@@ -77,6 +78,10 @@ public class Player implements Serializable {
         this.hasValidateBuilding = hasValidateBuilding;
     }
 
+    public void setusedPiece(HashMap<ModelColor, Integer> usedPiece){
+        this.usedPiece = usedPiece;
+    }
+
     /**********
      * GETTERS
      **********/
@@ -86,7 +91,7 @@ public class Player implements Serializable {
     }
 
     public int getWhiteUsed() {
-        return this.whiteUsed;
+        return this.usedPiece.get(ModelColor.WHITE);
     }
 
     public Mountain getInitialMountain() {
@@ -122,6 +127,10 @@ public class Player implements Serializable {
 
     public MiniMaxAI getAI() {
         return null;
+    }
+
+    public HashMap<ModelColor, Integer> getUsedPiece(){
+        return usedPiece;
     }
 
     /**********
@@ -370,6 +379,22 @@ public class Player implements Serializable {
         return playable;
     }
 
+    public void addUsedPiece(ModelColor c){
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException(
+                    "removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
+        }
+        usedPiece.put(c, usedPiece.get(c) + 1);
+    }
+
+    public void removeUsedPiece(ModelColor c){
+        if (!getHasValidateBuilding()) {
+            throw new UnsupportedOperationException(
+                    "removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
+        }
+        usedPiece.put(c, usedPiece.get(c) - 1);
+    }
+
     /**********
      * OTHER METHODS
      **********/
@@ -460,7 +485,7 @@ public class Player implements Serializable {
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
         p.setName(getName());
-        p.setWhiteUsed(getWhiteUsed());
+        p.setusedPiece(new HashMap<>(getUsedPiece()));
         p.setMountain(getMountain().clone());
         p.setHasValidateBuilding(getHasValidateBuilding());
         return p;

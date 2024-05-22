@@ -501,14 +501,12 @@ public class Kube {
         else if (move.isWhite() && move.isFromAdditionals()) {
             // Applying the move
             player.getAdditionals().remove(color);
-            player.setWhiteUsed(player.getWhiteUsed() + 1);
         }
         // Catching if the move is a MoveMW (placing a white cube from player's
         // mountain)
         else if (move.isWhite()) {
             // Applying the move
             player.removeFromMountain(move.getFrom().x, move.getFrom().y);
-            player.setWhiteUsed(player.getWhiteUsed() + 1);
         }
         // Catching if the move is a MoveAM (Placing a cube from player's additionals on
         // the K3)
@@ -538,8 +536,9 @@ public class Kube {
 
         // If the move is not a penality, set the next player
         if (!move.isToAdditionals()) {
+            player.addUsedPiece(move.getColor());
             nextPlayer();
-        }
+        } 
         lastMovePlayed = move;
         return true;
     }
@@ -620,7 +619,6 @@ public class Kube {
         else if (move.isWhite() && move.isFromAdditionals()) {
             // Cancel the move
             player.addToAdditionals(ModelColor.WHITE);
-            player.setWhiteUsed(player.getWhiteUsed() - 1);
         }
         // Catching if the move is a MoveMW (placing a white cube from player's
         // mountain)
@@ -628,7 +626,6 @@ public class Kube {
             // Cancel the move
             mw = (MoveMW) move;
             setPlayerCase(player, mw.getFrom(), mw.getColor());
-            player.setWhiteUsed(player.getWhiteUsed() - 1);
         }
         // Catching if the move is a MoveAM (placing a cube from player's additionals on
         // the k3)
@@ -649,6 +646,9 @@ public class Kube {
             setPenality(false);
         }
 
+        if (!move.isToAdditionals()){
+            player.removeUsedPiece(move.getColor());
+        }
         // Set the next player
         setCurrentPlayer(move.getPlayer());
         lastMovePlayed = move;

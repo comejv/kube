@@ -11,7 +11,7 @@ import kube.model.ModelColor;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
-public class betterConstruct extends MiniMaxAI {
+public class Joker extends MiniMaxAI {
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;
@@ -20,20 +20,20 @@ public class betterConstruct extends MiniMaxAI {
      * CONSTRUCTORS
      **********/
 
-    public betterConstruct(int time, Random r) {
+    public Joker(int time, Random r) {
         super(time, r);
     }
 
-    public betterConstruct(int time, int seed) {
+    public Joker(int time, int seed) {
         super(time, seed);
 
     }
 
-    public betterConstruct(int time) {
+    public Joker(int time) {
         super(time);
     }
 
-    public betterConstruct() {
+    public Joker() {
         super();
     }
 
@@ -55,7 +55,13 @@ public class betterConstruct extends MiniMaxAI {
 
     @Override
     public int evaluation(Kube k) {
-        return getPlayer(k).getPlayableColors().size() + getPlayer(k).getAdditionals().size();
+        int score = 0;
+        if (getPlayer(k).getId() == 1){
+            score += k.getP2().getWhiteUsed();
+        } else {
+            score += k.getP1().getWhiteUsed();
+        }
+        return k.moveSet(getPlayer(k)).size() + getPlayer(k).getAdditionals().size() - getPlayer(k).getWhiteUsed();
     }
 
     @Override

@@ -8,6 +8,7 @@ import kube.model.action.Queue;
 import kube.model.action.Swap;
 import kube.model.action.move.Move;
 import kube.model.ai.midLevelAI;
+import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 import kube.model.ai.utilsAI;
 
@@ -57,7 +58,7 @@ public class Game implements Runnable {
     public void localGame() {
         Config.debug("Démarrage de la partie locale");
         // Initialisation
-        k3.init(new randomAI(100), new midLevelAI(100), 180);
+        k3.init(null, new moveSetHeuristique(100));
 
         // Construction phase
         while (k3.getPhase() == 1) {
@@ -285,6 +286,9 @@ public class Game implements Runnable {
 
     public void undo() {
         if (k3.unPlay()) {
+            while (k3.getCurrentPlayer().isAI()){
+                k3.unPlay();
+            }
             modeleToView.add(new Action(Action.PRINT_UNDO, k3.getLastMovePlayed()));
         } else {
             modeleToView.add(new Action(Action.PRINT_UNDO_ERROR));

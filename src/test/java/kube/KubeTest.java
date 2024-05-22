@@ -1309,7 +1309,7 @@ public class KubeTest {
 
         // Changing to the expected state
         p1.remove(1, 1);
-        nbWhite ++;
+        nbWhite++;
 
         // Verifying that the state is the expected one
         ArrayList<ModelColor> p1Additional2 = new ArrayList<>(kube.getP1().getAdditionals());
