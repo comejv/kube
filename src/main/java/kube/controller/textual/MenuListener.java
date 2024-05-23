@@ -60,7 +60,7 @@ public class MenuListener implements Runnable {
             }
 
         } else {
-            kube.init();
+            kube.init(new moveSetHeuristique(300));
             mode = askHostOrJoin();
             Network network;
             if (mode == 1) {
