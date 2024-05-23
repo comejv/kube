@@ -43,8 +43,8 @@ public class MainFrame extends JFrame {
     public void createGlassPane(Component obj) {
         GlassPanel g = new GlassPanel(obj, cardPanel);
         this.glassPane = g;
-        g.setVisible(true);
         setGlassPane(g);
+        g.setVisible(true);
     }
 
     public void setGlassPaneController(MouseInputAdapter mia) {
