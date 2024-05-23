@@ -2,8 +2,8 @@ package kube.controller.textual;
 
 import java.util.Scanner;
 
-import kube.configuration.Config;
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
  
@@ -36,7 +36,7 @@ public class CommandListener implements Runnable {
             switch (sc.nextLine()) {
                 case "random":
                 case "shuffle":
-                    eventsToModel.add(new Action(Action.SHUFFLE));
+                    eventsToModel.add(new Action(ActionType.SHUFFLE));
                     break;
                 case "echanger":
                 case "swap":
@@ -45,11 +45,11 @@ public class CommandListener implements Runnable {
                 case "afficher":
                 case "print":
                 case "display":
-                    eventsToView.add(new Action(Action.PRINT_STATE));
+                    eventsToView.add(new Action(ActionType.PRINT_STATE));
                     break;
                 case "valider":
                 case "validate":
-                    eventsToModel.add(new Action(Action.VALIDATE));
+                    eventsToModel.add(new Action(ActionType.VALIDATE));
                     break;
                 case "jouer":
                 case "play":
@@ -58,19 +58,19 @@ public class CommandListener implements Runnable {
                 case "annuler":
                 case "cancel":
                 case "undo":
-                    eventsToModel(new Action(Action.UNDO));
+                    eventsToModel(new Action(ActionType.UNDO));
                     break;
                 case "rejouer":
                 case "replay":
-                    eventsToModel(new Action(Action.REDO));
+                    eventsToModel(new Action(ActionType.REDO));
                     break;
                 case "aide":
                 case "help":
                 case "":
-                    eventsToView.add(new Action(Action.PRINT_HELP));
+                    eventsToView.add(new Action(ActionType.PRINT_HELP));
                     break;
                 default:
-                    eventsToView.add(new Action(Action.PRINT_COMMAND_ERROR));
+                    eventsToView.add(new Action(ActionType.PRINT_COMMAND_ERROR));
                     break;
             }
         }
@@ -78,34 +78,34 @@ public class CommandListener implements Runnable {
 
     private boolean swap(Scanner sc) {
         try {
-            eventsToView.add(new Action(Action.PRINT_WAIT_COORDINATES, 1));
+            eventsToView.add(new Action(ActionType.PRINT_WAIT_COORDINATES, 1));
             String s = sc.nextLine();
             String[] coords = s.split(" ");
             int x1 = Integer.parseInt(coords[0]);
             int y1 = Integer.parseInt(coords[1]);
-            eventsToView.add(new Action(Action.PRINT_WAIT_COORDINATES, 2));
+            eventsToView.add(new Action(ActionType.PRINT_WAIT_COORDINATES, 2));
             s = sc.nextLine();
             coords = s.split(" ");
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
-            eventsToView.add(new Action(Action.SWAP, swap));
+            eventsToView.add(new Action(ActionType.SWAP, swap));
             return true;
         } catch (NumberFormatException e) {
-            eventsToView.add(new Action(Action.SWAP));
+            eventsToView.add(new Action(ActionType.SWAP));
             return false;
         }
     }
 
     private boolean playMove(Scanner sc) {
-        eventsToView.add(new Action(Action.PRINT_LIST_MOVES));
+        eventsToView.add(new Action(ActionType.PRINT_LIST_MOVES));
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(Action.MOVE,(Integer) n));
+            eventsToModel(new Action(ActionType.MOVE,(Integer) n));
             return true;
         } catch (NumberFormatException e) {
-            eventsToView.add(new Action(Action.MOVE));
+            eventsToView.add(new Action(ActionType.MOVE));
             return false;
         }
     }
