@@ -3,6 +3,8 @@ package kube.view;
 import javax.swing.*;
 
 import kube.configuration.Config;
+import kube.configuration.ResourceLoader;
+import kube.view.panels.GlassPanel;
 
 import java.awt.*;
 
@@ -22,8 +24,9 @@ public class MainFrame extends JFrame {
         setMinimumSize(new Dimension((int) (Config.getInitWidth() / 1.5), Config.getInitHeight()));
         setLocationRelativeTo(null);
         cardLayout = new CardLayout();
-        cardPanel = new JPanel(cardLayout);
-        add(cardPanel, BorderLayout.CENTER);
+        cardPanel = (JPanel) getContentPane();
+        cardPanel.setLayout(cardLayout);
+        pack();
         setVisible(true);
     }
 
@@ -33,5 +36,14 @@ public class MainFrame extends JFrame {
 
     public void showPanel(String name) {
         cardLayout.show(cardPanel, name);
+    }
+
+    public void createGlassPane(Component obj){
+        setGlassPane(new GlassPanel(obj, cardPanel));
+        getGlassPane().setVisible(true);
+    }
+
+    public void removeGlassPane(){
+        remove(getGlassPane());
     }
 }
