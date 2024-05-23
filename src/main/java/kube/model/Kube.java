@@ -1,6 +1,7 @@
 package kube.model;
 
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,15 +9,28 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 
-import kube.model.action.move.Move;
-import kube.model.action.move.MoveAA;
-import kube.model.action.move.MoveAM;
-import kube.model.action.move.MoveAW;
-import kube.model.action.move.MoveMA;
-import kube.model.action.move.MoveMM;
-import kube.model.action.move.MoveMW;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import kube.model.action.move.*;
 import kube.model.ai.MiniMaxAI;
 
+/**********
+ * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
+ **********/
+
+@JsonSerialize(using = Kube.KubeSerializer.class)
+@JsonDeserialize(using = Kube.KubeDeserializer.class)
 public class Kube {
 
     /**********
@@ -35,13 +49,12 @@ public class Kube {
     private ArrayList<ModelColor> bag;
     private boolean penality;
     private History history;
-    private int baseSize;
+    private int phase, baseSize;
     private Mountain k3;
-    private int phase;
     private Move lastMovePlayed;
 
     /**********
-     * CONSTRUCTOR
+     * CONSTRUCTORS
      **********/
 
     /**
@@ -51,9 +64,104 @@ public class Kube {
         init();
     }
 
+    /**
+     * Constructor of the Kube
+     * 
+     * @param empty true if the Kube should be empty, false otherwise
+     */
     public Kube(boolean empty) {
         if (!empty) {
             init();
+        }
+    }
+
+    /**********
+     * SERIALIZER
+     **********/
+
+    public static class KubeSerializer extends JsonSerializer<Kube> {
+        @Override
+        public void serialize(Kube kube, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+
+            Player [] players = {kube.getP1(), kube.getP2()};
+
+            ModelColor [] kubeBase = new ModelColor[kube.getBaseSize()];
+
+            for (int i = 0; i < kube.getBaseSize(); i++) {
+                kubeBase[i] = kube.getK3().getCase(kube.getBaseSize() - 1, i);
+            }
+
+            jsonGenerator.writeStartObject();
+            jsonGenerator.writeObjectField("phase", kube.getPhase());
+            jsonGenerator.writeObjectField("kube_base", kubeBase);
+            jsonGenerator.writeObjectField("players", players);
+            jsonGenerator.writeObjectField("history", kube.getHistory());
+            jsonGenerator.writeEndObject();
+        }
+    }
+
+    /**********
+     * DESERIALIZER
+     **********/
+
+    public static class KubeDeserializer extends JsonDeserializer<Kube> {
+        @Override
+        public Kube deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
+            
+            Kube kube = new Kube(true);
+
+            while(!jsonParser.isClosed()){
+                JsonToken jsonToken = jsonParser.nextToken();
+
+                if(JsonToken.FIELD_NAME.equals(jsonToken)){
+
+                    String fieldName = jsonParser.currentName();
+                    jsonParser.nextToken();
+
+                    switch(fieldName){
+                        case "phase":
+                            kube.phase = jsonParser.getValueAsInt();
+                            break;
+                        case "kube_base":
+                            // Convert the json formatted string to a ModelColor array
+                            TypeReference<ModelColor[]> typeReference = new TypeReference<ModelColor[]>(){};
+                            ModelColor[] kubeBase = jsonParser.readValueAs(typeReference);
+                            kube.k3 = new Mountain(kubeBase.length);
+                            // Filling the base of the kube
+                            for (int i = 0; i < kubeBase.length; i++) {
+                                kube.k3.setCase(kubeBase.length - 1, i, kubeBase[i]);
+                            }
+                            break;
+                        case "players":
+                            // Convert the json formatted string to a Player array
+                            ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
+                            JsonNode playersNode = mapper.readTree(jsonParser);
+                            String playersJson = playersNode.toString();
+                            playersJson = playersJson.substring(1, playersJson.length() - 1);
+                            String[] playerString = playersJson.split("\\},\\{");
+                            playerString[0] = playerString[0] + "}";
+                            playerString[1] = "{" + playerString[1];
+                            // Filling the players of the kube
+                            kube.p1 = mapper.readValue(playerString[0], Player.class);
+                            kube.p2 = mapper.readValue(playerString[1], Player.class);
+                            break;
+                        case "history":
+                            kube.history = jsonParser.readValueAs(History.class);
+                            // Setting the current player of the kube
+                            if (kube.getHistory().getFirstPlayer() == kube.getP1().getId()) {
+                                kube.currentPlayer = kube.getP1();
+                            } else {
+                                kube.currentPlayer = kube.getP2();
+                            }
+                            // Replaying the history
+                            for (Move move : kube.getHistory().getDone()) {
+                                kube.playMoveWithoutHistory(move);
+                            }
+                            break;
+                    }
+                }
+            }
+            return kube;
         }
     }
 
@@ -303,7 +411,7 @@ public class Kube {
 
         // Fill the base with the 9 first cubes of the bag
         for (int y = 0; y < baseSize; y++) {
-            k3.setCase(baseSize - 1, y, bag.remove(0));
+            getK3().setCase(baseSize - 1, y, bag.remove(0));
         }
     }
 
@@ -866,20 +974,6 @@ public class Kube {
         }
 
         return getPhase();
-    }
-
-    /**
-     * Give a String representation of the Kube for saving
-     * 
-     * @return the String representation of the Kube for saving
-     */
-    public String forSave() {
-        
-        String save;
-
-        save = "";
-
-        return save;
     }
 
     @Override

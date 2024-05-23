@@ -9,6 +9,9 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kube.model.ModelColor;
 import kube.model.Kube;
 import kube.model.Mountain;
@@ -1586,6 +1589,30 @@ public class KubeTest {
         assertTrue(moves.contains(new MoveAW()));
         assertTrue(moves.contains(new MoveAM(7, 6, ModelColor.YELLOW)));
         assertTrue(moves.contains(new MoveAM(7, 7, ModelColor.YELLOW)));
+    }
+
+    @Test
+    public void personnalTest() {
+
+        ObjectMapper om = new ObjectMapper();
+
+        Kube kube = new Kube();
+
+        initPlayMove(kube);
+        kube.getP1().setInitialMountain(kube.getP1().getMountain().clone());
+        kube.getP2().setInitialMountain(kube.getP2().getMountain().clone());
+        kube.getHistory().setFirstPlayer(1);
+
+        try {
+            String s = om.writeValueAsString(kube);
+
+            Kube k = om.readValue(s, Kube.class);
+
+            assertEquals(kube, k);
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initPlayMove(Kube k) {

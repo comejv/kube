@@ -3,6 +3,11 @@ package kube.model.action.move;
 
 import java.awt.Point;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 import kube.model.ModelColor;
 
 public class MoveMM extends Move {
@@ -11,7 +16,10 @@ public class MoveMM extends Move {
      * ATTRIBUTES
      **********/
 
+    @JsonProperty("from")
     private Point from;
+
+    @JsonProperty("to")
     private Point to;
 
     /**********
@@ -25,7 +33,8 @@ public class MoveMM extends Move {
      * @param to    the destination of the move
      * @param color the color of the moved cube
      */
-    public MoveMM(Point from, Point to, ModelColor color) {
+    @JsonCreator
+    public MoveMM(@JsonProperty("from") Point from, @JsonProperty("to") Point to, @JsonProperty("color") ModelColor color) {
         super(color);
         this.from = from;
         this.to = to;
@@ -44,34 +53,11 @@ public class MoveMM extends Move {
         this(new Point(fromX, fromY), new Point(toX, toY), color);
     }
 
-    /**
-     * Constructor of the class MoveMM from a save string
-     * 
-     * @param save the string to load
-     */
-    public MoveMM(String save) {
-
-        String fromString, toString, color;
-        String[] parts, coords;
-
-        parts = save.split(";");
-        color = parts[1];
-        fromString = parts[2].substring(1, parts[2].length() - 1);
-        toString = parts[3].substring(1, parts[3].length() - 1);
-
-        setColor(ModelColor.getColor(Integer.parseInt(color)));
-
-        coords = fromString.split(",");
-        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-
-        coords = toString.split(",");
-        this.to= new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-    }
-
     /**********
      * SETTERS
      **********/
 
+    @JsonSetter("from")
     public void setFrom(Point from) {
         this.from = from;
     }
@@ -80,6 +66,7 @@ public class MoveMM extends Move {
         setFrom(new Point(x, y));
     }
 
+    @JsonSetter("to")
     public void setTo(Point to) {
         this.to = to;
     }
@@ -92,10 +79,12 @@ public class MoveMM extends Move {
      * GETTERS
      **********/
 
+    @JsonGetter("from")
     public Point getFrom() {
         return from;
     }
 
+    @JsonGetter("to")
     public Point getTo() {
         return to;
     }
@@ -112,18 +101,6 @@ public class MoveMM extends Move {
     @Override
     public boolean isClassicMove() {
         return true;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{MM;" + super.forSave() + ";" +
-                "(" + getFrom().x + "," + getFrom().y + ");" +
-                "(" + getTo().x + "," + getTo().y + ")}";
     }
 
     @Override
