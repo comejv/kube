@@ -10,8 +10,6 @@ import kube.model.Mountain;
 import kube.model.action.move.Move;
 import kube.model.ai.Joker;
 import kube.model.ai.MiniMaxAI;
-import kube.model.ai.betterConstruct;
-import kube.model.ai.midLevelAI;
 import kube.model.ai.moveSetHeuristique;
 
 public class Simulation implements Runnable {

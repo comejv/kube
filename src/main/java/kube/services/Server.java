@@ -6,9 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import kube.configuration.Config;
-import kube.model.action.Action;
-
 public class Server extends Network {
 
     private ServerSocket serverSocket;

@@ -1,6 +1,5 @@
 package kube.model.ai;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,10 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Player;
-import kube.configuration.Config;
-import kube.model.Kube;
 import kube.model.action.move.Move;
 
 public class midLevelAI extends MiniMaxAI {

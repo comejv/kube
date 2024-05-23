@@ -8,6 +8,7 @@ import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
 import kube.model.action.move.Move;
@@ -30,36 +31,36 @@ public class TextualMode implements Runnable {
         boolean waitOtherTurn = false;
         while (true) {
             Action action = events.remove();
-            if (waitOtherTurn && action.getType() != Action.ITS_YOUR_TURN){
+            if (waitOtherTurn && action.getType() != ActionType.ITS_YOUR_TURN){
                 printOtherPlayerTurn();
                 continue;
             }
             switch (action.getType()) {
-                case Action.PRINT_AI:
+                case PRINT_AI:
                     if (action.getData() != null) {
                         printAI();
                     } else {
                         printAI((int) action.getData());
                     }
                     break;
-                case Action.PRINT_COMMAND_ERROR:
+                case PRINT_COMMAND_ERROR:
                     printCommandError();
                     printHelp();
                     break;
-                case Action.PRINT_WAIT_COORDINATES:
+                case PRINT_WAIT_COORDINATES:
                     printWaitCoordinates((int) action.getData());
                     break;
-                case Action.PRINT_GOODBYE:
+                case PRINT_GOODBYE:
                     printGoodbye();
                     break;
-                case Action.PRINT_HELP:
+                case PRINT_HELP:
                     printHelp();
                     break;
-                case Action.PRINT_LIST_MOVES:
+                case PRINT_LIST_MOVES:
                     printState();
                     printListMoves();
                     break;
-                case Action.MOVE:
+                case MOVE:
                     Config.debug(action);
                     if (action.getData() == null) {
                         printMoveError();
@@ -70,22 +71,22 @@ public class TextualMode implements Runnable {
                         printHelp();
                     }
                     break;
-                case Action.PRINT_NEXT_PLAYER:
+                case PRINT_NEXT_PLAYER:
                     printNextPlayer();
                     break;
-                case Action.PRINT_PLAYER:
+                case PRINT_PLAYER:
                     if (action.getData() != null) {
                         printPlayer();
                     } else {
                         printPlayer((int) action.getData());
                     }
                     break;
-                case Action.SHUFFLE:
+                case SHUFFLE:
                     printRandom();
                     printState();
                     printHelp();
                     break;
-                case Action.REDO:
+                case REDO:
                     if (action.getData() == null) {
                         printRedoError();
                         printState();
@@ -97,14 +98,14 @@ public class TextualMode implements Runnable {
                     }
                     break;
 
-                case Action.PRINT_STATE:
+                case PRINT_STATE:
                     printState();
                     break;
-                // case Action.ASK_SWAP:
+                // case ASK_SWAP:
                 // printSwap();
                 // printHelp();
                 // break;
-                case Action.SWAP:
+                case SWAP:
                     if (action.getData() == null) {
                         printSwapError();
                         printHelp();
@@ -115,7 +116,7 @@ public class TextualMode implements Runnable {
                     }
                     break;
 
-                case Action.UNDO:
+                case UNDO:
                     if (action.getData() == null) {
                         printState();
                         printUndoError();
@@ -127,39 +128,39 @@ public class TextualMode implements Runnable {
                     }
                     break;
 
-                case Action.VALIDATE:
+                case VALIDATE:
                     printValidate((boolean) action.getData());
                     printHelp();
                     break;
-                case Action.PRINT_WELCOME:
+                case PRINT_WELCOME:
                     printWelcome();
                     break;
-                case Action.PRINT_WIN_MESSAGE:
+                case PRINT_WIN_MESSAGE:
                     printWinMessage((Player) action.getData());
                     break;
-                case Action.PRINT_ASK_NB_PLAYERS:
+                case PRINT_ASK_NB_PLAYERS:
                     askNbPlayers();
                     break;
-                case Action.PRINT_ASK_GAME_MODE:
+                case PRINT_ASK_GAME_MODE:
                     printGameMode();
                     break;
-                case Action.PRINT_ASK_HOST_OR_JOIN:
+                case PRINT_ASK_HOST_OR_JOIN:
                     printHostOrJoin();
                     break;
-                case Action.PRINT_ASK_IP:
+                case PRINT_ASK_IP:
                     printAskIP();
                     break;
-                case Action.PRINT_CONNECTION_ETABLISHED:
+                case PRINT_CONNECTION_ETABLISHED:
                     printConnectionEtablished();
                     break;
-                case Action.PRINT_WAITING_FOR_CONNECTION:
+                case PRINT_WAITING_FOR_CONNECTION:
                     printWaitingForConnection((int) action.getData());
                     break;
-                case Action.PRINT_NOT_YOUR_TURN:
+                case PRINT_NOT_YOUR_TURN:
                     printOtherPlayerTurn();
                     waitOtherTurn = true;
                     break;
-                case Action.ITS_YOUR_TURN:
+                case ITS_YOUR_TURN:
                     waitOtherTurn = false;
                 default:
                     break;
