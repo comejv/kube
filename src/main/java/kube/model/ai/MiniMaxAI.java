@@ -93,7 +93,12 @@ public class MiniMaxAI implements ActionListener {
     public Kube getK3() {
         return k3;
     }
-
+    public Player getOtherPlayer(Kube k){
+        if (k.getP1().getId() == iaPlayerId){
+            return k.getP2();
+        } 
+        return k.getP1();
+    }
     public Player getPlayer(Kube k) {
         return k.getPlayerById(iaPlayerId);
     }
@@ -177,7 +182,7 @@ public class MiniMaxAI implements ActionListener {
         Player p = k.getCurrentPlayer();
         // Avoid evaluation of penality moves, because that false the game state
         if (!k.getPenality() && horizon <= 0 || (moves = k.moveSet()).size() == 0) {
-            return evaluation(k);
+            return evaluation(k, getPlayer(k)) - evaluation(k, getOtherPlayer(k));
         } else {
             if (p == getPlayer(k)) {
                 bestScore = Integer.MIN_VALUE;
@@ -217,7 +222,7 @@ public class MiniMaxAI implements ActionListener {
      * @param k the current state of the game
      * @return the value of the state
      */
-    public int evaluation(Kube k) {
+    public int evaluation(Kube k, Player p) {
         return 0;
     }
 
@@ -246,7 +251,7 @@ public class MiniMaxAI implements ActionListener {
      * 
      * @return the next move
      */
-    public Move nextMove() throws Exception {
+    public Move nextMove() {
         incrNbMoves();
         int horizon;
         setNoMoreTime(false);

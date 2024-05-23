@@ -1,5 +1,6 @@
 package kube.services;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
@@ -17,8 +18,6 @@ public abstract class Network {
 
     public abstract boolean connect(String ip, int port);
     public abstract boolean disconnect();
-    public abstract boolean send(Action data);
-    public abstract Action receive();
     
     public String getIp() {
         return ip;
@@ -55,7 +54,29 @@ public abstract class Network {
     public boolean isServer() {
         return false;
     }
-    
+    public boolean send(Action data) throws IOException {
+        try {
+            if (getOut() != null) {
+                getOut().writeObject(data);
+                getOut().flush();
+            } else {
+                return false;
+            }
+        } catch (IOException e) {
+            disconnect();
+            throw e;
+        }
+        return true;
+    }
 
+    public Action receive () throws IOException{
+        try {
+            Action o = (Action) getIn().readObject();
+            return o;
+        } catch (IOException | ClassNotFoundException e) {
+            disconnect();
+            throw new IOException();
+        }
+    }
     
 }

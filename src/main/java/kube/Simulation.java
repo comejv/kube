@@ -8,9 +8,9 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
+import kube.model.ai.Joker;
 import kube.model.ai.MiniMaxAI;
-import kube.model.ai.betterConstruct;
-import kube.model.ai.midLevelAI;
+import kube.model.ai.moveSetHeuristique;
 
 public class Simulation implements Runnable {
     int winJ1;
@@ -23,7 +23,7 @@ public class Simulation implements Runnable {
     int sumHorizonJ2;
 
     public static void main(String[] args) throws Exception {
-        int nbGames = 100;
+        int nbGames = 1000;
         int nbThreads = 8;
         Simulation s = new Simulation(nbGames);
         s.winJ1 = 0;
@@ -117,14 +117,14 @@ public class Simulation implements Runnable {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new betterConstruct(50), new betterConstruct(50));
+            k.init(new Joker(50), new moveSetHeuristique(50));
             k.getP1().getAI().constructionPhase();
             k.updatePhase();
             k.getP2().getAI().constructionPhase();
             k.updatePhase();
             // Phsae 2
             k.setCurrentPlayer(k.getRandomPlayer());
-            while (k.canCurrentPlayerPlay()) {
+            while (k.canCurrentPlayerPlay()) {  
                 Move move = k.getCurrentPlayer().getAI().nextMove();
                 if (k.getCurrentPlayer() == k.getP1()) {
                     horizonReachedJ1.add(k.getCurrentPlayer().getAI().getHorizonMax());

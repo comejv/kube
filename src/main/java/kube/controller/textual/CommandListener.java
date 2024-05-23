@@ -1,8 +1,11 @@
-package kube.controller;
+package kube.controller.textual;
 
 import java.util.Scanner;
 
+import com.fasterxml.jackson.databind.jsontype.impl.AsExistingPropertyTypeSerializer;
+
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
 
@@ -11,6 +14,7 @@ public class CommandListener implements Runnable {
     Queue<Action> eventsToModel;
     Queue<Action> eventsToView;
     Queue<Action> eventsToNetwork;
+    int whoAmI;
     Scanner sc;
 
     public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner sc) {
@@ -21,9 +25,12 @@ public class CommandListener implements Runnable {
     }
 
     public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,
+            int whoAmI,
             Scanner sc) {
         this(eventsToModel, eventsToView, sc);
         this.eventsToNetwork = eventsToNetwork;
+        this.whoAmI = whoAmI;
+
     }
 
     @Override
@@ -31,32 +38,43 @@ public class CommandListener implements Runnable {
         while (sc.hasNextLine()) {
             switch (sc.nextLine()) {
                 case "random":
-                    eventsToModel.add(new Action(Action.SHUFFLE));
+                case "shuffle":
+                    eventsToModel(new Action(ActionType.SHUFFLE));
                     break;
                 case "echanger":
+                case "swap":
                     swap(sc);
                     break;
                 case "afficher":
-                    eventsToView.add(new Action(Action.PRINT_STATE));
+                case "print":
+                case "display":
+                    eventsToView.add(new Action(ActionType.PRINT_STATE));
                     break;
                 case "valider":
-                    eventsToModel.add(new Action(Action.VALIDATE));
+                case "validate":
+                    eventsToModel(new Action(ActionType.VALIDATE));
                     break;
                 case "jouer":
+                case "play":
                     playMove(sc);
                     break;
                 case "annuler":
-                    eventsToModel(new Action(Action.UNDO));
+                case "cancel":
+                case "undo":
+                    eventsToModel(new Action(ActionType.UNDO));
                     break;
                 case "rejouer":
-                    eventsToModel(new Action(Action.REDO));
+                case "replay":
+                case "redo":
+                    eventsToModel(new Action(ActionType.REDO));
                     break;
                 case "aide":
+                case "help":
                 case "":
-                    eventsToView.add(new Action(Action.PRINT_HELP));
+                    eventsToView.add(new Action(ActionType.PRINT_HELP));
                     break;
                 default:
-                    eventsToView.add(new Action(Action.PRINT_COMMAND_ERROR));
+                    eventsToView.add(new Action(ActionType.PRINT_COMMAND_ERROR));
                     break;
             }
         }
@@ -64,47 +82,45 @@ public class CommandListener implements Runnable {
 
     private boolean swap(Scanner sc) {
         try {
-            eventsToView.add(new Action(Action.PRINT_WAIT_COORDINATES, 1));
+            eventsToView.add(new Action(ActionType.PRINT_WAIT_COORDINATES, 1));
             String s = sc.nextLine();
             String[] coords = s.split(" ");
             int x1 = Integer.parseInt(coords[0]);
             int y1 = Integer.parseInt(coords[1]);
-            eventsToView.add(new Action(Action.PRINT_WAIT_COORDINATES, 2));
+            eventsToView.add(new Action(ActionType.PRINT_WAIT_COORDINATES, 2));
             s = sc.nextLine();
             coords = s.split(" ");
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
-            eventsToModel.add(new Action(Action.SWAP, swap));
-            eventsToView.add(new Action(Action.PRINT_SWAP, swap));
+            eventsToView.add(new Action(ActionType.SWAP, swap));
+            eventsToModel(new Action(ActionType.SWAP, swap));
             return true;
-        } catch (NumberFormatException e) {
-            eventsToView.add(new Action(Action.PRINT_SWAP_ERROR));
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
+            eventsToView.add(new Action(ActionType.SWAP));
             return false;
         }
     }
 
     private boolean playMove(Scanner sc) {
-        eventsToView.add(new Action(Action.PRINT_LIST_MOVES));
+        eventsToView.add(new Action(ActionType.PRINT_LIST_MOVES));
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(Action.MOVE, n));
+            eventsToModel(new Action(ActionType.MOVE,(Integer) n));
             return true;
         } catch (NumberFormatException e) {
-            eventsToView.add(new Action(Action.PRINT_MOVE_ERROR));
+            eventsToView.add(new Action(ActionType.MOVE));
             return false;
         }
     }
 
     private void eventsToModel(Action action) {
-        eventsToModel.add(action);
         if (eventsToNetwork != null) {
-            if (action.getType() == Action.MOVE) {
-                eventsToNetwork.add(new Action(Action.MOVE_FROM_NETWORK, action.getData()));
-            } else {
-                eventsToNetwork.add(action);
-            }
+            action.setPlayer(whoAmI);
+            eventsToModel.add(action);
+        } else {
+            eventsToModel.add(action);
         }
     }
 }

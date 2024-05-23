@@ -2,7 +2,7 @@ package kube;
 
 import java.util.Scanner;
 
-import kube.controller.MenuListener;
+import kube.controller.textual.MenuListener;
 import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
@@ -22,6 +22,7 @@ public class TextualGame {
 
         Thread viewThread = new Thread(view);
         Thread menuThread = new Thread(menuListener);
+        
         viewThread.start();
         menuThread.start();
     }

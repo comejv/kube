@@ -3,10 +3,12 @@ package kube.view;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
 import kube.model.action.move.Move;
@@ -26,125 +28,140 @@ public class TextualMode implements Runnable {
         printWelcome();
         printStart();
         printHelp();
+        boolean waitOtherTurn = false;
         while (true) {
             Action action = events.remove();
+            if (waitOtherTurn && action.getType() != ActionType.ITS_YOUR_TURN){
+                printOtherPlayerTurn();
+                continue;
+            }
             switch (action.getType()) {
-                case Action.PRINT_AI:
+                case PRINT_AI:
                     if (action.getData() != null) {
                         printAI();
                     } else {
                         printAI((int) action.getData());
                     }
                     break;
-                case Action.PRINT_COMMAND_ERROR:
+                case PRINT_COMMAND_ERROR:
                     printCommandError();
                     printHelp();
                     break;
-                case Action.PRINT_WAIT_COORDINATES:
+                case PRINT_WAIT_COORDINATES:
                     printWaitCoordinates((int) action.getData());
                     break;
-                case Action.PRINT_GOODBYE:
+                case PRINT_GOODBYE:
                     printGoodbye();
                     break;
-                case Action.PRINT_HELP:
+                case PRINT_HELP:
                     printHelp();
                     break;
-                case Action.PRINT_LIST_MOVES:
+                case PRINT_LIST_MOVES:
                     printState();
                     printListMoves();
                     break;
-                case Action.PRINT_MOVE:
-                    printMove((Move) action.getData());
-                    printState();
-                    printHelp();
+                case MOVE:
+                    Config.debug(action);
+                    if (action.getData() == null) {
+                        printMoveError();
+                        printHelp();
+                    } else {
+                        printMove((Move) action.getData());
+                        printState();
+                        printHelp();
+                    }
                     break;
-                case Action.PRINT_MOVE_ERROR:
-                    printMoveError();
-                    printHelp();
-                    break;
-                case Action.PRINT_NEXT_PLAYER:
+                case PRINT_NEXT_PLAYER:
                     printNextPlayer();
                     break;
-                case Action.PRINT_PLAYER:
+                case PRINT_PLAYER:
                     if (action.getData() != null) {
                         printPlayer();
                     } else {
                         printPlayer((int) action.getData());
                     }
                     break;
-                case Action.PRINT_RANDOM:
+                case SHUFFLE:
                     printRandom();
                     printState();
                     printHelp();
                     break;
-                case Action.PRINT_REDO:
-                    printRedo((Move) action.getData());
+                case REDO:
+                    if (action.getData() == null) {
+                        printRedoError();
+                        printState();
+                        printHelp();
+                    } else {
+                        printRedo((Move) action.getData());
+                        printState();
+                        printHelp();
+                    }
+                    break;
+
+                case PRINT_STATE:
                     printState();
-                    printHelp();
                     break;
-                case Action.PRINT_REDO_ERROR:
-                    printRedoError();
-                    printState();
-                    printHelp();
+                //case ASK_SWAP:
+                // printSwap();
+                // printHelp();
+                // break;
+                case SWAP:
+                    if (action.getData() == null) {
+                        printSwapError();
+                        printHelp();
+                    } else {
+                        Swap s = (Swap) action.getData();
+                        printSwapSuccess(s.getPos1(), s.getPos2());
+                        printHelp();
+                    }
                     break;
-                case Action.PRINT_STATE:
-                    printState();
+
+                case UNDO:
+                    if (action.getData() == null) {
+                        printState();
+                        printUndoError();
+                        printHelp();
+                    } else {
+                        printUndo((Move) action.getData());
+                        printState();
+                        printHelp();
+                    }
                     break;
-                case Action.PRINT_SWAP:
-                    printSwap();
-                    printHelp();
-                    break;
-                case Action.PRINT_SWAP_ERROR:
-                    printSwapError();
-                    printHelp();
-                    break;
-                case Action.PRINT_SWAP_SUCCESS:
-                    Swap s = (Swap) action.getData();
-                    printSwapSuccess(s.getPos1(), s.getPos2());
-                    printHelp();
-                    break;
-                case Action.PRINT_UNDO:
-                    printUndo((Move) action.getData());
-                    printState();
-                    printHelp();
-                    break;
-                case Action.PRINT_UNDO_ERROR:
-                    printState();
-                    printUndoError();
-                    printHelp();
-                    break;
-                case Action.PRINT_VALIDATE:
+
+                case VALIDATE:
                     printValidate((boolean) action.getData());
                     printHelp();
                     break;
-                case Action.PRINT_WELCOME:
+                case PRINT_WELCOME:
                     printWelcome();
                     break;
-                case Action.PRINT_WIN_MESSAGE:
+                case PRINT_WIN_MESSAGE:
                     printWinMessage((Player) action.getData());
                     break;
-                case Action.PRINT_ASK_NB_PLAYERS:
+                case PRINT_ASK_NB_PLAYERS:
                     askNbPlayers();
                     break;
-                case Action.PRINT_ASK_GAME_MODE:
+                case PRINT_ASK_GAME_MODE:
                     printGameMode();
                     break;
-                case Action.PRINT_ASK_HOST_OR_JOIN:
+                case PRINT_ASK_HOST_OR_JOIN:
                     printHostOrJoin();
                     break;
-                case Action.PRINT_ASK_IP:
+                case PRINT_ASK_IP:
                     printAskIP();
                     break;
-                case Action.PRINT_CONNECTION_ETABLISHED:
+                case PRINT_CONNECTION_ETABLISHED:
                     printConnectionEtablished();
                     break;
-                case Action.PRINT_WAITING_FOR_CONNECTION:
-                    printWaitingForConnection((int)action.getData());
+                case PRINT_WAITING_FOR_CONNECTION:
+                    printWaitingForConnection((int) action.getData());
                     break;
-                case Action.PRINT_NOT_YOUR_TURN:
-                    printOhterPlayerTurn();
+                case PRINT_NOT_YOUR_TURN:
+                    printOtherPlayerTurn();
+                    waitOtherTurn = true;
                     break;
-
+                case ITS_YOUR_TURN:
+                    waitOtherTurn = false;
                 default:
                     break;
             }
@@ -298,7 +315,7 @@ public class TextualMode implements Runnable {
 
     private void printSwapSuccess(int x1, int y1, int x2, int y2) {
         Mountain m = kube.getCurrentPlayer().getMountain();
-        System.out.println("Les pièces " + m.getCase(x1, y1) + " et " + m.getCase(x2, y2) + "ont été échangées");
+        System.out.println("Les pièces " + m.getCase(x1, y1).forDisplay() + " et " + m.getCase(x2, y2).forDisplay() + " ont été échangées");
     }
 
     private void printUndo(Move move) {
@@ -349,7 +366,7 @@ public class TextualMode implements Runnable {
         System.out.println("Connexion établie");
     }
 
-    private void printOhterPlayerTurn() {
+    private void printOtherPlayerTurn() {
         System.out.println("En attente de l'autre joueur");
     }
 }
