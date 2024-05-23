@@ -1,6 +1,5 @@
 package kube.model.action;
 
-import java.io.Serializable;
 
 public enum ActionType {
     // --- Model ---
@@ -41,6 +40,7 @@ public enum ActionType {
     ITS_YOUR_TURN,
     MOVE_FROM_NETWORK,
     PLAYER_DATA,
+    CONNECTION_CLOSED,
     // --- GUI ---
     // Global
     SET_BUTTON_PRESSED,

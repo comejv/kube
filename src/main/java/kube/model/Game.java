@@ -1,5 +1,6 @@
 package kube.model;
 
+import java.io.ObjectInputFilter;
 import java.util.Random;
 
 import com.fasterxml.jackson.annotation.JsonCreator.Mode;
@@ -130,6 +131,11 @@ public class Game implements Runnable {
                         k3.updatePhase();
                         modeleToView.add(new Action(ActionType.VALIDATE, isValidated));
                     }
+                    break;
+                case CONNECTION_CLOSED:
+                    //TODO
+                    Config.debug(a.getData());
+                    System.exit(-1);
                     break;
                 default:
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
