@@ -12,29 +12,31 @@ import kube.model.ai.MiniMaxAI;
 
 public class Player implements Serializable {
 
-    /**********
-     * ATTRIBUTES
-     **********/
-
+    /**
+     * ********
+     * ATTRIBUTES ********
+     */
     private String name;
     private int id, whiteUsed;
     private Mountain initialMountain, mountain;
-    private boolean hasValidateBuilding;
+    private boolean validate, hasValidateBuilding;
     private ArrayList<ModelColor> initialAdditionals, additionals;
     private HashMap<ModelColor, Integer> avalaibleToBuild;
     private HashMap<ModelColor, Integer> usedPiece;
 
-    /**********
-     * CONSTRUCTORS
-     **********/
-
+    /**
+     * ********
+     * CONSTRUCTORS ********
+     */
     /**
      * Constructor of the class Player
-     * 
+     *
      * @param id the player id
      */
     public Player(int id) {
 
+        this.id = id;
+        this.whiteUsed = 0;
         this.id = id;
         this.whiteUsed = 0;
         this.mountain = new Mountain(6);
@@ -89,10 +91,10 @@ public class Player implements Serializable {
         this.hasValidateBuilding = hasValidateBuilding;
     }
 
-    /**********
-     * SETTERS
-     **********/
-
+    /**
+     * ********
+     * SETTERS ********
+     */
     public void setId(int id) {
         this.id = id;
     }
@@ -125,14 +127,15 @@ public class Player implements Serializable {
         this.hasValidateBuilding = hasValidateBuilding;
     }
 
+
     public void setusedPiece(HashMap<ModelColor, Integer> usedPiece){
         this.usedPiece = usedPiece;
     }
 
     /**********
      * GETTERS
-     **********/
-
+     *********/
+    
     public int getId() {
         return this.id;
     }
@@ -180,16 +183,17 @@ public class Player implements Serializable {
         return usedPiece;
     }
 
-    /**********
-     * BEFORE HAS VALIDATE BUILDING METHODS
-     **********/
 
     /**
+     * ********
+     * BEFORE HAS VALIDATE BUILDING METHODS ********
+     */
+    /**
      * Check if the player can build a cube of the given color
-     * 
+     *
      * @param c the color to check
      * @return true if the player can build a cube of the given color, false
-     *         otherwise
+     * otherwise
      */
     public boolean isAvailableToBuild(ModelColor c) throws UnsupportedOperationException {
 
@@ -203,7 +207,7 @@ public class Player implements Serializable {
 
     /**
      * Add a color to the player's mountain using available colors
-     * 
+     *
      * @param point the position to build
      * @param color the color to build
      * @return true if the color has been built, false otherwise
@@ -221,9 +225,9 @@ public class Player implements Serializable {
 
     /**
      * Add a color to the player's mountain using available colors
-     * 
-     * @param x     the x position to build
-     * @param y     the y position to build
+     *
+     * @param x the x position to build
+     * @param y the y position to build
      * @param color the color to build
      * @return true if the color has been built, false otherwise
      */
@@ -263,7 +267,7 @@ public class Player implements Serializable {
 
     /**
      * Remove a color from the player's mountain to the available to build
-     * 
+     *
      * @param point the position to remove
      * @return the color removed
      */
@@ -279,7 +283,7 @@ public class Player implements Serializable {
 
     /**
      * Remove a color from the player's mountain to the available to build
-     * 
+     *
      * @param x the x position to remove
      * @param y the y position to remove
      * @return the color removed
@@ -309,7 +313,7 @@ public class Player implements Serializable {
 
     /**
      * Validdates the building of the player if the mountain is full
-     * 
+     *
      * @return true if the building has been validated, false otherwise
      */
     public boolean validateBuilding() throws UnsupportedOperationException {
@@ -320,7 +324,7 @@ public class Player implements Serializable {
         }
 
         if (getMountain().isFull()) {
-            setHasValidateBuilding(true); 
+            setHasValidateBuilding(true);
             setInitialMountain(getMountain().clone());
         }
 
@@ -328,13 +332,13 @@ public class Player implements Serializable {
         return getMountain().isFull();
     }
 
-    /**********
-     * AFTER HAS VALIDATE BUILDING METHODS
-     **********/
-
+    /**
+     * ********
+     * AFTER HAS VALIDATE BUILDING METHODS ********
+     */
     /**
      * Add a color to the player's additionals
-     * 
+     *
      * @param color the color to add
      */
     public void addToAdditionals(ModelColor color) throws UnsupportedOperationException {
@@ -349,7 +353,7 @@ public class Player implements Serializable {
 
     /**
      * Remove a color from the player's additionals
-     * 
+     *
      * @param pos the index of the color to remove
      * @return the color removed
      */
@@ -365,7 +369,7 @@ public class Player implements Serializable {
 
     /**
      * Remove a color from the player's mountain with the given position
-     * 
+     *
      * @param point the position to remove
      * @return the color removed
      */
@@ -381,7 +385,7 @@ public class Player implements Serializable {
 
     /**
      * Remove a color from the player's mountain with the given position
-     * 
+     *
      * @param l the x position to remove
      * @param c the y position to remove
      * @return the color removed
@@ -401,14 +405,14 @@ public class Player implements Serializable {
 
     /**
      * Give the list of playable colors by player
-     * 
+     *
      * @return the list of playable colors
      */
     public HashSet<ModelColor> getPlayableColors() throws UnsupportedOperationException {
 
         HashSet<ModelColor> playable;
         HashSet<ModelColor> toTest;
-        
+
         toTest = new HashSet<>();
         for (Point p : getMountain().removable()) {
             toTest.add(getMountain().getCase(p.x, p.y));
@@ -457,7 +461,7 @@ public class Player implements Serializable {
 
     /**
      * Clear the mountain of the player
-     * 
+     *
      * @return void
      */
     public final void clearMountain() {
@@ -466,7 +470,7 @@ public class Player implements Serializable {
 
     /**
      * Check if the mountain of the player is full
-     * 
+     *
      * @return true if the mountain is full, false otherwise
      */
     public boolean isMountainFull() {
@@ -475,7 +479,7 @@ public class Player implements Serializable {
 
     /**
      * Check if the mountain of the player is empty
-     * 
+     *
      * @return true if the mountain is empty, false otherwise
      */
     public boolean isMountainEmpty() {
@@ -484,7 +488,7 @@ public class Player implements Serializable {
 
     /**
      * Return a string representing the player for saving it
-     * 
+     *
      * @return a string representing the player
      */
     public String forSave() {
@@ -523,6 +527,22 @@ public class Player implements Serializable {
         return save;
     }
 
+    /**
+     * Set this.validate to true
+     */
+
+    public void validate(){
+        this.validate = true;
+    }
+    
+    /**
+     * Return the value of this.validate
+     * @return if the player has validate his building
+     */
+    public boolean haveValidate(){
+        return this.validate && this.hasValidateBuilding;
+    }
+
     @Override
     public String toString() {
 
@@ -558,7 +578,6 @@ public class Player implements Serializable {
 
     @Override
     public Player clone() {
-
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
         p.setName(getName());

@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class Action implements Serializable {
     private ActionType type;
     private Object data;
+    private int player;
 
     public Action(ActionType type, Object data) {
         this.type = type;
@@ -29,6 +30,14 @@ public class Action implements Serializable {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public void setPlayer(int p) {
+        this.player = p;
+    }
+
+    public int getPlayer() {
+        return player;
     }
 
     @Override
