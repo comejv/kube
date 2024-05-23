@@ -39,6 +39,7 @@ public class HSL {
 
         if (vmax == vmin) { // Achromatic
             this.hue = 0;
+            this.luminance = vmax;
             return;
         }
 
@@ -74,15 +75,15 @@ public class HSL {
     }
 
     public void setHue(double h) {
-        this.hue = h % 360;
+        this.hue = h;
     }
 
     public void setSaturation(double s) {
-        this.saturation = s % 1;
+        this.saturation = s;
     }
 
     public void setLuminance(double l) {
-        this.luminance = l % 1;
+        this.luminance = l;
     }
 
     public int toRGB() {
@@ -107,7 +108,7 @@ public class HSL {
     }
 
     public Color toColor() {
-        return new Color(toRGB());
+        return new Color((0xFF << 24) | toRGB());
     }
 
     private double hueToRgb(double p, double q, double t) {

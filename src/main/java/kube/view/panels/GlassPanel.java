@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Graphics;
@@ -25,10 +24,6 @@ public class GlassPanel extends JComponent {
     }
 
     protected void paintComponent(Graphics g) {
-        if (point != null) {
-            g.setColor(Color.red);
-            g.fillOval(point.x - 10, point.y - 10, 20, 20);
-        }
     }
 
     public void setPoint(Point ptn) {
