@@ -127,7 +127,6 @@ public class Game implements Runnable {
                 k3.setCurrentPlayer(k3.getRandomPlayer());
                 break;
         }
-        Config.debug("Le joueur " + k3.getCurrentPlayer().getName() + " commence");
     }
 
     public void gamePhase() {
@@ -160,6 +159,7 @@ public class Game implements Runnable {
         initPhase();
         constructionPhase();
         setFirstPlayer();
+        modeleToView.add(new Action(ActionType.PRINT_STATE));
         gamePhase();
 
         if (k3.getCurrentPlayer() == k3.getP1()) {
@@ -167,7 +167,6 @@ public class Game implements Runnable {
         } else {
             modeleToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
         }
-        Config.debug("Fin phase 2");
     }
 
     synchronized public void swap(Swap s) {
@@ -203,21 +202,21 @@ public class Game implements Runnable {
                 if (a.getPlayer() != k3.getCurrentPlayer().getId()) {
                     modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 } else if (a.getPlayer() != getGameType()) {
-                    Config.debug("Reception d'un coup adverse");
                     // Move from the outside
                     acknowledge(k3.playMove(move));
                     modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
                     modeleToView.add(new Action(ActionType.MOVE, move));
                 } else {
                     // Local move
-                    Config.debug("Envoi d'un coup");
                     eventsToNetwork.add(new Action(ActionType.MOVE, move));
                     if (waitAcknowledge()) {
                         k3.playMove(move);
                         modeleToView.add(new Action(ActionType.MOVE, move));
-                        modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                        if (k3.getCurrentPlayer().getId() != getGameType()){
+                            modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                        }
                     } else {
-                        Config.debug("Coup non accepté par l'autre joueur");
+
                     }
                 }
                 break;
@@ -245,7 +244,13 @@ public class Game implements Runnable {
     }
 
     public void constructionPhaseIA(Player p) {
-        k3.getCurrentPlayer().getAI().constructionPhase();
+        p.getAI().constructionPhase();
+        if (!p.getHasValidateBuilding()) {
+            p.validateBuilding();
+        }
+        if (getGameType() != LOCAL) {
+            eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
+        }
         modeleToView.add(new Action(ActionType.VALIDATE, true));
         k3.updatePhase();
     }
@@ -269,14 +274,7 @@ public class Game implements Runnable {
 
     public void constructionPhasePlayer(Player p) {
         if (p.isAI()) {
-            p.getAI().constructionPhase();
-            if (!p.getHasValidateBuilding()) {
-                p.validateBuilding();
-            }
-            if (getGameType() != LOCAL) {
-                eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
-                modeleToView.add(new Action(ActionType.VALIDATE, true));
-            }
+            constructionPhaseIA(p);
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModele.remove();

@@ -1,7 +1,5 @@
 package kube.model.action;
 
-import java.io.Serializable;
-
 public enum ActionType {
     // --- Model ---
     SHOW_ALL,
