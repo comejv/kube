@@ -88,41 +88,67 @@ public class SecondPhasePanel extends JPanel {
 
     private JPanel gamePanel() {
         JPanel gamePanel = new JPanel();
-        gamePanel.setLayout(new BorderLayout());
+        gamePanel.setLayout(null);
+        JPanel p1 = pyra(1,0);
+        JPanel p2 = pyra(2,3);
+        JPanel base = base();
+        int w1= width_p1_mountain+20;
+        int w2=width_p2_mountain+20;
+        int w3=width_base_mountain+20;
 
-        // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
+        p1.setBounds(0, 0, 320,w1);
+        gamePanel.add(p1);
+        p2.setBounds(325, 0, 320,w2);
+        gamePanel.add(p2);
+        base.setBounds(100, 400, 500,w3);
+        gamePanel.add(base);
+
+        return gamePanel;
+    }
+    int width_p1_mountain;
+    int width_p2_mountain;
+    int width_base_mountain=450;// if icon size changes: fucked! so don't forget to modify it
+    private JPanel pyra(int player, int rowMissing){
         JPanel constructPanel = new JPanel();
-        constructPanel.setBackground(GUIColors.TEXT.toColor());
-        constructPanel.setLayout(new GridLayout(6, 6));
+        constructPanel.setOpaque(false);
+        constructPanel.setLayout(new GridBagLayout());
+       constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+
         GridBagConstraints gbc = new GridBagConstraints();
-        kube.view.components.Icon[][] hexaList = new Icon[6][6];
-        gamePanel.add(constructPanel, BorderLayout.CENTER);
-        int last = 0;
-        // will change to getting base colours from model
-        for (int i = 5; i >= 0; i--) {
-            for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = newHexa(true);
+        int i;
+        for ( i = 1; i <= 6; i++) {
+            if (i<=rowMissing){
+                continue;
             }
-        }
-        for (int i = 0; i < 6; i++) {
             JPanel lineHexa = new JPanel();
+            lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
-            for (int j = 5; j >= 0; j--) {
-                if (hexaList[i][j] != null) {
-                    lineHexa.add(hexaList[i][j]);
-                }
+            lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+
+            for (int j = 0; j < i; j++) {
+                lineHexa.add(newHexa(GUIColors.BLUE_HEX));
             }
-            if (i != 5) {
-                gbc.insets = new Insets(0, 60 / 2, 0, 60 / 2);
-            }
-            if (i % 2 == 1) {
-                last = i - (i - 5) * 2;
-            }
-            gbc.gridx = last;
+            gbc.gridx = 0;
             gbc.gridy = i;
+            //gbc.anchor = GridBagConstraints.CENTER;
             constructPanel.add(lineHexa, gbc);
         }
-        return gamePanel;
+        if(player==1){
+            width_p1_mountain=(i-1)*50;
+        }
+        else if (player==2){
+            width_p2_mountain=(i-1-rowMissing)*50;
+        }
+        return constructPanel;
+    }
+
+    private JPanel base (){
+        JPanel topPanel = new JPanel();
+        topPanel.setOpaque(false);
+        for (int i=0;i<9;i++){
+            topPanel.add(newHexa(GUIColors.GREEN_HEX));
+        }
+        return topPanel;
     }
     public static Icon newHexa(boolean opt) {
         Icon hexa;
@@ -137,7 +163,7 @@ public class SecondPhasePanel extends JPanel {
 
     public static Icon newHexa(HSL c) {
         Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaWhiteTextured"));
-        hexa.resizeIcon(60, 60);
+        hexa.resizeIcon(50, 50);
         hexa.recolor(c);
         return hexa;
     }
