@@ -33,8 +33,7 @@ public class Player implements Serializable {
     private int id, whiteUsed;
     private Mountain initialMountain, mountain;
     private boolean validate, hasValidateBuilding;
-    private ArrayList<ModelColor> initialAdditionals, additionals;
-    private boolean hasValidateBuilding;
+    private ArrayList<ModelColor> additionals;
     private HashMap<ModelColor, Integer> avalaibleToBuild;
 
     /**********
