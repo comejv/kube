@@ -15,6 +15,9 @@ public class MainFrame extends JFrame {
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private JComponent glassPane;
+    private JPanel framePanel;
+    private JPanel overlayPanel;
+    private Component overlay;
 
     public MainFrame() {
         setTitle("KUBE");
@@ -24,6 +27,14 @@ public class MainFrame extends JFrame {
         setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
         setMinimumSize(new Dimension((int) (Config.getInitWidth() / 1.5), Config.getInitHeight()));
         setLocationRelativeTo(null);
+        framePanel = new JPanel();
+        OverlayLayout overlay = new OverlayLayout(framePanel);
+        framePanel.setLayout(overlay);
+        overlayPanel = new JPanel();
+        overlayPanel.setVisible(false);
+        overlayPanel.setOpaque(false);
+        overlayPanel.setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
+        framePanel.setVisible(true);
         cardLayout = new CardLayout();
         cardPanel = (JPanel) getContentPane();
         cardPanel.setLayout(cardLayout);
@@ -59,5 +70,29 @@ public class MainFrame extends JFrame {
             remove(getGlassPane());
             glassPane = null;
         }
+    }
+
+    public void addOverlay(Component p) {
+        Config.debug("Added new overlay");
+        overlayPanel.add(p);
+        overlayPanel.setVisible(true);
+        framePanel.revalidate();
+        framePanel.repaint();
+        overlay = p;
+    }
+
+    public void removeOverlay() {
+        if (overlay != null) {
+            Config.debug("Removed overlay");
+            overlayPanel.remove(overlay);
+            overlayPanel.setVisible(false);
+            framePanel.revalidate();
+            framePanel.repaint();
+            overlay = null;
+        }
+    }
+
+    public Component getOverlayComponent() {
+        return overlay;
     }
 }

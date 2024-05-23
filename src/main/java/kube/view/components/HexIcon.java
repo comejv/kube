@@ -1,7 +1,5 @@
 package kube.view.components;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -12,10 +10,9 @@ public class HexIcon extends Icon {
     private boolean isActionable;
     private boolean isHovered;
     private boolean isPressed;
-    private boolean isGrabbed;
 
-    private int offsetX;
-    private int offsetY;
+    private double offsetX;
+    private double offsetY;
 
     public HexIcon(BufferedImage img, boolean actionable) {
         super(img);
@@ -24,24 +21,23 @@ public class HexIcon extends Icon {
 
     @Override
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        if (isHovered) { // Draw darker image
+        if (isActionable() && isHovered) { // Draw darker image
             float factor = isPressed ? 0.75f : 1.25f;
-            float[] scales = { factor };
-            float[] offsets = new float[4];
+            float[] scales = { factor }; // Multiply all bands of each pixel by factor
+            float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
             RescaleOp rop = new RescaleOp(scales, offsets, null);
-            if (isGrabbed) {
-                g2d.setColor(Color.RED);
-                g2d.setStroke(new BasicStroke(5));
-            }
-            g2d.drawImage(getImage(), rop, 0, 0);
+            g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
         } else { // Draw the original image
-            g2d.drawImage(getImage(), 0, 0, null);
+            g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
         }
 
+    }
+
+    public HexIcon clone() {
+        return new HexIcon(getImage(), isActionable());
     }
 
     public void setActionable(boolean b) {
@@ -50,11 +46,6 @@ public class HexIcon extends Icon {
 
     public void setPressed(boolean b) {
         isPressed = b;
-        repaint();
-    }
-
-    public void setGrabbed(boolean b) {
-        isGrabbed = b;
         repaint();
     }
 
@@ -71,16 +62,17 @@ public class HexIcon extends Icon {
         return isActionable;
     }
 
-    public void setOffset(int x, int y) {
-        offsetX = x;
-        offsetY = y;
+    public void setOffset(double x, double y) {
+        offsetX = x - getImage().getWidth() / 2;
+        offsetY = y - getImage().getHeight() / 2;
+        repaint();
     }
 
-    public int getXOffset() {
+    public double getXOffset() {
         return offsetX;
     }
 
-    public int getYOffset() {
+    public double getYOffset() {
         return offsetY;
     }
 }

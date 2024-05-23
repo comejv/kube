@@ -2,7 +2,7 @@ package kube;
 
 import java.util.Scanner;
 
-import kube.controller.CommandListener;
+import kube.controller.textual.CommandListener;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
@@ -10,8 +10,6 @@ import kube.model.action.Queue;
 import kube.view.TextualMode;
 
 public class QuickGame {
-
-   
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -27,13 +25,10 @@ public class QuickGame {
         Thread modelThread = new Thread(model);
         Thread controllerThread = new Thread(controller);
         Thread viewThread = new Thread(view);
-        
+
         modelThread.start();
         viewThread.start();
         controllerThread.start();
     }
 
-
-
-
-}               
+}

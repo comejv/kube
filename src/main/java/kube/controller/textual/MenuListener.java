@@ -1,11 +1,15 @@
-package kube.controller;
+package kube.controller.textual;
 
 import java.util.Scanner;
 
+import kube.controller.network.NetworkListener;
+import kube.controller.network.NetworkSender;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 import kube.services.Client;
 import kube.services.Network;
@@ -42,7 +46,7 @@ public class MenuListener implements Runnable {
             nb = askNbPlayer();
             switch (nb) {
                 case 0:
-                    kube.init(new randomAI(), new randomAI());
+                    kube.init(new moveSetHeuristique(), new randomAI());
                     break;
                 case 1:
                     kube.init(new randomAI());
@@ -60,18 +64,18 @@ public class MenuListener implements Runnable {
             mode = askHostOrJoin();
             Network network;
             if (mode == 1) {
-                eventsToView.add(new Action(Action.PRINT_WAITING_FOR_CONNECTION, PORT));
+                eventsToView.add(new Action(ActionType.PRINT_WAITING_FOR_CONNECTION, (Integer) PORT));
                 network = new Server(PORT);
-                eventsToView.add(new Action(Action.PRINT_CONNECTION_ETABLISHED));
+                eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ETABLISHED));
                 type = Game.HOST;
             } else {
                 network = askIP();
-                eventsToView.add(new Action(Action.PRINT_CONNECTION_ETABLISHED));
+                eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ETABLISHED));
                 type = Game.JOIN;
             }
             eventsToNetwork = new Queue<>();
-            controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, scanner);
-            networkSender = new NetworkSender(network, eventsToNetwork);
+            controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, type, scanner);
+            networkSender = new NetworkSender(network, eventsToNetwork, type);
             networkListener = new NetworkListener(network, eventsToModel);
 
             Thread networkListenerThread = new Thread(networkListener);
@@ -91,7 +95,7 @@ public class MenuListener implements Runnable {
 
     public int askNbPlayer() {
         String s;
-        eventsToView.add(new Action(Action.PRINT_ASK_NB_PLAYERS));
+        eventsToView.add(new Action(ActionType.PRINT_ASK_NB_PLAYERS));
         s = scanner.nextLine();
         int i;
         try {
@@ -108,7 +112,7 @@ public class MenuListener implements Runnable {
     public int askGameMode() {
         String s;
         int i;
-        eventsToView.add(new Action(Action.PRINT_ASK_GAME_MODE));
+        eventsToView.add(new Action(ActionType.PRINT_ASK_GAME_MODE));
         s = scanner.nextLine();
         try {
             if ((i = Integer.parseInt(s)) <= 2 && i >= 1) {
@@ -123,7 +127,7 @@ public class MenuListener implements Runnable {
 
     private int askHostOrJoin() {
         String s;
-        eventsToView.add(new Action(Action.PRINT_ASK_HOST_OR_JOIN));
+        eventsToView.add(new Action(ActionType.PRINT_ASK_HOST_OR_JOIN));
         s = scanner.nextLine();
         int i;
         try {
@@ -140,13 +144,13 @@ public class MenuListener implements Runnable {
     private Network askIP() {
         String s;
         Network network = new Client();
-        eventsToView.add(new Action(Action.PRINT_ASK_IP));
+        eventsToView.add(new Action(ActionType.PRINT_ASK_IP));
         s = scanner.nextLine();
         if (!network.connect(s, PORT)) {
-            eventsToView.add(new Action(Action.PRINT_CONNECTION_ERROR));
+            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
             return askIP();
         } else {
-            eventsToView.add(new Action(Action.PRINT_START));
+            eventsToView.add(new Action(ActionType.PRINT_START));
             return network;
         }
     }
