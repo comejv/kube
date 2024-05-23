@@ -20,6 +20,8 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
+import kube.model.action.Action;
+import kube.model.action.Queue;
 import kube.view.panels.*;
 
 public class GUI extends Thread {
@@ -31,7 +33,7 @@ public class GUI extends Thread {
     GUIControllers controllers;
     Game model;
 
-    public GUI(Game model, GUIControllers controllers) {
+    public GUI(Game model, GUIControllers controllers, Queue<Action> events) {
         this.controllers = controllers;
         this.model = model;
         try {
@@ -64,6 +66,8 @@ public class GUI extends Thread {
             Config.debug("Error : ");
             System.err.println("Could not load buttons font, using default.");
         }
+
+        new Thread(new GUIEventsHandler(this, events)).start();
 
         SwingUtilities.invokeLater(this);
     }
@@ -115,9 +119,5 @@ public class GUI extends Thread {
                 ((JPanel) comp).setBorder(BorderFactory.createLineBorder(Color.red));
             }
         }
-    }
-
-    private Dimension getFrameSize() {
-        return mF.getSize();
     }
 }

@@ -73,7 +73,6 @@ public class MainFrame extends JFrame {
     }
 
     public void addOverlay(Component p) {
-        Config.debug("Added new overlay");
         overlayPanel.add(p);
         overlayPanel.setVisible(true);
         framePanel.revalidate();
@@ -83,7 +82,6 @@ public class MainFrame extends JFrame {
 
     public void removeOverlay() {
         if (overlay != null) {
-            Config.debug("Removed overlay");
             overlayPanel.remove(overlay);
             overlayPanel.setVisible(false);
             framePanel.revalidate();
