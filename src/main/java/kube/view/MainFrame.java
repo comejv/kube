@@ -3,7 +3,6 @@ package kube.view;
 import javax.swing.*;
 
 import kube.configuration.Config;
-import kube.configuration.ResourceLoader;
 import kube.view.panels.GlassPanel;
 
 import java.awt.*;
