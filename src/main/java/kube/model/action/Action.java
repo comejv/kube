@@ -2,9 +2,10 @@ package kube.model.action;
 
 import java.io.Serializable;
 
+import kube.model.Game;
 import kube.model.Player;
 
-public class Action implements Serializable{
+public class Action implements Serializable {
     public static final int SHOW_ALL = 0;
     public static final int SHOW_MOUNTAIN = 1;
     public static final int SWAP = 2;
@@ -34,12 +35,13 @@ public class Action implements Serializable{
     public static final int PRINT_ASK_HOST_OR_JOIN = 37;
     public static final int PRINT_ASK_IP = 38;
     public static final int INIT_K3 = 39;
-    public static final int OTHER_PLAYER = 40;
+    public static final int PLAYER_DATA = 40;
     public static final int PRINT_WAITING_FOR_CONNECTION = 41;
     public static final int PRINT_CONNECTION_ETABLISHED = 42;
     public static final int PRINT_CONNECTION_ERROR = 43;
     public static final int PRINT_NOT_YOUR_TURN = 44;
-    public static final int MOVE_FROM_NETWORK = 45;
+    public static final int ITS_YOUR_TURN = 45;
+    public static final int MOVE_FROM_NETWORK = 46;
 
 
     private int type;
@@ -57,11 +59,11 @@ public class Action implements Serializable{
     }
 
     public Action(int type, Object data){
-        this(type, data, 0);
+        this(type, data, Game.LOCAL);
     }
 
     public Action(int type){
-        this(type, null,0);
+        this(type, null,Game.LOCAL);
     }
 
     public void setType(int type){
@@ -94,6 +96,7 @@ public class Action implements Serializable{
         if(data != null){
             s += ", data = " + data.toString();
         }
+        s += ", id = " + getPlayer(); 
         s += "}";
         return s;
     }

@@ -527,22 +527,6 @@ public class Player implements Serializable {
         return save;
     }
 
-    /**
-     * Set this.validate to true
-     */
-
-    public void validate(){
-        this.validate = true;
-    }
-    
-    /**
-     * Return the value of this.validate
-     * @return if the player has validate his building
-     */
-    public boolean haveValidate(){
-        return this.validate && this.hasValidateBuilding;
-    }
-
     @Override
     public String toString() {
 

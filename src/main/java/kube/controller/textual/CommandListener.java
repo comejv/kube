@@ -6,7 +6,7 @@ import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
- 
+
 public class CommandListener implements Runnable {
 
     Queue<Action> eventsToModel;
@@ -22,7 +22,8 @@ public class CommandListener implements Runnable {
 
     }
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,int whoAmI,
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,
+            int whoAmI,
             Scanner sc) {
         this(eventsToModel, eventsToView, sc);
         this.eventsToNetwork = eventsToNetwork;
@@ -36,7 +37,7 @@ public class CommandListener implements Runnable {
             switch (sc.nextLine()) {
                 case "random":
                 case "shuffle":
-                    eventsToModel.add(new Action(Action.SHUFFLE));
+                    eventsToModel(new Action(Action.SHUFFLE));
                     break;
                 case "echanger":
                 case "swap":
@@ -49,7 +50,7 @@ public class CommandListener implements Runnable {
                     break;
                 case "valider":
                 case "validate":
-                    eventsToModel.add(new Action(Action.VALIDATE));
+                    eventsToModel(new Action(Action.VALIDATE));
                     break;
                 case "jouer":
                 case "play":
@@ -89,6 +90,7 @@ public class CommandListener implements Runnable {
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
+            eventsToModel.add(new Action(Action.SWAP, swap));
             eventsToView.add(new Action(Action.SWAP, swap));
             return true;
         } catch (NumberFormatException e) {
@@ -102,7 +104,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(Action.MOVE,(Integer) n));
+            eventsToModel(new Action(Action.MOVE, (Integer) n));
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(Action.MOVE));
@@ -111,11 +113,11 @@ public class CommandListener implements Runnable {
     }
 
     private void eventsToModel(Action action) {
-
-        eventsToModel.add(action);
         if (eventsToNetwork != null) {
-                action.setPlayer(whoAmI);
-                eventsToNetwork.add(action);
-            }
+            action.setPlayer(whoAmI);
+            eventsToModel.add(action);
+        } else {
+            eventsToModel.add(action);
         }
+    }
 }

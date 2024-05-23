@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import kube.model.ModelColor;
+import kube.model.Player;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
@@ -54,8 +55,8 @@ public class betterConstruct extends MiniMaxAI {
     }
 
     @Override
-    public int evaluation(Kube k) {
-        return getPlayer(k).getPlayableColors().size() + getPlayer(k).getAdditionals().size();
+    public int evaluation(Kube k, Player p) {
+        return p.getPlayableColors().size() + p.getAdditionals().size();
     }
 
     @Override

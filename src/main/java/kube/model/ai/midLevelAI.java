@@ -57,8 +57,8 @@ public class midLevelAI extends MiniMaxAI {
     }
 
     @Override
-    public int evaluation(Kube k) {
-        return getPlayer(k).getPlayableColors().size() + getPlayer(k).getAdditionals().size();
+    public int evaluation(Kube k, Player p) {
+        return p.getPlayableColors().size() + p.getAdditionals().size();
     }
 
     @Override

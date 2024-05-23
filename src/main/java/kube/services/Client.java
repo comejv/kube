@@ -5,6 +5,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import kube.configuration.Config;
 import kube.model.action.Action;
 
 public class Client extends Network {
@@ -51,32 +52,5 @@ public class Client extends Network {
             return false;
         }
         return true;
-    }
-
-    @Override
-    public boolean send(Action data) {
-        try {
-            if (getOut() != null) {
-                getOut().writeObject(data);
-
-            } else {
-                return false;
-            }
-        } catch (IOException e) {
-            System.out.println(e);
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public Action receive() {
-        try {
-            Action o = (Action) getIn().readObject();
-            return o;
-        } catch (IOException | ClassNotFoundException e) {
-            return null;
-        }
-    }
+    }    
 }

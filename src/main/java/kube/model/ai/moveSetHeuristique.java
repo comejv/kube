@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import kube.model.ModelColor;
+import kube.model.Player;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
@@ -54,17 +55,8 @@ public class moveSetHeuristique extends MiniMaxAI {
     }
 
     @Override
-    public int evaluation(Kube k) {
-        //System.out.println(k.getK3());
-        //System.out.println(getPlayer(k));
-        //wSystem.out.println(k.moveSet(getPlayer(k)));
-        if (k.moveSet(getPlayer(k)).size() == 0){
-            return Integer.MIN_VALUE;
-        } 
-        if (k.moveSet(getOtherPlayer(k)).size() == 0){
-            return Integer.MAX_VALUE;
-        }
-        return k.moveSet(getPlayer(k)).size() + getPlayer(k).getAdditionals().size() - getPlayer(k).getWhiteUsed();
+    public int evaluation(Kube k, Player p) {
+        return k.moveSet(p).size() + p.getAdditionals().size() - p.getWhiteUsed();
     }
 
     @Override
