@@ -2,6 +2,8 @@ package kube.controller.textual;
 
 import java.util.Scanner;
 
+import com.fasterxml.jackson.databind.jsontype.impl.AsExistingPropertyTypeSerializer;
+
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
@@ -92,8 +94,9 @@ public class CommandListener implements Runnable {
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
             eventsToView.add(new Action(ActionType.SWAP, swap));
+            eventsToModel(new Action(ActionType.SWAP, swap));
             return true;
-        } catch (NumberFormatException e) {
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             eventsToView.add(new Action(ActionType.SWAP));
             return false;
         }

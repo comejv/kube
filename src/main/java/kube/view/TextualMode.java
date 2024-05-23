@@ -101,7 +101,7 @@ public class TextualMode implements Runnable {
                 case PRINT_STATE:
                     printState();
                     break;
-                // case ASK_SWAP:
+                //case ASK_SWAP:
                 // printSwap();
                 // printHelp();
                 // break;

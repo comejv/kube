@@ -1,9 +1,7 @@
 package kube.model;
 
-import java.io.ObjectInputFilter;
 import java.util.Random;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 import kube.configuration.Config;
 import kube.model.action.Action;
@@ -56,17 +54,21 @@ public class Game implements Runnable {
             if (k3.getCurrentPlayer().isAI()) {
                 constructionPhaseIA(k3.getCurrentPlayer());
             } else {
-                if (getGameType() == LOCAL){
-                    constructionPhasePlayer(k3.getP1());
-                    constructionPhasePlayer(k3.getP2());
-                    k3.setCurrentPlayer(k3.getRandomPlayer());
-                } else if (getGameType() == HOST){
-                    constructionPhasePlayer(k3.getP1());
-                    waitConstruction(k3.getP2());
-                    k3.setCurrentPlayer(k3.getRandomPlayer());
-                } else {
-                    constructionPhasePlayer(k3.getP2());
-                    waitConstruction(k3.getP1());
+                switch (getGameType()) {
+                    case LOCAL:
+                        constructionPhasePlayer(k3.getP1());
+                        constructionPhasePlayer(k3.getP2());
+                        k3.setCurrentPlayer(k3.getRandomPlayer());
+                        break;
+                    case HOST:
+                        constructionPhasePlayer(k3.getP1());
+                        waitConstruction(k3.getP2());
+                        k3.setCurrentPlayer(k3.getRandomPlayer());
+                        break;
+                    default:
+                        constructionPhasePlayer(k3.getP2());
+                        waitConstruction(k3.getP1());
+                        break;
                 }
             }
         }
@@ -171,28 +173,29 @@ public class Game implements Runnable {
     }
 
     public void initPhase(){
-        if (getGameType() == HOST) {
-            eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getK3()));
-            eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP1()));
-            eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP2()));
-            k3.setCurrentPlayer(k3.getP1());
-        } else if (getGameType() == JOIN) {
-            Action a;
-            while ((a = eventsToModele.remove()).getType() != ActionType.INIT_K3){
-                modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
-            }
-            k3.setK3((Mountain) a.getData());
-            while ((a = eventsToModele.remove()).getType() != ActionType.PLAYER_DATA){
-                modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
-            }
-            k3.setP1((Player) a.getData());
-            while ((a = eventsToModele.remove()).getType() != ActionType.PLAYER_DATA){
-                modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
-            }
-            k3.setP2((Player) a.getData());
-            k3.setCurrentPlayer(k3.getP2());
-        } else {
-            k3.setCurrentPlayer(k3.getP1());
+        switch (getGameType()) {
+            case HOST:
+                eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getK3()));
+                eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP1()));
+                eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP2()));
+                k3.setCurrentPlayer(k3.getP1());
+                break;
+            case JOIN:
+                Action a;
+                while ((a = eventsToModele.remove()).getType() != ActionType.INIT_K3){
+                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                }   k3.setK3((Mountain) a.getData());
+                while ((a = eventsToModele.remove()).getType() != ActionType.PLAYER_DATA){
+                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                }   k3.setP1((Player) a.getData());
+                while ((a = eventsToModele.remove()).getType() != ActionType.PLAYER_DATA){
+                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                }   k3.setP2((Player) a.getData());
+                k3.setCurrentPlayer(k3.getP2());
+                break;
+            default:
+                k3.setCurrentPlayer(k3.getP1());
+                break;
         }
     }
 

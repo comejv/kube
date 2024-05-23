@@ -49,7 +49,7 @@ public class MenuListener implements Runnable {
                     kube.init(new moveSetHeuristique(), new randomAI());
                     break;
                 case 1:
-                    kube.init(new randomAI());
+                    kube.init(new moveSetHeuristique(300));
                     break;
                 case 2:
                     kube.init();
