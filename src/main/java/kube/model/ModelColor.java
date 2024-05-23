@@ -1,8 +1,6 @@
 package kube.model;
 
 import java.util.Random;
-
-
 import java.util.Comparator;
 
 public enum ModelColor {

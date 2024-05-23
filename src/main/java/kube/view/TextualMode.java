@@ -28,8 +28,13 @@ public class TextualMode implements Runnable {
         printWelcome();
         printStart();
         printHelp();
+        boolean waitOtherTurn = false;
         while (true) {
             Action action = events.remove();
+            if (waitOtherTurn && action.getType() != ActionType.ITS_YOUR_TURN){
+                printOtherPlayerTurn();
+                continue;
+            }
             switch (action.getType()) {
                 case PRINT_AI:
                     if (action.getData() != null) {
@@ -152,9 +157,11 @@ public class TextualMode implements Runnable {
                     printWaitingForConnection((int) action.getData());
                     break;
                 case PRINT_NOT_YOUR_TURN:
-                    printOhterPlayerTurn();
+                    printOtherPlayerTurn();
+                    waitOtherTurn = true;
                     break;
-
+                case ITS_YOUR_TURN:
+                    waitOtherTurn = false;
                 default:
                     break;
             }
@@ -359,7 +366,7 @@ public class TextualMode implements Runnable {
         System.out.println("Connexion établie");
     }
 
-    private void printOhterPlayerTurn() {
+    private void printOtherPlayerTurn() {
         System.out.println("En attente de l'autre joueur");
     }
 }

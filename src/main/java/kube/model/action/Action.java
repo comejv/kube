@@ -46,6 +46,7 @@ public class Action implements Serializable {
         if (data != null) {
             s += ", data = " + data.toString();
         }
+        s += ", id = " + getPlayer(); 
         s += "}";
         return s;
     }

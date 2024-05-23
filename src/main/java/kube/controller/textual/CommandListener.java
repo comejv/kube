@@ -6,7 +6,7 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
- 
+
 public class CommandListener implements Runnable {
 
     Queue<Action> eventsToModel;
@@ -22,7 +22,8 @@ public class CommandListener implements Runnable {
 
     }
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,int whoAmI,
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,
+            int whoAmI,
             Scanner sc) {
         this(eventsToModel, eventsToView, sc);
         this.eventsToNetwork = eventsToNetwork;
@@ -36,7 +37,7 @@ public class CommandListener implements Runnable {
             switch (sc.nextLine()) {
                 case "random":
                 case "shuffle":
-                    eventsToModel.add(new Action(ActionType.SHUFFLE));
+                    eventsToModel(new Action(ActionType.SHUFFLE));
                     break;
                 case "echanger":
                 case "swap":
@@ -49,7 +50,7 @@ public class CommandListener implements Runnable {
                     break;
                 case "valider":
                 case "validate":
-                    eventsToModel.add(new Action(ActionType.VALIDATE));
+                    eventsToModel(new Action(ActionType.VALIDATE));
                     break;
                 case "jouer":
                 case "play":
@@ -62,6 +63,7 @@ public class CommandListener implements Runnable {
                     break;
                 case "rejouer":
                 case "replay":
+                case "redo":
                     eventsToModel(new Action(ActionType.REDO));
                     break;
                 case "aide":
@@ -102,7 +104,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(ActionType.MOVE,(Integer) n));
+            eventsToModel(new Action(ActionType.MOVE, (Integer) n));
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(ActionType.MOVE));
@@ -111,11 +113,11 @@ public class CommandListener implements Runnable {
     }
 
     private void eventsToModel(Action action) {
-
-        eventsToModel.add(action);
         if (eventsToNetwork != null) {
-                action.setPlayer(whoAmI);
-                eventsToNetwork.add(action);
-            }
+            action.setPlayer(whoAmI);
+            eventsToModel.add(action);
+        } else {
+            eventsToModel.add(action);
         }
+    }
 }

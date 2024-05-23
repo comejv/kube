@@ -9,6 +9,7 @@ import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 import kube.services.Client;
 import kube.services.Network;
@@ -45,7 +46,7 @@ public class MenuListener implements Runnable {
             nb = askNbPlayer();
             switch (nb) {
                 case 0:
-                    kube.init(new randomAI(), new randomAI());
+                    kube.init(new moveSetHeuristique(), new randomAI());
                     break;
                 case 1:
                     kube.init(new randomAI());

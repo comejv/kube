@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import kube.model.ModelColor;
+import kube.model.Player;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
@@ -54,7 +55,7 @@ public class Joker extends MiniMaxAI {
     }
 
     @Override
-    public int evaluation(Kube k) {
+    public int evaluation(Kube k, Player p) {
         int score = 0;
         if (getPlayer(k).getId() == 1){
             score += k.getP2().getWhiteUsed();

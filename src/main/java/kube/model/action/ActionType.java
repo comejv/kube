@@ -37,7 +37,9 @@ public enum ActionType {
     PRINT_CONNECTION_ETABLISHED,
     PRINT_CONNECTION_ERROR,
     PRINT_NOT_YOUR_TURN,
+    ITS_YOUR_TURN,
     MOVE_FROM_NETWORK,
+    PLAYER_DATA,
 
     // --- GUI ---
     // Global
