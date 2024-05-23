@@ -63,7 +63,7 @@ public class CommandListener implements Runnable {
                     break;
                 case "rejouer":
                 case "replay":
-                case "redo"
+                case "redo":
                     eventsToModel(new Action(ActionType.REDO));
                     break;
                 case "aide":
