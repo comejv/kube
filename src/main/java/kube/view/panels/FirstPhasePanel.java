@@ -18,23 +18,12 @@ import javax.swing.*;
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
 public class FirstPhasePanel extends JPanel {
-    private GraphicsEnvironment ge;
     private Game model;
     Phase1Controller controller;
 
     public FirstPhasePanel(Game model, Phase1Controller controller) {
         this.model = model;
         this.controller = controller;
-        try {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font buttonsFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
-            ge.registerFont(buttonsFont);
-            ge.getAvailableFontFamilyNames();
-        } catch (IOException | FontFormatException e) {
-            Config.debug("Error : ");
-            System.err.println("Could not load buttons font, using default.");
-        }
 
         setLayout(new GridBagLayout());
         setBackground(GUIColors.GAME_BG.toColor());
