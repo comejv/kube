@@ -7,11 +7,11 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import kube.view.HSL;
 
-public class Icon extends JPanel {
+public class Icon extends JLabel {
     private BufferedImage originalImage;
 
     public Icon(BufferedImage bufferedImage) {
@@ -19,10 +19,6 @@ public class Icon extends JPanel {
         this.originalImage = bufferedImage;
         setPreferredSize(new Dimension(bufferedImage.getWidth(), bufferedImage.getHeight()));
         setOpaque(false);
-    }
-
-    public Icon(BufferedImage bufferedImage, boolean actionable) {
-        this(bufferedImage);
     }
 
     @Override

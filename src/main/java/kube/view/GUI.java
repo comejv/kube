@@ -4,6 +4,10 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -13,7 +17,8 @@ import javax.swing.UIManager.*;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import kube.configuration.Config;
-import kube.controller.MainController;
+import kube.configuration.ResourceLoader;
+import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
 import kube.view.panels.*;
 
@@ -23,11 +28,11 @@ public class GUI extends Thread {
     public final static String PHASE2 = "PHASE2";
 
     MainFrame mF;
-    MainController controller;
+    GUIControllers controllers;
     Game model;
 
-    public GUI(Game model, MainController controller) {
-        this.controller = controller;
+    public GUI(Game model, GUIControllers controllers) {
+        this.controllers = controllers;
         this.model = model;
         try {
             boolean nimbusFound = false;
@@ -43,10 +48,23 @@ public class GUI extends Thread {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 Config.debug("Set Look and Feel to system.");
             }
-        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
-                | IllegalAccessException e) {
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
+
+                IllegalAccessException e) {
             System.err.println("Can't set look and feel : " + e);
         }
+
+        try {
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            Font font = Font.createFont(Font.TRUETYPE_FONT,
+                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
+            ge.registerFont(font);
+            ge.getAvailableFontFamilyNames();
+        } catch (IOException | FontFormatException e) {
+            Config.debug("Error : ");
+            System.err.println("Could not load buttons font, using default.");
+        }
+
         SwingUtilities.invokeLater(this);
     }
 
@@ -55,13 +73,13 @@ public class GUI extends Thread {
         mF = new MainFrame();
 
         // add menu pannel
-        MenuPanel mP = new MenuPanel(controller.menuListener);
+        MenuPanel mP = new MenuPanel(controllers.getMenuController());
         mF.addPanel(mP, MENU);
         // add new phase 1 pannel
-        FirstPhasePanel fP = new FirstPhasePanel(model, controller);
+        FirstPhasePanel fP = new FirstPhasePanel(model, controllers.getPhase1Controller());
         mF.addPanel(fP, PHASE1);
         // add new phase 2 pannel
-        SecondPhasePanel sP = new SecondPhasePanel(controller);
+        SecondPhasePanel sP = new SecondPhasePanel(model, controllers.getPhase2Controller());
         mF.addPanel(sP, PHASE2);
 
         if (Config.showBorders()) {
@@ -99,7 +117,7 @@ public class GUI extends Thread {
         }
     }
 
-    public Dimension getFrameSize() {
+    private Dimension getFrameSize() {
         return mF.getSize();
     }
 }

@@ -1,6 +1,6 @@
 package kube;
 
-import kube.controller.MainController;
+import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
@@ -19,6 +19,8 @@ public class Main {
         Thread modelThread = new Thread(model);
 
         modelThread.start();
-        GUI gui = new GUI(model, this);
+
+        GUIControllers controllers = new GUIControllers(eventsToView, eventsToModel);
+        new GUI(model, controllers);
     }
 }

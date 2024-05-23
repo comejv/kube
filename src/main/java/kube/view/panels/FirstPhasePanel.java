@@ -2,7 +2,7 @@ package kube.view.panels;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
-import kube.controller.MainController;
+import kube.controller.graphical.Phase1Controller;
 import kube.model.Game;
 import kube.view.GUIColors;
 import kube.view.components.Buttons;
@@ -20,9 +20,9 @@ import javax.swing.*;
 public class FirstPhasePanel extends JPanel {
     private GraphicsEnvironment ge;
     private Game model;
-    MainController controller;
+    Phase1Controller controller;
 
-    public FirstPhasePanel(Game model, MainController controller) {
+    public FirstPhasePanel(Game model, Phase1Controller controller) {
         this.model = model;
         this.controller = controller;
         try {
@@ -150,7 +150,7 @@ public class FirstPhasePanel extends JPanel {
         JButton optButton = new Buttons.GameFirstPhaseButton("Options");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("Menu");
-        optButton.addActionListener(controller.phase1Listener);
+        optButton.addActionListener(controller);
         buttons.add(optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
@@ -165,7 +165,7 @@ public class FirstPhasePanel extends JPanel {
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
         validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         validerButton.setActionCommand("phase2");
-        validerButton.addActionListener(controller.phase1Listener);
+        validerButton.addActionListener(controller);
         buttons.add(validerButton);
         return buttons;
     }
@@ -178,7 +178,7 @@ public class FirstPhasePanel extends JPanel {
             hexa = new HexIcon(ResourceLoader.getBufferedImage("greenHexa"), true);
         }
         if (actionable) {
-            hexa.addMouseListener(controller.phase1Listener);
+            hexa.addMouseListener(controller);
         }
         hexa.resizeIcon(60, 60);
         hexa.setActionable(actionable);
