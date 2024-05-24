@@ -1,5 +1,6 @@
 package kube.view;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 
 import java.awt.Color;
@@ -77,17 +78,6 @@ public class GUI extends Thread {
     }
 
     public void run() {
-        try {
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font buttonsFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
-
-            ge.registerFont(buttonsFont);
-            ge.getAvailableFontFamilyNames();
-        } catch (IOException | FontFormatException e) {
-            Config.debug("Error : ");
-            System.err.println("Could not load buttons font, using default.");
-        }
         // new MainFrame
         mF = new MainFrame();
 
@@ -99,8 +89,8 @@ public class GUI extends Thread {
             showAllBorders(mF);
         }
 
-        mF.pack();
         mF.repaint();
+        mF.setFrameVisible(true);
 
         // After repaint start loading next panel
         loadPanel(GUI.PHASE1);
