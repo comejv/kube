@@ -1,7 +1,7 @@
 package kube.model;
 
+import kube.configuration.Config;
 import java.util.Random;
-
 
 import kube.model.action.Action;
 import kube.model.action.ActionType;
@@ -100,10 +100,10 @@ public class Game implements Runnable {
             case HOST:
                 k3.setCurrentPlayer(k3.getRandomPlayer());
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getCurrentPlayer()));
-                if (k3.getCurrentPlayer().getId() != HOST) {
-                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                } else {
+                if (k3.getCurrentPlayer().getId() == HOST) {
                     modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                } else {
+                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 }
                 waitAcknowledge();
                 break;
@@ -114,10 +114,10 @@ public class Game implements Runnable {
                 }
                 Player starter = (Player) a.getData();
                 k3.setCurrentPlayer(k3.getPlayerById(starter.getId()));
-                if (k3.getCurrentPlayer().getId() != JOIN) {
-                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                } else {
+                if (k3.getCurrentPlayer().getId() == JOIN) {
                     modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                } else {
+                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 }
                 acknowledge(true);
                 break;
@@ -196,20 +196,22 @@ public class Game implements Runnable {
                 break;
             case HOST:
             case JOIN:
-                if (a.getPlayer() != k3.getCurrentPlayer().getId()) {
+                if (a.getPlayer() == getGameType() && a.getPlayer() != k3.getCurrentPlayer().getId()) {
                     modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 } else if (a.getPlayer() != getGameType()) {
                     // Move from the outside
-                    acknowledge(k3.playMove(move));
-                    modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
-                    modeleToView.add(new Action(ActionType.MOVE, move));
+                    boolean validMove = k3.playMove(move);
+                    acknowledge(validMove);
+                    if (validMove) {
+                        modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                        modeleToView.add(new Action(ActionType.MOVE, move));
+                    }
                 } else {
                     // Local move
                     eventsToNetwork.add(new Action(ActionType.MOVE, move));
-                    if (waitAcknowledge()) {
-                        k3.playMove(move);
+                    if (waitAcknowledge() && k3.playMove(move)) {
                         modeleToView.add(new Action(ActionType.MOVE, move));
-                        if (k3.getCurrentPlayer().getId() != getGameType()){
+                        if (k3.getCurrentPlayer().getId() != getGameType()) {
                             modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                         }
                     } else {
