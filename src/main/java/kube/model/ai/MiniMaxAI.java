@@ -262,7 +262,6 @@ public class MiniMaxAI implements ActionListener {
         while (true) {
             moveMap = miniMax(getK3().clone(), horizon);
             if (getNoMoreTime()) {
-                //Config.debug("Horizon max :" + horizon);
                 if (solution == null) {
                     return selectMove(moveMap);
                 } else {
