@@ -1,7 +1,12 @@
 package kube.model.action;
 
 public enum ActionType {
-    // --- Model ---
+
+    /**********
+    * MODEL
+    **********/
+
+    // --- GAME ---
     SHOW_ALL,
     SHOW_MOUNTAIN,
     SWAP,
@@ -28,6 +33,7 @@ public enum ActionType {
     PRINT_ASK_NB_PLAYERS,
     PRINT_ASK_PLAYER_NAME,
     PRINT_ASK_GAME_MODE,
+
     // --- NETWORK ---
     PRINT_ASK_HOST_OR_JOIN,
     PRINT_ASK_IP,
@@ -42,24 +48,32 @@ public enum ActionType {
     PLAYER_DATA,
     ACKNOWLEDGEMENT,
     PRINT_WAITING_RESPONSE,
-    // --- GUI ---
-    // Global
+    CONNECTION_CLOSED,
+
+    /**********
+    * GUI
+    **********/
+
+    // --- GLOBAL ---
     SET_BUTTON_PRESSED,
     SET_BUTTON_HOVERED,
     SET_BUTTON_RELEASED,
     SET_BUTTON_CLICKED,
     SET_BUTTON_DEFAULT,
     SETTINGS,
-    // Menu
+
+    // --- MENU ---
     PLAY_ONLINE,
     PLAY_LOCAL,
     RULES,
     VOLUME,
-    // Phase 1
-    GRAB_HEX,
-    // Phase 2
 
-    // Overlay
+    // --- PHASE 1 ---
+    GRAB_HEX,
+
+    // --- PHASE 2 ---
+
+    // --- Overlay ---
     ADD_GLASS,
     REMOVE_GLASS,
 }

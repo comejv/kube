@@ -1,14 +1,15 @@
 package kube.model;
 
-import java.awt.Point;
-import java.util.ArrayList;
-
+// Import model classes
+import kube.model.action.move.Move;
+// Import jackson classes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-
-import kube.model.action.move.Move;
+// Import java classes
+import java.awt.Point;
+import java.util.ArrayList;
 
 public class History {
 

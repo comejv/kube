@@ -1,33 +1,31 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-import java.io.Serializable;
-
+// Import model classes
+import kube.model.ModelColor;
+import kube.model.Player;
+// Import jackson classes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-import kube.model.ModelColor;
-import kube.model.Player;
+// Import java classes
+import java.awt.Point;
+import java.io.Serializable;
 
 /**********
  * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
  **********/
 
-@JsonTypeInfo(
-    use = JsonTypeInfo.Id.NAME, 
-    include = JsonTypeInfo.As.PROPERTY, 
-    property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = MoveMW.class, name = "MW"),
-    @JsonSubTypes.Type(value = MoveMM.class, name = "MM"),
-    @JsonSubTypes.Type(value = MoveAM.class, name = "AM"),
-    @JsonSubTypes.Type(value = MoveAW.class, name = "AW"),
-    @JsonSubTypes.Type(value = MoveMA.class, name = "MA"),
-    @JsonSubTypes.Type(value = MoveAA.class, name = "AA")
+        @JsonSubTypes.Type(value = MoveMW.class, name = "MW"),
+        @JsonSubTypes.Type(value = MoveMM.class, name = "MM"),
+        @JsonSubTypes.Type(value = MoveAM.class, name = "AM"),
+        @JsonSubTypes.Type(value = MoveAW.class, name = "AW"),
+        @JsonSubTypes.Type(value = MoveMA.class, name = "MA"),
+        @JsonSubTypes.Type(value = MoveAA.class, name = "AA")
 })
 public abstract class Move implements Serializable {
 
@@ -140,15 +138,6 @@ public abstract class Move implements Serializable {
     @JsonIgnore
     public boolean isClassicMove() {
         return false;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    public String forSave() {
-        return getColor().forSave();
     }
 
     @Override

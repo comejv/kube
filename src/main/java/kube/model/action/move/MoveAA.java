@@ -1,9 +1,10 @@
 package kube.model.action.move;
 
+// Import model class
+import kube.model.ModelColor;
+// Import jackson classes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import kube.model.ModelColor;
 
 public class MoveAA extends Move {
 

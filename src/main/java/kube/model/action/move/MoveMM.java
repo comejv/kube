@@ -1,14 +1,14 @@
-
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
+import kube.model.ModelColor;
+// Import jackson classes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-
-import kube.model.ModelColor;
+// Import java class
+import java.awt.Point;
 
 public class MoveMM extends Move {
 
@@ -34,7 +34,8 @@ public class MoveMM extends Move {
      * @param color the color of the moved cube
      */
     @JsonCreator
-    public MoveMM(@JsonProperty("from") Point from, @JsonProperty("to") Point to, @JsonProperty("color") ModelColor color) {
+    public MoveMM(@JsonProperty("from") Point from, @JsonProperty("to") Point to,
+            @JsonProperty("color") ModelColor color) {
         super(color);
         this.from = from;
         this.to = to;

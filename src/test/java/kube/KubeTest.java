@@ -208,13 +208,13 @@ public class KubeTest {
 
         // Verifying the players have the right number of cubes
         int sum = 0;
-        for (int n : kube.getP1().getAvailaibleToBuild().values()) {
+        for (int n : kube.getP1().getAvailableToBuild().values()) {
             sum += n;
         }
         assertEquals(21, sum);
 
         sum = 0;
-        for (int n : kube.getP2().getAvailaibleToBuild().values()) {
+        for (int n : kube.getP2().getAvailableToBuild().values()) {
             sum += n;
         }
         assertEquals(21, sum);
@@ -1673,6 +1673,41 @@ public class KubeTest {
         k.getP1().setHasValidateBuilding(true);
         k.getP2().setHasValidateBuilding(true);
         k.setPenality(false);
+    }
+
+    @Test
+    public void serializationTest() {
+            
+            ObjectMapper om = new ObjectMapper();
+    
+            Kube kube = new Kube();
+    
+            initPlayMove(kube);
+
+            kube.getP1().setHasValidateBuilding(true);
+            kube.getP2().setHasValidateBuilding(true);
+
+            kube.getP1().setInitialMountain(kube.getP1().getMountain().clone());
+            kube.getP2().setInitialMountain(kube.getP2().getMountain().clone());
+
+            try {
+                String s = om.writeValueAsString(kube);
+    
+                Kube k = om.readValue(s, Kube.class);
+    
+                assertEquals(kube.getPhase(), k.getPhase());
+
+                assertTrue(areSameMountain(kube.getK3(), k.getK3()));
+
+                assertEquals(kube.getP1().getName(), k.getP1().getName());
+                assertEquals(kube.getP1().getId(), k.getP1().getId());
+                assertEquals(kube.getP1().getHasValidateBuilding(), k.getP1().getHasValidateBuilding());
+                assertTrue(areSameMountain(kube.getP1().getInitialMountain(), k.getP1().getInitialMountain()));
+                assertTrue(areSameMountain(kube.getP1().getMountain(), k.getP1().getMountain()));
+    
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {

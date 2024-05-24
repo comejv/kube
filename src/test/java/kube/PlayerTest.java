@@ -62,28 +62,28 @@ public class PlayerTest {
 
         assertTrue(player.addToMountainFromAvailableToBuild(0, 0, ModelColor.RED));
         assertEquals(ModelColor.RED, player.getMountain().getCase(0, 0));
-        assertEquals(3, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(3, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         assertTrue(player.addToMountainFromAvailableToBuild(1, 0, ModelColor.RED));
         assertEquals(ModelColor.RED, player.getMountain().getCase(1, 0));
-        assertEquals(2, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(2, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         assertTrue(player.addToMountainFromAvailableToBuild(1, 1, ModelColor.RED));
         assertEquals(ModelColor.RED, player.getMountain().getCase(1, 1));
-        assertEquals(1, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(1, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         assertTrue(player.addToMountainFromAvailableToBuild(2, 0, ModelColor.RED));
         assertEquals(ModelColor.RED, player.getMountain().getCase(2, 0));
-        assertEquals(0, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(0, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         assertFalse(player.addToMountainFromAvailableToBuild(2, 1, ModelColor.RED));
         assertEquals(ModelColor.EMPTY, player.getMountain().getCase(2, 1));
-        assertEquals(0, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(0, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         assertTrue(player.addToMountainFromAvailableToBuild(0, 0, ModelColor.BLUE));
         assertEquals(ModelColor.BLUE, player.getMountain().getCase(0, 0));
-        assertEquals(1, player.getAvailaibleToBuild().get(ModelColor.BLUE).intValue());
-        assertEquals(1, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(1, player.getAvailableToBuild().get(ModelColor.BLUE).intValue());
+        assertEquals(1, player.getAvailableToBuild().get(ModelColor.RED).intValue());
     }
 
     @Test
@@ -138,23 +138,23 @@ public class PlayerTest {
 
         player.removeFromMountainToAvailableToBuild(0, 0);
         assertEquals(ModelColor.EMPTY, player.getMountain().getCase(0, 0));
-        assertEquals(1, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(1, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         player.removeFromMountainToAvailableToBuild(1, 0);
         assertEquals(ModelColor.EMPTY, player.getMountain().getCase(1, 0));
-        assertEquals(2, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(2, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         player.removeFromMountainToAvailableToBuild(1, 1);
         assertEquals(ModelColor.EMPTY, player.getMountain().getCase(1, 1));
-        assertEquals(3, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(3, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         player.removeFromMountainToAvailableToBuild(2, 0);
         assertEquals(ModelColor.EMPTY, player.getMountain().getCase(2, 0));
-        assertEquals(4, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(4, player.getAvailableToBuild().get(ModelColor.RED).intValue());
 
         player.removeFromMountainToAvailableToBuild(2, 1);
         assertEquals(ModelColor.EMPTY, player.getMountain().getCase(2, 1));
-        assertEquals(4, player.getAvailaibleToBuild().get(ModelColor.RED).intValue());
+        assertEquals(4, player.getAvailableToBuild().get(ModelColor.RED).intValue());
     }
 
     @Test
@@ -172,6 +172,8 @@ public class PlayerTest {
         player.getMountain().setCase(2, 1, ModelColor.WHITE);
         player.getMountain().setCase(2, 2, ModelColor.BLUE);
 
+        player.setInitialMountain(player.getMountain().clone());
+
         HashMap<ModelColor, Integer> cubes = new HashMap<>();
 
         cubes.put(ModelColor.RED, 4);
@@ -184,9 +186,33 @@ public class PlayerTest {
         try {
             String playerJson = mapper.writeValueAsString(player);
             Player player2 = mapper.readValue(playerJson, Player.class);
-            assertEquals(player, player2);
+
+            assertEquals(player.getName(), player2.getName());
+            assertEquals(player.getId(), player2.getId());
+            assertEquals(player.getHasValidateBuilding(), player2.getHasValidateBuilding());
+            assertTrue(areSameMountain(player.getInitialMountain(), player2.getInitialMountain()));
+            assertTrue(areSameMountain(player.getMountain(), player2.getMountain()));
+
+            for (ModelColor color : player.getAvailableToBuild().keySet()) {
+                assertEquals(player.getAvailableToBuild().get(color), player2.getAvailableToBuild().get(color));
+            }
+
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean areSameMountain(Mountain m1, Mountain m2) {
+        if (m1.getBaseSize() != m2.getBaseSize()) {
+            return false;
+        }
+        for (int i = 0; i < m1.getBaseSize(); i++) {
+            for (int j = 0; j < m1.getBaseSize(); j++) {
+                if (m1.getCase(i, j) != m2.getCase(i, j)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

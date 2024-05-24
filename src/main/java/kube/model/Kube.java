@@ -1,14 +1,9 @@
 package kube.model;
 
-import java.awt.Point;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Random;
-
+// Import model classes
+import kube.model.action.move.*;
+import kube.model.ai.MiniMaxAI;
+// Import jackson classes
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -21,9 +16,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import kube.model.action.move.*;
-import kube.model.ai.MiniMaxAI;
+// Import java classes
+import java.awt.Point;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Random;
 
 /**********
  * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
@@ -80,12 +81,22 @@ public class Kube {
      **********/
 
     public static class KubeSerializer extends JsonSerializer<Kube> {
+
+        /**
+         * Serialize the Kube kube to a json formatted string
+         * 
+         * @param kube               the Kube to serialize
+         * @param jsonGenerator      the json generator
+         * @param serializerProvider the serializer provider
+         * @return void
+         */
         @Override
-        public void serialize(Kube kube, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
+        public void serialize(Kube kube, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+                throws IOException {
 
-            Player [] players = {kube.getP1(), kube.getP2()};
+            Player[] players = { kube.getP1(), kube.getP2() };
 
-            ModelColor [] kubeBase = new ModelColor[kube.getBaseSize()];
+            ModelColor[] kubeBase = new ModelColor[kube.getBaseSize()];
 
             for (int i = 0; i < kube.getBaseSize(); i++) {
                 kubeBase[i] = kube.getK3().getCase(kube.getBaseSize() - 1, i);
@@ -105,26 +116,36 @@ public class Kube {
      **********/
 
     public static class KubeDeserializer extends JsonDeserializer<Kube> {
+
+        /**
+         * Deserialize the json formatted string to a Kube
+         * 
+         * @param jsonParser             the json parser
+         * @param deserializationContext the deserialization context
+         * @return the Kube kube
+         */
         @Override
-        public Kube deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-            
+        public Kube deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+                throws IOException {
+
             Kube kube = new Kube(true);
 
-            while(!jsonParser.isClosed()){
+            while (!jsonParser.isClosed()) {
                 JsonToken jsonToken = jsonParser.nextToken();
 
-                if(JsonToken.FIELD_NAME.equals(jsonToken)){
+                if (JsonToken.FIELD_NAME.equals(jsonToken)) {
 
                     String fieldName = jsonParser.currentName();
                     jsonParser.nextToken();
 
-                    switch(fieldName){
+                    switch (fieldName) {
                         case "phase":
                             kube.phase = jsonParser.getValueAsInt();
                             break;
                         case "kube_base":
                             // Convert the json formatted string to a ModelColor array
-                            TypeReference<ModelColor[]> typeReference = new TypeReference<ModelColor[]>(){};
+                            TypeReference<ModelColor[]> typeReference = new TypeReference<ModelColor[]>() {
+                            };
                             ModelColor[] kubeBase = jsonParser.readValueAs(typeReference);
                             kube.k3 = new Mountain(kubeBase.length);
                             // Filling the base of the kube
@@ -169,22 +190,56 @@ public class Kube {
      * INITIALIZATION
      **********/
 
+    /**
+     * Initialize the Kube with the default values
+     * 
+     * @return void
+     */
     public final void init() {
         init(null, null, new Random());
     }
 
+    /**
+     * Initialize the Kube with one AI
+     * 
+     * @param typeAI1 the type of the AI
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1) {
         init(typeAI1, null, new Random());
     }
 
+    /**
+     * Initialize the Kube with two AIs
+     * 
+     * @param typeAI1 the type of the first AI
+     * @param typeAI2 the type of the second AI
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2) {
         init(typeAI1, typeAI2, new Random());
     }
 
+    /**
+     * Initialize the Kube with two AIs and a seed
+     * 
+     * @param typeAI1 the type of the first AI
+     * @param typeAI2 the type of the second AI
+     * @param seed    the seed to shuffle the bag
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, int seed) {
         init(typeAI1, typeAI2, new Random(seed));
     }
 
+    /**
+     * Initialize the Kube with two AIs and a Random
+     * 
+     * @param typeAI1 the type of the first AI
+     * @param typeAI2 the type of the second AI
+     * @param r       the Random to shuffle the bag
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, Random r) {
 
         setBaseSize(9);
@@ -326,8 +381,8 @@ public class Kube {
         }
     }
 
-    public Player getRandomPlayer(){
-        if (new Random().nextInt(2) == 0){
+    public Player getRandomPlayer() {
+        if (new Random().nextInt(2) == 0) {
             return getP1();
         } else {
             return getP2();
@@ -467,13 +522,13 @@ public class Kube {
      * 
      * @param move the move to check
      * @return true if the move is playable, false otherwise
-     * @throws UnsupportedOperationException                if the phase is not the
-     *                                                      game phase
-     * @throws IllegalArgumentException                     if the move is not a
-     * @throws UnsupportedOperationException                if the move is not a
-     *                                                      MoveAA, MoveMA,
-     *                                                      MoveAW, MoveMW, MoveAM
-     *                                                      or MoveMM
+     * @throws UnsupportedOperationException if the phase is not the
+     *                                       game phase
+     * @throws IllegalArgumentException      if the move is not a
+     * @throws UnsupportedOperationException if the move is not a
+     *                                       MoveAA, MoveMA,
+     *                                       MoveAW, MoveMW, MoveAM
+     *                                       or MoveMM
      */
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
 
@@ -646,7 +701,7 @@ public class Kube {
         if (!move.isToAdditionals()) {
             player.addUsedPiece(move.getColor());
             nextPlayer();
-        } 
+        }
         lastMovePlayed = move;
         return true;
     }
@@ -754,7 +809,7 @@ public class Kube {
             setPenality(false);
         }
 
-        if (!move.isToAdditionals()){
+        if (!move.isToAdditionals()) {
             player.removeUsedPiece(move.getColor());
         }
         // Set the next player
@@ -862,7 +917,7 @@ public class Kube {
      * @return the list of moves that can be played
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    synchronized public ArrayList<Move> moveSet(){
+    synchronized public ArrayList<Move> moveSet() {
         return moveSet(getCurrentPlayer());
     }
 
