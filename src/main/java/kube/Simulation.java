@@ -2,11 +2,14 @@ package kube;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
+import kube.model.AI;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
+import kube.model.Player;
 import kube.model.action.move.Move;
 import kube.model.ai.Joker;
 import kube.model.ai.MiniMaxAI;
@@ -61,7 +64,7 @@ public class Simulation implements Runnable {
     @Override
     public void run() {
         try {
-            aiTrainingGames();
+            testMountain();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -276,6 +279,87 @@ public class Simulation implements Runnable {
             nMove++;
         }
         return availableSum / nMove;
+
+    }
+
+    private void testMountain(){
+        Mountain m = new Mountain(9);
+        Kube k = new Kube(true);
+        //Init the base
+        m.setCase(8,0, ModelColor.RED);
+        m.setCase(8,1, ModelColor.BLUE);
+        m.setCase(8,2, ModelColor.YELLOW);
+        m.setCase(8,3, ModelColor.GREEN);
+        m.setCase(8,4, ModelColor.RED);
+        m.setCase(8,5, ModelColor.BLUE);
+        m.setCase(8,6, ModelColor.GREEN);
+        m.setCase(8,7, ModelColor.GREEN);
+        m.setCase(8,8, ModelColor.BLUE);
+        //Init the first IA
+        k.setP1(new AI(1,new MiniMaxAI(300),k));
+        
+        Mountain iaMountain = new Mountain(6);
+        iaMountain.setCase(0,0, ModelColor.RED);
+        iaMountain.setCase(1,0, ModelColor.GREEN);
+        iaMountain.setCase(1,1, ModelColor.RED);
+        iaMountain.setCase(2,0, ModelColor.BLUE);
+        iaMountain.setCase(2,1, ModelColor.RED);
+        iaMountain.setCase(2,2, ModelColor.BLUE);
+        iaMountain.setCase(3,0, ModelColor.NATURAL);
+        iaMountain.setCase(3,1, ModelColor.RED);
+        iaMountain.setCase(3,2, ModelColor.GREEN);
+        iaMountain.setCase(3,3, ModelColor.WHITE);
+        iaMountain.setCase(4,0, ModelColor.YELLOW);
+        iaMountain.setCase(4,1, ModelColor.WHITE);
+        iaMountain.setCase(4,2, ModelColor.GREEN);
+        iaMountain.setCase(4,3, ModelColor.YELLOW);
+        iaMountain.setCase(4,4, ModelColor.GREEN);
+        iaMountain.setCase(5,0, ModelColor.YELLOW);
+        iaMountain.setCase(5,1, ModelColor.BLACK);
+        iaMountain.setCase(5,2, ModelColor.NATURAL);
+        iaMountain.setCase(5,3, ModelColor.BLACK);
+        iaMountain.setCase(5,4, ModelColor.YELLOW);
+        iaMountain.setCase(5,5, ModelColor.BLACK);
+        k.getP1().setMountain(iaMountain);
+
+        System.out.println(k.getP1().getMountain());
+        k.updatePhase();
+        //Init the second IA
+
+        k.setP2(new AI(2, new MiniMaxAI(300), k));
+        HashMap<ModelColor, Integer> bag = new HashMap<>();
+        bag.put(ModelColor.RED, 3);
+        bag.put(ModelColor.BLUE, 4);
+        bag.put(ModelColor.YELLOW, 4);
+        bag.put(ModelColor.GREEN, 2);
+        bag.put(ModelColor.BLACK, 4);
+        bag.put(ModelColor.WHITE, 2);
+        bag.put(ModelColor.NATURAL, 2);
+        k.getP2().setAvailableToBuild(bag);
+        k.getP2().getAI().constructionPhase();
+        System.out.println(k.getP2().getMountain());
+
+        k.updatePhase();
+
+        //Phase 2
+
+        k.setCurrentPlayer(k.getRandomPlayer());
+        while (k.canCurrentPlayerPlay()) {
+            Move move = k.getCurrentPlayer().getAI().nextMove();
+            k.playMove(move);
+        }
+        if (getnGamesFinished() >= getNbGames()) {
+            return;
+        }
+        if (k.getCurrentPlayer() == k.getP1()) {
+            upWinJ2();
+        } else {
+            upWinJ1();
+        }
+        addNbMovesJ1(k.getP1().getAI().getNbMoves());
+        addNbMovesJ2(k.getP2().getAI().getNbMoves());
+        incrnGamesFinished();
+        System.out.print("\rPartie n°" + getnGamesFinished() + " finie");
 
     }
 
