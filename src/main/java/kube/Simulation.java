@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import kube.model.AI;
+import kube.model.History;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
@@ -25,7 +26,13 @@ public class Simulation implements Runnable {
     int sumHorizonJ2;
 
     public static void main(String[] args) throws Exception {
-        int nbGames = 1000;
+        int nbGames = 100;
+        try{
+            nbGames = Integer.parseInt(args[0]);
+        }
+        catch (Exception e){
+            System.out.println("Nombre de parties par défaut: 100");
+        }
         int nbThreads = 8;
         Simulation s = new Simulation(nbGames);
         s.winJ1 = 0;
@@ -282,8 +289,11 @@ public class Simulation implements Runnable {
     }
 
     private void testMountain(){
-        Mountain m = new Mountain(9);
         Kube k = new Kube(true);
+        k.setHistory(new History());
+        k.setBag(new ArrayList<>());
+        while (getnGamesFinished() < getNbGames()) {
+        Mountain m = new Mountain(9);
         //Init the base
         m.setCase(8,0, ModelColor.RED);
         m.setCase(8,1, ModelColor.BLUE);
@@ -294,38 +304,35 @@ public class Simulation implements Runnable {
         m.setCase(8,6, ModelColor.GREEN);
         m.setCase(8,7, ModelColor.GREEN);
         m.setCase(8,8, ModelColor.BLUE);
+        k.setK3(m);
         //Init the first IA
-        k.setP1(new AI(1,new MiniMaxAI(300),k));
+        k.setP1(new AI(1,new moveSetHeuristique(30),k));
         
-        Mountain iaMountain = new Mountain(6);
-        iaMountain.setCase(0,0, ModelColor.RED);
-        iaMountain.setCase(1,0, ModelColor.GREEN);
-        iaMountain.setCase(1,1, ModelColor.RED);
-        iaMountain.setCase(2,0, ModelColor.BLUE);
-        iaMountain.setCase(2,1, ModelColor.RED);
-        iaMountain.setCase(2,2, ModelColor.BLUE);
-        iaMountain.setCase(3,0, ModelColor.NATURAL);
-        iaMountain.setCase(3,1, ModelColor.RED);
-        iaMountain.setCase(3,2, ModelColor.GREEN);
-        iaMountain.setCase(3,3, ModelColor.WHITE);
-        iaMountain.setCase(4,0, ModelColor.YELLOW);
-        iaMountain.setCase(4,1, ModelColor.WHITE);
-        iaMountain.setCase(4,2, ModelColor.GREEN);
-        iaMountain.setCase(4,3, ModelColor.YELLOW);
-        iaMountain.setCase(4,4, ModelColor.GREEN);
-        iaMountain.setCase(5,0, ModelColor.YELLOW);
-        iaMountain.setCase(5,1, ModelColor.BLACK);
-        iaMountain.setCase(5,2, ModelColor.NATURAL);
-        iaMountain.setCase(5,3, ModelColor.BLACK);
-        iaMountain.setCase(5,4, ModelColor.YELLOW);
-        iaMountain.setCase(5,5, ModelColor.BLACK);
-        k.getP1().setMountain(iaMountain);
+        
+        ModelColor[][]mountain= new ModelColor[][]{ {ModelColor.RED,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY},
+                                                    {ModelColor.GREEN,ModelColor.RED,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY},
+                                                    {ModelColor.BLUE,ModelColor.RED,ModelColor.BLUE,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY},
+                                                    {ModelColor.NATURAL,ModelColor.RED,ModelColor.GREEN,ModelColor.WHITE,ModelColor.EMPTY,ModelColor.EMPTY},
+                                                    {ModelColor.YELLOW,ModelColor.WHITE,ModelColor.GREEN,ModelColor.YELLOW,ModelColor.GREEN,ModelColor.EMPTY},
+                                                    {ModelColor.YELLOW,ModelColor.BLACK,ModelColor.NATURAL,ModelColor.BLACK,ModelColor.YELLOW,ModelColor.BLACK}
+                                                };
+        Mountain iaMountain = new Mountain(mountain,6);
 
-        System.out.println(k.getP1().getMountain());
+        HashMap<ModelColor, Integer> bag1 = new HashMap<>();
+        bag1.put(ModelColor.RED, 0);
+        bag1.put(ModelColor.BLUE, 0);
+        bag1.put(ModelColor.YELLOW, 0);
+        bag1.put(ModelColor.GREEN, 0);
+        bag1.put(ModelColor.BLACK, 0);
+        bag1.put(ModelColor.WHITE, 0);
+        bag1.put(ModelColor.NATURAL, 0);
+        k.getP1().setAvailableToBuild(bag1);
+        k.getP1().setMountain(iaMountain);
+        k.getP1().validateBuilding();
         k.updatePhase();
         //Init the second IA
 
-        k.setP2(new AI(2, new MiniMaxAI(300), k));
+        k.setP2(new AI(2, new moveSetHeuristique(30), k));
         HashMap<ModelColor, Integer> bag = new HashMap<>();
         bag.put(ModelColor.RED, 3);
         bag.put(ModelColor.BLUE, 4);
@@ -336,9 +343,8 @@ public class Simulation implements Runnable {
         bag.put(ModelColor.NATURAL, 2);
         k.getP2().setAvailableToBuild(bag);
         k.getP2().getAI().constructionPhase();
-        System.out.println(k.getP2().getMountain());
 
-        k.updatePhase();
+        k.setPhase(2);
 
         //Phase 2
 
@@ -361,5 +367,6 @@ public class Simulation implements Runnable {
         System.out.print("\rPartie n°" + getnGamesFinished() + " finie");
 
     }
+}
 
 }
