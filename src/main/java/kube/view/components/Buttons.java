@@ -3,19 +3,14 @@ package kube.view.components;
 import kube.configuration.Config;
 import kube.view.GUIColors;
 
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
+import javax.swing.*;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
 
 /*
  * This class will have subclasses for all the buttons used.
@@ -35,15 +30,39 @@ public class Buttons {
         }
     }
 
-    public static class LocalButton extends JButton {
-        public LocalButton(String name) {
-            super(name);
-            setPreferredSize(new Dimension(Config.getInitWidth() / 2, Config.getInitWidth() / 6));
+    public static class SelectPlayerButton extends JPanel implements ActionListener{
+        public SelectPlayerButton(String name){
+            setLayout(new GridBagLayout());
+            setPreferredSize(new Dimension(Config.getInitWidth() / 2,
+                    Config.getInitWidth() / 12));
             setBackground(GUIColors.ACCENT.toColor());
-            setForeground(GUIColors.TEXT.toColor());
+            GridBagConstraints gbc = new GridBagConstraints();
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+
+            JLabel nameLabel = new JLabel();
+            nameLabel.setText(name);
+            nameLabel.setForeground(GUIColors.TEXT.toColor());
+            nameLabel.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
+            gbc.insets= new Insets(5,2,5,25);
+            add( nameLabel,gbc);
+
+            JComboBox<String> comboBox = new JComboBox<String>();
+            comboBox.addActionListener(this);
+
+            comboBox.addItem( "Humain" );
+            comboBox.addItem( "IA facile" );
+            comboBox.addItem( "IA moyenne" );
+            comboBox.addItem( "IA difficile" );
+            gbc.insets= new Insets(5,25,5,2);
+            add( comboBox,gbc);
         }
+        public void actionPerformed(ActionEvent e)
+        {
+           // System.out.println( e.getModifiers() );
+            JComboBox comboBox = (JComboBox)e.getSource();
+           // System.out.println( comboBox.getSelectedItem() );
+        }
+
     }
 
     public static class GameFirstPhaseButton extends JButton {

@@ -9,9 +9,11 @@ public class GUIEventsHandler implements Runnable {
 
     Kube kube;
     Queue<Action> events;
+    GUI gui;
 
     public GUIEventsHandler(GUI gui, Queue<Action> events) {
         this.events = events;
+        this.gui = gui;
     }
 
     @Override
@@ -30,6 +32,15 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case SET_BUTTON_RELEASED:
                     ((ButtonIcon) action.getData()).setPressed(false);
+                    break;
+                case PLAY_LOCAL:
+                    gui.showPanel(GUI.PHASE1);
+                    break;
+                case VALIDATE:
+                    gui.showPanel(GUI.PHASE2);
+                    break;
+                case SETTINGS:
+                    gui.showPanel(GUI.MENU);
                     break;
                 default:
                     break;

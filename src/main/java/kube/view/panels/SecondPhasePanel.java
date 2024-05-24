@@ -171,7 +171,7 @@ public class SecondPhasePanel extends JPanel {
             hexa = new HexIcon(ResourceLoader.getBufferedImage("hexaWhiteTextured"), isActionable);
             hexa.recolor(c);
         }
-        hexa.resizeIcon(60, 60);
+        hexa.resizeIcon(50, 50);
         return hexa;
     }
 }

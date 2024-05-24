@@ -1,5 +1,6 @@
 package kube.view.components;
 
+import javax.swing.*;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -23,7 +24,10 @@ public class HexIcon extends Icon {
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
+        JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this);
+        int min = Math.min(frame.getHeight(),frame.getWidth());
+        int ratio= (int)(min*0.1);
+        resizeIcon(ratio, ratio);
         if (isActionable() && isHovered) { // Draw darker image
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor }; // Multiply all bands of each pixel by factor

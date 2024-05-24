@@ -1,15 +1,8 @@
 package kube.view.panels;
 
-import java.awt.CardLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
@@ -124,11 +117,16 @@ public class MenuPanel extends JPanel {
         buttonsGBC.fill = GridBagConstraints.BOTH;
         buttonsGBC.insets = insets;
 
-        JButton playerOne = new MenuButton("JOUEUR 1");
-        playersButtons.add(playerOne, buttonsGBC);
+        JPanel player1 = new SelectPlayerButton("PLAYER 1");
+        JPanel player2 = new SelectPlayerButton("PLAYER 2");
 
-        JButton playerTwo = new MenuButton("JOUEUR 2");
-        playersButtons.add(playerTwo, buttonsGBC);
+
+        playersButtons.add(player1, buttonsGBC);
+        playersButtons.add(player2, buttonsGBC);
+
+
+        /*JButton playerTwo = new MenuButton("JOUEUR 2");
+        playersButtons.add(playerTwo, buttonsGBC);*/
 
         JButton play = new MenuButton("PLAY");
         playersButtons.add(play, buttonsGBC);

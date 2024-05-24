@@ -25,8 +25,7 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
-        setMinimumSize(new Dimension((int) (Config.getInitWidth() / 1.5), Config.getInitHeight()));
-        setLocationRelativeTo(null);
+        setMinimumSize(new Dimension((int) (Config.getInitWidth()), Config.getInitHeight()));
         framePanel = new JPanel();
         OverlayLayout overlay = new OverlayLayout(framePanel);
         framePanel.setLayout(overlay);
