@@ -51,7 +51,7 @@ public class MoveAM extends Move {
      **********/
 
     @JsonSetter("to")
-    public void setTo(Point to) {
+    public final void setTo(Point to) {
         this.to = to;
     }
 

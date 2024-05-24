@@ -64,12 +64,12 @@ public abstract class Move implements Serializable {
      * SETTERS
      **********/
 
-    public void setPlayer(Player player) {
+    public final void setPlayer(Player player) {
         this.player = player;
     }
 
     @JsonSetter("color")
-    public void setColor(ModelColor color) {
+    public final void setColor(ModelColor color) {
         this.color = color;
     }
 

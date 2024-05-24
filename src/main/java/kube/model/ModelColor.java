@@ -42,7 +42,7 @@ public enum ModelColor {
      * SETTER
      **********/
 
-    public void setColorCode(int colorCode) {
+    public final void setColorCode(int colorCode) {
         this.colorCode = colorCode;
     }
 

@@ -51,11 +51,11 @@ public class MoveMW extends Move {
      **********/
 
     @JsonSetter("from")
-    public void setFrom(Point from) {
+    public final void setFrom(Point from) {
         this.from = from;
     }
 
-    public void setFrom(int x, int y) {
+    public final void setFrom(int x, int y) {
         setFrom(new Point(x, y));
     }
 

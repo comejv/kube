@@ -1678,53 +1678,98 @@ public class KubeTest {
     @Test
     public void serializationTest() {
             
-            ObjectMapper om = new ObjectMapper();
-    
-            Kube kube = new Kube();
-    
-            initPlayMove(kube);
+        ObjectMapper om = new ObjectMapper();
 
-            kube.getP1().setHasValidateBuilding(true);
-            kube.getP2().setHasValidateBuilding(true);
+        // Preparation phase serialization
+        Kube kube = new Kube();
 
-            kube.getP1().setInitialMountain(kube.getP1().getMountain().clone());
-            kube.getP2().setInitialMountain(kube.getP2().getMountain().clone());
+        kube.init(null, null, 0);
 
-            try {
-                String s = om.writeValueAsString(kube);
-    
-                Kube k = om.readValue(s, Kube.class);
-    
-                assertEquals(kube.getPhase(), k.getPhase());
+        kube.getP1().addToMountainFromAvailableToBuild(0, 0, ModelColor.RED);
+        kube.getP1().addToMountainFromAvailableToBuild(4, 0, ModelColor.GREEN);
+        kube.getP1().addToMountainFromAvailableToBuild(4, 1, ModelColor.GREEN);
+        kube.getP1().addToMountainFromAvailableToBuild(4, 2, ModelColor.GREEN);
+        kube.getP1().addToMountainFromAvailableToBuild(4, 3, ModelColor.GREEN);
+        kube.getP1().addToMountainFromAvailableToBuild(3, 0, ModelColor.BLACK);
+        kube.getP1().addToMountainFromAvailableToBuild(3, 0, ModelColor.BLACK);
 
-                assertTrue(areSameMountain(kube.getK3(), k.getK3()));
+        try {
+            String s = om.writeValueAsString(kube);
 
-                assertEquals(kube.getP1().getName(), k.getP1().getName());
-                assertEquals(kube.getP1().getId(), k.getP1().getId());
-                assertEquals(kube.getP1().getHasValidateBuilding(), k.getP1().getHasValidateBuilding());
-                assertTrue(areSameMountain(kube.getP1().getInitialMountain(), k.getP1().getInitialMountain()));
-                assertTrue(areSameMountain(kube.getP1().getMountain(), k.getP1().getMountain()));
-                
-    
-                assertEquals(kube.getP2().getName(), k.getP2().getName());
-                assertEquals(kube.getP2().getId(), k.getP2().getId());
-                assertEquals(kube.getP2().getHasValidateBuilding(), k.getP2().getHasValidateBuilding());
-                assertTrue(areSameMountain(kube.getP2().getInitialMountain(), k.getP2().getInitialMountain()));
-                assertTrue(areSameMountain(kube.getP2().getMountain(), k.getP2().getMountain()));
+            Kube k = om.readValue(s, Kube.class);
 
-                assertEquals(kube.getHistory().getFirstPlayer(), k.getHistory().getFirstPlayer());
+            assertEquals(kube.getPhase(), k.getPhase());
 
-                for (int i = 0; i < kube.getHistory().getDone().size(); i++) {
-                    assertEquals(kube.getHistory().getDone().get(i), k.getHistory().getDone().get(i));
-                }
-    
-                for (int i = 0; i < kube.getHistory().getUndone().size(); i++) {
-                    assertEquals(kube.getHistory().getUndone().get(i), k.getHistory().getUndone().get(i));
-                }
+            assertTrue(areSameMountain(kube.getK3(), k.getK3()));
 
-            } catch (JsonProcessingException e) {
-                e.printStackTrace();
+            assertEquals(kube.getP1().getName(), k.getP1().getName());
+            assertEquals(kube.getP1().getId(), k.getP1().getId());
+            assertEquals(kube.getP1().getHasValidateBuilding(), k.getP1().getHasValidateBuilding());
+            assertTrue(areSameMountain(kube.getP1().getMountain(), k.getP1().getMountain()));
+
+            assertEquals(kube.getP2().getName(), k.getP2().getName());
+            assertEquals(kube.getP2().getId(), k.getP2().getId());
+            assertEquals(kube.getP2().getHasValidateBuilding(), k.getP2().getHasValidateBuilding());
+            assertTrue(areSameMountain(kube.getP2().getMountain(), k.getP2().getMountain()));
+
+            assertEquals(kube.getHistory().getFirstPlayer(), k.getHistory().getFirstPlayer());
+
+            for (int i = 0; i < kube.getHistory().getDone().size(); i++) {
+                assertEquals(kube.getHistory().getDone().get(i), k.getHistory().getDone().get(i));
             }
+
+            for (int i = 0; i < kube.getHistory().getUndone().size(); i++) {
+                assertEquals(kube.getHistory().getUndone().get(i), k.getHistory().getUndone().get(i));
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        // Game phase serialization
+        kube = new Kube();
+
+        initPlayMove(kube);
+
+        kube.getP1().setHasValidateBuilding(true);
+        kube.getP2().setHasValidateBuilding(true);
+
+        kube.getP1().setInitialMountain(kube.getP1().getMountain().clone());
+        kube.getP2().setInitialMountain(kube.getP2().getMountain().clone());
+
+        try {
+            String s = om.writeValueAsString(kube);
+            Kube k = om.readValue(s, Kube.class);
+
+            assertEquals(kube.getPhase(), k.getPhase());
+
+            assertTrue(areSameMountain(kube.getK3(), k.getK3()));
+
+            assertEquals(kube.getP1().getName(), k.getP1().getName());
+            assertEquals(kube.getP1().getId(), k.getP1().getId());
+            assertEquals(kube.getP1().getHasValidateBuilding(), k.getP1().getHasValidateBuilding());
+            assertTrue(areSameMountain(kube.getP1().getInitialMountain(), k.getP1().getInitialMountain()));
+            assertTrue(areSameMountain(kube.getP1().getMountain(), k.getP1().getMountain()));
+
+            assertEquals(kube.getP2().getName(), k.getP2().getName());
+            assertEquals(kube.getP2().getId(), k.getP2().getId());
+            assertEquals(kube.getP2().getHasValidateBuilding(), k.getP2().getHasValidateBuilding());
+            assertTrue(areSameMountain(kube.getP2().getInitialMountain(), k.getP2().getInitialMountain()));
+            assertTrue(areSameMountain(kube.getP2().getMountain(), k.getP2().getMountain()));
+
+            assertEquals(kube.getHistory().getFirstPlayer(), k.getHistory().getFirstPlayer());
+
+            for (int i = 0; i < kube.getHistory().getDone().size(); i++) {
+                assertEquals(kube.getHistory().getDone().get(i), k.getHistory().getDone().get(i));
+            }
+
+            for (int i = 0; i < kube.getHistory().getUndone().size(); i++) {
+                assertEquals(kube.getHistory().getUndone().get(i), k.getHistory().getUndone().get(i));
+            }
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {

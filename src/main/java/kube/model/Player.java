@@ -83,6 +83,8 @@ public class Player implements Serializable {
         public void serialize(Player player, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
                 throws IOException {
 
+            
+
             jsonGenerator.writeStartObject();
             // Serialize the name attributes
             jsonGenerator.writeStringField("name", player.getName());
@@ -148,16 +150,15 @@ public class Player implements Serializable {
                             // Deserialize the hasValidateBuilding attribute
                             player.hasValidateBuilding = jsonParser.getValueAsBoolean();
                             if (player.hasValidateBuilding) {
-                                player.availableToBuild = new HashMap<>();
-                                for (ModelColor c : ModelColor.getAllColored()) {
-                                    player.getAvailableToBuild().put(c, 0);
-                                }
+                                player.initAvailableToBuild();
                             }
                             break;
                         case "initial_mountain":
                             // Deserialize the initialMountain attribute
                             player.initialMountain = jsonParser.readValueAs(Mountain.class);
-                            player.mountain = player.initialMountain.clone();
+                            if (player.hasValidateBuilding) {
+                                player.mountain = player.initialMountain.clone();
+                            }
                             break;
                         case "mountain":
                             // Deserialize the mountain attribute
@@ -185,35 +186,35 @@ public class Player implements Serializable {
      * SETTERS
      **********/
 
-    public void setId(int id) {
+    public final void setId(int id) {
         this.id = id;
     }
 
-    public void setInitialMountain(Mountain initialMountain) {
+    public final void setInitialMountain(Mountain initialMountain) {
         this.initialMountain = initialMountain;
     }
 
-    public void setMountain(Mountain mountain) {
+    public final void setMountain(Mountain mountain) {
         this.mountain = mountain;
     }
 
-    public void setName(String name) {
+    public final void setName(String name) {
         this.name = name;
     }
 
-    public void setAdditionals(ArrayList<ModelColor> additionals) {
+    public final void setAdditionals(ArrayList<ModelColor> additionals) {
         this.additionals = additionals;
     }
 
-    public void setAvailableToBuild(HashMap<ModelColor, Integer> avalaibleToBuild) {
+    public final void setAvailableToBuild(HashMap<ModelColor, Integer> avalaibleToBuild) {
         this.availableToBuild = avalaibleToBuild;
     }
 
-    public void setHasValidateBuilding(boolean hasValidateBuilding) {
+    public final void setHasValidateBuilding(boolean hasValidateBuilding) {
         this.hasValidateBuilding = hasValidateBuilding;
     }
 
-    public void setUsedPiece(HashMap<ModelColor, Integer> usedPiece) {
+    public final void setUsedPiece(HashMap<ModelColor, Integer> usedPiece) {
         this.usedPiece = usedPiece;
     }
 
@@ -529,6 +530,13 @@ public class Player implements Serializable {
     /**********
      * OTHER METHODS
      **********/
+
+    public final void initAvailableToBuild() {
+        availableToBuild = new HashMap<>();
+        for (ModelColor c : ModelColor.getAllColored()) {
+            availableToBuild.put(c, 0);
+        }
+    }
 
     /**
      * Check if the player is an AI

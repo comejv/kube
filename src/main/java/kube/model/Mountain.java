@@ -57,12 +57,12 @@ public class Mountain implements Serializable {
      **********/
 
     @JsonSetter("baseSize")
-    public void setBaseSize(int size) {
+    public final void setBaseSize(int size) {
         baseSize = size;
     }
 
     @JsonSetter("content")
-    public void setMountain(ModelColor[][] mountain) {
+    public final void setMountain(ModelColor[][] mountain) {
         content = mountain;
     }
 
@@ -70,7 +70,7 @@ public class Mountain implements Serializable {
         setCase(p.x, p.y, c);
     }
 
-    public final void setCase(int x, int y, ModelColor c) {
+    public void setCase(int x, int y, ModelColor c) {
         content[x][y] = c;
     }
 

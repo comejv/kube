@@ -45,17 +45,17 @@ public class History {
      **********/
 
     @JsonSetter("first_player")
-    public void setFirstPlayer(int player) {
+    public final void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
 
     @JsonSetter("done")
-    public void setDone(ArrayList<Move> done) {
+    public final void setDone(ArrayList<Move> done) {
         this.done = done;
     }
 
     @JsonSetter("un_done")
-    public void setUndone(ArrayList<Move> undone) {
+    public final void setUndone(ArrayList<Move> undone) {
         this.undone = undone;
     }
 
