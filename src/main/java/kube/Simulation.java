@@ -11,7 +11,6 @@ import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.move.Move;
-import kube.model.ai.Joker;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.moveSetHeuristique;
 
@@ -120,7 +119,7 @@ public class Simulation implements Runnable {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new Joker(50), new moveSetHeuristique(50));
+            k.init(new moveSetHeuristique(50), new moveSetHeuristique(50));
             k.getP1().getAI().constructionPhase();
             k.updatePhase();
             k.getP2().getAI().constructionPhase();

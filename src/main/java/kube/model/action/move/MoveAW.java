@@ -1,5 +1,7 @@
 package kube.model.action.move;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import kube.model.ModelColor;
 
 public class MoveAW extends Move {
@@ -11,6 +13,7 @@ public class MoveAW extends Move {
     /**
      * Constructor of the class MoveAM
      */
+    @JsonCreator
     public MoveAW() {
         super(ModelColor.WHITE);
     }
@@ -37,16 +40,6 @@ public class MoveAW extends Move {
     @Override
     public boolean isWhite() {
         return true;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{AW}";
     }
 
     @Override

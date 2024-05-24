@@ -1,6 +1,5 @@
 package kube.model.action;
 
-
 public enum ActionType {
     // --- Model ---
     SHOW_ALL,
@@ -9,6 +8,7 @@ public enum ActionType {
     SHUFFLE,
     VALIDATE,
     MOVE,
+    MOVE_NUMBER,
     UNDO,
     REDO,
     PRINT_AI,
@@ -40,7 +40,8 @@ public enum ActionType {
     ITS_YOUR_TURN,
     MOVE_FROM_NETWORK,
     PLAYER_DATA,
-    CONNECTION_CLOSED,
+    ACKNOWLEDGEMENT,
+    PRINT_WAITING_RESPONSE,
     // --- GUI ---
     // Global
     SET_BUTTON_PRESSED,

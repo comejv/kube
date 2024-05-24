@@ -4,7 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.HashMap;
+
 import org.junit.Test;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kube.model.*;
 
@@ -153,23 +158,35 @@ public class PlayerTest {
     }
 
     @Test
-    public void fromSaveTest() {
+    public void serializationTest() {
+            
+        ObjectMapper mapper = new ObjectMapper();
 
-        Kube kube = new Kube();
+        Player player = new Player(1);
 
-        kube.fillBag(0);
-        kube.distributeCubesToPlayers();
-        // Distribution for player one: {RED=4, BLUE=2, WHITE=2, YELLOW=7, BLACK=3, NATURAL=2, GREEN=1}
-
-        Player player = kube.getP1();
         player.setName("roger");
 
-        String save = player.forSave();
-        Player player2 = new Player(save, player.getHasValidateBuilding());
+        player.getMountain().setCase(1, 0, ModelColor.BLUE);
+        player.getMountain().setCase(1, 1, ModelColor.WHITE);
+        player.getMountain().setCase(2, 0, ModelColor.YELLOW);
+        player.getMountain().setCase(2, 1, ModelColor.WHITE);
+        player.getMountain().setCase(2, 2, ModelColor.BLUE);
 
-        assertEquals(player.getId(),player2.getId());
-        assertEquals(player.getName(), player2.getName());
-        assertEquals(player.getMountain(), player2.getMountain());
-        assertEquals(player.getAvailaibleToBuild(), player2.getAvailaibleToBuild());
+        HashMap<ModelColor, Integer> cubes = new HashMap<>();
+
+        cubes.put(ModelColor.RED, 4);
+        cubes.put(ModelColor.BLUE, 3);
+        cubes.put(ModelColor.GREEN, 2);
+        cubes.put(ModelColor.YELLOW, 1);
+
+        player.setAvailableToBuild(cubes);
+
+        try {
+            String playerJson = mapper.writeValueAsString(player);
+            Player player2 = mapper.readValue(playerJson, Player.class);
+            assertEquals(player, player2);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,5 +1,6 @@
 package kube.model;
 
+
 import kube.model.ai.MiniMaxAI;
 
 public class AI extends Player {
@@ -7,8 +8,7 @@ public class AI extends Player {
     /**********
      * ATTRIBUTES
      **********/
-
-    private MiniMaxAI ai;
+    private transient MiniMaxAI ai;
 
     /**********
      * CONSTRUCTOR

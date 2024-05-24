@@ -5,13 +5,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
 public class Mountain implements Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
+    @JsonProperty("content")
     private ModelColor[][] content;
+
+    @JsonProperty("base_size")
     private int baseSize;
 
     /**********
@@ -21,12 +30,24 @@ public class Mountain implements Serializable {
     /**
      * Constructor of the class Mountain
      * 
-     * @param size the size of the mountain's base
+     * @param baseSize the size of the mountain's base
      */
-    public Mountain(int size) {
-        this.baseSize = size;
-        this.content = new ModelColor[size][size];
+    public Mountain(int baseSize) {
+        this.baseSize = baseSize;
+        this.content = new ModelColor[baseSize][baseSize];
         clear();
+    }
+
+    /**
+     * Constructor of the class Mountain from a json file
+     * 
+     * @param content  the content of the mountain
+     * @param baseSize the size of the mountain's base
+     */
+    @JsonCreator
+    public Mountain(@JsonProperty("content") ModelColor[][] content, @JsonProperty("base_size") int baseSize) {
+        this.content = content;
+        this.baseSize = baseSize;
     }
 
     /**
@@ -62,10 +83,12 @@ public class Mountain implements Serializable {
      * SETTERS
      **********/
 
+    @JsonSetter("baseSize")
     public void setBaseSize(int size) {
         baseSize = size;
     }
 
+    @JsonSetter("content")
     public void setMountain(ModelColor[][] mountain) {
         content = mountain;
     }
@@ -82,10 +105,12 @@ public class Mountain implements Serializable {
      * GETTERS
      **********/
 
+    @JsonGetter("baseSize")
     public int getBaseSize() {
         return baseSize;
     }
 
+    @JsonGetter("content")
     public ModelColor[][] getMountain() {
         return content;
     }
@@ -246,6 +271,7 @@ public class Mountain implements Serializable {
      * 
      * @return true if the mountain is full, false otherwise
      */
+    @JsonIgnore
     public boolean isFull() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
@@ -262,6 +288,7 @@ public class Mountain implements Serializable {
      * 
      * @return true if the mountain is empty, false otherwise
      */
+    @JsonIgnore
     public boolean isEmpty() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
@@ -271,33 +298,6 @@ public class Mountain implements Serializable {
             }
         }
         return true;
-    }
-
-    /**
-     * Give a String representation of the mountain for saving
-     * 
-     * @return the String representation of the mountain for saving
-     */
-    public String forSave() {
-        
-        String save;
-        int i, j;
-
-        save = "{" + getBaseSize() + ";";
-        
-        for (i = 0; i < getBaseSize(); i++) {
-            for (j = 0; j < i + 1; j++) {
-                save += getCase(i, j).forSave() + ",";
-            }
-        }
-
-        if (getBaseSize() > 0) {
-            save = save.substring(0, save.length() - 1);
-        }
-
-        save += "}";
-
-        return save;
     }
 
     @Override
