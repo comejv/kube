@@ -33,15 +33,15 @@ public class randomAI extends MiniMaxAI {
     }
 
     @Override
-    public Move selectMove(HashMap<Move, Integer> movesMap) {
-        ArrayList<Move> moves = getK3().moveSet();
+    public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
+        ArrayList<Move> moves = k3.moveSet();
         return moves.get(new Random().nextInt(moves.size()));
     }
 
     @Override
-    public void constructionPhase() {
-        while (getPlayer(getK3()).getPlayableColors().isEmpty() && !getPlayer(getK3()).validateBuilding()) {
-            utilsAI.randomFillMountain(getPlayer(getK3()), getR());
+    public void constructionPhase(Kube k3) {
+        while (getPlayer(k3).getPlayableColors().isEmpty() && !getPlayer(k3).validateBuilding()) {
+            utilsAI.randomFillMountain(getPlayer(k3), getR());
         }
     }
 }

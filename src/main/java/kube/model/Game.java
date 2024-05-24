@@ -2,9 +2,7 @@ package kube.model;
 
 import java.util.Random;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
-import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
@@ -132,7 +130,7 @@ public class Game implements Runnable {
     public void gamePhase() {
         while (k3.canCurrentPlayerPlay()) {
             if (k3.getCurrentPlayer().isAI()) {
-                Move move = k3.getCurrentPlayer().getAI().nextMove();
+                Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
                 playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
             } else {
                 Action a = controllerToModele.remove();
@@ -161,7 +159,7 @@ public class Game implements Runnable {
         setFirstPlayer();
         modeleToView.add(new Action(ActionType.PRINT_STATE));
         gamePhase();
-
+        modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
         if (k3.getCurrentPlayer() == k3.getP1()) {
             modeleToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
         } else {
@@ -188,7 +186,6 @@ public class Game implements Runnable {
         } else {
             move = (Move) a.getData();
         }
-
         switch (getGameType()) {
             case LOCAL:
                 if (k3.playMove(move)) {
@@ -244,7 +241,7 @@ public class Game implements Runnable {
     }
 
     public void constructionPhaseIA(Player p) {
-        p.getAI().constructionPhase();
+        p.getAI().constructionPhase(k3);
         if (!p.getHasValidateBuilding()) {
             p.validateBuilding();
         }
