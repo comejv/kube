@@ -19,21 +19,21 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.view.components.Buttons.RulesButton;
 
-public class RulesPanel extends JPanel{
-    
-    public RulesPanel(){
+public class RulesPanel extends JPanel {
+
+    public RulesPanel() {
         setLayout(new CardLayout());
-        setPreferredSize(new Dimension(700,500));
+        setPreferredSize(new Dimension(700, 500));
 
         JPanel ruleFirst = new RulePanel();
         add("ruleFirst", ruleFirst);
-        
+
         JTextArea textArea = new JTextArea(ResourceLoader.getText("rule1"));
         textArea.setEditable(false);
         textArea.setLineWrap(true);
         textArea.setBackground(new Color(0, 0, 0, 0));
         textArea.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 12)));
-        textArea.setForeground(GUIColors.TEXT);
+        textArea.setForeground(GUIColors.TEXT.toColor());
         textArea.setBorder(null);
         textArea.setPreferredSize(new Dimension(550, 200));
         GridBagConstraints elemGBC = new GridBagConstraints();
@@ -44,16 +44,16 @@ public class RulesPanel extends JPanel{
         elemGBC.weightx = .5;
         ruleFirst.add(textArea, elemGBC);
     }
-    
+
     private class RulePanel extends JPanel {
-        private RulePanel(){
+        private RulePanel() {
             setLayout(new GridBagLayout());
             setPreferredSize(new Dimension(700, 500));
-            setBackground(GUIColors.ACCENT);
+            setBackground(GUIColors.ACCENT.toColor());
 
             JLabel ruleTitle = new JLabel("RULES", SwingConstants.CENTER);
             ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 6)));
-            
+
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
             elemGBC.gridy = 0;

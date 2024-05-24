@@ -33,8 +33,9 @@ public class GUI extends Thread {
     private GUIControllers controllers;
     private Game model;
 
-    private FirstPhasePanel firstPhasePanel;
-    private SecondPhasePanel secondPhasePanel;
+    private volatile FirstPhasePanel firstPhasePanel;
+    private volatile SecondPhasePanel secondPhasePanel;
+    private Thread loaderThread;
 
     public GUI(Game model, GUIControllers controllers, Queue<Action> events) {
         this.controllers = controllers;
@@ -106,25 +107,44 @@ public class GUI extends Thread {
     }
 
     public void showPanel(String panelName) {
+        waitPanel(panelName);
         mF.showPanel(panelName);
     }
 
-    public void loadPanel(String p) {
-        switch (p) {
+    public void loadPanel(String panelName) {
+        PanelLoader loader = new PanelLoader(this, panelName, model, controllers);
+        loaderThread = new Thread(loader);
+        loaderThread.start();
+    }
+
+    public synchronized void waitPanel(String panelName) {
+        Config.debug("Waiting for panel ", panelName);
+        switch (panelName) {
             case GUI.PHASE1:
-                if (firstPhasePanel == null) {
-                    // add new phase 1 pannel
-                    Thread fPT = new Thread(new FirstPhasePanel(this, model, controllers.getPhase1Controller()));
-                    mF.addPanel(firstPhasePanel, PHASE1);
+                try {
+                    while (firstPhasePanel == null) {
+                        wait();
+                    }
+                } catch (InterruptedException e) {
+                    System.err.println("Interrupted loading");
                 }
                 break;
+
             case GUI.PHASE2:
-                if (!secondPanelLoaded) {
-                    // add new phase 2 pannel
-                    SecondPhasePanel sP = new SecondPhasePanel(model, controllers.getPhase2Controller());
-                    mF.addPanel(sP, PHASE2);
+                try {
+                    while (secondPhasePanel == null) {
+                        wait();
+                    }
+                } catch (InterruptedException e) {
+                    System.err.println("Interrupted loading");
                 }
+                break;
+
+            default:
+                System.err.println("Waiting for non existent panel " + panelName);
+                break;
         }
+        Config.debug("Panel ", panelName, " finished loading");
     }
 
     public void addOverlay(Component p) {
@@ -147,23 +167,12 @@ public class GUI extends Thread {
 
             case GUI.PHASE2:
                 secondPhasePanel = (SecondPhasePanel) panel;
+                break;
 
             default:
                 break;
         }
-    }
-
-    protected synchronized JPanel getPanel(String panelName) {
-        switch (panelName) {
-            case GUI.PHASE1:
-                return (JPanel) firstPhasePanel;
-
-            case GUI.PHASE2:
-                return (JPanel) secondPhasePanel;
-
-            default:
-                return null;
-        }
+        mF.addPanel(panel, panelName);
     }
 
     private void showAllBorders(Container container) {

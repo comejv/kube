@@ -50,7 +50,6 @@ public class FirstPhasePanel extends JPanel {
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 20, 20, 20);
         add(gamePanel, gbc);
-
     }
 
     private JPanel gamePanel() {

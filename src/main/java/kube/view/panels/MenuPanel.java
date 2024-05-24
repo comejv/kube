@@ -29,19 +29,19 @@ public class MenuPanel extends JPanel {
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
-        
+
         setLayout(new OverlayLayout(this));
-        
+
         JPanel modal = new JPanel();
         modal.setLayout(new GridBagLayout());
 
-        JPanel glassPane = new GlassPane();
+        // JPanel glassPane = new GlassPanel();
 
         // Rules panel
         JPanel rulesPanel = new Overlay(null);
-        
+
         add(rulesPanel);
-        add(glassPane);
+        // add(glassPane);
         add(modal);
 
         // Game title
@@ -105,33 +105,32 @@ public class MenuPanel extends JPanel {
             CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
             cl.show(buttonsPanel, "players");
         });
-        
+
         // Online button
         JButton online = new MenuButton("ONLINE");
-        
-        
+
         // Quit button
         JButton quit = new MenuButton("QUIT");
-        
+
         // Rules button
         JButton rules = new MenuButton("RULES");
         rules.addActionListener(e -> {
-            // Switch to the players panel
-            glassPane.setVisible(true);
-            rulesPanel.setVisible(true);
+            // // Switch to the players panel
+            // glassPane.setVisible(true);
+            // rulesPanel.setVisible(true);
         });
-        
+
         startButtons.add(local, buttonsGBC);
         startButtons.add(online, buttonsGBC);
         startButtons.add(rules, buttonsGBC);
         startButtons.add(quit, buttonsGBC);
-        
+
         buttonsPanel.add("start", startButtons);
-        
+
         // ***************************************************************************************//
         // LOCAL //
         // ***************************************************************************************//
-        
+
         // Players buttons - fill entire row
         JPanel playersButtons = new JPanel();
         playersButtons.setLayout(new GridBagLayout());
@@ -141,23 +140,23 @@ public class MenuPanel extends JPanel {
         buttonsGBC.gridy = GridBagConstraints.RELATIVE;
         buttonsGBC.fill = GridBagConstraints.BOTH;
         buttonsGBC.insets = insets;
-        
+
         JButton playerOne = new MenuButton("JOUEUR 1");
         playersButtons.add(playerOne, buttonsGBC);
-        
+
         JButton playerTwo = new MenuButton("JOUEUR 2");
         playersButtons.add(playerTwo, buttonsGBC);
-        
+
         JButton play = new MenuButton("PLAY");
         playersButtons.add(play, buttonsGBC);
         play.addActionListener(buttonListener);
         play.setActionCommand("play");
-        
+
         buttonsPanel.add("players", playersButtons);
-        
+
         // ***************************************************************************************//
         // RULES //
         // ***************************************************************************************//
-        
+
     }
 }

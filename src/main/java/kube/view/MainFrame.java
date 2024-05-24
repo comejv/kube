@@ -49,6 +49,7 @@ public class MainFrame extends JFrame {
     }
 
     public void showPanel(String name) {
+        Config.debug("Showing panel ", name);
         cardLayout.show(cardPanel, name);
     }
 
