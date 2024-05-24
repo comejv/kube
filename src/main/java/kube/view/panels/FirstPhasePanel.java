@@ -2,16 +2,15 @@ package kube.view.panels;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.controller.graphical.Phase1Controller;
 import kube.model.Game;
 import kube.view.GUIColors;
+import kube.view.HSL;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 import kube.view.components.Icon;
 
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.io.IOException;
 
 import javax.swing.*;
 
@@ -19,54 +18,38 @@ import javax.swing.*;
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
 public class FirstPhasePanel extends JPanel {
-    private GraphicsEnvironment ge;
     private Game model;
-    ActionListener buttonListener;
-    MouseAdapter hexaListener;
+    Phase1Controller controller;
 
-    public FirstPhasePanel(Game model, ActionListener buttonListener, MouseAdapter hexaListener) {
+    public FirstPhasePanel(Game model, Phase1Controller controller) {
         this.model = model;
-        this.hexaListener = hexaListener;
-        try {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font buttonsFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
-            ge.registerFont(buttonsFont);
-            ge.getAvailableFontFamilyNames();
-        } catch (IOException | FontFormatException e) {
-            Config.debug("Error : ");
-            System.err.println("Could not load buttons font, using default.");
-        }
-
+        this.controller = controller;
         setLayout(new GridBagLayout());
         setBackground(GUIColors.GAME_BG.toColor());
 
         /* Buttons panel construction */
-        JPanel eastColPanel = new JPanel();
-        eastColPanel.setBackground(GUIColors.GAME_BG.toColor());
-        JPanel buttonsPanel = createButtons(buttonListener);
-        eastColPanel.add(buttonsPanel, BorderLayout.NORTH);
-        GridBagConstraints c1 = new GridBagConstraints();
-        c1.gridy = 0;
-        c1.gridx = 3;
-        c1.anchor = GridBagConstraints.NORTHEAST;
-        c1.fill = GridBagConstraints.VERTICAL;
-        c1.insets = new Insets(0, 10, 0, 10);
+        JPanel buttonsPanel = createButtons();
+        buttonsPanel.setBackground(GUIColors.GAME_BG.toColor());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        gbc.insets = new Insets(0, 10, 0, 10);
 
-        add(eastColPanel, c1);
+        add(buttonsPanel, gbc);
 
         /* Game panel construction */
         JPanel gamePanel = gamePanel();
-        GridBagConstraints c2 = new GridBagConstraints();
-        c2.gridy = 0;
-        c2.gridx = 0;
-        c2.gridwidth = 2;
-        c2.fill = GridBagConstraints.BOTH;
-        c2.anchor = GridBagConstraints.CENTER;
-        c2.weightx = 1;
-        c2.weighty = 1;
-        c2.insets = new Insets(20, 20, 20, 20);
-        add(gamePanel, c2);
+        gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.insets = new Insets(20, 20, 20, 20);
+        add(gamePanel, gbc);
 
     }
 
@@ -75,51 +58,56 @@ public class FirstPhasePanel extends JPanel {
         gamePanel.setLayout(new BorderLayout());
 
         // TOP BAR - GAME BASE
-        JPanel basePanel = new JPanel();
-        basePanel.setBackground(GUIColors.GAME_BG_DARK.toColor());
+        JPanel topPanel = new JPanel();
+        topPanel.setBackground(GUIColors.GAME_BG_DARK.toColor());
         JLabel baseLabel = new JLabel("Base Centrale: ");
         baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
         baseLabel.setForeground(GUIColors.TEXT.toColor());
-        basePanel.add(baseLabel);
-        for (int i = 0; i < 9; i++) {
-            HexIcon h = newHexa(false);
-            h.addMouseListener(hexaListener);
-            basePanel.add(h);
-        }
-        gamePanel.add(basePanel, BorderLayout.NORTH);
+        topPanel.add(baseLabel);
+
+        topPanel.add(newHexa(GUIColors.YELLOW_HEX, false));
+        topPanel.add(newHexa(GUIColors.BLACK_HEX, false));
+        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
+        topPanel.add(newHexa(GUIColors.RED_HEX, false));
+        topPanel.add(newHexa(GUIColors.GREEN_HEX, false));
+        topPanel.add(newHexa(GUIColors.RED_HEX, false));
+        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
+        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
+        topPanel.add(newHexa(GUIColors.YELLOW_HEX, false));
+
+        gamePanel.add(topPanel, BorderLayout.NORTH);
 
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
         JPanel constructPanel = new JPanel();
         constructPanel.setBackground(GUIColors.TEXT.toColor());
         constructPanel.setLayout(new GridLayout(6, 6));
-        GridBagConstraints cc = new GridBagConstraints();
+        GridBagConstraints gbc = new GridBagConstraints();
         Icon[][] hexaList = new Icon[6][6];
-        constructPanel.setBackground(GUIColors.GAME_BG_LIGHT.toColor());
         gamePanel.add(constructPanel, BorderLayout.CENTER);
         int last = 0;
-        // RANDOM LIST;
+        // will change to getting base colours from model
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = newHexa(true);
+                hexaList[i][j] = newHexa(null, false);
             }
         }
         for (int i = 0; i < 6; i++) {
             JPanel lineHexa = new JPanel();
-            lineHexa.setBackground(GUIColors.TEXT.toColor());
+            lineHexa.setOpaque(false);
             for (int j = 5; j >= 0; j--) {
                 if (hexaList[i][j] != null) {
                     lineHexa.add(hexaList[i][j]);
                 }
             }
             if (i != 5) {
-                cc.insets = new Insets(0, 60 / 2, 0, 60 / 2);
+                gbc.insets = new Insets(0, 60 / 2, 0, 60 / 2);
             }
             if (i % 2 == 1) {
                 last = i - (i - 5) * 2;
             }
-            cc.gridx = last;
-            cc.gridy = i;
-            constructPanel.add(lineHexa, cc);
+            gbc.gridx = last;
+            gbc.gridy = i;
+            constructPanel.add(lineHexa, gbc);
         }
 
         // SIDE BAR - PIECES AVAILABLE
@@ -127,17 +115,18 @@ public class FirstPhasePanel extends JPanel {
         JPanel piecesPanel = new JPanel();
         piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
         piecesPanel.setLayout(new GridLayout(4, 2));
-        GridBagConstraints c = new GridBagConstraints();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 2; j++) {
                 JPanel mini = new JPanel();
                 mini.setOpaque(false);
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                mini.add(newHexa(false));
+                if (i == 2) {
+                    mini.add(newHexa(GUIColors.NATURAL_HEX, true));
+                } else {
+                    mini.add(newHexa(GUIColors.WHITE_HEX, true));
+                }
                 mini.add(numOfPieces);
-                c.gridy = j;
-                c.gridx = i;
                 piecesPanel.add(mini);
             }
         }
@@ -145,21 +134,20 @@ public class FirstPhasePanel extends JPanel {
         return gamePanel;
     }
 
-    private JPanel createButtons(ActionListener a) {
+    private JPanel createButtons() {
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1));
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
-        JButton optButton = new Buttons.GameFirstPhaseButton("Options");
+        JButton optButton = new Buttons.GameFirstPhaseButton("Menu");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("Menu");
-        optButton.addActionListener(a);
+        optButton.addActionListener(controller);
         buttons.add(optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
         sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-
         buttons.add(sugIaButton);
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
@@ -169,19 +157,18 @@ public class FirstPhasePanel extends JPanel {
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
         validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         validerButton.setActionCommand("phase2");
-        validerButton.addActionListener(a);
+        validerButton.addActionListener(controller);
         buttons.add(validerButton);
         return buttons;
     }
 
-    private HexIcon newHexa(boolean empty) {
+    public static HexIcon newHexa(HSL c, boolean isActionable) {
         HexIcon hexa;
-        if (empty) {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), false);
+        if (c == null) {
+            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), isActionable);
         } else {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("greenHexa"), true);
-            hexa.addMouseListener(hexaListener);
-            hexa.addMouseMotionListener(hexaListener);
+            hexa = new HexIcon(ResourceLoader.getBufferedImage("hexaWhiteTextured"), isActionable);
+            hexa.recolor(c);
         }
         hexa.resizeIcon(60, 60);
         return hexa;

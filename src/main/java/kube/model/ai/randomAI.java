@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import kube.model.Kube;
+import kube.model.Player;
 import kube.model.action.move.Move;
 
 public class randomAI extends MiniMaxAI {
@@ -27,7 +28,7 @@ public class randomAI extends MiniMaxAI {
     }
 
     @Override
-    public int evaluation(Kube k) {
+    public int evaluation(Kube k, Player p) {
         return 0;
     }
 

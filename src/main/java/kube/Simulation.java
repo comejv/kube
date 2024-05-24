@@ -8,8 +8,9 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
+import kube.model.ai.Joker;
 import kube.model.ai.MiniMaxAI;
-import kube.model.ai.midLevelAI;
+import kube.model.ai.moveSetHeuristique;
 
 public class Simulation implements Runnable {
     int winJ1;
@@ -18,42 +19,45 @@ public class Simulation implements Runnable {
     int nbMoveJ2;
     int nbGames;
     int nGamesFinished;
+    int sumHorizonJ1;
+    int sumHorizonJ2;
+
     public static void main(String[] args) throws Exception {
-        int nbGames = 100;
+        int nbGames = 1000;
+        int nbThreads = 8;
         Simulation s = new Simulation(nbGames);
         s.winJ1 = 0;
         s.winJ2 = 0;
         s.nbMoveJ1 = 0;
         s.nbMoveJ2 = 0;
-        Thread t1 = new Thread(s);
-        Thread t2 = new Thread(s);
-        Thread t3 = new Thread(s);
-        Thread t4 = new Thread(s);
-        t1.start();
-        //t2.start();
-        //t3.start();
-        //t4.start();
+        Thread[] threads = new Thread[nbThreads];
+        for (int i = 0; i < nbThreads; i++) {
+            threads[i] = new Thread(s);
+        }
+        for (int i = 0; i < nbThreads; i++) {
+            threads[i].start();
+        }
+        for (int i = 0; i < nbThreads; i++) {
+            threads[i].join();
+        }
 
-        // Wait for each thread to finish
-        t1.join();
-        t2.join();
-        t3.join();
-        t4.join();
-        
         // Print winJ1 and winJ2 after all threads have finished
         System.out.println("\nNombre de parties: " + s.nbGames);
         System.out.println("Wins J1: " + s.winJ1);
         System.out.println("Wins J2: " + s.winJ2);
-        System.out.println("Winrate J1: " + (double)s.winJ1 / (s.winJ1 + s.winJ2) * 100 + "%");
-        System.out.println("Winrate J2: " + (double)s.winJ2 / (s.winJ1 + s.winJ2) * 100 + "%");
+        System.out.println("Winrate J1: " + (double) s.winJ1 / (s.winJ1 + s.winJ2) * 100 + "%");
+        System.out.println("Winrate J2: " + (double) s.winJ2 / (s.winJ1 + s.winJ2) * 100 + "%");
         System.out.println("Nombre de coup moyen du J1: " + (double) s.nbMoveJ1 / s.nbGames);
         System.out.println("Nombre de coup moyen du J2: " + (double) s.nbMoveJ2 / s.nbGames);
+        System.out.println("Horizon moyen J1: " + (double) s.sumHorizonJ1 / s.nbMoveJ1);
+        System.out.println("Horizon moyen J2: " + (double) s.sumHorizonJ1 / s.nbMoveJ2);
 
     }
 
-    public Simulation(int nbGames){
+    public Simulation(int nbGames) {
         this.nbGames = nbGames;
     }
+
     @Override
     public void run() {
         try {
@@ -63,53 +67,73 @@ public class Simulation implements Runnable {
         }
     }
 
-    synchronized void upWinJ1(){
+    synchronized void upWinJ1() {
         winJ1++;
     }
-    synchronized void upWinJ2(){
+
+    synchronized void upWinJ2() {
         winJ2++;
     }
 
-    synchronized void addNbMovesJ1(int n){
+    synchronized void addNbMovesJ1(int n) {
         nbMoveJ1 += n;
     }
 
-    synchronized void addNbMovesJ2(int n){
+    synchronized void addNbMovesJ2(int n) {
         nbMoveJ2 += n;
     }
 
-    synchronized int getnGamesFinished(){
+    synchronized void addToSumHorizonJ1(int h) {
+        sumHorizonJ1 += h;
+    }
+
+    synchronized void addToSumHorizonJ2(int h) {
+        sumHorizonJ2 += h;
+    }
+
+    public int getnGamesFinished() {
         return nGamesFinished;
     }
 
-    synchronized void incrnGamesFinished(){
+    synchronized void incrnGamesFinished() {
         nGamesFinished++;
     }
 
-    public int getNbGames(){
+    public int getNbGames() {
         return nbGames;
+    }
+
+    public int getSumHorizonJ1() {
+        return sumHorizonJ1;
+    }
+
+    public int getSumHorizonJ2() {
+        return sumHorizonJ2;
     }
 
     private void aiTrainingGames() throws Exception {
         Kube k = new Kube(true);
-        while(getnGamesFinished() < getNbGames()) {
+        while (getnGamesFinished() < getNbGames()) {
             // Phase 1
-            int seed = findSeedWithEquivalentDistributionToPlayers();
-            k.init( new midLevelAI(50), new midLevelAI(50), seed);
+            ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
+            ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
+            k.init(new Joker(50), new moveSetHeuristique(50));
             k.getP1().getAI().constructionPhase();
             k.updatePhase();
             k.getP2().getAI().constructionPhase();
             k.updatePhase();
-            System.out.println(k.getK3());
-            System.out.println(k.getP1());
-            System.out.println(k.getP2());
             // Phsae 2
-            k.setCurrentPlayer(k.getP1());
-            while (k.canCurrentPlayerPlay()) {
+            k.setCurrentPlayer(k.getRandomPlayer());
+            while (k.canCurrentPlayerPlay()) {  
                 Move move = k.getCurrentPlayer().getAI().nextMove();
+                if (k.getCurrentPlayer() == k.getP1()) {
+                    horizonReachedJ1.add(k.getCurrentPlayer().getAI().getHorizonMax());
+                } else {
+                    horizonReachedJ2.add(k.getCurrentPlayer().getAI().getHorizonMax());
+                }
                 k.playMove(move);
             }
-            if (getnGamesFinished() >= getNbGames()){
+            if (getnGamesFinished() >= getNbGames()) {
                 return;
             }
             if (k.getCurrentPlayer() == k.getP1()) {
@@ -120,6 +144,16 @@ public class Simulation implements Runnable {
             addNbMovesJ1(k.getP1().getAI().getNbMoves());
             addNbMovesJ2(k.getP2().getAI().getNbMoves());
             incrnGamesFinished();
+            for (int i : horizonReachedJ1){
+                if (i < 20){
+                    addToSumHorizonJ1(i);
+                }
+            }
+            for (int i : horizonReachedJ2){
+                if (i < 20){
+                    addToSumHorizonJ2(i);
+                }
+            }
             System.out.print("\rPartie n°" + getnGamesFinished() + " finie");
         }
     }
@@ -155,11 +189,12 @@ public class Simulation implements Runnable {
             k.fillBag(seed);
             k.fillBase();
             k.distributeCubesToPlayers();
-            if (k.getP1().getAvalaibleToBuild().equals(k.getP2().getAvalaibleToBuild())) {
+            if (k.getP1().getAvailaibleToBuild().equals(k.getP2().getAvailaibleToBuild())) {
                 break;
             }
         }
-        //System.out.println("Seed avec une même distribution de cube pour les joueurs :" + seed);
+        // System.out.println("Seed avec une même distribution de cube pour les joueurs
+        // :" + seed);
         return seed;
 
     }

@@ -2,12 +2,8 @@ package kube.view.panels;
 
 import java.awt.CardLayout;
 import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.awt.Insets;
 
 import javax.swing.JButton;
@@ -18,6 +14,7 @@ import javax.swing.SwingConstants;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.controller.graphical.MenuController;
 import kube.view.components.Buttons.*;
 import kube.view.GUIColors;
 
@@ -25,22 +22,10 @@ import kube.view.GUIColors;
  * This class extends JPanel and creates the main menu of the app.
  */
 public class MenuPanel extends JPanel {
-    private GraphicsEnvironment ge;
 
-    public MenuPanel(ActionListener buttonListener) {
+    public MenuPanel(MenuController buttonListener) {
+        setLayout(new CardLayout());
 
-        try {
-            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font buttonsFont = Font.createFont(Font.TRUETYPE_FONT,
-                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
-            setFont(buttonsFont);
-            ge.registerFont(buttonsFont);
-            ge.getAvailableFontFamilyNames();
-        } catch (IOException | FontFormatException e) {
-            Config.debug("Error : ");
-            System.err.println("Could not load buttons font, using default.");
-        }
-        
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//

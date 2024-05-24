@@ -150,6 +150,12 @@ public class Buttons {
             repaint();
         }
 
+        public void setDefault() {
+            isHovered = false;
+            isPressed = false;
+            repaint();
+        }
+
         public String getName() {
             return name;
         }
