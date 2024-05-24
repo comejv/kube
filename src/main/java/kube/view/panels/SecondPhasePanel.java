@@ -12,6 +12,7 @@ import kube.configuration.ResourceLoader;
 import kube.view.GUIColors;
 import kube.view.HSL;
 import kube.view.components.Buttons;
+import kube.view.components.HexIcon;
 import kube.view.components.Icon;
 
 import java.awt.*;
@@ -138,7 +139,7 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
             for (int j = 0; j < i; j++) {
-                lineHexa.add(newHexa(GUIColors.BLUE_HEX));
+                lineHexa.add(newHexa(GUIColors.BLUE_HEX, true));
             }
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -157,26 +158,20 @@ public class SecondPhasePanel extends JPanel {
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
         for (int i = 0; i < 9; i++) {
-            topPanel.add(newHexa(GUIColors.GREEN_HEX));
+            topPanel.add(newHexa(GUIColors.GREEN_HEX, false));
         }
         return topPanel;
     }
 
-    public static Icon newHexa(boolean opt) {
-        Icon hexa;
-        if (opt) {
-            hexa = new Icon(ResourceLoader.getBufferedImage("hexaEmpty"));
+    public static HexIcon newHexa(HSL c, boolean isActionable) {
+        HexIcon hexa;
+        if (c == null) {
+            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), isActionable);
         } else {
-            hexa = new Icon(ResourceLoader.getBufferedImage("hexaGrayTextured"));
+            hexa = new HexIcon(ResourceLoader.getBufferedImage("hexaWhiteTextured"), isActionable);
+            hexa.recolor(c);
         }
         hexa.resizeIcon(60, 60);
-        return hexa;
-    }
-
-    public static Icon newHexa(HSL c) {
-        Icon hexa = new Icon(ResourceLoader.getBufferedImage("hexaWhiteTextured"));
-        hexa.resizeIcon(50, 50);
-        hexa.recolor(c);
         return hexa;
     }
 }

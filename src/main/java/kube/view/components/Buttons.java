@@ -153,6 +153,7 @@ public class Buttons {
         public void setDefault() {
             isHovered = false;
             isPressed = false;
+            repaint();
         }
 
         public String getName() {
