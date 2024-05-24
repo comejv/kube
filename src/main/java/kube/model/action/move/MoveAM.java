@@ -1,13 +1,14 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
+import kube.model.ModelColor;
+// Import jackson classes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-
-import kube.model.ModelColor;
+// Import java class
+import java.awt.Point;
 
 public class MoveAM extends Move {
 
@@ -22,12 +23,12 @@ public class MoveAM extends Move {
      * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      *
-      * @param to the destination of the move
-      * @param color the color of the moved cube
-      */
+    /**
+     * Constructor of the class MoveAM
+     *
+     * @param to    the destination of the move
+     * @param color the color of the moved cube
+     */
     @JsonCreator
     public MoveAM(@JsonProperty("to") Point to, @JsonProperty("color") ModelColor color) {
         super(color);
@@ -71,11 +72,11 @@ public class MoveAM extends Move {
      * METHODS
      **********/
 
-     /**
-      * Check if the move is from the additionals 
-      *
-      * @return true if the move is from the additionals, false otherwise
-      */
+    /**
+     * Check if the move is from the additionals
+     *
+     * @return true if the move is from the additionals, false otherwise
+     */
     @Override
     public boolean isFromAdditionals() {
         return true;
