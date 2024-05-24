@@ -147,6 +147,12 @@ public class Player implements Serializable {
                         case "has_validate_building":
                             // Deserialize the hasValidateBuilding attribute
                             player.hasValidateBuilding = jsonParser.getValueAsBoolean();
+                            if (player.hasValidateBuilding) {
+                                player.availableToBuild = new HashMap<>();
+                                for (ModelColor c : ModelColor.getAllColored()) {
+                                    player.getAvailableToBuild().put(c, 0);
+                                }
+                            }
                             break;
                         case "initial_mountain":
                             // Deserialize the initialMountain attribute
