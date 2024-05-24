@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
         createGlassPane(null);
-        pack();
+        // pack();
         setVisible(true);
     }
 

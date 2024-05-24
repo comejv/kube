@@ -1,21 +1,25 @@
 package kube.view.panels;
 
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Rectangle;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
 import kube.view.components.Buttons.*;
+import kube.view.GUI;
 import kube.view.GUIColors;
 
 /*
@@ -23,7 +27,11 @@ import kube.view.GUIColors;
  */
 public class MenuPanel extends JPanel {
 
-    public MenuPanel(MenuController buttonListener) {
+    private GUI gui;
+
+    public MenuPanel(GUI gui, MenuController buttonListener) {
+        this.gui = gui;
+
         setLayout(new CardLayout());
 
         // ****************************************************************************************//
@@ -35,13 +43,6 @@ public class MenuPanel extends JPanel {
         JPanel modal = new JPanel();
         modal.setLayout(new GridBagLayout());
 
-        JPanel glassPane = new GlassPane();
-
-        // Rules panel
-        JPanel rulesPanel = new Overlay(null);
-        
-        add(rulesPanel);
-        add(glassPane);
         add(modal);
 
         // Game title
@@ -117,8 +118,8 @@ public class MenuPanel extends JPanel {
         JButton rules = new MenuButton("RULES");
         rules.addActionListener(e -> {
             // Switch to the players panel
-            glassPane.setVisible(true);
-            rulesPanel.setVisible(true);
+            gui.addOverlay(new RulesPanel(gui));
+            Config.debug("added overlay");
         });
         
         startButtons.add(local, buttonsGBC);

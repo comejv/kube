@@ -88,7 +88,7 @@ public class GUI extends Thread {
         mF = new MainFrame();
 
         // add menu pannel
-        MenuPanel mP = new MenuPanel(controllers.getMenuController());
+        MenuPanel mP = new MenuPanel(this, controllers.getMenuController());
         mF.addPanel(mP, MENU);
         // add new phase 1 pannel
         FirstPhasePanel fP = new FirstPhasePanel(model, controllers.getPhase1Controller());
@@ -119,6 +119,10 @@ public class GUI extends Thread {
 
     public Component getOverlayComponent() {
         return mF.getOverlayComponent();
+    }
+
+    public MainFrame getMainFrame(){
+        return mF;
     }
 
     private void showAllBorders(Container container) {
