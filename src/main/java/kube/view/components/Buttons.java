@@ -26,8 +26,8 @@ public class Buttons {
         public MenuButton(String name) {
             super(name);
 
-            setPreferredSize(new Dimension(Config.getInitWidth() / 2,
-                    Config.getInitWidth() / 12));
+            setPreferredSize(new Dimension(Config.getInitWidth() / 3,
+                    Config.getInitWidth() / 15));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
 

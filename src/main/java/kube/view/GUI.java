@@ -29,9 +29,12 @@ public class GUI extends Thread {
     public final static String PHASE1 = "PHASE1";
     public final static String PHASE2 = "PHASE2";
 
-    MainFrame mF;
-    GUIControllers controllers;
-    Game model;
+    private MainFrame mF;
+    private GUIControllers controllers;
+    private Game model;
+
+    private FirstPhasePanel firstPhasePanel;
+    private SecondPhasePanel secondPhasePanel;
 
     public GUI(Game model, GUIControllers controllers, Queue<Action> events) {
         this.controllers = controllers;
@@ -90,12 +93,6 @@ public class GUI extends Thread {
         // add menu pannel
         MenuPanel mP = new MenuPanel(controllers.getMenuController());
         mF.addPanel(mP, MENU);
-        // add new phase 1 pannel
-        FirstPhasePanel fP = new FirstPhasePanel(model, controllers.getPhase1Controller());
-        mF.addPanel(fP, PHASE1);
-        // add new phase 2 pannel
-        SecondPhasePanel sP = new SecondPhasePanel(model, controllers.getPhase2Controller());
-        mF.addPanel(sP, PHASE2);
 
         if (Config.showBorders()) {
             showAllBorders(mF);
@@ -103,10 +100,31 @@ public class GUI extends Thread {
 
         mF.pack();
         mF.repaint();
+
+        // After repaint start loading next panel
+        loadPanel(GUI.PHASE1);
     }
 
-    public void showPanel(String name) {
-        mF.showPanel(name);
+    public void showPanel(String panelName) {
+        mF.showPanel(panelName);
+    }
+
+    public void loadPanel(String p) {
+        switch (p) {
+            case GUI.PHASE1:
+                if (firstPhasePanel == null) {
+                    // add new phase 1 pannel
+                    Thread fPT = new Thread(new FirstPhasePanel(this, model, controllers.getPhase1Controller()));
+                    mF.addPanel(firstPhasePanel, PHASE1);
+                }
+                break;
+            case GUI.PHASE2:
+                if (!secondPanelLoaded) {
+                    // add new phase 2 pannel
+                    SecondPhasePanel sP = new SecondPhasePanel(model, controllers.getPhase2Controller());
+                    mF.addPanel(sP, PHASE2);
+                }
+        }
     }
 
     public void addOverlay(Component p) {
@@ -119,6 +137,33 @@ public class GUI extends Thread {
 
     public Component getOverlayComponent() {
         return mF.getOverlayComponent();
+    }
+
+    protected void setPanel(String panelName, JPanel panel) {
+        switch (panelName) {
+            case GUI.PHASE1:
+                firstPhasePanel = (FirstPhasePanel) panel;
+                break;
+
+            case GUI.PHASE2:
+                secondPhasePanel = (SecondPhasePanel) panel;
+
+            default:
+                break;
+        }
+    }
+
+    protected synchronized JPanel getPanel(String panelName) {
+        switch (panelName) {
+            case GUI.PHASE1:
+                return (JPanel) firstPhasePanel;
+
+            case GUI.PHASE2:
+                return (JPanel) secondPhasePanel;
+
+            default:
+                return null;
+        }
     }
 
     private void showAllBorders(Container container) {

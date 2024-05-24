@@ -1,6 +1,7 @@
 package kube.view;
 
 import kube.model.Kube;
+import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
@@ -9,9 +10,11 @@ public class GUIEventsHandler implements Runnable {
 
     Kube kube;
     Queue<Action> events;
+    GUI gui;
 
     public GUIEventsHandler(GUI gui, Queue<Action> events) {
         this.events = events;
+        this.gui = gui;
     }
 
     @Override
@@ -31,7 +34,15 @@ public class GUIEventsHandler implements Runnable {
                 case SET_BUTTON_RELEASED:
                     ((ButtonIcon) action.getData()).setPressed(false);
                     break;
+                case PLAY_LOCAL:
+                    gui.showPanel(GUI.PHASE1);
+                    gui.loadPanel(GUI.PHASE2);
+                    break;
+                case VALIDATE:
+                    gui.showPanel(GUI.PHASE2);
+                    break;
                 default:
+                    Config.debug("Unrecognized action : " + action);
                     break;
             }
         }
