@@ -91,7 +91,7 @@ public class Buttons {
         public RulesButton(String name) {
             super(name);
             setPreferredSize(new Dimension(200, 50));
-            setBackground(GUIColors.ACCENT);
+            setBackground(GUIColors.ACCENT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
         }
