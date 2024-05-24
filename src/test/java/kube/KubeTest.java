@@ -1704,7 +1704,24 @@ public class KubeTest {
                 assertEquals(kube.getP1().getHasValidateBuilding(), k.getP1().getHasValidateBuilding());
                 assertTrue(areSameMountain(kube.getP1().getInitialMountain(), k.getP1().getInitialMountain()));
                 assertTrue(areSameMountain(kube.getP1().getMountain(), k.getP1().getMountain()));
+                
     
+                assertEquals(kube.getP2().getName(), k.getP2().getName());
+                assertEquals(kube.getP2().getId(), k.getP2().getId());
+                assertEquals(kube.getP2().getHasValidateBuilding(), k.getP2().getHasValidateBuilding());
+                assertTrue(areSameMountain(kube.getP2().getInitialMountain(), k.getP2().getInitialMountain()));
+                assertTrue(areSameMountain(kube.getP2().getMountain(), k.getP2().getMountain()));
+
+                assertEquals(kube.getHistory().getFirstPlayer(), k.getHistory().getFirstPlayer());
+
+                for (int i = 0; i < kube.getHistory().getDone().size(); i++) {
+                    assertEquals(kube.getHistory().getDone().get(i), k.getHistory().getDone().get(i));
+                }
+    
+                for (int i = 0; i < kube.getHistory().getUndone().size(); i++) {
+                    assertEquals(kube.getHistory().getUndone().get(i), k.getHistory().getUndone().get(i));
+                }
+
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }
