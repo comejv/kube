@@ -45,7 +45,6 @@ public class HexIcon extends Icon {
         } else { // Draw the original image
             g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
         }
-
     }
 
     public HexIcon clone() {
