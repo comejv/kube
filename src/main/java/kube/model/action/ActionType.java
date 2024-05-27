@@ -51,6 +51,8 @@ public enum ActionType {
     SETTINGS,
 
     // Menu
+    LOCAL,
+    ONLINE,
     PLAY_LOCAL,
     PLAY_ONLINE,
     RULES,

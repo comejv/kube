@@ -26,6 +26,12 @@ public class MenuController implements ActionListener, MouseListener {
 
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
+            case "local":
+                toView.add(new Action(ActionType.LOCAL));
+                break;
+            case "online":
+                toView.add(new Action(ActionType.ONLINE));
+                break;
             case "play":
                 toView.add(new Action(ActionType.PLAY_LOCAL));
                 break;

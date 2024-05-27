@@ -106,7 +106,7 @@ public class MenuPanel extends JPanel {
         local.addActionListener(e -> {
             // Switch to the players panel
             CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
-            cl.show(buttonsPanel, "players");
+            cl.show(buttonsPanel, "localPlayers");
         });
 
         // Online button
@@ -156,7 +156,7 @@ public class MenuPanel extends JPanel {
         play.addActionListener(buttonListener);
         play.setActionCommand("play");
 
-        buttonsPanel.add("players", playersButtons);
+        buttonsPanel.add("localPlayers", playersButtons);
 
         // ***************************************************************************************//
         // RULES //

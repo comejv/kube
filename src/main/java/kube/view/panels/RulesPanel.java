@@ -31,6 +31,7 @@ public class RulesPanel extends JPanel{
     private JPanel cardPanel;
     private JPanel gridPanel;
     private RulePanel rulePanel;
+    private static int totalRuleNb = 8;
     
     public RulesPanel(GUI gui, MenuController buttonListener){
 
@@ -78,7 +79,7 @@ public class RulesPanel extends JPanel{
     }
 
     public void nextRule(){
-        rulePanel.setRuleNb(rulePanel.getRuleNb()%4 + 1);
+        rulePanel.setRuleNb(rulePanel.getRuleNb()%totalRuleNb + 1);
         rulePanel.ruleToShow();
         rulePanel.revalidate();
         rulePanel.repaint();
@@ -130,7 +131,7 @@ public class RulesPanel extends JPanel{
             elemGBC.weightx = .5;
             elemGBC.insets = new Insets(0, 0, 20, 20);
             suivant.addActionListener(buttonListener);
-            if (getRuleNb() == 4) {
+            if (getRuleNb() == totalRuleNb) {
                 suivant.setText("Terminer");
                 suivant.setActionCommand("endRule");
             } else {
@@ -150,10 +151,10 @@ public class RulesPanel extends JPanel{
         }
 
         public void setRuleNb(int i){
-            if (i > 0 && i < 5) {
+            if (i > 0 && i < totalRuleNb + 1) {
                 ruleNb = i;
             } else {
-                System.err.println("Can't assign invalid rule number. Valid range of rule number is 1 to 4 included");
+                System.err.println("Can't assign invalid rule number. Valid range of rule number is 1 to "+ totalRuleNb +" included");
             }
         }
     }

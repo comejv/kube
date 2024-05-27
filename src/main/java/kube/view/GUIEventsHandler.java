@@ -1,5 +1,7 @@
 package kube.view;
 
+import java.awt.CardLayout;
+
 import javax.swing.JPanel;
 
 import kube.configuration.Config;
@@ -47,6 +49,8 @@ public class GUIEventsHandler implements Runnable {
                 case VALIDATE:
                     gui.showPanel(GUI.PHASE2);
                     break;
+                case LOCAL:
+                    break;
                 case RULES:
                     //toModel is null because we don't interract with the model in the rules
                     gui.addToOverlay(new RulesPanel(gui, new MenuController(events, null)));
@@ -59,7 +63,6 @@ public class GUIEventsHandler implements Runnable {
                     gui.removeAllFromOverlay();
                     break;
                 case QUIT:
-                    //gui.getmF().dispose();
                     System.exit(0);
                     break;
                 default:
