@@ -4,6 +4,8 @@ import kube.configuration.Config;
 import kube.view.GUIColors;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -46,7 +48,7 @@ public class Buttons {
             gbc.insets= new Insets(5,2,5,25);
             add( nameLabel,gbc);
 
-            JComboBox<String> comboBox = new JComboBox<String>();
+           /* JComboBox<String> comboBox = new JComboBox<String>();
             comboBox.addActionListener(this);
 
             comboBox.addItem( "Humain" );
@@ -54,7 +56,59 @@ public class Buttons {
             comboBox.addItem( "IA moyenne" );
             comboBox.addItem( "IA difficile" );
             gbc.insets= new Insets(5,25,5,2);
-            add( comboBox,gbc);
+            add( comboBox,gbc);*/
+
+            String[] players = {"Humain", "IA Facile", "IA Moyenne","IA Difficile"};
+            final int[] currentIndex = {0};
+            JPanel selectComp = new JPanel();
+            selectComp.setLayout(new BorderLayout());
+
+            // Create buttons and label
+            JButton leftButton = new JButton("<");
+            leftButton.setFocusPainted(false);  // Remove focus border
+            leftButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            leftButton.setContentAreaFilled(false);
+            leftButton.setFocusPainted(false);  // Remove focus border
+            JButton rightButton = new JButton(">");
+            rightButton.setFocusPainted(false);  // Remove focus border
+            rightButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            rightButton.setContentAreaFilled(false);
+            rightButton.setFocusPainted(false);  // Remove focus border
+            JLabel displayLabel = new JLabel(players[currentIndex[0]], JLabel.CENTER);
+            displayLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 20)));
+            displayLabel.setForeground(GUIColors.ACCENT.toColor());
+            displayLabel.setPreferredSize(new Dimension(150, 50)); // Set fixed width for display label
+
+
+            // Add buttons and label to the panel
+            selectComp.add(leftButton, BorderLayout.WEST);
+            selectComp.add(displayLabel, BorderLayout.CENTER);
+            selectComp.add(rightButton, BorderLayout.EAST);
+
+            // Set button actions
+            leftButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    currentIndex[0] = (currentIndex[0] - 1 + players.length) % players.length;
+                    displayLabel.setText(players[currentIndex[0]]);
+                }
+            });
+
+            rightButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    currentIndex[0] = (currentIndex[0] + 1) % players.length;
+                    displayLabel.setText(players[currentIndex[0]]);
+                }
+            });
+
+            selectComp.setMaximumSize(new Dimension(150,40));
+            selectComp.setMinimumSize(new Dimension(150,40));
+
+
+            gbc.insets= new Insets(5,25,5,2);
+            add(selectComp,gbc);
+
         }
         public void actionPerformed(ActionEvent e)
         {
