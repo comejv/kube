@@ -13,6 +13,7 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.panels.RulesPanel;
 
 public class MenuController implements ActionListener, MouseListener {
     Queue<Action> toView;
@@ -32,6 +33,10 @@ public class MenuController implements ActionListener, MouseListener {
             // TODO Handle online game
 
             // TODO Handle game settings (AI, nb of players)
+            case "rules":
+                toView.add(new Action(ActionType.RULES));
+                Config.debug("added overlay");
+                break;
 
             default:
                 break;

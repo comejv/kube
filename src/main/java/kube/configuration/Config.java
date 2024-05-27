@@ -5,8 +5,8 @@ public class Config {
     private static final boolean debug = true;
     private static final boolean showBorders = false;
     private static String language = "fr_FR";
-    private static final int initWidth = 800;
-    private static final int initHeight = 600;
+    private static final int initWidth = 1600;
+    private static final int initHeight = 900;
 
     public static boolean isJar() {
         return System.getProperty("java.class.path").contains(".jar");

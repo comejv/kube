@@ -110,18 +110,14 @@ public class MenuPanel extends JPanel {
         // Online button
         JButton online = new MenuButton("ONLINE");
         
+        // Rules button
+        JButton rules = new MenuButton("RULES");
+        rules.addActionListener(buttonListener);
+        rules.setActionCommand("rules");
         
         // Quit button
         JButton quit = new MenuButton("QUIT");
-        
-        // Rules button
-        JButton rules = new MenuButton("RULES");
-        rules.addActionListener(e -> {
-            // Switch to the players panel
-            gui.addOverlay(new RulesPanel(gui));
-            Config.debug("added overlay");
-        });
-        
+
         startButtons.add(local, buttonsGBC);
         startButtons.add(online, buttonsGBC);
         startButtons.add(rules, buttonsGBC);
