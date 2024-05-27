@@ -58,6 +58,7 @@ public enum ActionType {
     VOLUME,
     PARAMETERS,
     NEXT_RULE,
+    END_RULE,
 
     // Phase 1
     GRAB_HEX,

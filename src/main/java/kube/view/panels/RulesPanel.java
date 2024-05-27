@@ -121,7 +121,7 @@ public class RulesPanel extends JPanel{
         }
         
         private void addNextButton(){
-            JButton suivant = new RulesButton("suivant");
+            JButton suivant = new RulesButton("Suivant");
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
             elemGBC.gridy = 2;
@@ -130,9 +130,14 @@ public class RulesPanel extends JPanel{
             elemGBC.weightx = .5;
             elemGBC.insets = new Insets(0, 0, 20, 20);
             suivant.addActionListener(buttonListener);
-            suivant.setActionCommand("nextRule");
+            if (getRuleNb() == 4) {
+                suivant.setText("Terminer");
+                suivant.setActionCommand("endRule");
+            } else {
+                suivant.setActionCommand("nextRule");
+            }
             add(suivant, elemGBC);
-        } 
+        }
         
         private void ruleToShow(){
             removeAll();

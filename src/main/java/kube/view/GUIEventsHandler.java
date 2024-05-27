@@ -46,9 +46,16 @@ public class GUIEventsHandler implements Runnable {
                     gui.addToOverlay(new RulesPanel(gui, new MenuController(events, null)));
                     break;
                 case NEXT_RULE:
-                    Config.debug("changed to next rule");
                     RulesPanel rulePanel = (RulesPanel) gui.getOverlay().getComponent(0);
                     rulePanel.nextRule();
+                    break;
+                case END_RULE:
+                    gui.removeAllFromOverlay();
+                    break;
+                case QUIT:
+                    gui.mF.dispose();
+                    System.exit(0);
+                    break;
                 default:
                     break;
             }
