@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Menu;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -18,6 +19,7 @@ import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.controller.graphical.MenuController;
 import kube.view.components.Buttons.RulesButton;
 
 public class RulesPanel extends JPanel{
@@ -25,12 +27,15 @@ public class RulesPanel extends JPanel{
     private GUI gui;
     private int width;
     private int height;
-    JPanel cardPanel;
-    JPanel gridPanel;
+    private MenuController buttonListener;
+    private JPanel cardPanel;
+    private JPanel gridPanel;
+    private RulePanel rulePanel;
     
-    public RulesPanel(GUI gui){
+    public RulesPanel(GUI gui, MenuController buttonListener){
 
         this.gui = gui;
+        this.buttonListener = buttonListener;
         width = Config.getInitWidth()/2;
         height = Config.getInitHeight()/2;
 
@@ -66,94 +71,73 @@ public class RulesPanel extends JPanel{
         elemGBC.weightx = .5;
         gridPanel.add(cardPanel, elemGBC);
         
-        RulePanel ruleFirst = new RulePanel();
-        cardPanel.add(ruleFirst, "ruleFirst");
+        rulePanel = new RulePanel();
+        cardPanel.add(rulePanel, "rule");
 
         setVisible(true);
     }
+
+    public void nextRule(){
+        rulePanel.setRuleNb(rulePanel.getRuleNb()%4 + 1);
+        rulePanel.ruleToShow();
+        rulePanel.revalidate();
+        rulePanel.repaint();
+    }
     
     private class RulePanel extends JPanel {
-        int ruleNb = 1;
-
+        private int ruleNb = 1;
+        private Color background;
+        private Color foreground;
+        private JTextArea textArea;
+        
         private RulePanel(){
             setLayout(new GridBagLayout());
-            setBackground(GUIColors.ACCENT.toColor());
-            ruleToCreate();
+            background = GUIColors.ACCENT.toColor();
+            foreground = GUIColors.TEXT.toColor();
+            setBackground(background);
+            ruleToShow();
         }
-
-        private void ruleToCreate(){
-            switch (getRuleNb()) {
-                case 1:
-                    rule1();
-                    break;
-                case 2:
-                    rule2();
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        private void rule1(){
-            JTextArea textArea = new JTextArea(ResourceLoader.getText("rule1"));
+        
+        private void addTextArea(String name){
+            textArea = new JTextArea(ResourceLoader.getText(name));
             textArea.setEditable(false);
             textArea.setWrapStyleWord(true);
             textArea.setLineWrap(true);
-            textArea.setBackground(new Color(0, 0, 0, 0));
             textArea.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 14)));
-            textArea.setForeground(GUIColors.TEXT.toColor());
+            textArea.setBackground(background);
+            textArea.setForeground(foreground);
+            textArea.setOpaque(false);
             textArea.setBorder(null);
             
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
             elemGBC.gridy = 1;
             elemGBC.anchor = GridBagConstraints.CENTER;
-            elemGBC.fill = GridBagConstraints.HORIZONTAL;
+            elemGBC.fill = GridBagConstraints.BOTH;
             elemGBC.weighty = .5;
             elemGBC.weightx = .5;
             elemGBC.insets = new Insets(0, 30, 0, 30);
             add(textArea, elemGBC);
-
-            JButton suivant = new RulesButton("suivant");
-            elemGBC = new GridBagConstraints();
-            elemGBC.gridx = 0;
-            elemGBC.gridy = 2;
-            elemGBC.anchor = GridBagConstraints.LAST_LINE_END;
-            elemGBC.weighty = .5;
-            elemGBC.weightx = .5;
-            elemGBC.insets = new Insets(0, 0, 20, 20);
-            add(suivant, elemGBC);
         }
-
-        private void rule2(){
-            JTextArea textArea = new JTextArea(ResourceLoader.getText("rule1"));
-            textArea.setEditable(false);
-            textArea.setWrapStyleWord(true);
-            textArea.setLineWrap(true);
-            textArea.setBackground(new Color(0, 0, 0, 0));
-            textArea.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 14)));
-            textArea.setForeground(GUIColors.TEXT.toColor());
-            textArea.setBorder(null);
-            
+        
+        private void addNextButton(){
+            JButton suivant = new RulesButton("suivant");
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
-            elemGBC.gridy = 1;
-            elemGBC.anchor = GridBagConstraints.CENTER;
-            elemGBC.fill = GridBagConstraints.HORIZONTAL;
-            elemGBC.weighty = .5;
-            elemGBC.weightx = .5;
-            elemGBC.insets = new Insets(0, 30, 0, 30);
-            add(textArea, elemGBC);
-
-            JButton suivant = new RulesButton("suivant");
-            elemGBC = new GridBagConstraints();
-            elemGBC.gridx = 0;
             elemGBC.gridy = 2;
             elemGBC.anchor = GridBagConstraints.LAST_LINE_END;
             elemGBC.weighty = .5;
             elemGBC.weightx = .5;
             elemGBC.insets = new Insets(0, 0, 20, 20);
+            suivant.addActionListener(buttonListener);
+            suivant.setActionCommand("nextRule");
             add(suivant, elemGBC);
+        } 
+        
+        private void ruleToShow(){
+            removeAll();
+            addTextArea("rule" + getRuleNb());
+            addNextButton();
         }
 
         public int getRuleNb(){

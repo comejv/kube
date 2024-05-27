@@ -105,16 +105,28 @@ public class GUI extends Thread {
         mF.repaint();
     }
 
+    public void revalidate(){
+        mF.revalidate();
+    }
+
+    public void repaint() {
+        mF.repaint();
+    }
+
     public void showPanel(String name) {
         mF.showPanel(name);
     }
 
-    public void addOverlay(Component p) {
-        mF.addOverlay(p);
+    public JPanel getOverlay() {
+        return mF.getOverlay();
     }
 
-    public void removeOverlay() {
-        mF.removeOverlay();
+    public void addToOverlay(Component p) {
+        mF.addToOverlay(p);
+    }
+
+    public void removeAllFromOverlay() {
+        mF.removeAllFromOverlay();
     }
 
     public Component getOverlayComponent() {

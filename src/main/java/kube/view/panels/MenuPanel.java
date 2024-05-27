@@ -101,6 +101,8 @@ public class MenuPanel extends JPanel {
 
         // Local button
         JButton local = new MenuButton("LOCAL");
+        local.addActionListener(buttonListener);
+        local.setActionCommand("local");
         local.addActionListener(e -> {
             // Switch to the players panel
             CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
@@ -109,6 +111,8 @@ public class MenuPanel extends JPanel {
         
         // Online button
         JButton online = new MenuButton("ONLINE");
+        online.addActionListener(buttonListener);
+        online.setActionCommand("online");
         
         // Rules button
         JButton rules = new MenuButton("RULES");
@@ -117,6 +121,8 @@ public class MenuPanel extends JPanel {
         
         // Quit button
         JButton quit = new MenuButton("QUIT");
+        quit.addActionListener(buttonListener);
+        quit.setActionCommand("quit");;
 
         startButtons.add(local, buttonsGBC);
         startButtons.add(online, buttonsGBC);

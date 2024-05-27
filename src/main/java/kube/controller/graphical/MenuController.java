@@ -35,9 +35,19 @@ public class MenuController implements ActionListener, MouseListener {
             // TODO Handle game settings (AI, nb of players)
             case "rules":
                 toView.add(new Action(ActionType.RULES));
-                Config.debug("added overlay");
                 break;
-
+            case "nextRule":
+                toView.add(new Action(ActionType.NEXT_RULE));
+                break;
+            case "quit":
+                toView.add(new Action(ActionType.QUIT));
+                break;
+            case "volume":
+                toView.add(new Action(ActionType.VOLUME));
+                break;
+            case "parameters":
+                toView.add(new Action(ActionType.PARAMETERS));
+                break;
             default:
                 break;
         }
