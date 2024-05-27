@@ -3,6 +3,7 @@ package kube.model.action.move;
 // Import model classes
 import kube.model.ModelColor;
 import kube.model.Player;
+
 // Import jackson classes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 // Import java classes
 import java.awt.Point;
 import java.io.Serializable;

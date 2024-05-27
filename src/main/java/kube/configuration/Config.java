@@ -1,10 +1,12 @@
 package kube.configuration;
 
 public class Config {
+
     private static boolean isJar;
     private static boolean mute = true;
     private static final boolean debug = true;
     private static final boolean showBorders = false;
+    public static final String SAVING_PATH_DIRECTORY = "saves/";
 
     public Config() {
         isJar = System.getProperty("java.class.path").contains(".jar");

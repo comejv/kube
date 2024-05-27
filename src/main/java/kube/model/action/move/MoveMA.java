@@ -1,13 +1,14 @@
-
 package kube.model.action.move;
 
 // Import model class
 import kube.model.ModelColor;
+
 // Import jackson classes
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 // Import java class
 import java.awt.Point;
 

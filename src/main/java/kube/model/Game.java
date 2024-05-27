@@ -1,15 +1,15 @@
 package kube.model;
 
-import java.util.Random;
-
-
-import kube.configuration.Config;
+// Import model classes
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Swap;
 import kube.model.action.move.Move;
 import kube.model.ai.utilsAI;
+
+// Import java class
+import java.util.Random;
 
 public class Game implements Runnable {
 
@@ -28,6 +28,7 @@ public class Game implements Runnable {
 
     public Game(int gameType, Kube k3, Queue<Action> controllerToModele, Queue<Action> modeleToView,
             Queue<Action> eventsToNetwork) {
+                
         this.gameType = gameType;
         this.k3 = k3;
         this.controllerToModele = controllerToModele;
@@ -211,7 +212,7 @@ public class Game implements Runnable {
                     if (waitAcknowledge()) {
                         k3.playMove(move);
                         modeleToView.add(new Action(ActionType.MOVE, move));
-                        if (k3.getCurrentPlayer().getId() != getGameType()){
+                        if (k3.getCurrentPlayer().getId() != getGameType()) {
                             modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                         }
                     } else {

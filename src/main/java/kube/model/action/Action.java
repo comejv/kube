@@ -20,8 +20,8 @@ public class Action implements Serializable {
     /**
      * Constructor of Action class
      * 
-     * @param type the type of the action
-     * @param data the Object data
+     * @param type     the type of the action
+     * @param data     the Object data
      * @param playerId the id of the player that perform the action
      */
     public Action(ActionType type, Object data, int playerId) {
@@ -60,7 +60,7 @@ public class Action implements Serializable {
     public final void setData(Object data) {
         this.data = data;
     }
-    
+
     public final void setPlayer(int p) {
         this.playerId = p;
     }
@@ -72,7 +72,7 @@ public class Action implements Serializable {
     public ActionType getType() {
         return type;
     }
-    
+
     public Object getData() {
         return data;
     }
@@ -84,14 +84,14 @@ public class Action implements Serializable {
     /**********
      * METHOD
      **********/
-    
+
     @Override
     public String toString() {
         String s = "Action{type = " + type;
         if (data != null) {
             s += ", data = " + data.toString();
         }
-        s += ", id = " + getPlayer(); 
+        s += ", id = " + getPlayer();
         s += "}";
         return s;
     }

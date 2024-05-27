@@ -3,21 +3,17 @@ package kube.model;
 // Import model classes
 import kube.model.action.move.*;
 import kube.model.ai.MiniMaxAI;
+import kube.configuration.Config;
+
 // Import jackson classes
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 // Import java classes
 import java.awt.Point;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,8 +25,8 @@ import java.util.Random;
  * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
  **********/
 
-@JsonSerialize(using = Kube.KubeSerializer.class)
-@JsonDeserialize(using = Kube.KubeDeserializer.class)
+@JsonSerialize(using = Serializer.KubeSerializer.class)
+@JsonDeserialize(using = Deserializer.KubeDeserializer.class)
 public class Kube {
 
     /**********
@@ -82,117 +78,39 @@ public class Kube {
         }
     }
 
-    /**********
-     * SERIALIZER
-     **********/
-
-    public static class KubeSerializer extends JsonSerializer<Kube> {
-
-        /**
-         * Serialize the Kube kube to a json formatted string
-         * 
-         * @param kube               the Kube to serialize
-         * @param jsonGenerator      the json generator
-         * @param serializerProvider the serializer provider
-         * @return void
-         */
-        @Override
-        public void serialize(Kube kube, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-                throws IOException {
-
-            Player[] players = { kube.getP1(), kube.getP2() };
-
-            ModelColor[] kubeBase = new ModelColor[kube.getBaseSize()];
-
-            for (int i = 0; i < kube.getBaseSize(); i++) {
-                kubeBase[i] = kube.getK3().getCase(kube.getBaseSize() - 1, i);
-            }
-
-            jsonGenerator.writeStartObject();
-            jsonGenerator.writeObjectField("phase", kube.getPhase());
-            jsonGenerator.writeObjectField("kube_base", kubeBase);
-            jsonGenerator.writeObjectField("players", players);
-            jsonGenerator.writeObjectField("history", kube.getHistory());
-            jsonGenerator.writeEndObject();
+    public Kube(String fileName) throws KubeReadException {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            FileReader file = new FileReader(Config.SAVING_PATH_DIRECTORY + fileName);
+            Kube kube = mapper.readValue(file, Kube.class);
+            this.p1 = kube.getP1();
+            this.p2 = kube.getP2();
+            this.currentPlayer = kube.getCurrentPlayer();
+            this.bag = kube.getBag();
+            this.penality = kube.getPenality();
+            this.history = kube.getHistory();
+            this.phase = kube.getPhase();
+            this.baseSize = kube.getBaseSize();
+            this.k3 = kube.getK3();
+            this.lastMovePlayed = kube.getLastMovePlayed();
+        } catch (IOException e) {
+            throw new KubeReadException("Failed to read Kube from file: " + fileName);
         }
     }
 
     /**********
-     * DESERIALIZER
+     * EXCEPTION
      **********/
 
-    public static class KubeDeserializer extends JsonDeserializer<Kube> {
+    public class KubeReadException extends Exception {
 
         /**
-         * Deserialize the json formatted string to a Kube
+         * Constructor of the KubeReadException
          * 
-         * @param jsonParser             the json parser
-         * @param deserializationContext the deserialization context
-         * @return the Kube kube
+         * @param message the message of the exception
          */
-        @Override
-        public Kube deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-                throws IOException {
-
-            Kube kube = new Kube(true);
-
-            while (!jsonParser.isClosed()) {
-                JsonToken jsonToken = jsonParser.nextToken();
-
-                if (JsonToken.FIELD_NAME.equals(jsonToken)) {
-
-                    String fieldName = jsonParser.currentName();
-                    jsonParser.nextToken();
-
-                    switch (fieldName) {
-                        case "phase":
-                            kube.setPhase(jsonParser.getValueAsInt());
-                            break;
-                        case "kube_base":
-                            // Convert the json formatted string to a ModelColor array
-                            TypeReference<ModelColor[]> typeReference = new TypeReference<ModelColor[]>() {
-                            };
-                            ModelColor[] kubeBase = jsonParser.readValueAs(typeReference);
-                            kube.setK3(new Mountain(kubeBase.length));
-                            // Filling the base of the kube
-                            for (int i = 0; i < kubeBase.length; i++) {
-                                kube.getK3().setCase(kubeBase.length - 1, i, kubeBase[i]);
-                            }
-                            break;
-                        case "players":
-                            // Convert the json formatted string to a Player array
-                            ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
-                            JsonNode playersNode = mapper.readTree(jsonParser);
-                            String playersJson = playersNode.toString();
-                            // Config.debug(playersJson);
-                            // playersJson = playersJson.replace("\n", "");
-                            // playersJson = playersJson.replace(" ", "");
-                            // Config.debug(playersJson);
-                            playersJson = playersJson.substring(1, playersJson.length() - 1);
-                            String[] playerString = playersJson.split("\\},\\{");
-                            playerString[0] = playerString[0] + "}";
-                            playerString[1] = "{" + playerString[1];
-                            // Filling the players of the kube
-                            kube.setP1(mapper.readValue(playerString[0], Player.class));
-                            kube.setP2(mapper.readValue(playerString[1], Player.class));
-                            break;
-                        case "history":
-                            kube.setHistory(jsonParser.readValueAs(History.class));
-                            // Setting the current player of the kube
-                            if (kube.getHistory().getFirstPlayer() == kube.getP1().getId()) {
-                                kube.setCurrentPlayer(kube.getP1());
-                            } else {
-                                kube.setCurrentPlayer(kube.getP2());
-                            }
-                            // Replaying the history
-                            for (Move move : kube.getHistory().getDone()) {
-                                kube.playMoveWithoutHistory(move);
-                            }
-                            break;
-                    }
-                }
-            }
-            return kube;
+        public KubeReadException(String message) {
+            super(message);
         }
     }
 
@@ -504,7 +422,7 @@ public class Kube {
         // Distribute the cubes to the players
         getP1().initAvailableToBuild();
         getP2().initAvailableToBuild();
-        
+
         getP1().getAvailableToBuild().put(ModelColor.WHITE, NB_WHITE_PER_PLAYER);
         getP2().getAvailableToBuild().put(ModelColor.WHITE, NB_WHITE_PER_PLAYER);
         getP1().getAvailableToBuild().put(ModelColor.NATURAL, NB_NATURAL_PER_PLAYER);
@@ -987,7 +905,7 @@ public class Kube {
      * @return true if the current player can play, false otherwise
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    public Boolean canCurrentPlayerPlay() throws UnsupportedOperationException {
+    public boolean canCurrentPlayerPlay() throws UnsupportedOperationException {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
@@ -1036,6 +954,21 @@ public class Kube {
         }
 
         return getPhase();
+    }
+
+    public void saveInstance(String fileName) {
+
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            File directory = new File(Config.SAVING_PATH_DIRECTORY);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            File file = new File(Config.SAVING_PATH_DIRECTORY, fileName);
+            mapper.writeValue(file, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

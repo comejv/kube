@@ -2,33 +2,25 @@ package kube.model;
 
 // Import model classes
 import kube.model.ai.MiniMaxAI;
+
 // Import jackson classes
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 // Import java classes
 import java.awt.Point;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 
 /**********
  * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
  **********/
 
-@JsonSerialize(using = Player.PlayerSerializer.class)
-@JsonDeserialize(using = Player.PlayerDeserializer.class)
+@JsonSerialize(using = Serializer.PlayerSerializer.class)
+@JsonDeserialize(using = Deserializer.PlayerDeserializer.class)
 public class Player implements Serializable {
 
     /**********
@@ -62,123 +54,6 @@ public class Player implements Serializable {
         this.usedPiece = new HashMap<>();
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             usedPiece.put(c, 0);
-        }
-    }
-
-    /**********
-     * SERIALIZER
-     **********/
-
-    public static class PlayerSerializer extends JsonSerializer<Player> {
-
-        /**
-         * Serialize the player object into json format
-         * 
-         * @param player             the player object to serialize
-         * @param jsonGenerator      the json generator
-         * @param serializerProvider the serializer provider
-         * @return void
-         */
-        @Override
-        public void serialize(Player player, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-                throws IOException {
-
-            
-
-            jsonGenerator.writeStartObject();
-            // Serialize the name attributes
-            jsonGenerator.writeStringField("name", player.getName());
-            // Serialize the id attribute
-            jsonGenerator.writeNumberField("id", player.getId());
-            // Serialize the hasValidateBuilding attribute
-            jsonGenerator.writeBooleanField("has_validate_building", player.getHasValidateBuilding());
-            // Serialize the initialMountain attribute
-            jsonGenerator.writeObjectField("initial_mountain", player.getInitialMountain());
-
-            if (!player.getHasValidateBuilding()) {
-                // Serialize the mountain attribute
-                jsonGenerator.writeObjectField("mountain", player.getMountain());
-                // Serialize the availableToBuild attribute
-                jsonGenerator.writeObjectFieldStart("available_to_build");
-                // Serialize the availableToBuild hashmap
-                for (Map.Entry<ModelColor, Integer> entry : player.getAvailableToBuild().entrySet()) {
-                    jsonGenerator.writeNumberField(entry.getKey().toString(), entry.getValue());
-                }
-                jsonGenerator.writeEndObject();
-            }
-
-            jsonGenerator.writeEndObject();
-        }
-    }
-
-    /**********
-     * DESERIALIZER
-     **********/
-
-    public static class PlayerDeserializer extends JsonDeserializer<Player> {
-
-        /**
-         * Deserialize the player object from json format
-         * 
-         * @param jsonParser             the json parser
-         * @param deserializationContext the deserialization context
-         * @return the player object
-         */
-        @Override
-        public Player deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-                throws IOException {
-
-            Player player = new Player(0);
-
-            while (!jsonParser.isClosed()) {
-                JsonToken jsonToken = jsonParser.nextToken();
-
-                if (JsonToken.FIELD_NAME.equals(jsonToken)) {
-                    String fieldName = jsonParser.currentName();
-                    jsonParser.nextToken();
-
-                    switch (fieldName) {
-                        case "name":
-                            // Deserialize the name attribute
-                            player.name = jsonParser.getValueAsString();
-                            break;
-                        case "id":
-                            // Deserialize the id attribute
-                            player.id = jsonParser.getValueAsInt();
-                            break;
-                        case "has_validate_building":
-                            // Deserialize the hasValidateBuilding attribute
-                            player.hasValidateBuilding = jsonParser.getValueAsBoolean();
-                            if (player.hasValidateBuilding) {
-                                player.initAvailableToBuild();
-                            }
-                            break;
-                        case "initial_mountain":
-                            // Deserialize the initialMountain attribute
-                            player.initialMountain = jsonParser.readValueAs(Mountain.class);
-                            if (player.hasValidateBuilding) {
-                                player.mountain = player.initialMountain.clone();
-                            }
-                            break;
-                        case "mountain":
-                            // Deserialize the mountain attribute
-                            player.mountain = jsonParser.readValueAs(Mountain.class);
-                            break;
-                        case "available_to_build":
-                            // Convert the json object to a hashmap
-                            TypeReference<HashMap<ModelColor, Integer>> typeRef = new TypeReference<HashMap<ModelColor, Integer>>() {
-                            };
-                            HashMap<ModelColor, Integer> availableToBuild = jsonParser.readValueAs(typeRef);
-                            player.availableToBuild = new HashMap<>();
-                            // Filling the player availableToBuild hashmap
-                            for (Map.Entry<ModelColor, Integer> entry : availableToBuild.entrySet()) {
-                                player.availableToBuild.put(entry.getKey(), entry.getValue());
-                            }
-                            break;
-                    }
-                }
-            }
-            return player;
         }
     }
 

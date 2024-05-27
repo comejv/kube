@@ -65,9 +65,10 @@ public class Swap {
     /**********
      * METHOD
      **********/
-    
+
     @Override
     public String toString() {
-        return "Echange de la position (" + pos1.x + "," + pos1.y + ") avec la position (" + pos2.x + "," + pos2.y + ")";
+        return "Echange de la position (" + pos1.x + "," + pos1.y + ") avec la position (" + pos2.x + "," + pos2.y
+                + ")";
     }
 }

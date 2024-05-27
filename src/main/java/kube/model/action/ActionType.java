@@ -3,8 +3,8 @@ package kube.model.action;
 public enum ActionType {
 
     /**********
-    * MODEL
-    **********/
+     * MODEL
+     **********/
 
     // --- GAME ---
     SHOW_ALL,
@@ -51,8 +51,8 @@ public enum ActionType {
     CONNECTION_CLOSED,
 
     /**********
-    * GUI
-    **********/
+     * GUI
+     **********/
 
     // --- GLOBAL ---
     SET_BUTTON_PRESSED,
