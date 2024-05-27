@@ -2,8 +2,6 @@ package kube.controller.textual;
 
 import java.util.Scanner;
 
-import com.fasterxml.jackson.databind.jsontype.impl.AsExistingPropertyTypeSerializer;
-
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
@@ -68,6 +66,10 @@ public class CommandListener implements Runnable {
                 case "redo":
                     eventsToModel(new Action(ActionType.REDO));
                     break;
+                case "sauvegarder":
+                case "save":
+                    save(sc);
+                    break;
                 case "aide":
                 case "help":
                 case "":
@@ -112,6 +114,17 @@ public class CommandListener implements Runnable {
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(ActionType.MOVE));
+            return false;
+        }
+    }
+
+    private boolean save(Scanner sc) {
+        try {
+            eventsToView.add(new Action(ActionType.SAVE_KUBE));
+            String s = sc.nextLine();
+            eventsToModel(new Action(ActionType.SAVE_KUBE, s));
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }

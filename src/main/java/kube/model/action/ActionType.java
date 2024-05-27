@@ -33,6 +33,8 @@ public enum ActionType {
     PRINT_ASK_NB_PLAYERS,
     PRINT_ASK_PLAYER_NAME,
     PRINT_ASK_GAME_MODE,
+    SAVE_KUBE,
+    LOAD_KUBE,
 
     // --- NETWORK ---
     PRINT_ASK_HOST_OR_JOIN,

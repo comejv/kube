@@ -78,24 +78,8 @@ public class Kube {
         }
     }
 
-    public Kube(String fileName) throws KubeReadException {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            FileReader file = new FileReader(Config.SAVING_PATH_DIRECTORY + fileName);
-            Kube kube = mapper.readValue(file, Kube.class);
-            this.p1 = kube.getP1();
-            this.p2 = kube.getP2();
-            this.currentPlayer = kube.getCurrentPlayer();
-            this.bag = kube.getBag();
-            this.penality = kube.getPenality();
-            this.history = kube.getHistory();
-            this.phase = kube.getPhase();
-            this.baseSize = kube.getBaseSize();
-            this.k3 = kube.getK3();
-            this.lastMovePlayed = kube.getLastMovePlayed();
-        } catch (IOException e) {
-            throw new KubeReadException("Failed to read Kube from file: " + fileName);
-        }
+    public Kube(String fileName) {
+        init(fileName);
     }
 
     /**********
@@ -192,6 +176,24 @@ public class Kube {
         }
         setCurrentPlayer(getP1());
         distributeCubesToPlayers();
+    }
+
+    public void init(String fileName) {
+        try {
+            Kube kube = loadInstance(fileName);
+            setP1(kube.getP1());
+            setP2(kube.getP2());
+            setCurrentPlayer(kube.getCurrentPlayer());
+            setBag(kube.getBag());
+            setPenality(kube.getPenality());
+            setHistory(kube.getHistory());
+            setPhase(kube.getPhase());
+            setBaseSize(kube.getBaseSize());
+            setK3(kube.getK3());
+            setLastMovePlayed(kube.getLastMovePlayed());
+        } catch (KubeReadException e) {
+            e.printStackTrace();
+        }
     }
 
     /**********
@@ -968,6 +970,16 @@ public class Kube {
             mapper.writeValue(file, this);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public Kube loadInstance(String fileName) throws KubeReadException {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            FileReader file = new FileReader(Config.SAVING_PATH_DIRECTORY + fileName);
+            return mapper.readValue(file, Kube.class);
+        } catch (IOException e) {
+            throw new KubeReadException("Failed to read Kube from file: " + fileName);
         }
     }
 

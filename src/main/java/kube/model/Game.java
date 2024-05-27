@@ -1,5 +1,7 @@
 package kube.model;
 
+import kube.configuration.Config;
+
 // Import model classes
 import kube.model.action.Action;
 import kube.model.action.ActionType;
@@ -150,6 +152,13 @@ public class Game implements Runnable {
                     default:
                         modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                         break;
+                    case SAVE_KUBE:
+                        Config.debug((String) a.getData());
+                        k3.saveInstance((String) a.getData());
+                        break;
+                    case LOAD_KUBE:
+                        k3.init(a.getData().toString());
+                        break;
                 }
             }
         }
@@ -287,7 +296,7 @@ public class Game implements Runnable {
                     utilsAI.randomFillMountain(k3.getCurrentPlayer(), new Random());
                     modeleToView.add(new Action(ActionType.SHUFFLE));
                     break;
-                case VALIDATE:
+                    case VALIDATE:
                     // Reception of the other player mountain
                     if (getGameType() != LOCAL && a.getPlayer() != getGameType()) {
                         if (getGameType() == JOIN) {
@@ -303,6 +312,13 @@ public class Game implements Runnable {
                         k3.updatePhase();
                         modeleToView.add(new Action(ActionType.VALIDATE, isValidated));
                     }
+                    break;
+                case SAVE_KUBE:
+                    Config.debug((String) a.getData());
+                    k3.saveInstance((String) a.getData());
+                    break;
+                case LOAD_KUBE:
+                    k3.init(a.getData().toString());
                     break;
                 default:
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
