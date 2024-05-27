@@ -40,6 +40,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.loadPanel(GUI.PHASE2);
                     break;
                 case VALIDATE:
+                    gui.setGlassPanelVisible(true);
                     gui.showPanel(GUI.PHASE2);
                     break;
                 default:
