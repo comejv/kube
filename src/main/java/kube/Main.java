@@ -21,6 +21,6 @@ public class Main {
         modelThread.start();
 
         GUIControllers controllers = new GUIControllers(eventsToView, eventsToModel);
-        new GUI(model, controllers, eventsToView);
+        new GUI(kube, controllers, eventsToView, eventsToModel);
     }
 }

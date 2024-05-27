@@ -5,6 +5,7 @@ public enum ActionType {
     SHOW_ALL,
     SHOW_MOUNTAIN,
     SWAP,
+    BUILD,
     SHUFFLE,
     VALIDATE,
     MOVE,

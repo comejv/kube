@@ -2,6 +2,7 @@ package kube.view.components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
@@ -13,7 +14,7 @@ public class HexIcon extends Icon {
     private boolean isActionable;
     private boolean isHovered;
     private boolean isPressed;
-
+    private Point position;
     private double offsetX;
     private double offsetY;
 
@@ -35,7 +36,6 @@ public class HexIcon extends Icon {
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         if (isActionable() && isHovered) { // Draw darker image
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor }; // Multiply all bands of each pixel by factor
@@ -70,10 +70,13 @@ public class HexIcon extends Icon {
                 super.recolor(GUIColors.BLUE_HEX);
                 break;
             case YELLOW:
-                recolor(GUIColors.YELLOW_HEX);
+                super.recolor(GUIColors.YELLOW_HEX);
                 break;
             case BLACK:
-                recolor(GUIColors.BLACK_HEX);
+                super.recolor(GUIColors.BLACK_HEX);
+                break;
+            case EMPTY:
+                super.recolor(GUIColors.WHITE_HEX);
                 break;
             default:
                 break;
@@ -123,5 +126,17 @@ public class HexIcon extends Icon {
 
     public ModelColor getColor() {
         return color;
+    }
+
+    public void setPosition(Point p) {
+        position = p;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public String toString() {
+        return "HexIcon, isActionable: " + isActionable + "\nposition: " + getPosition() + "\ncolor: " + getColor();
     }
 }

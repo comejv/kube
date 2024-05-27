@@ -9,18 +9,20 @@ import kube.view.components.Buttons.ButtonIcon;
 public class GUIEventsHandler implements Runnable {
 
     Kube kube;
-    Queue<Action> events;
+    Queue<Action> eventsToView;
+    Queue<Action> eventsToModel;
     GUI gui;
 
-    public GUIEventsHandler(GUI gui, Queue<Action> events) {
-        this.events = events;
+    public GUIEventsHandler(GUI gui, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
+        this.eventsToView = eventsToView;
+        this.eventsToModel = eventsToModel;
         this.gui = gui;
     }
 
     @Override
     public void run() {
         while (true) {
-            Action action = events.remove();
+            Action action = eventsToView.remove();
             switch (action.getType()) {
                 case SET_BUTTON_DEFAULT:
                     ((ButtonIcon) action.getData()).setDefault();

@@ -20,16 +20,17 @@ import java.awt.event.ActionListener;
 
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Game;
+import kube.model.Kube;
 
 /*
  * This class extends JPanel and creates the GUI for the second phase of the game.
  */
 public class SecondPhasePanel extends JPanel {
     private Phase2Controller controller;
-    private Game model;
+    private Kube k3;
     private GUI gui;
 
-    public SecondPhasePanel(GUI gui, Game model, Phase2Controller controller) {
+    public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         setBackground(GUIColors.GAME_BG.toColor());
