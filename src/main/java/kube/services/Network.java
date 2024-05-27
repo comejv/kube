@@ -35,19 +35,19 @@ public abstract class Network {
         return in;
     }
 
-    public void setIp(String ip) {
+    public final void setIp(String ip) {
         this.ip = ip;
     }
 
-    public void setPort(int port) {
+    public final void setPort(int port) {
         this.port = port;
     }
 
-    public void setOut(ObjectOutputStream out) {
+    public final void setOut(ObjectOutputStream out) {
         this.out = out;
     }
 
-    public void setIn(ObjectInputStream in) {
+    public final void setIn(ObjectInputStream in) {
         this.in = in;
     }
 

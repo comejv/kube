@@ -66,11 +66,11 @@ public class Mountain implements Serializable {
         content = mountain;
     }
 
-    public void setCase(Point p, ModelColor c) {
+    public final void setCase(Point p, ModelColor c) {
         setCase(p.x, p.y, c);
     }
 
-    public void setCase(int x, int y, ModelColor c) {
+    public final void setCase(int x, int y, ModelColor c) {
         content[x][y] = c;
     }
 

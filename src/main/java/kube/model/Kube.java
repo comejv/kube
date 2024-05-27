@@ -238,11 +238,11 @@ public class Kube {
         lastMovePlayed = move;
     }
 
-    public void setPlayerCase(Player player, Point point, ModelColor color) {
+    public final void setPlayerCase(Player player, Point point, ModelColor color) {
         player.getMountain().setCase(point, color);
     }
 
-    public void setPlayerCase(Player player, int x, int y, ModelColor color) {
+    public final void setPlayerCase(Player player, int x, int y, ModelColor color) {
         player.getMountain().setCase(x, y, color);
     }
 

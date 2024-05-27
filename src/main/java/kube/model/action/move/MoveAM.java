@@ -57,7 +57,7 @@ public class MoveAM extends Move {
         this.to = to;
     }
 
-    public void setTo(int toX, int toY) {
+    public final void setTo(int toX, int toY) {
         setTo(new Point(toX, toY));
     }
 

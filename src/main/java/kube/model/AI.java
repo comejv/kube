@@ -33,7 +33,7 @@ public class AI extends Player {
      * SETTER
      **********/
 
-    public void setAI(MiniMaxAI ai) {
+    public final void setAI(MiniMaxAI ai) {
         this.ai = ai;
     }
 

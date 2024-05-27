@@ -42,7 +42,7 @@ public class Game implements Runnable {
         localGame(gameType);
     }
 
-    public void setGameType(int gameType) {
+    public final void setGameType(int gameType) {
         this.gameType = gameType;
     }
 
@@ -97,7 +97,7 @@ public class Game implements Runnable {
         }
     }
 
-    public void setFirstPlayer() {
+    public final void setFirstPlayer() {
         switch (getGameType()) {
             case HOST:
                 k3.setCurrentPlayer(k3.getRandomPlayer());
