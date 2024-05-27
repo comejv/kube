@@ -15,7 +15,9 @@ import javax.swing.SwingConstants;
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
+import kube.controller.graphical.DnDController;
 import kube.view.components.Buttons.*;
+import kube.view.GUI;
 import kube.view.GUIColors;
 
 /*
@@ -23,25 +25,23 @@ import kube.view.GUIColors;
  */
 public class MenuPanel extends JPanel {
 
-    public MenuPanel(MenuController buttonListener) {
+    public MenuPanel(GUI gui, MenuController buttonListener) {
         setLayout(new CardLayout());
 
+        gui.createGlassPane();
+        gui.setGlassPaneController(new DnDController(null));
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
-
         setLayout(new OverlayLayout(this));
 
         JPanel modal = new JPanel();
         modal.setLayout(new GridBagLayout());
 
-        // JPanel glassPane = new GlassPanel();
-
         // Rules panel
         JPanel rulesPanel = new Overlay(null);
 
         add(rulesPanel);
-        // add(glassPane);
         add(modal);
 
         // Game title
@@ -115,9 +115,6 @@ public class MenuPanel extends JPanel {
         // Rules button
         JButton rules = new MenuButton("RULES");
         rules.addActionListener(e -> {
-            // // Switch to the players panel
-            // glassPane.setVisible(true);
-            // rulesPanel.setVisible(true);
         });
 
         startButtons.add(local, buttonsGBC);

@@ -24,6 +24,10 @@ public class Phase1Controller implements ActionListener, MouseListener {
         this.toModel = toModel;
     }
 
+    public DnDController getDragNDropController() {
+        return new DnDController(toView);
+    }
+
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
             case "phase2":

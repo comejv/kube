@@ -4,12 +4,14 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
 import kube.configuration.Config;
+import kube.controller.graphical.DnDController;
 import kube.view.panels.GlassPanel;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 
 /*
- * This class initializes the game frame and its layout manager : a card layout that contains all pannels of the game.
+ * This class initializes the game frame and its layout manager : an overlay layout that contains a card layout and potential overlay elements.
  */
 public class MainFrame extends JFrame {
     private JPanel cardPanel;
@@ -39,7 +41,6 @@ public class MainFrame extends JFrame {
         cardPanel = new JPanel(cardLayout);
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
-        createGlassPane(null);
         pack();
         setVisible(true);
     }
@@ -53,28 +54,36 @@ public class MainFrame extends JFrame {
         cardLayout.show(cardPanel, name);
     }
 
-    public void createGlassPane(Component obj) {
-        GlassPanel g = new GlassPanel(obj, cardPanel);
+    public void createGlassPane() {
+        if (glassPane != null) {
+            System.err.println("Glass pane already exists.");
+            return;
+        }
+        GlassPanel g = new GlassPanel();
         this.glassPane = g;
-        setGlassPane(g);
+        super.setGlassPane(g);
         g.setVisible(true);
     }
 
-    public void setGlassPaneController(MouseInputAdapter mia) {
-        if (glassPane != null) {
-            glassPane.addMouseMotionListener(mia);
-            glassPane.addMouseListener(mia);
-        }
+    public void setGlassPaneController(DnDController ma) {
+        glassPane.addMouseMotionListener(ma);
+        glassPane.addMouseListener(ma);
     }
 
     public void removeGlassPane() {
-        if (glassPane != null) {
-            remove(getGlassPane());
-            glassPane = null;
+        if (glassPane == null) {
+            System.err.println("No glass pane exists.");
+            return;
         }
+        remove(getGlassPane());
+        glassPane = null;
     }
 
     public void addOverlay(Component p) {
+        if (p != null) {
+            System.err.println("Overlay already exists.");
+            return;
+        }
         overlayPanel.add(p);
         overlayPanel.setVisible(true);
         framePanel.revalidate();
@@ -83,13 +92,15 @@ public class MainFrame extends JFrame {
     }
 
     public void removeOverlay() {
-        if (overlay != null) {
-            overlayPanel.remove(overlay);
-            overlayPanel.setVisible(false);
-            framePanel.revalidate();
-            framePanel.repaint();
-            overlay = null;
+        if (overlay == null) {
+            System.err.println("No existing overlay.");
+            return;
         }
+        overlayPanel.remove(overlay);
+        overlayPanel.setVisible(false);
+        framePanel.revalidate();
+        framePanel.repaint();
+        overlay = null;
     }
 
     public Component getOverlayComponent() {

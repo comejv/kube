@@ -4,6 +4,7 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Game;
+import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.HSL;
 import kube.view.components.Buttons;
@@ -19,9 +20,11 @@ import javax.swing.*;
  */
 public class FirstPhasePanel extends JPanel {
     private Game model;
-    Phase1Controller controller;
+    private Phase1Controller controller;
+    private GUI gui;
 
-    public FirstPhasePanel(Game model, Phase1Controller controller) {
+    public FirstPhasePanel(GUI gui, Game model, Phase1Controller controller) {
+        this.gui = gui;
         this.model = model;
         this.controller = controller;
         setLayout(new GridBagLayout());

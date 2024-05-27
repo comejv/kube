@@ -24,10 +24,10 @@ public class PanelLoader implements Runnable {
         JPanel panel;
         switch (panelName) {
             case GUI.PHASE1:
-                panel = new FirstPhasePanel(model, controllers.getPhase1Controller());
+                panel = new FirstPhasePanel(gui, model, controllers.getPhase1Controller());
                 break;
             case GUI.PHASE2:
-                panel = new SecondPhasePanel(model, controllers.getPhase2Controller());
+                panel = new SecondPhasePanel(gui, model, controllers.getPhase2Controller());
                 break;
             default:
                 panel = null;
