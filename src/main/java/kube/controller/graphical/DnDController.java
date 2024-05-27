@@ -32,26 +32,24 @@ public class DnDController implements MouseListener, MouseMotionListener {
     @Override
     public void mousePressed(MouseEvent e) {
         GlassPanel g = (GlassPanel) e.getSource();
-        Icon i = new Icon(ResourceLoader.getBufferedImage("gear"));
-        i.resizeIcon(30, 30);
-        g.setObject(i);
+        // Get the object that was clicked in the content pane underneath the glass panel
+        Container container = ((JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource())).getContentPane();
+        Component component = SwingUtilities.getDeepestComponentAt(container, e.getX(), e.getY());
+        
+        if (component instanceof HexIcon) {
+            Config.debug("HexIcon clicked");
+            HexIcon icon = (HexIcon) component;
+            g.setImage(icon.getImage());
+            g.setPoint(e.getPoint());
+            g.setColor(icon.getColor());
+            g.repaint();
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         GlassPanel g = ((GlassPanel) e.getSource());
-        // g.removeObject();
-        // Get dropoff location
-        // Component source = (Component) e.getSource();
-        // Container grid = source.getParent().getParent();
-        // Config.debug(grid.getComponentCount());
-        // if (grid != null && grid.getLayout() instanceof GridLayout) {
-        // Config.debug("mouse x " + e.getX());
-        // Config.debug("mouse y " + e.getY());
-        // int gridX = (e.getX()) / (grid.getWidth() / grid.getComponentCount());
-        // int gridY = (e.getY()) / (grid.getHeight() / grid.getComponentCount());
-        // Config.debug("Dropped in grid cell (" + gridX + ", " + gridY + ")");
-        // }
+        g.clear();
     }
 
     @Override

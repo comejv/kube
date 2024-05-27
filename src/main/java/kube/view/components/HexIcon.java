@@ -6,6 +6,9 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
+import kube.model.ModelColor;
+import kube.view.GUIColors;
+
 public class HexIcon extends Icon {
     private boolean isActionable;
     private boolean isHovered;
@@ -14,9 +17,18 @@ public class HexIcon extends Icon {
     private double offsetX;
     private double offsetY;
 
+    private ModelColor color;
+
     public HexIcon(BufferedImage img, boolean actionable) {
         super(img);
         this.isActionable = actionable;
+    }
+
+    public HexIcon(BufferedImage img, boolean actionable, ModelColor color) {
+        super(img);
+        recolor(color);
+        this.isActionable = actionable;
+        this.color = color;
     }
 
     @Override
@@ -38,6 +50,35 @@ public class HexIcon extends Icon {
 
     public HexIcon clone() {
         return new HexIcon(getImage(), isActionable());
+    }
+
+    public void recolor(ModelColor color) {
+        switch (color) {
+            case WHITE:
+                super.recolor(GUIColors.WHITE_HEX);
+                break;
+            case NATURAL:
+                super.recolor(GUIColors.NATURAL_HEX);
+                break;
+            case RED:
+                super.recolor(GUIColors.RED_HEX);
+                break;
+            case GREEN:
+                super.recolor(GUIColors.GREEN_HEX);
+                break;
+            case BLUE:
+                super.recolor(GUIColors.BLUE_HEX);
+                break;
+            case YELLOW:
+                recolor(GUIColors.YELLOW_HEX);
+                break;
+            case BLACK:
+                recolor(GUIColors.BLACK_HEX);
+                break;
+            default:
+                break;
+        }
+        this.color = color;
     }
 
     public void setActionable(boolean b) {
@@ -74,5 +115,13 @@ public class HexIcon extends Icon {
 
     public double getYOffset() {
         return offsetY;
+    }
+
+    public BufferedImage getImage() {
+        return super.getImage();
+    }
+
+    public ModelColor getColor() {
+        return color;
     }
 }

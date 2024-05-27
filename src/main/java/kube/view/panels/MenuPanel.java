@@ -28,8 +28,6 @@ public class MenuPanel extends JPanel {
     public MenuPanel(GUI gui, MenuController buttonListener) {
         setLayout(new CardLayout());
 
-        gui.createGlassPane();
-        gui.setGlassPaneController(new DnDController(null));
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
