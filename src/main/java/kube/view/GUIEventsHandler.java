@@ -1,16 +1,21 @@
 package kube.view;
 
+import javax.swing.JPanel;
+
+import kube.configuration.Config;
+import kube.controller.graphical.MenuController;
 import kube.model.Kube;
 import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.panels.RulesPanel;
 
 public class GUIEventsHandler implements Runnable {
 
-    Kube kube;
-    Queue<Action> events;
-    GUI gui;
+    private Kube kube;
+    private Queue<Action> events;
+    private GUI gui;
 
     public GUIEventsHandler(GUI gui, Queue<Action> events) {
         this.events = events;
@@ -35,11 +40,27 @@ public class GUIEventsHandler implements Runnable {
                     ((ButtonIcon) action.getData()).setPressed(false);
                     break;
                 case PLAY_LOCAL:
+                    System.out.println("play local");
                     gui.showPanel(GUI.PHASE1);
                     gui.loadPanel(GUI.PHASE2);
                     break;
                 case VALIDATE:
                     gui.showPanel(GUI.PHASE2);
+                    break;
+                case RULES:
+                    //toModel is null because we don't interract with the model in the rules
+                    gui.addToOverlay(new RulesPanel(gui, new MenuController(events, null)));
+                    break;
+                case NEXT_RULE:
+                    RulesPanel rulePanel = (RulesPanel) gui.getOverlay().getComponent(0);
+                    rulePanel.nextRule();
+                    break;
+                case END_RULE:
+                    gui.removeAllFromOverlay();
+                    break;
+                case QUIT:
+                    //gui.getmF().dispose();
+                    System.exit(0);
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);

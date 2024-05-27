@@ -40,7 +40,6 @@ public class MainFrame extends JFrame {
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
         createGlassPane(null);
-        pack();
         setVisible(true);
     }
 
@@ -73,8 +72,12 @@ public class MainFrame extends JFrame {
             glassPane = null;
         }
     }
-
-    public void addOverlay(Component p) {
+    
+    public JPanel getOverlay() {
+        return overlayPanel;
+    }
+    
+    public void addToOverlay(Component p) {
         overlayPanel.add(p);
         overlayPanel.setVisible(true);
         framePanel.revalidate();
@@ -82,7 +85,7 @@ public class MainFrame extends JFrame {
         overlay = p;
     }
 
-    public void removeOverlay() {
+    public void removeAllFromOverlay() {
         if (overlay != null) {
             overlayPanel.remove(overlay);
             overlayPanel.setVisible(false);
