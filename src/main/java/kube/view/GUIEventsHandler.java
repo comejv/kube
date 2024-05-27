@@ -36,6 +36,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PLAY_LOCAL:
                     gui.showPanel(GUI.PHASE1);
+                    gui.setGlassPanelVisible(true);
                     gui.loadPanel(GUI.PHASE2);
                     break;
                 case VALIDATE:

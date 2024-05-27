@@ -184,6 +184,10 @@ public class GUI extends Thread {
         mF.setGlassPaneController(ma);
     }
 
+    public void setGlassPanelVisible(boolean b){
+        mF.getGlassPane().setVisible(b);
+    }
+
     private void showAllBorders(Container container) {
         for (Component comp : container.getComponents()) {
             if (comp instanceof Container) {
@@ -194,4 +198,6 @@ public class GUI extends Thread {
             }
         }
     }
+
+    
 }

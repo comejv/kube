@@ -62,7 +62,6 @@ public class MainFrame extends JFrame {
         GlassPanel g = new GlassPanel();
         this.glassPane = g;
         super.setGlassPane(g);
-        g.setVisible(true);
     }
 
     public void setGlassPaneController(DnDController ma) {
