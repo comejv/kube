@@ -10,16 +10,12 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
-import kube.configuration.ResourceLoader;
 import kube.model.action.Action;
-import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.view.components.HexIcon;
-import kube.view.components.Icon;
 import kube.view.panels.GlassPanel;
 
 public class DnDController implements MouseListener, MouseMotionListener {
@@ -36,7 +32,7 @@ public class DnDController implements MouseListener, MouseMotionListener {
         Container container = ((JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource())).getContentPane();
         Component component = SwingUtilities.getDeepestComponentAt(container, e.getX(), e.getY());
         
-        if (component instanceof HexIcon) {
+        if (component instanceof HexIcon && ((HexIcon) component).isActionable()) {
             Config.debug("HexIcon clicked");
             HexIcon icon = (HexIcon) component;
             g.setImage(icon.getImage());
@@ -72,6 +68,9 @@ public class DnDController implements MouseListener, MouseMotionListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         GlassPanel g = (GlassPanel) e.getSource();
+        if (g.getImage() == null) {
+            return;
+        }
         g.setPoint(e.getPoint());
     }
 
