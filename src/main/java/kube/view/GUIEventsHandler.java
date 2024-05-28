@@ -45,6 +45,9 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(true);
                     gui.showPanel(GUI.PHASE2);
                     break;
+                case BUILD:
+                    gui.updateFirstPanel();
+                    break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;

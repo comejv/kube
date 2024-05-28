@@ -144,6 +144,7 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateGrid(){
+        Config.debug("Start recolor");
         constructPanel.removeAll();
         GridBagConstraints gbc = new GridBagConstraints();
 
@@ -162,6 +163,8 @@ public class FirstPhasePanel extends JPanel {
             // gbc.anchor = GridBagConstraints.CENTER;
             constructPanel.add(lineHexa, gbc);
         }
+        Config.debug("End recolor");
+
     }
 
     public static HexIcon newHexa(ModelColor c, boolean isActionable) {

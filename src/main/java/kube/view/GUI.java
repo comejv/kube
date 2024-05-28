@@ -204,5 +204,9 @@ public class GUI extends Thread {
         }
     }
 
+    public void updateFirstPanel(){
+        firstPhasePanel.updateGrid();
+    }
+
     
 }
