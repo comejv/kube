@@ -102,6 +102,7 @@ public class GUI extends Thread {
 
         // After repaint start loading next panel
         loadPanel(GUI.PHASE1);
+        createGlassPane();
     }
 
     public void showPanel(String panelName) {
@@ -116,7 +117,6 @@ public class GUI extends Thread {
     }
 
     public synchronized void waitPanel(String panelName) {
-        Config.debug("Waiting for panel ", panelName);
         switch (panelName) {
             case GUI.PHASE1:
                 try {
@@ -137,7 +137,9 @@ public class GUI extends Thread {
                     System.err.println("Interrupted loading");
                 }
                 break;
-
+            case GUI.MENU:
+                // Do nothing, menu always loaded
+                break;
             default:
                 System.err.println("Waiting for non existent panel " + panelName);
                 break;

@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
 import kube.model.ModelColor;
 import kube.view.components.HexIcon;
 
@@ -27,15 +26,18 @@ public class GlassPanel extends JPanel {
         super.paintComponent(g); // Call the superclass method to ensure proper rendering
         if (getImage() != null) {
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.drawImage(getImage(), point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2), null);
+            g2d.drawImage(getImage(), point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2),
+                    null);
             g2d.dispose();
         }
     }
 
     public void setPoint(Point p) {
-        repaint(point.x - (getImage().getWidth() / 2),point.y - (getImage().getHeight() / 2), getImage().getWidth(), getImage().getHeight()); // Repaint old area
+        repaint(point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2), getImage().getWidth(),
+                getImage().getHeight()); // Repaint old area
         point = p;
-        repaint(point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2), getImage().getWidth(), getImage().getHeight()); // Repaint new area
+        repaint(point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2), getImage().getWidth(),
+                getImage().getHeight()); // Repaint new area
     }
 
     public void setPoint(int x, int y) {
@@ -58,13 +60,13 @@ public class GlassPanel extends JPanel {
     public Point getPoint() {
         return point;
     }
-    
+
     public HexIcon getHexIcon() {
         return hex;
     }
 
     public BufferedImage getImage() {
-        if (getHexIcon() != null){
+        if (getHexIcon() != null) {
             return getHexIcon().getImage();
         }
         return null;

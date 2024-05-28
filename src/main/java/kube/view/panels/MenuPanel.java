@@ -27,8 +27,8 @@ public class MenuPanel extends JPanel {
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
-       BufferedImage backgroundCow = ResourceLoader.getBufferedImage("background");
-        JPanel modal = new JPanel(){
+        BufferedImage backgroundCow = ResourceLoader.getBufferedImage("background");
+        JPanel modal = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -109,16 +109,17 @@ public class MenuPanel extends JPanel {
         JButton online = new MenuButton("ONLINE");
         online.addActionListener(buttonListener);
         online.setActionCommand("online");
-        
+        // TODO : add online panel
+
         // Rules button
         JButton rules = new MenuButton("RULES");
         rules.addActionListener(buttonListener);
         rules.setActionCommand("rules");
-        
+
         // Quit button
         JButton quit = new MenuButton("QUIT");
         quit.addActionListener(buttonListener);
-        quit.setActionCommand("quit");;
+        quit.setActionCommand("quit");
 
         startButtons.add(local, buttonsGBC);
         startButtons.add(online, buttonsGBC);
@@ -141,6 +142,14 @@ public class MenuPanel extends JPanel {
         buttonsGBC.gridy = GridBagConstraints.RELATIVE;
         buttonsGBC.fill = GridBagConstraints.BOTH;
         buttonsGBC.insets = insets;
+
+        JButton returnButton = new MenuButton("Retour");
+        playersButtons.add(returnButton, buttonsGBC);
+        returnButton.addActionListener(e -> {
+            // Switch to the main panel
+            CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
+            cl.show(buttonsPanel, "start");
+        });
 
         JPanel player1 = new SelectPlayerButton("PLAYER 1");
         JPanel player2 = new SelectPlayerButton("PLAYER 2");

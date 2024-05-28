@@ -20,8 +20,14 @@ public class Phase2Controller implements ActionListener, MouseListener {
 
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
-            case "menu": // change to opts.
+            case "settings":
                 toView.add(new Action(ActionType.SETTINGS));
+                break;
+            case "quit":
+                // TODO : ask if need to save the game
+                toModel.add(new Action(ActionType.RESET));
+                toView.add(new Action(ActionType.RETURN_TO_MENU));
+                break;
 
             default:
                 break;

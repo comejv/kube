@@ -4,8 +4,6 @@ import kube.configuration.Config;
 import kube.view.GUIColors;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,53 +30,54 @@ public class Buttons {
         }
     }
 
-    public static class SelectPlayerButton extends JPanel implements ActionListener{
-        public SelectPlayerButton(String name){
+    // TODO : maybe not in buttons ?
+    public static class SelectPlayerButton extends JPanel implements ActionListener {
+        public SelectPlayerButton(String name) {
             setLayout(new GridBagLayout());
             setPreferredSize(new Dimension(Config.getInitWidth() / 2,
                     Config.getInitWidth() / 12));
             setBackground(GUIColors.ACCENT.toColor());
             GridBagConstraints gbc = new GridBagConstraints();
 
-
             JLabel nameLabel = new JLabel();
             nameLabel.setText(name);
             nameLabel.setForeground(GUIColors.TEXT.toColor());
             nameLabel.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
-            gbc.insets= new Insets(5,2,5,25);
-            add( nameLabel,gbc);
+            gbc.insets = new Insets(5, 2, 5, 25);
+            add(nameLabel, gbc);
 
-           /* JComboBox<String> comboBox = new JComboBox<String>();
-            comboBox.addActionListener(this);
+            /*
+             * JComboBox<String> comboBox = new JComboBox<String>();
+             * comboBox.addActionListener(this);
+             * 
+             * comboBox.addItem( "Humain" );
+             * comboBox.addItem( "IA facile" );
+             * comboBox.addItem( "IA moyenne" );
+             * comboBox.addItem( "IA difficile" );
+             * gbc.insets= new Insets(5,25,5,2);
+             * add( comboBox,gbc);
+             */
 
-            comboBox.addItem( "Humain" );
-            comboBox.addItem( "IA facile" );
-            comboBox.addItem( "IA moyenne" );
-            comboBox.addItem( "IA difficile" );
-            gbc.insets= new Insets(5,25,5,2);
-            add( comboBox,gbc);*/
-
-            String[] players = {"Humain", "IA Facile", "IA Moyenne","IA Difficile"};
-            final int[] currentIndex = {0};
+            String[] players = { "Humain", "IA Facile", "IA Moyenne", "IA Difficile" };
+            final int[] currentIndex = { 0 };
             JPanel selectComp = new JPanel();
             selectComp.setLayout(new BorderLayout());
 
             // Create buttons and label
             JButton leftButton = new JButton("<");
-            leftButton.setFocusPainted(false);  // Remove focus border
-            leftButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            leftButton.setFocusPainted(false); // Remove focus border
+            leftButton.setBorder(BorderFactory.createEmptyBorder()); // Remove button border
             leftButton.setContentAreaFilled(false);
-            leftButton.setFocusPainted(false);  // Remove focus border
+            leftButton.setFocusPainted(false); // Remove focus border
             JButton rightButton = new JButton(">");
-            rightButton.setFocusPainted(false);  // Remove focus border
-            rightButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            rightButton.setFocusPainted(false); // Remove focus border
+            rightButton.setBorder(BorderFactory.createEmptyBorder()); // Remove button border
             rightButton.setContentAreaFilled(false);
-            rightButton.setFocusPainted(false);  // Remove focus border
+            rightButton.setFocusPainted(false); // Remove focus border
             JLabel displayLabel = new JLabel(players[currentIndex[0]], JLabel.CENTER);
             displayLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 20)));
             displayLabel.setForeground(GUIColors.ACCENT.toColor());
             displayLabel.setPreferredSize(new Dimension(150, 50)); // Set fixed width for display label
-
 
             // Add buttons and label to the panel
             selectComp.add(leftButton, BorderLayout.WEST);
@@ -102,19 +101,18 @@ public class Buttons {
                 }
             });
 
-            selectComp.setMaximumSize(new Dimension(150,40));
-            selectComp.setMinimumSize(new Dimension(150,40));
+            selectComp.setMaximumSize(new Dimension(150, 40));
+            selectComp.setMinimumSize(new Dimension(150, 40));
 
-
-            gbc.insets= new Insets(5,25,5,2);
-            add(selectComp,gbc);
+            gbc.insets = new Insets(5, 25, 5, 2);
+            add(selectComp, gbc);
 
         }
-        public void actionPerformed(ActionEvent e)
-        {
-           // System.out.println( e.getModifiers() );
-            JComboBox comboBox = (JComboBox)e.getSource();
-           // System.out.println( comboBox.getSelectedItem() );
+
+        public void actionPerformed(ActionEvent e) {
+            // System.out.println( e.getModifiers() );
+            JComboBox comboBox = (JComboBox) e.getSource();
+            // System.out.println( comboBox.getSelectedItem() );
         }
 
     }

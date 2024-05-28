@@ -1,6 +1,7 @@
 package kube.view;
 
 import kube.configuration.Config;
+import kube.controller.graphical.DnDController;
 import kube.controller.graphical.MenuController;
 import kube.model.Kube;
 import kube.model.action.*;
@@ -25,6 +26,7 @@ public class GUIEventsHandler implements Runnable {
         while (true) {
             Action action = eventsToView.remove();
             switch (action.getType()) {
+                // GLOBAL
                 case SET_BUTTON_DEFAULT:
                     ((ButtonIcon) action.getData()).setDefault();
                     break;
@@ -37,25 +39,43 @@ public class GUIEventsHandler implements Runnable {
                 case SET_BUTTON_RELEASED:
                     ((ButtonIcon) action.getData()).setPressed(false);
                     break;
-                case PLAY_LOCAL:
+                case RETURN_TO_MENU:
+                    gui.showPanel(GUI.MENU);
+                    break;
+                case QUIT:
+                    // TODO : Something wrong here
+                    System.exit(0);
+                    gui.showPanel(GUI.PHASE1);
+                    break;
+                case SETTINGS:
+                    // TODO : show settings overlay
+                    break;
+                case PRINT_FORBIDDEN_ACTION:
+                    Config.debug("Forbidden action : " + action.getData());
+                    String message = (String) action.getData() == null ? "You can't do that now."
+                            : (String) action.getData();
+                    gui.showError("Forbidden action", message);
+                    break;
+                case PRINT_NOT_YOUR_TURN:
+                    Config.debug("Not your turn");
+                    gui.showWarning("Not your turn", "It's not your turn yet.");
+                    break;
+                case PRINT_WIN_MESSAGE:
+                    Config.debug("Win message");
+                    gui.showInfo("You won !", "Congratulations, you won the game !");
+                    break;
+
+                // MENU
+                case START:
                     eventsToModel.add(new Action(ActionType.START, new Start()));
                     gui.showPanel(GUI.PHASE1);
+                    gui.setGlassPaneController(new DnDController(eventsToView, eventsToModel));
                     gui.setGlassPanelVisible(true);
                     gui.loadPanel(GUI.PHASE2);
                     break;
-                case VALIDATE:
-                    gui.setGlassPanelVisible(true);
-                    gui.showPanel(GUI.PHASE2);
-                    break;
-                case BUILD:
-                case REMOVE:
-                case SWAP:
-                    gui.updateFirstPanel(action);
-                    break;
-                case LOCAL:
-                    break;
                 case RULES:
-                    //toModel is null because we don't interract with the model in the rules
+                    // toModel is null because we don't interract with the model in the rules
+                    // TODO : maybe reuse old controller ?
                     gui.addToOverlay(new RulesPanel(gui, new MenuController(eventsToView, null)));
                     break;
                 case NEXT_RULE:
@@ -65,25 +85,22 @@ public class GUIEventsHandler implements Runnable {
                 case END_RULE:
                     gui.removeAllFromOverlay();
                     break;
-                case QUIT:
-                    System.exit(0);
-                    gui.showPanel(GUI.PHASE1);
+                case PLAY_LOCAL:
+                    // TODO : maybe tell model about it ?
                     break;
-                case SETTINGS:
-                    gui.showPanel(GUI.MENU);
+                case PLAY_ONLINE:
+                    // TODO : maybe tell model about it ?
                     break;
-                case PRINT_FORBIDDEN_ACTION:
-                    Config.debug("Forbidden action : " + action.getData());
-                    String message = (String) action.getData() == null ? "You can't do that now." : (String) action.getData();
-                    gui.showError("Forbidden action", message);                    
+
+                // FIRST PHASE
+                case VALIDATE:
+                    gui.setGlassPanelVisible(true);
+                    gui.showPanel(GUI.PHASE2);
                     break;
-                case PRINT_NOT_YOUR_TURN:
-                    Config.debug("Not your turn");
-                    gui.showWarning("Not your turn", "It's not your turn yet.");
-                    break;
-                case PRINT_WIN_MESSAGE:
-                    Config.debug("Win message");
-                    gui.showInfo("You won !", "Congratulations, you won the game !");
+                case BUILD:
+                case REMOVE:
+                case SWAP:
+                    gui.updateFirstPanel(action);
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);

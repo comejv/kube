@@ -1,7 +1,6 @@
 package kube.view.panels;
 
 import kube.configuration.Config;
-import kube.configuration.ResourceLoader;
 import kube.controller.graphical.DnDController;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Kube;
@@ -16,17 +15,10 @@ import kube.view.GUIColors;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
 
 import javax.swing.*;
-
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
 
 /*
  * This class extends JPanel and creates the GUI for the first phase of the game.
@@ -46,8 +38,6 @@ public class FirstPhasePanel extends JPanel {
         this.controller = controller;
         setLayout(new GridBagLayout());
         setBackground(GUIColors.GAME_BG.toColor());
-        gui.createGlassPane();
-        gui.setGlassPaneController(new DnDController(eventsToView, eventsToModel));
 
         /* Buttons panel construction */
         JPanel buttonsPanel = createButtons();
@@ -107,19 +97,21 @@ public class FirstPhasePanel extends JPanel {
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
-        JButton optButton = new Buttons.GameFirstPhaseButton("Menu");
+        JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
+        quitButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
+        quitButton.setActionCommand("quit");
+        quitButton.addActionListener(controller);
+        buttons.add(quitButton);
+
+        JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        optButton.setActionCommand("Menu");
+        optButton.setActionCommand("settings");
         optButton.addActionListener(controller);
         buttons.add(optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
         sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         buttons.add(sugIaButton);
-
-        JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
-        annulerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        buttons.add(annulerButton);
 
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
         validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
@@ -167,7 +159,7 @@ public class FirstPhasePanel extends JPanel {
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             JPanel mini = new JPanel();
             mini.setOpaque(false);
-            int numberOfPieces =  k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+            int numberOfPieces = k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
             JLabel numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             boolean actionable = numberOfPieces > 0;
@@ -200,7 +192,7 @@ public class FirstPhasePanel extends JPanel {
 
         JPanel mini = sidePanels.get(c);
         mini.removeAll();
-        int numberOfPieces =  k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+        int numberOfPieces = k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
         JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(c, numberOfPieces > 0));
@@ -211,7 +203,7 @@ public class FirstPhasePanel extends JPanel {
 
     }
 
-    public void update(Action a){
+    public void update(Action a) {
         switch (a.getType()) {
             case BUILD:
                 Build b = (Build) a.getData();
@@ -231,6 +223,6 @@ public class FirstPhasePanel extends JPanel {
             default:
                 break;
         }
-    
+
     }
 }

@@ -17,7 +17,6 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 import kube.controller.graphical.Phase2Controller;
-import kube.model.Game;
 import kube.model.Kube;
 import kube.model.ModelColor;
 
@@ -58,13 +57,19 @@ public class SecondPhasePanel extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
         JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(4, 1));
+        buttons.setLayout(new GridLayout(4, 1)); // TODO : change to flow or box layout
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setOpaque(false);
 
-        JButton optButton = new Buttons.GameFirstPhaseButton("Menu");
+        JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
+        quitButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
+        quitButton.setActionCommand("quit");
+        quitButton.addActionListener(a);
+        buttons.add(quitButton);
+
+        JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        optButton.setActionCommand("menu");
+        optButton.setActionCommand("settings");
         optButton.addActionListener(a);
         buttons.add(optButton);
 

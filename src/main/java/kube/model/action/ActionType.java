@@ -3,6 +3,7 @@ package kube.model.action;
 public enum ActionType {
     // --- Model ---
     START,
+    RESET, // TODO : handle reset event
     SHOW_ALL,
     SHOW_MOUNTAIN,
     SWAP,
@@ -55,10 +56,9 @@ public enum ActionType {
     SET_BUTTON_CLICKED,
     SET_BUTTON_DEFAULT,
     SETTINGS,
+    RETURN_TO_MENU,
 
     // Menu
-    LOCAL,
-    ONLINE,
     PLAY_LOCAL,
     PLAY_ONLINE,
     RULES,

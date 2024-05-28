@@ -54,7 +54,6 @@ public class DnDController implements MouseListener, MouseMotionListener {
     }
 
     public void mouseReleased(MouseEvent e) {
-        Config.debug("Mouse release");
         GlassPanel g = (GlassPanel) e.getSource();
         // Get the object that was clicked in the content pane underneath the glass
         // panel

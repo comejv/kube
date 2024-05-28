@@ -7,8 +7,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -23,7 +21,7 @@ import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
 import kube.view.components.Buttons.RulesButton;
 
-public class RulesPanel extends JPanel{
+public class RulesPanel extends JPanel {
 
     private GUI gui;
     private int width;
@@ -33,13 +31,13 @@ public class RulesPanel extends JPanel{
     private JPanel gridPanel;
     private RulePanel rulePanel;
     private static int totalRuleNb = 8;
-    
-    public RulesPanel(GUI gui, MenuController buttonListener){
+
+    public RulesPanel(GUI gui, MenuController buttonListener) {
 
         this.gui = gui;
         this.buttonListener = buttonListener;
-        width = Config.getInitWidth()/2;
-        height = Config.getInitHeight()/2;
+        width = Config.getInitWidth() / 2;
+        height = Config.getInitHeight() / 2;
 
         gui.setGlassPanelVisible(true);
 
@@ -74,15 +72,15 @@ public class RulesPanel extends JPanel{
         elemGBC.weighty = .67;
         elemGBC.weightx = .5;
         gridPanel.add(cardPanel, elemGBC);
-        
+
         rulePanel = new RulePanel();
         cardPanel.add(rulePanel, "rule");
 
         setVisible(true);
     }
 
-    public void nextRule(){
-        rulePanel.setRuleNb(rulePanel.getRuleNb()%totalRuleNb + 1);
+    public void nextRule() {
+        rulePanel.setRuleNb(rulePanel.getRuleNb() % totalRuleNb + 1);
         rulePanel.ruleToShow();
         rulePanel.revalidate();
         rulePanel.repaint();
@@ -93,16 +91,16 @@ public class RulesPanel extends JPanel{
         private Color background;
         private Color foreground;
         private JTextArea textArea;
-        
-        private RulePanel(){
+
+        private RulePanel() {
             setLayout(new GridBagLayout());
             background = GUIColors.ACCENT.toColor();
             foreground = GUIColors.TEXT.toColor();
             setBackground(background);
             ruleToShow();
         }
-        
-        private void addTextArea(String name){
+
+        private void addTextArea(String name) {
             textArea = new JTextArea(ResourceLoader.getText(name));
             textArea.setEditable(false);
             textArea.setWrapStyleWord(true);
@@ -112,7 +110,7 @@ public class RulesPanel extends JPanel{
             textArea.setForeground(foreground);
             textArea.setOpaque(false);
             textArea.setBorder(null);
-            
+
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
             elemGBC.gridy = 1;
@@ -123,8 +121,8 @@ public class RulesPanel extends JPanel{
             elemGBC.insets = new Insets(0, 30, 0, 30);
             add(textArea, elemGBC);
         }
-        
-        private void addNextButton(){
+
+        private void addNextButton() {
             JButton suivant = new RulesButton("Suivant");
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
@@ -142,22 +140,23 @@ public class RulesPanel extends JPanel{
             }
             add(suivant, elemGBC);
         }
-        
-        private void ruleToShow(){
+
+        private void ruleToShow() {
             removeAll();
             addTextArea("rule" + getRuleNb());
             addNextButton();
         }
 
-        public int getRuleNb(){
+        public int getRuleNb() {
             return ruleNb;
         }
 
-        public void setRuleNb(int i){
+        public void setRuleNb(int i) {
             if (i > 0 && i < totalRuleNb + 1) {
                 ruleNb = i;
             } else {
-                System.err.println("Can't assign invalid rule number. Valid range of rule number is 1 to "+ totalRuleNb +" included");
+                System.err.println("Can't assign invalid rule number. Valid range of rule number is 1 to " + totalRuleNb
+                        + " included");
             }
         }
     }

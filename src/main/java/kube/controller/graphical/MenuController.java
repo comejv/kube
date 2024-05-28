@@ -13,7 +13,6 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
-import kube.view.panels.RulesPanel;
 
 public class MenuController implements ActionListener, MouseListener {
     Queue<Action> toView;
@@ -27,13 +26,13 @@ public class MenuController implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
             case "local":
-                toView.add(new Action(ActionType.LOCAL));
+                toView.add(new Action(ActionType.PLAY_LOCAL));
                 break;
             case "online":
-                toView.add(new Action(ActionType.ONLINE));
+                toView.add(new Action(ActionType.PLAY_ONLINE));
                 break;
             case "play":
-                toView.add(new Action(ActionType.PLAY_LOCAL));
+                toView.add(new Action(ActionType.START));
                 break;
 
             // TODO Handle online game
