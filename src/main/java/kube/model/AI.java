@@ -65,10 +65,10 @@ public class AI extends Player {
         AI copy = new AI(getId(), getAI().clone());
         copy.setAdditionals(new ArrayList<>(getAdditionals()));
         if (!getHasValidateBuilding()) {
-            copy.setAvailableToBuild(new HashMap<>(getAvailaibleToBuild()));
+            copy.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
         }
         copy.setName(getName());
-        copy.setusedPiece(new HashMap<>(getUsedPiece()));
+        copy.setUsedPiece(new HashMap<>(getUsedPiece()));
         copy.setMountain(getMountain().clone());
         copy.setHasValidateBuilding(getHasValidateBuilding());
         return copy;

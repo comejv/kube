@@ -165,7 +165,7 @@ public class FirstPhasePanel extends JPanel {
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             JPanel mini = new JPanel();
             mini.setOpaque(false);
-            int numberOfPieces =  k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+            int numberOfPieces =  k3.getCurrentPlayer().getAvailableToBuild().get(c);
             JLabel numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             boolean actionable = numberOfPieces > 0;
@@ -198,7 +198,7 @@ public class FirstPhasePanel extends JPanel {
 
         JPanel mini = sidePanels.get(c);
         mini.removeAll();
-        int numberOfPieces =  k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+        int numberOfPieces =  k3.getCurrentPlayer().getAvailableToBuild().get(c);
         JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(c, numberOfPieces > 0));

@@ -486,7 +486,7 @@ public class Player implements Serializable {
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
         if (!getHasValidateBuilding()){
-            p.setAvailableToBuild(new HashMap<>(getAvailaibleToBuild()));
+            p.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
         }
         p.setName(getName());
         p.setUsedPiece(new HashMap<>(getUsedPiece()));
