@@ -5,11 +5,16 @@ import java.io.Serializable;
 public class Action implements Serializable {
     private ActionType type;
     private Object data;
-    private int player;
+    private int playerId;
 
-    public Action(ActionType type, Object data) {
+    public Action(ActionType type, Object data, int playerId) {
         this.type = type;
         this.data = data;
+        this.playerId = playerId;
+    }
+
+    public Action(ActionType type, Object data) {
+        this(type, data, 0);
     }
 
     public Action(ActionType type) {
@@ -33,11 +38,11 @@ public class Action implements Serializable {
     }
 
     public void setPlayer(int p) {
-        this.player = p;
+        this.playerId = p;
     }
 
     public int getPlayer() {
-        return player;
+        return playerId;
     }
 
     @Override

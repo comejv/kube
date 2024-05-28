@@ -10,6 +10,7 @@ public enum ActionType {
     SHUFFLE,
     VALIDATE,
     MOVE,
+    MOVE_NUMBER,
     UNDO,
     REDO,
     PRINT_AI,
@@ -42,6 +43,8 @@ public enum ActionType {
     ITS_YOUR_TURN,
     MOVE_FROM_NETWORK,
     PLAYER_DATA,
+    ACKNOWLEDGEMENT,
+    PRINT_WAITING_RESPONSE,
 
     // --- GUI ---
     // Global

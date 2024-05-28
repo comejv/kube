@@ -91,6 +91,7 @@ public class CommandListener implements Runnable {
             int x2 = Integer.parseInt(coords[0]);
             int y2 = Integer.parseInt(coords[1]);
             Swap swap = new Swap(x1, y1, x2, y2);
+            eventsToModel.add(new Action(ActionType.SWAP, swap));
             eventsToView.add(new Action(ActionType.SWAP, swap));
             return true;
         } catch (NumberFormatException e) {
@@ -104,7 +105,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(ActionType.MOVE, (Integer) n));
+            eventsToModel(new Action(ActionType.MOVE_NUMBER,(Integer) n));
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(ActionType.MOVE));
