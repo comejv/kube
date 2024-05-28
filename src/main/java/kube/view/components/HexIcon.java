@@ -2,10 +2,12 @@ package kube.view.components;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
+import kube.configuration.ResourceLoader;
 import kube.model.ModelColor;
 import kube.view.GUIColors;
 
@@ -13,29 +15,64 @@ public class HexIcon extends Icon {
     private boolean isActionable;
     private boolean isHovered;
     private boolean isPressed;
-
+    private Point position;
     private double offsetX;
     private double offsetY;
 
     private ModelColor color;
 
-    public HexIcon(BufferedImage img, boolean actionable) {
-        super(img);
-        this.isActionable = actionable;
-    }
+    private static final int WIDTH = 50;
+    private static final int HEIGHT = 50;
 
-    public HexIcon(BufferedImage img, boolean actionable, ModelColor color) {
-        super(img);
-        recolor(color);
+    public HexIcon(ModelColor color, boolean actionable) {
+        super(ResourceLoader.getBufferedImage(getImageName(color)));
+        resizeIcon(WIDTH, HEIGHT);
         this.isActionable = actionable;
         this.color = color;
+    }
+
+    public HexIcon(ModelColor color) {
+        this(color, false);
+    }
+
+    public HexIcon() {
+        this(ModelColor.EMPTY);
+    }
+
+    public HexIcon(ModelColor color, int width, int height) {
+        super(ResourceLoader.getBufferedImage(getImageName(color)));
+        this.color = color;
+        resizeIcon(width, height);
+    }
+
+    private static String getImageName(ModelColor color) {
+        switch (color) {
+            case WHITE:
+                return "hexaWhiteTextured";
+            case NATURAL:
+                return "hexaBrownTextured";
+            case RED:
+                return "hexaRedTextured";
+            case GREEN:
+                return "hexaGreenTextured";
+            case BLUE:
+                return "hexaBlueTextured";
+            case YELLOW:
+                return "hexaYellowTextured";
+            case BLACK:
+                return "hexaBlackTextured";
+            case EMPTY:
+                return "hexaWire";
+            default:
+                System.err.println("Color not found: " + color);
+                return null;
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         if (isActionable() && isHovered) { // Draw darker image
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor }; // Multiply all bands of each pixel by factor
@@ -48,36 +85,7 @@ public class HexIcon extends Icon {
     }
 
     public HexIcon clone() {
-        return new HexIcon(getImage(), isActionable());
-    }
-
-    public void recolor(ModelColor color) {
-        switch (color) {
-            case WHITE:
-                super.recolor(GUIColors.WHITE_HEX);
-                break;
-            case NATURAL:
-                super.recolor(GUIColors.NATURAL_HEX);
-                break;
-            case RED:
-                super.recolor(GUIColors.RED_HEX);
-                break;
-            case GREEN:
-                super.recolor(GUIColors.GREEN_HEX);
-                break;
-            case BLUE:
-                super.recolor(GUIColors.BLUE_HEX);
-                break;
-            case YELLOW:
-                recolor(GUIColors.YELLOW_HEX);
-                break;
-            case BLACK:
-                recolor(GUIColors.BLACK_HEX);
-                break;
-            default:
-                break;
-        }
-        this.color = color;
+        return new HexIcon(getColor(), isActionable());
     }
 
     public void setActionable(boolean b) {
@@ -122,5 +130,17 @@ public class HexIcon extends Icon {
 
     public ModelColor getColor() {
         return color;
+    }
+
+    public void setPosition(Point p) {
+        position = p;
+    }
+
+    public Point getPosition() {
+        return position;
+    }
+
+    public String toString() {
+        return "HexIcon, isActionable: " + isActionable + "\nposition: " + getPosition() + "\ncolor: " + getColor();
     }
 }

@@ -2,12 +2,15 @@ package kube.model.action;
 
 public enum ActionType {
     // --- Model ---
+    START,
     SHOW_ALL,
     SHOW_MOUNTAIN,
     SWAP,
+    BUILD,
     SHUFFLE,
     VALIDATE,
     MOVE,
+    MOVE_NUMBER,
     UNDO,
     REDO,
     PRINT_AI,
@@ -40,6 +43,8 @@ public enum ActionType {
     ITS_YOUR_TURN,
     MOVE_FROM_NETWORK,
     PLAYER_DATA,
+    ACKNOWLEDGEMENT,
+    PRINT_WAITING_RESPONSE,
 
     // --- GUI ---
     // Global

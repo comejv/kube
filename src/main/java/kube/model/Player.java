@@ -17,9 +17,9 @@ public class Player implements Serializable {
      * ATTRIBUTES ********
      */
     private String name;
-    private int id, whiteUsed;
+    private int id;
     private Mountain initialMountain, mountain;
-    private boolean validate, hasValidateBuilding;
+    private boolean hasValidateBuilding;
     private ArrayList<ModelColor> initialAdditionals, additionals;
     private HashMap<ModelColor, Integer> avalaibleToBuild;
     private HashMap<ModelColor, Integer> usedPiece;
@@ -36,9 +36,6 @@ public class Player implements Serializable {
     public Player(int id) {
 
         this.id = id;
-        this.whiteUsed = 0;
-        this.id = id;
-        this.whiteUsed = 0;
         this.mountain = new Mountain(6);
         clearMountain();
         this.additionals = new ArrayList<>();
@@ -564,6 +561,9 @@ public class Player implements Serializable {
     public Player clone() {
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
+        if (!getHasValidateBuilding()){
+            p.setAvailableToBuild(new HashMap<>(getAvailaibleToBuild()));
+        }
         p.setName(getName());
         p.setusedPiece(new HashMap<>(getUsedPiece()));
         p.setMountain(getMountain().clone());

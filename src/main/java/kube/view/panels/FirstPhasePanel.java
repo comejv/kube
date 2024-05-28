@@ -4,15 +4,21 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.DnDController;
 import kube.controller.graphical.Phase1Controller;
-import kube.model.Game;
+import kube.model.Kube;
+import kube.model.ModelColor;
+import kube.model.action.Queue;
+import kube.model.action.Action;
 import kube.view.GUI;
 import kube.view.GUIColors;
-import kube.view.HSL;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
-import kube.view.components.Icon;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 
 import javax.swing.*;
 
@@ -20,18 +26,19 @@ import javax.swing.*;
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
 public class FirstPhasePanel extends JPanel {
-    private Game model;
+    private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
+    private JPanel constructPanel, piecesPanel;
 
-    public FirstPhasePanel(GUI gui, Game model, Phase1Controller controller) {
+    public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.gui = gui;
-        this.model = model;
+        this.k3 = k3;
         this.controller = controller;
         setLayout(new GridBagLayout());
         setBackground(GUIColors.GAME_BG.toColor());
         gui.createGlassPane();
-        gui.setGlassPaneController(new DnDController(null));
+        gui.setGlassPaneController(new DnDController(eventsToView, eventsToModel));
 
         /* Buttons panel construction */
         JPanel buttonsPanel = createButtons();
@@ -70,71 +77,31 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
 
-        topPanel.add(newHexa(GUIColors.YELLOW_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLACK_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
-        topPanel.add(newHexa(GUIColors.RED_HEX, false));
-        topPanel.add(newHexa(GUIColors.GREEN_HEX, false));
-        topPanel.add(newHexa(GUIColors.RED_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
-        topPanel.add(newHexa(GUIColors.YELLOW_HEX, false));
+        topPanel.add(new HexIcon(ModelColor.YELLOW, false));
+        topPanel.add(new HexIcon(ModelColor.BLACK, false));
+        topPanel.add(new HexIcon(ModelColor.BLUE, false));
+        topPanel.add(new HexIcon(ModelColor.RED, false));
+        topPanel.add(new HexIcon(ModelColor.GREEN, false));
+        topPanel.add(new HexIcon(ModelColor.RED, false));
+        topPanel.add(new HexIcon(ModelColor.BLUE, false));
+        topPanel.add(new HexIcon(ModelColor.BLUE, false));
+        topPanel.add(new HexIcon(ModelColor.YELLOW, false));
 
         gamePanel.add(topPanel, BorderLayout.NORTH);
 
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
-        JPanel constructPanel = new JPanel();
-        constructPanel.setBackground(GUIColors.TEXT.toColor());
-        constructPanel.setLayout(new GridLayout(6, 6));
-        GridBagConstraints gbc = new GridBagConstraints();
-        Icon[][] hexaList = new Icon[6][6];
-        gamePanel.add(constructPanel, BorderLayout.CENTER);
-        int last = 0;
-        // will change to getting base colours from model
-        for (int i = 5; i >= 0; i--) {
-            for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = newHexa(null, false);
-            }
-        }
-        for (int i = 0; i < 6; i++) {
-            JPanel lineHexa = new JPanel();
-            lineHexa.setOpaque(false);
-            for (int j = 5; j >= 0; j--) {
-                if (hexaList[i][j] != null) {
-                    lineHexa.add(hexaList[i][j]);
-                }
-            }
-            if (i != 5) {
-                gbc.insets = new Insets(0, 60 / 2, 0, 60 / 2);
-            }
-            if (i % 2 == 1) {
-                last = i - (i - 5) * 2;
-            }
-            gbc.gridx = last;
-            gbc.gridy = i;
-            constructPanel.add(lineHexa, gbc);
-        }
-
+        constructPanel = new JPanel();
+        constructPanel.setOpaque(false);
+        constructPanel.setLayout(new GridBagLayout());
+        constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+        gamePanel.add(constructPanel);
+        updateGrid();
         // SIDE BAR - PIECES AVAILABLE
         // for this part need: getAvailableColors() and loop on it
-        JPanel piecesPanel = new JPanel();
+        piecesPanel = new JPanel();
         piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
         piecesPanel.setLayout(new GridLayout(4, 2));
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 2; j++) {
-                JPanel mini = new JPanel();
-                mini.setOpaque(false);
-                JLabel numOfPieces = new JLabel("x3");
-                numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                if (i == 2) {
-                    mini.add(newHexa(GUIColors.NATURAL_HEX, true));
-                } else {
-                    mini.add(newHexa(GUIColors.WHITE_HEX, true));
-                }
-                mini.add(numOfPieces);
-                piecesPanel.add(mini);
-            }
-        }
+        updateSide();
         gamePanel.add(piecesPanel, BorderLayout.EAST);
         return gamePanel;
     }
@@ -167,15 +134,47 @@ public class FirstPhasePanel extends JPanel {
         return buttons;
     }
 
-    public static HexIcon newHexa(HSL c, boolean isActionable) {
-        HexIcon hexa;
-        if (c == null) {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), isActionable);
-        } else {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("hexaWhiteTextured"), isActionable);
-            hexa.recolor(c);
+    public void updateGrid(){
+        Config.debug("Start recolor");
+        constructPanel.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        for (int i = 1; i <= 6; i++) {
+            JPanel lineHexa = new JPanel();
+            lineHexa.setLayout(new GridLayout(1, i));
+            lineHexa.setOpaque(false);
+            lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            for (int j = 0; j < i; j++) {
+                HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i-1, j), false);
+                hex.setPosition(new Point(i-1, j));
+                lineHexa.add(hex);
+            }
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            // gbc.anchor = GridBagConstraints.CENTER;
+            constructPanel.add(lineHexa, gbc);
         }
-        hexa.resizeIcon(60, 60);
-        return hexa;
+        Config.debug("End recolor");
+    }
+
+    public void updateSide(){
+        piecesPanel.removeAll();
+        List<Map.Entry<ModelColor, Integer>> entryList = new ArrayList<>(k3.getCurrentPlayer().getAvailaibleToBuild().entrySet());
+        Map.Entry<ModelColor, Integer> entry;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 2; j++) {
+                if (entryList.size() == 0){
+                    break;
+                }
+                entry = entryList.remove(0);
+                JPanel mini = new JPanel();
+                mini.setOpaque(false);
+                JLabel numOfPieces = new JLabel("x" + entry.getValue());
+                numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+                mini.add(new HexIcon(entry.getKey(), true));
+                mini.add(numOfPieces);
+                piecesPanel.add(mini);
+            }
+        }
     }
 }

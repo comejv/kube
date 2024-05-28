@@ -40,11 +40,14 @@ public class MainFrame extends JFrame {
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
         pack();
-        setVisible(true);
     }
 
     public void addPanel(JPanel panel, String name) {
         cardPanel.add(panel, name);
+    }
+
+    public void setFrameVisible(boolean b) {
+        setVisible(true);
     }
 
     public void showPanel(String name) {

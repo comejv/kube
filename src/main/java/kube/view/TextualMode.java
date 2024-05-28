@@ -31,7 +31,8 @@ public class TextualMode implements Runnable {
         boolean waitOtherTurn = false;
         while (true) {
             Action action = events.remove();
-            if (waitOtherTurn && action.getType() != ActionType.ITS_YOUR_TURN){
+            if (waitOtherTurn && action.getType() != ActionType.ITS_YOUR_TURN
+                    && action.getType() != ActionType.PRINT_STATE) {
                 printOtherPlayerTurn();
                 continue;
             }
@@ -61,7 +62,6 @@ public class TextualMode implements Runnable {
                     printListMoves();
                     break;
                 case MOVE:
-                    Config.debug(action);
                     if (action.getData() == null) {
                         printMoveError();
                         printHelp();
@@ -97,14 +97,9 @@ public class TextualMode implements Runnable {
                         printHelp();
                     }
                     break;
-
                 case PRINT_STATE:
                     printState();
                     break;
-                // case ASK_SWAP:
-                // printSwap();
-                // printHelp();
-                // break;
                 case SWAP:
                     if (action.getData() == null) {
                         printSwapError();
@@ -162,11 +157,14 @@ public class TextualMode implements Runnable {
                     break;
                 case ITS_YOUR_TURN:
                     waitOtherTurn = false;
+                    break;
+                case PRINT_WAITING_RESPONSE:
+                    printWaitingOtherPlayer();
+                    break;
                 default:
                     break;
             }
         }
-
     }
 
     private void printCommandPhase1() {
@@ -209,9 +207,9 @@ public class TextualMode implements Runnable {
 
     private void printWaitCoordinates(int i) {
         if (i == 1) {
-            System.out.println("Entrez les coordonnées de la première pièce à déplacer");
+            System.out.println("Entrez les coordonnées de la première pièce à déplacer (ex : 0 2)");
         } else {
-            System.out.println("Entrez les coordonnées de la deuxième pièce à déplacer");
+            System.out.println("Entrez les coordonnées de la deuxième pièce à déplacer (ex : 0 2)");
         }
     }
 
@@ -242,7 +240,7 @@ public class TextualMode implements Runnable {
     }
 
     private void printMove(Move move) {
-        System.out.println("Vous avez joué : " + move);
+        System.out.println(move.getPlayer().getName() + " a joué : " + move);
     }
 
     private void printMoveError() {
@@ -315,7 +313,8 @@ public class TextualMode implements Runnable {
 
     private void printSwapSuccess(int x1, int y1, int x2, int y2) {
         Mountain m = kube.getCurrentPlayer().getMountain();
-        System.out.println("Les pièces " + m.getCase(x1, y1).forDisplay() + " et " + m.getCase(x2, y2).forDisplay() + " ont été échangées");
+        System.out.println("Les pièces " + m.getCase(x1, y1).forDisplay() + " et " + m.getCase(x2, y2).forDisplay()
+                + " ont été échangées");
     }
 
     private void printUndo(Move move) {
@@ -367,6 +366,10 @@ public class TextualMode implements Runnable {
     }
 
     private void printOtherPlayerTurn() {
-        System.out.println("En attente de l'autre joueur");
+        System.out.println("C'est au tour de l'autre joueur");
+    }
+
+    private void printWaitingOtherPlayer() {
+        System.out.println("En attente de l'adversaire");
     }
 }

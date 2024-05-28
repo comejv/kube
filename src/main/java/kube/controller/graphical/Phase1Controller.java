@@ -25,7 +25,7 @@ public class Phase1Controller implements ActionListener, MouseListener {
     }
 
     public DnDController getDragNDropController() {
-        return new DnDController(toView);
+        return new DnDController(toView, toModel);
     }
 
     public void actionPerformed(ActionEvent evt) {

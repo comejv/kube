@@ -8,10 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import kube.configuration.Config;
-import kube.configuration.ResourceLoader;
 import kube.view.GUI;
 import kube.view.GUIColors;
-import kube.view.HSL;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
@@ -20,16 +18,18 @@ import java.awt.event.ActionListener;
 
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Game;
+import kube.model.Kube;
+import kube.model.ModelColor;
 
 /*
  * This class extends JPanel and creates the GUI for the second phase of the game.
  */
 public class SecondPhasePanel extends JPanel {
     private Phase2Controller controller;
-    private Game model;
+    private Kube k3;
     private GUI gui;
 
-    public SecondPhasePanel(GUI gui, Game model, Phase2Controller controller) {
+    public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         setBackground(GUIColors.GAME_BG.toColor());
@@ -140,7 +140,7 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
             for (int j = 0; j < i; j++) {
-                lineHexa.add(newHexa(GUIColors.BLUE_HEX, true));
+                lineHexa.add(new HexIcon(ModelColor.BLUE, true));
             }
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -159,20 +159,8 @@ public class SecondPhasePanel extends JPanel {
         JPanel topPanel = new JPanel();
         topPanel.setOpaque(false);
         for (int i = 0; i < 9; i++) {
-            topPanel.add(newHexa(GUIColors.GREEN_HEX, false));
+            topPanel.add(new HexIcon());
         }
         return topPanel;
-    }
-
-    public static HexIcon newHexa(HSL c, boolean isActionable) {
-        HexIcon hexa;
-        if (c == null) {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), isActionable);
-        } else {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("hexaWhiteTextured"), isActionable);
-            hexa.recolor(c);
-        }
-        hexa.resizeIcon(50, 50);
-        return hexa;
     }
 }
