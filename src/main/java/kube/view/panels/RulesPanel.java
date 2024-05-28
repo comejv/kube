@@ -7,7 +7,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Menu;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -39,6 +40,8 @@ public class RulesPanel extends JPanel{
         this.buttonListener = buttonListener;
         width = Config.getInitWidth()/2;
         height = Config.getInitHeight()/2;
+
+        gui.setGlassPanelVisible(true);
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
