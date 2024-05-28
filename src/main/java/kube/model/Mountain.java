@@ -56,7 +56,7 @@ public class Mountain implements Serializable {
      * SETTERS
      **********/
 
-    @JsonSetter("baseSize")
+    @JsonSetter("base_size")
     public final void setBaseSize(int size) {
         baseSize = size;
     }
@@ -78,7 +78,7 @@ public class Mountain implements Serializable {
      * GETTERS
      **********/
 
-    @JsonGetter("baseSize")
+    @JsonGetter("base_size")
     public int getBaseSize() {
         return baseSize;
     }

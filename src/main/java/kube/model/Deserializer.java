@@ -19,6 +19,10 @@ import java.util.Map;
 
 public class Deserializer {
 
+    /**********
+     * KUBE DESERIALIZER
+     **********/
+
     public static class KubeDeserializer extends JsonDeserializer<Kube> {
 
         /**
@@ -51,10 +55,10 @@ public class Deserializer {
                             TypeReference<ModelColor[]> typeReference = new TypeReference<ModelColor[]>() {
                             };
                             ModelColor[] kubeBase = jsonParser.readValueAs(typeReference);
-                            kube.setK3(new Mountain(kubeBase.length));
+                            kube.setK3(new Mountain(Kube.DEFAULT_BASE_SIZE));
                             // Filling the base of the kube
-                            for (int i = 0; i < kubeBase.length; i++) {
-                                kube.getK3().setCase(kubeBase.length - 1, i, kubeBase[i]);
+                            for (int i = 0; i < Kube.DEFAULT_BASE_SIZE; i++) {
+                                kube.getK3().setCase(Kube.DEFAULT_BASE_SIZE - 1, i, kubeBase[i]);
                             }
                             break;
                         case "players":
@@ -90,6 +94,10 @@ public class Deserializer {
             return kube;
         }
     }
+
+    /**********
+     * PLAYER DESERIALIZER
+     **********/
 
     public static class PlayerDeserializer extends JsonDeserializer<Player> {
 

@@ -1,7 +1,5 @@
 package kube.model;
 
-import kube.configuration.Config;
-
 // Import model classes
 import kube.model.action.Action;
 import kube.model.action.ActionType;
@@ -132,6 +130,7 @@ public class Game implements Runnable {
     }
 
     public void gamePhase() {
+
         while (k3.canCurrentPlayerPlay()) {
             if (k3.getCurrentPlayer().isAI()) {
                 Move move = k3.getCurrentPlayer().getAI().nextMove();
@@ -149,15 +148,15 @@ public class Game implements Runnable {
                     case REDO:
                         redo();
                         break;
-                    default:
-                        modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
-                        break;
                     case SAVE_KUBE:
-                        Config.debug((String) a.getData());
                         k3.saveInstance((String) a.getData());
                         break;
                     case LOAD_KUBE:
                         k3.init(a.getData().toString());
+
+                        break;
+                    default:
+                        modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                         break;
                 }
             }
@@ -314,11 +313,13 @@ public class Game implements Runnable {
                     }
                     break;
                 case SAVE_KUBE:
-                    Config.debug((String) a.getData());
                     k3.saveInstance((String) a.getData());
                     break;
                 case LOAD_KUBE:
                     k3.init(a.getData().toString());
+                    if (k3.getPhase() == Kube.GAME_PHASE) {
+                        gamePhase();
+                    }
                     break;
                 default:
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));

@@ -11,6 +11,10 @@ import java.util.Map;
 
 public class Serializer {
 
+    /**********
+     * KUBE SERIALIZER
+     **********/
+
     public static class KubeSerializer extends JsonSerializer<Kube> {
 
         /**
@@ -27,10 +31,10 @@ public class Serializer {
 
             Player[] players = { kube.getP1(), kube.getP2() };
 
-            ModelColor[] kubeBase = new ModelColor[kube.getBaseSize()];
+            ModelColor[] kubeBase = new ModelColor[Kube.DEFAULT_BASE_SIZE];
 
-            for (int i = 0; i < kube.getBaseSize(); i++) {
-                kubeBase[i] = kube.getK3().getCase(kube.getBaseSize() - 1, i);
+            for (int i = 0; i < Kube.DEFAULT_BASE_SIZE; i++) {
+                kubeBase[i] = kube.getK3().getCase(Kube.DEFAULT_BASE_SIZE - 1, i);
             }
 
             jsonGenerator.writeStartObject();
@@ -41,6 +45,10 @@ public class Serializer {
             jsonGenerator.writeEndObject();
         }
     }
+
+    /**********
+     * PLAYER SERIALIZER
+     **********/
 
     public static class PlayerSerializer extends JsonSerializer<Player> {
 

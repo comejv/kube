@@ -70,6 +70,12 @@ public class CommandListener implements Runnable {
                 case "save":
                     save(sc);
                     break;
+                case "restaurer":
+                case "charger":
+                case "restore":
+                case "load":
+                    load(sc);
+                    break;
                 case "aide":
                 case "help":
                 case "":
@@ -123,6 +129,19 @@ public class CommandListener implements Runnable {
             eventsToView.add(new Action(ActionType.SAVE_KUBE));
             String s = sc.nextLine();
             eventsToModel(new Action(ActionType.SAVE_KUBE, s));
+            eventsToView.add(new Action(ActionType.SAVED_KUBE, s));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean load(Scanner sc) {
+        try {
+            eventsToView.add(new Action(ActionType.LOAD_KUBE));
+            String s = sc.nextLine();
+            eventsToModel(new Action(ActionType.LOAD_KUBE, s));
+            eventsToView.add(new Action(ActionType.LOADED_KUBE, s));
             return true;
         } catch (Exception e) {
             return false;

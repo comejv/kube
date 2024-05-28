@@ -159,7 +159,16 @@ public class TextualMode implements Runnable {
                     printWaitingOtherPlayer();
                     break;
                 case SAVE_KUBE:
-                    printSave();
+                    printSaveAskFileName();
+                    break;
+                case SAVED_KUBE:
+                    printSaved();
+                    break;
+                case LOAD_KUBE:
+                    printLoadAskFileName();
+                    break;
+                case LOADED_KUBE:
+                    printLoaded();
                     break;
                 default:
                     break;
@@ -376,7 +385,19 @@ public class TextualMode implements Runnable {
         System.out.println("En attente de l'adversaire");
     }
 
-    private void printSave() {
+    private void printSaveAskFileName() {
         System.out.println("Veuillez entrer le nom du fichier de sauvegarde");
+    }
+
+    private void printSaved() {
+        System.out.println("Partie sauvegardée");
+    }
+
+    private void printLoadAskFileName() {
+        System.out.println("Veuillez entrer le nom du fichier de sauvegarde");
+    }
+
+    private void printLoaded() {
+        System.out.println("Partie chargée");
     }
 }

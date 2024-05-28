@@ -1717,6 +1717,7 @@ public class KubeTest {
 
         try {
             String s = om.writeValueAsString(kube);
+            
             Kube k = om.readValue(s, Kube.class);
 
             assertEquals(kube.getPhase(), k.getPhase());
