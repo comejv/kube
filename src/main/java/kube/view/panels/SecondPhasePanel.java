@@ -64,7 +64,7 @@ public class SecondPhasePanel extends JPanel {
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Menu");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        optButton.setActionCommand("Menu");
+        optButton.setActionCommand("menu");
         optButton.addActionListener(a);
         buttons.add(optButton);
 
