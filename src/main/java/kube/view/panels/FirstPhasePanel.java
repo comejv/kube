@@ -158,13 +158,17 @@ public class FirstPhasePanel extends JPanel {
     public void updateSide(){
         piecesPanel.removeAll();
         List<Map.Entry<ModelColor, Integer>> entryList = new ArrayList<>(k3.getCurrentPlayer().getAvailaibleToBuild().entrySet());
+        Map.Entry<ModelColor, Integer> entry;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 2; j++) {
-                Map.Entry<ModelColor, Integer> entry = entryList.remove(0);
+                if (entryList.size() == 0){
+                    break;
+                }
+                entry = entryList.remove(0);
                 JPanel mini = new JPanel();
                 mini.setOpaque(false);
                 JLabel numOfPieces = new JLabel("x" + entry.getValue());
-                numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
+                numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
                 mini.add(newHexa(entry.getKey(), true));
                 mini.add(numOfPieces);
                 piecesPanel.add(mini);

@@ -54,6 +54,7 @@ public class Game implements Runnable {
         } else {
             k3.init(s.getAiJ1(), s.getAiJ2());
         }
+        Config.debug("Game is ready");
         return;
     }
 
