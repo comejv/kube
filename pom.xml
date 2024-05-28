@@ -26,22 +26,19 @@
         <groupId>jackson.core</groupId>  
         <artifactId>jackson-databind</artifactId>  
         <version>2.17.1</version>
-        <scope>system</scope>
-        <systemPath>${project.basedir}/lib/jackson-databind-2.17.1.jar</systemPath>
+        <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
         <version>2.17.1</version>
-        <scope>system</scope>
-        <systemPath>${project.basedir}/lib/jackson-core-2.17.1.jar</systemPath>
+        <scope>compile</scope>
     </dependency>
     <dependency>
         <groupId>jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
         <version>2.17.1</version>
-        <scope>system</scope>
-        <systemPath>${project.basedir}/lib/jackson-annotations-2.17.1.jar</systemPath>
+        <scope>compile</scope>
     </dependency>
 </dependencies>
 
@@ -97,5 +94,49 @@
             </plugin>
         </plugins>
     </pluginManagement>
+    <plugins>
+        <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>3.3.0</version>
+            <configuration>
+                <archive>
+                    <manifest>
+                        <mainClass>kube.TextualGame</mainClass>
+                    </manifest>
+                </archive>
+                <descriptorRefs>
+                    <descriptorRef>jar-with-dependencies</descriptorRef>
+                </descriptorRefs>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>make-assembly</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>single</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        <plugin>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.8</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <configuration>
+                        <target>
+                            <delete>
+                                <fileset dir="${project.build.directory}" includes="${project.build.finalName}.jar"/>
+                            </delete>
+                        </target>
+                    </configuration>
+                    <goals>
+                        <goal>run</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
 </build>
 </project>
