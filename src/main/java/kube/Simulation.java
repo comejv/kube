@@ -8,9 +8,9 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
-import kube.model.ai.Joker;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.moveSetHeuristique;
+import kube.model.ai.randomAI;
 
 public class Simulation implements Runnable {
     int winJ1;
@@ -117,15 +117,15 @@ public class Simulation implements Runnable {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new Joker(50), new moveSetHeuristique(50));
-            k.getP1().getAI().constructionPhase();
+            k.init(new moveSetHeuristique(50), new randomAI(50));
+            k.getP1().getAI().constructionPhase(k);
             k.updatePhase();
-            k.getP2().getAI().constructionPhase();
+            k.getP2().getAI().constructionPhase(k);
             k.updatePhase();
             // Phsae 2
             k.setCurrentPlayer(k.getRandomPlayer());
             while (k.canCurrentPlayerPlay()) {  
-                Move move = k.getCurrentPlayer().getAI().nextMove();
+                Move move = k.getCurrentPlayer().getAI().nextMove(k);
                 if (k.getCurrentPlayer() == k.getP1()) {
                     horizonReachedJ1.add(k.getCurrentPlayer().getAI().getHorizonMax());
                 } else {
@@ -165,13 +165,13 @@ public class Simulation implements Runnable {
         k.init(new MiniMaxAI(0, 1), new MiniMaxAI(0, 1), seed);
         k2.init(new MiniMaxAI(0, 1), new MiniMaxAI(0, 1), seed);
 
-        k.getCurrentPlayer().getAI().constructionPhase();
+        k.getCurrentPlayer().getAI().constructionPhase(k);
         k.updatePhase();
-        k.getCurrentPlayer().getAI().constructionPhase();
+        k.getCurrentPlayer().getAI().constructionPhase(k);
 
-        k2.getCurrentPlayer().getAI().constructionPhase();
+        k2.getCurrentPlayer().getAI().constructionPhase(k);
         k2.updatePhase();
-        k2.getCurrentPlayer().getAI().constructionPhase();
+        k2.getCurrentPlayer().getAI().constructionPhase(k);
 
         System.out.println(k.getP1());
         System.out.println(k.getP2());

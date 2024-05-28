@@ -9,6 +9,7 @@ import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.model.action.Start;
 import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 import kube.services.Client;
@@ -44,23 +45,24 @@ public class MenuListener implements Runnable {
             controller = new CommandListener(eventsToModel, eventsToView, scanner);
             type = Game.LOCAL;
             nb = askNbPlayer();
+            Start s = new Start();
             switch (nb) {
                 case 0:
-                    kube.init(new moveSetHeuristique(), new randomAI());
+                    s.setAiJ1(new moveSetHeuristique());
+                    s.setAiJ2(new moveSetHeuristique());
                     break;
                 case 1:
-                    kube.init(new randomAI());
+                    s.setAiJ1(new moveSetHeuristique());
                     break;
                 case 2:
-                    kube.init();
                     break;
-
                 default:
                     break;
             }
+            eventsToModel.add(new Action(ActionType.START, s));
 
         } else {
-            kube.init();
+            eventsToModel.add(new Action(ActionType.START, new Start()));
             mode = askHostOrJoin();
             Network network;
             if (mode == 1) {

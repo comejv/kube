@@ -13,7 +13,7 @@ public class GUIControllers {
         menuController = new MenuController(toView, toModel);
         phase1Controller = new Phase1Controller(toView, toModel);
         phase2Controller = new Phase2Controller(toView, toModel);
-        hexDnDController = new DnDController(toView);
+        hexDnDController = new DnDController(toView, toModel);
     }
 
     public MenuController getMenuController() {

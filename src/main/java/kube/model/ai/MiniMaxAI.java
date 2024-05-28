@@ -2,6 +2,7 @@ package kube.model.ai;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,13 +14,12 @@ import kube.model.Kube;
 import kube.model.Player;
 import kube.model.action.move.Move;
 
-public class MiniMaxAI implements ActionListener {
+public class MiniMaxAI implements ActionListener, Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
-    private Kube k3;
     private int iaPlayerId;
     private Random r;
     private int time; // in ms
@@ -27,12 +27,13 @@ public class MiniMaxAI implements ActionListener {
     private Timer timer;
     private int nbMoves;
     private int horizonMax;
+
     /**********
      * CONSTRUCTORS
      **********/
 
-     public MiniMaxAI(int time, Random r) {
-        this.r =r;
+    public MiniMaxAI(int time, Random r) {
+        this.r = r;
         this.time = time;
     }
 
@@ -55,10 +56,6 @@ public class MiniMaxAI implements ActionListener {
      * SETTERS
      **********/
 
-    public void setK3(Kube k) {
-        k3 = k;
-    }
-
     public void setPlayerId(int id) {
         iaPlayerId = id;
     }
@@ -79,26 +76,25 @@ public class MiniMaxAI implements ActionListener {
         timer = t;
     }
 
-    public void incrNbMoves(){
+    public void incrNbMoves() {
         nbMoves++;
     }
 
-    public void setHorizonMax(int h){
+    public void setHorizonMax(int h) {
         horizonMax = h;
     }
+
     /**********
      * GETTERS
      **********/
 
-    public Kube getK3() {
-        return k3;
-    }
-    public Player getOtherPlayer(Kube k){
-        if (k.getP1().getId() == iaPlayerId){
+    public Player getOtherPlayer(Kube k) {
+        if (k.getP1().getId() == iaPlayerId) {
             return k.getP2();
-        } 
+        }
         return k.getP1();
     }
+
     public Player getPlayer(Kube k) {
         return k.getPlayerById(iaPlayerId);
     }
@@ -119,13 +115,14 @@ public class MiniMaxAI implements ActionListener {
         return timer;
     }
 
-    public int getNbMoves(){
+    public int getNbMoves() {
         return nbMoves;
     }
 
-    public int getHorizonMax(){
+    public int getHorizonMax() {
         return horizonMax;
     }
+
     /**********
      * METHODS
      **********/
@@ -135,7 +132,7 @@ public class MiniMaxAI implements ActionListener {
      * 
      * @return void
      */
-    public void constructionPhase() {
+    public void constructionPhase(Kube k3) {
         while (!getPlayer(k3).validateBuilding()) {
             utilsAI.randomFillMountain(getPlayer(k3), getR());
         }
@@ -196,18 +193,18 @@ public class MiniMaxAI implements ActionListener {
                     return -1;
                 }
                 k.unPlay();
-                // Noeud max 
+                // Noeud max
                 if (p == getPlayer(k)) {
                     bestScore = Math.max(score, bestScore);
                     alpha = Math.max(score, alpha);
-                    if (beta <= alpha){
+                    if (beta <= alpha) {
                         break;
                     }
-                // Noeud min
+                    // Noeud min
                 } else {
                     bestScore = Math.min(score, bestScore);
                     beta = Math.min(score, beta);
-                    if (beta <= alpha){
+                    if (beta <= alpha) {
                         break;
                     }
                 }
@@ -238,11 +235,7 @@ public class MiniMaxAI implements ActionListener {
         getTimer().stop();
     }
 
-    public int moveSetSize() {
-        return k3.moveSet().size();
-    }
-
-    public Move selectMove(HashMap<Move, Integer> movesMap) {
+    public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
 
@@ -251,7 +244,7 @@ public class MiniMaxAI implements ActionListener {
      * 
      * @return the next move
      */
-    public Move nextMove() {
+    public Move nextMove(Kube k3) {
         incrNbMoves();
         int horizon;
         setNoMoreTime(false);
@@ -260,13 +253,12 @@ public class MiniMaxAI implements ActionListener {
         horizon = 2;
         HashMap<Move, Integer> solution = null, moveMap = null;
         while (true) {
-            moveMap = miniMax(getK3().clone(), horizon);
+            moveMap = miniMax(k3.clone(), horizon);
             if (getNoMoreTime()) {
-                //Config.debug("Horizon max :" + horizon);
                 if (solution == null) {
-                    return selectMove(moveMap);
+                    return selectMove(moveMap, k3);
                 } else {
-                    return selectMove(solution);
+                    return selectMove(moveMap, k3);
                 }
             } else {
                 solution = moveMap;
@@ -274,5 +266,16 @@ public class MiniMaxAI implements ActionListener {
                 horizon++;
             }
         }
+    }
+
+    public MiniMaxAI clone(){
+        if (this instanceof moveSetHeuristique){
+            return new moveSetHeuristique(getTime());
+        } else if (this instanceof randomAI){
+            return new randomAI(getTime());
+        } else {
+            throw new UnsupportedOperationException("Unsupported type for cloning.");
+        }
+
     }
 }

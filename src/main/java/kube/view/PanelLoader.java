@@ -4,6 +4,9 @@ import javax.swing.JPanel;
 
 import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
+import kube.model.Kube;
+import kube.model.action.Action;
+import kube.model.action.Queue;
 import kube.view.panels.FirstPhasePanel;
 import kube.view.panels.SecondPhasePanel;
 
@@ -11,23 +14,27 @@ public class PanelLoader implements Runnable {
     GUI gui;
     String panelName;
     GUIControllers controllers;
-    Game model;
-
-    PanelLoader(GUI gui, String panelName, Game model, GUIControllers controller) {
+    Kube k3;
+    Queue<Action> eventsToView;
+    Queue<Action> eventsToModel;
+    
+    PanelLoader(GUI gui, String panelName, Kube k3, GUIControllers controller, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.gui = gui;
         this.panelName = panelName;
         this.controllers = controller;
-        this.model = model;
+        this.k3 = k3;
+        this.eventsToView = eventsToView;
+        this.eventsToModel = eventsToModel;
     }
 
     public void run() {
         JPanel panel;
         switch (panelName) {
             case GUI.PHASE1:
-                panel = new FirstPhasePanel(gui, model, controllers.getPhase1Controller());
+                panel = new FirstPhasePanel(gui, k3, controllers.getPhase1Controller(), eventsToView, eventsToModel);
                 break;
             case GUI.PHASE2:
-                panel = new SecondPhasePanel(gui, model, controllers.getPhase2Controller());
+                panel = new SecondPhasePanel(gui, k3, controllers.getPhase2Controller());
                 break;
             default:
                 panel = null;

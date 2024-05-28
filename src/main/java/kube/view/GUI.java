@@ -22,6 +22,7 @@ import kube.configuration.ResourceLoader;
 import kube.controller.graphical.DnDController;
 import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
+import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.panels.*;
@@ -33,15 +34,19 @@ public class GUI extends Thread {
 
     private MainFrame mF;
     private GUIControllers controllers;
-    private Game model;
+    private Kube k3;
 
     private volatile FirstPhasePanel firstPhasePanel;
     private volatile SecondPhasePanel secondPhasePanel;
     private Thread loaderThread;
+    private Queue<Action> eventsToView;
+    private Queue<Action> eventsToModel;
 
-    public GUI(Game model, GUIControllers controllers, Queue<Action> events) {
+    public GUI(Kube k3, GUIControllers controllers, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
+        this.eventsToView = eventsToView;
+        this.eventsToModel = eventsToModel;
         this.controllers = controllers;
-        this.model = model;
+        this.k3 = k3;
         try {
             boolean nimbusFound = false;
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -73,7 +78,7 @@ public class GUI extends Thread {
             System.err.println("Could not load buttons font, using default.");
         }
 
-        new Thread(new GUIEventsHandler(this, events)).start();
+        new Thread(new GUIEventsHandler(this, eventsToView, eventsToModel)).start();
 
         SwingUtilities.invokeLater(this);
     }
@@ -103,7 +108,7 @@ public class GUI extends Thread {
     }
 
     public void loadPanel(String panelName) {
-        PanelLoader loader = new PanelLoader(this, panelName, model, controllers);
+        PanelLoader loader = new PanelLoader(this, panelName, k3, controllers, eventsToView, eventsToModel);
         loaderThread = new Thread(loader);
         loaderThread.start();
     }
@@ -191,6 +196,10 @@ public class GUI extends Thread {
                 ((JPanel) comp).setBorder(BorderFactory.createLineBorder(Color.red));
             }
         }
+    }
+
+    public void updateFirstPanel(){
+        firstPhasePanel.updateGrid();
     }
 
     

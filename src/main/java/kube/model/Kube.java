@@ -89,13 +89,13 @@ public class Kube {
         setPenality(false);
 
         if (typeAI1 != null) {
-            setP1(new AI(1, typeAI1, this));
+            setP1(new AI(1, typeAI1));
         } else {
             setP1(new Player(1));
         }
 
         if (typeAI2 != null) {
-            setP2(new AI(2, typeAI2, this));
+            setP2(new AI(2, typeAI2));
         } else {
             setP2(new Player(2));
         }
