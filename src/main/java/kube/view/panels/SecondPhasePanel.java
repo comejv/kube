@@ -54,6 +54,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
 
+
     private JPanel createEastPanel(ActionListener a) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
