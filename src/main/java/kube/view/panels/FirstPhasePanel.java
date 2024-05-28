@@ -14,6 +14,8 @@ import kube.view.components.HexIcon;
 import kube.view.components.Icon;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
 
 import javax.swing.*;
 
