@@ -64,7 +64,6 @@ public class DnDController implements MouseListener, MouseMotionListener {
             }
             toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getPosition())));
         }
-        GlassPanel g = ((GlassPanel) e.getSource());
         g.setCursor(Cursor.getDefaultCursor());
         g.clear();
     }
