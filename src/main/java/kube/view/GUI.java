@@ -210,16 +210,7 @@ public class GUI extends Thread {
     }
 
     public void updateFirstPanel(Action a) {
-        switch (a.getType()) {
-            case BUILD:
-                Build b = (Build) a.getData();
-                firstPhasePanel.updateGrid(b.getPos());
-                firstPhasePanel.updateSide(b.getModelColor());
-                break;
-
-            default:
-                break;
-        }
+        firstPhasePanel.update(a);
     }
 
 }
