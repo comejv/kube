@@ -5,6 +5,7 @@ import kube.configuration.ResourceLoader;
 import kube.controller.graphical.DnDController;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Game;
+import kube.model.ModelColor;
 import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.HSL;
@@ -70,15 +71,15 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
 
-        topPanel.add(newHexa(GUIColors.YELLOW_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLACK_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
-        topPanel.add(newHexa(GUIColors.RED_HEX, false));
-        topPanel.add(newHexa(GUIColors.GREEN_HEX, false));
-        topPanel.add(newHexa(GUIColors.RED_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
-        topPanel.add(newHexa(GUIColors.BLUE_HEX, false));
-        topPanel.add(newHexa(GUIColors.YELLOW_HEX, false));
+        topPanel.add(new HexIcon(ModelColor.WHITE));
+        topPanel.add(new HexIcon(ModelColor.RED));
+        topPanel.add(new HexIcon(ModelColor.BLUE));
+        topPanel.add(new HexIcon(ModelColor.GREEN));
+        topPanel.add(new HexIcon(ModelColor.YELLOW));
+        topPanel.add(new HexIcon(ModelColor.NATURAL));
+        topPanel.add(new HexIcon(ModelColor.BLACK));
+        topPanel.add(new HexIcon(ModelColor.WHITE));
+        topPanel.add(new HexIcon(ModelColor.RED));
 
         gamePanel.add(topPanel, BorderLayout.NORTH);
 
@@ -93,7 +94,7 @@ public class FirstPhasePanel extends JPanel {
         // will change to getting base colours from model
         for (int i = 5; i >= 0; i--) {
             for (int j = 0; j <= i; j++) {
-                hexaList[i][j] = newHexa(null, false);
+                hexaList[i][j] = new HexIcon();
             }
         }
         for (int i = 0; i < 6; i++) {
@@ -127,9 +128,9 @@ public class FirstPhasePanel extends JPanel {
                 JLabel numOfPieces = new JLabel("x3");
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
                 if (i == 2) {
-                    mini.add(newHexa(GUIColors.NATURAL_HEX, true));
+                    mini.add(new HexIcon(ModelColor.NATURAL, true));
                 } else {
-                    mini.add(newHexa(GUIColors.WHITE_HEX, true));
+                    mini.add(new HexIcon(ModelColor.WHITE, true));
                 }
                 mini.add(numOfPieces);
                 piecesPanel.add(mini);
@@ -165,17 +166,5 @@ public class FirstPhasePanel extends JPanel {
         validerButton.addActionListener(controller);
         buttons.add(validerButton);
         return buttons;
-    }
-
-    public static HexIcon newHexa(HSL c, boolean isActionable) {
-        HexIcon hexa;
-        if (c == null) {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), isActionable);
-        } else {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("hexaWhiteTextured"), isActionable);
-            hexa.recolor(c);
-        }
-        hexa.resizeIcon(60, 60);
-        return hexa;
     }
 }
