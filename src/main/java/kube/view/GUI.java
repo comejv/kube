@@ -209,6 +209,11 @@ public class GUI extends Thread {
                 JOptionPane.ERROR_MESSAGE);
     }
 
+    public void showInfo(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
     public void updateFirstPanel() {
         firstPhasePanel.updateGrid();
     }

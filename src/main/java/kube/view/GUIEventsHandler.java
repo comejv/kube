@@ -73,7 +73,15 @@ public class GUIEventsHandler implements Runnable {
                 case PRINT_FORBIDDEN_ACTION:
                     Config.debug("Forbidden action : " + action.getData());
                     String message = (String) action.getData() == null ? "You can't do that now." : (String) action.getData();
-                    gui.showWarning("Forbidden action", message);                    
+                    gui.showError("Forbidden action", message);                    
+                    break;
+                case PRINT_NOT_YOUR_TURN:
+                    Config.debug("Not your turn");
+                    gui.showWarning("Not your turn", "It's not your turn yet.");
+                    break;
+                case PRINT_WIN_MESSAGE:
+                    Config.debug("Win message");
+                    gui.showInfo("You won !", "Congratulations, you won the game !");
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);
