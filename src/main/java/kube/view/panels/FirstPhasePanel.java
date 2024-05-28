@@ -24,8 +24,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
 /*
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
@@ -165,7 +163,7 @@ public class FirstPhasePanel extends JPanel {
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             JPanel mini = new JPanel();
             mini.setOpaque(false);
-            int numberOfPieces =  k3.getCurrentPlayer().getAvailableToBuild().get(c);
+            int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
             JLabel numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             boolean actionable = numberOfPieces > 0;
@@ -198,7 +196,7 @@ public class FirstPhasePanel extends JPanel {
 
         JPanel mini = sidePanels.get(c);
         mini.removeAll();
-        int numberOfPieces =  k3.getCurrentPlayer().getAvailableToBuild().get(c);
+        int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
         JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(c, numberOfPieces > 0));
@@ -209,7 +207,7 @@ public class FirstPhasePanel extends JPanel {
 
     }
 
-    public void update(Action a){
+    public void update(Action a) {
         switch (a.getType()) {
             case BUILD:
                 Build b = (Build) a.getData();
@@ -229,6 +227,6 @@ public class FirstPhasePanel extends JPanel {
             default:
                 break;
         }
-    
+
     }
 }

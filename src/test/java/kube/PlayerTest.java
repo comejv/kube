@@ -4,12 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashMap;
-
 import org.junit.Test;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kube.model.*;
 
@@ -157,62 +152,62 @@ public class PlayerTest {
         assertEquals(4, player.getAvailableToBuild().get(ModelColor.RED).intValue());
     }
 
-    @Test
-    public void serializationTest() {
+    // @Test
+    // public void serializationTest() {
             
-        ObjectMapper mapper = new ObjectMapper();
+    //     ObjectMapper mapper = new ObjectMapper();
 
-        Player player = new Player(1);
+    //     Player player = new Player(1);
 
-        player.setName("roger");
+    //     player.setName("roger");
 
-        player.getMountain().setCase(1, 0, ModelColor.BLUE);
-        player.getMountain().setCase(1, 1, ModelColor.WHITE);
-        player.getMountain().setCase(2, 0, ModelColor.YELLOW);
-        player.getMountain().setCase(2, 1, ModelColor.WHITE);
-        player.getMountain().setCase(2, 2, ModelColor.BLUE);
+    //     player.getMountain().setCase(1, 0, ModelColor.BLUE);
+    //     player.getMountain().setCase(1, 1, ModelColor.WHITE);
+    //     player.getMountain().setCase(2, 0, ModelColor.YELLOW);
+    //     player.getMountain().setCase(2, 1, ModelColor.WHITE);
+    //     player.getMountain().setCase(2, 2, ModelColor.BLUE);
 
-        player.setInitialMountain(player.getMountain().clone());
+    //     player.setInitialMountain(player.getMountain().clone());
 
-        HashMap<ModelColor, Integer> cubes = new HashMap<>();
+    //     HashMap<ModelColor, Integer> cubes = new HashMap<>();
 
-        cubes.put(ModelColor.RED, 4);
-        cubes.put(ModelColor.BLUE, 3);
-        cubes.put(ModelColor.GREEN, 2);
-        cubes.put(ModelColor.YELLOW, 1);
+    //     cubes.put(ModelColor.RED, 4);
+    //     cubes.put(ModelColor.BLUE, 3);
+    //     cubes.put(ModelColor.GREEN, 2);
+    //     cubes.put(ModelColor.YELLOW, 1);
 
-        player.setAvailableToBuild(cubes);
+    //     player.setAvailableToBuild(cubes);
 
-        try {
-            String playerJson = mapper.writeValueAsString(player);
-            Player player2 = mapper.readValue(playerJson, Player.class);
+    //     try {
+    //         String playerJson = mapper.writeValueAsString(player);
+    //         Player player2 = mapper.readValue(playerJson, Player.class);
 
-            assertEquals(player.getName(), player2.getName());
-            assertEquals(player.getId(), player2.getId());
-            assertEquals(player.getHasValidateBuilding(), player2.getHasValidateBuilding());
-            assertTrue(areSameMountain(player.getInitialMountain(), player2.getInitialMountain()));
-            assertTrue(areSameMountain(player.getMountain(), player2.getMountain()));
+    //         assertEquals(player.getName(), player2.getName());
+    //         assertEquals(player.getId(), player2.getId());
+    //         assertEquals(player.getHasValidateBuilding(), player2.getHasValidateBuilding());
+    //         assertTrue(areSameMountain(player.getInitialMountain(), player2.getInitialMountain()));
+    //         assertTrue(areSameMountain(player.getMountain(), player2.getMountain()));
 
-            for (ModelColor color : player.getAvailableToBuild().keySet()) {
-                assertEquals(player.getAvailableToBuild().get(color), player2.getAvailableToBuild().get(color));
-            }
+    //         for (ModelColor color : player.getAvailableToBuild().keySet()) {
+    //             assertEquals(player.getAvailableToBuild().get(color), player2.getAvailableToBuild().get(color));
+    //         }
 
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean areSameMountain(Mountain m1, Mountain m2) {
-        if (m1.getBaseSize() != m2.getBaseSize()) {
-            return false;
-        }
-        for (int i = 0; i < m1.getBaseSize(); i++) {
-            for (int j = 0; j < m1.getBaseSize(); j++) {
-                if (m1.getCase(i, j) != m2.getCase(i, j)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
+    //     } catch (JsonProcessingException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+    //
+    // private boolean areSameMountain(Mountain m1, Mountain m2) {
+    //     if (m1.getBaseSize() != m2.getBaseSize()) {
+    //         return false;
+    //     }
+    //     for (int i = 0; i < m1.getBaseSize(); i++) {
+    //         for (int j = 0; j < m1.getBaseSize(); j++) {
+    //             if (m1.getCase(i, j) != m2.getCase(i, j)) {
+    //                 return false;
+    //             }
+    //         }
+    //     }
+    //     return true;
+    // }
 }

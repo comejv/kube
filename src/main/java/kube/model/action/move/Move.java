@@ -4,14 +4,6 @@ package kube.model.action.move;
 import kube.model.ModelColor;
 import kube.model.Player;
 
-// Import jackson classes
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
 // Import java classes
 import java.awt.Point;
 import java.io.Serializable;
@@ -20,25 +12,13 @@ import java.io.Serializable;
  * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
  **********/
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = MoveMW.class, name = "MW"),
-        @JsonSubTypes.Type(value = MoveMM.class, name = "MM"),
-        @JsonSubTypes.Type(value = MoveAM.class, name = "AM"),
-        @JsonSubTypes.Type(value = MoveAW.class, name = "AW"),
-        @JsonSubTypes.Type(value = MoveMA.class, name = "MA"),
-        @JsonSubTypes.Type(value = MoveAA.class, name = "AA")
-})
 public abstract class Move implements Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
-    @JsonIgnore
     private Player player;
-
-    @JsonProperty("color")
     private ModelColor color;
 
     /**********
@@ -57,8 +37,7 @@ public abstract class Move implements Serializable {
      * 
      * @param color
      */
-    @JsonCreator
-    public Move(@JsonProperty("color") ModelColor color) {
+    public Move(ModelColor color) {
         this.color = color;
     }
 
@@ -70,7 +49,6 @@ public abstract class Move implements Serializable {
         this.player = player;
     }
 
-    @JsonSetter("color")
     public final void setColor(ModelColor color) {
         this.color = color;
     }
@@ -83,17 +61,14 @@ public abstract class Move implements Serializable {
         return this.player;
     }
 
-    @JsonProperty("color")
     public ModelColor getColor() {
         return this.color;
     }
-
-    @JsonIgnore
+    
     public Point getFrom() {
         return null;
     }
 
-    @JsonIgnore
     public Point getTo() {
         return null;
     }
@@ -107,7 +82,6 @@ public abstract class Move implements Serializable {
      *
      * @return true if the move is from the additionals, false otherwise
      */
-    @JsonIgnore
     public boolean isFromAdditionals() {
         return false;
     }
@@ -117,7 +91,6 @@ public abstract class Move implements Serializable {
      * 
      * @return true if the move is to the additionals, false otherwise
      */
-    @JsonIgnore
     public boolean isToAdditionals() {
         return false;
     }
@@ -127,7 +100,6 @@ public abstract class Move implements Serializable {
      * 
      * @return true if the move is a white move, false otherwise
      */
-    @JsonIgnore
     public boolean isWhite() {
         return false;
     }
@@ -137,7 +109,6 @@ public abstract class Move implements Serializable {
      * 
      * @return true if the move is a classic move, false otherwise
      */
-    @JsonIgnore
     public boolean isClassicMove() {
         return false;
     }

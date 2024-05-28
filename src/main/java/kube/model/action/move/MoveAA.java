@@ -3,10 +3,6 @@ package kube.model.action.move;
 // Import model class
 import kube.model.ModelColor;
 
-// Import jackson classes
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class MoveAA extends Move {
 
     /**********
@@ -18,8 +14,7 @@ public class MoveAA extends Move {
      * 
      * @param color the color of the moved cube
      */
-    @JsonCreator
-    public MoveAA(@JsonProperty("color") ModelColor color) {
+    public MoveAA(ModelColor color) {
         super(color);
     }
 

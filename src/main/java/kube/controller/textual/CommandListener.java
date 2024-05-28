@@ -68,13 +68,13 @@ public class CommandListener implements Runnable {
                     break;
                 case "sauvegarder":
                 case "save":
-                    save(sc);
+                    // TODO
                     break;
                 case "restaurer":
                 case "charger":
                 case "restore":
                 case "load":
-                    load(sc);
+                    // TODO
                     break;
                 case "aide":
                 case "help":
@@ -120,30 +120,6 @@ public class CommandListener implements Runnable {
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(ActionType.MOVE));
-            return false;
-        }
-    }
-
-    private boolean save(Scanner sc) {
-        try {
-            eventsToView.add(new Action(ActionType.SAVE_KUBE));
-            String s = sc.nextLine();
-            eventsToModel(new Action(ActionType.SAVE_KUBE, s));
-            eventsToView.add(new Action(ActionType.SAVED_KUBE, s));
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    private boolean load(Scanner sc) {
-        try {
-            eventsToView.add(new Action(ActionType.LOAD_KUBE));
-            String s = sc.nextLine();
-            eventsToModel(new Action(ActionType.LOAD_KUBE, s));
-            eventsToView.add(new Action(ActionType.LOADED_KUBE, s));
-            return true;
-        } catch (Exception e) {
             return false;
         }
     }

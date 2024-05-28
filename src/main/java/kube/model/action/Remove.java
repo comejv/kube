@@ -2,8 +2,6 @@ package kube.model.action;
 
 import java.awt.Point;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
 import kube.model.ModelColor;
 
 public class Remove {

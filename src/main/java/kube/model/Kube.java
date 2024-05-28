@@ -3,31 +3,17 @@ package kube.model;
 // Import model classes
 import kube.model.action.move.*;
 import kube.model.ai.MiniMaxAI;
-import kube.configuration.Config;
-
-// Import jackson classes
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 // Import java classes
 import java.awt.Point;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 
-/**********
- * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
- **********/
-
-@JsonSerialize(using = Serializer.KubeSerializer.class)
-@JsonDeserialize(using = Deserializer.KubeDeserializer.class)
-public class Kube {
+public class Kube implements Serializable {
 
     /**********
      * CONSTANTS
@@ -76,10 +62,6 @@ public class Kube {
         if (!empty) {
             init();
         }
-    }
-
-    public Kube(String fileName) {
-        init(fileName);
     }
 
     /**********
@@ -176,24 +158,6 @@ public class Kube {
         }
         setCurrentPlayer(getP1());
         distributeCubesToPlayers();
-    }
-
-    public void init(String fileName) {
-        try {
-            Kube kube = loadInstance(fileName);
-            setP1(kube.getP1());
-            setP2(kube.getP2());
-            setCurrentPlayer(kube.getCurrentPlayer());
-            setBag(kube.getBag());
-            setPenality(kube.getPenality());
-            setHistory(kube.getHistory());
-            setPhase(kube.getPhase());
-            setBaseSize(kube.getBaseSize());
-            setK3(kube.getK3());
-            setLastMovePlayed(kube.getLastMovePlayed());
-        } catch (KubeReadException e) {
-            e.printStackTrace();
-        }
     }
 
     /**********
@@ -956,31 +920,6 @@ public class Kube {
         }
 
         return getPhase();
-    }
-
-    public void saveInstance(String fileName) {
-
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            File directory = new File(Config.SAVING_PATH_DIRECTORY);
-            if (!directory.exists()) {
-                directory.mkdirs();
-            }
-            File file = new File(Config.SAVING_PATH_DIRECTORY, fileName);
-            mapper.writeValue(file, this);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Kube loadInstance(String fileName) throws KubeReadException {
-        try {
-            ObjectMapper mapper = new ObjectMapper();
-            FileReader file = new FileReader(Config.SAVING_PATH_DIRECTORY + fileName);
-            return mapper.readValue(file, Kube.class);
-        } catch (IOException e) {
-            throw new KubeReadException("Failed to read Kube from file: " + fileName);
-        }
     }
 
     @Override

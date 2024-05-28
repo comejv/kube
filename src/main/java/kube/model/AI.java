@@ -1,6 +1,5 @@
 package kube.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,7 +21,6 @@ public class AI extends Player {
      * 
      * @param id the id of the player
      * @param ai the AI of the player
-     * @param k3 the game
      */
     public AI(int id, MiniMaxAI ai) {
         super(id);

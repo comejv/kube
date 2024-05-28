@@ -1,12 +1,5 @@
 package kube.model;
 
-// Import jackson classes
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-
 // Import java classes
 import java.awt.Point;
 import java.io.Serializable;
@@ -19,10 +12,7 @@ public class Mountain implements Serializable {
      * ATTRIBUTES
      **********/
 
-    @JsonProperty("content")
     private ModelColor[][] content;
-
-    @JsonProperty("base_size")
     private int baseSize;
 
     /**********
@@ -40,28 +30,14 @@ public class Mountain implements Serializable {
         clear();
     }
 
-    /**
-     * Constructor of the class Mountain from a json file
-     * 
-     * @param content  the content of the mountain
-     * @param baseSize the size of the mountain's base
-     */
-    @JsonCreator
-    public Mountain(@JsonProperty("content") ModelColor[][] content, @JsonProperty("base_size") int baseSize) {
-        this.content = content;
-        this.baseSize = baseSize;
-    }
-
     /**********
      * SETTERS
      **********/
 
-    @JsonSetter("base_size")
     public final void setBaseSize(int size) {
         baseSize = size;
     }
 
-    @JsonSetter("content")
     public final void setMountain(ModelColor[][] mountain) {
         content = mountain;
     }
@@ -78,12 +54,10 @@ public class Mountain implements Serializable {
      * GETTERS
      **********/
 
-    @JsonGetter("base_size")
     public int getBaseSize() {
         return baseSize;
     }
 
-    @JsonGetter("content")
     public ModelColor[][] getMountain() {
         return content;
     }
@@ -243,7 +217,6 @@ public class Mountain implements Serializable {
      * 
      * @return true if the mountain is full, false otherwise
      */
-    @JsonIgnore
     public boolean isFull() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
@@ -260,7 +233,6 @@ public class Mountain implements Serializable {
      * 
      * @return true if the mountain is empty, false otherwise
      */
-    @JsonIgnore
     public boolean isEmpty() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
