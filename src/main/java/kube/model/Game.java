@@ -153,7 +153,6 @@ public class Game implements Runnable {
                         break;
                     case LOAD_KUBE:
                         k3.init(a.getData().toString());
-
                         break;
                     default:
                         modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
