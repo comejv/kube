@@ -34,7 +34,18 @@ public class Game implements Runnable {
 
     @Override
     public void run() {
+        waitStartGame();
         localGame(gameType);
+    }
+
+    public void waitStartGame() {
+        Action a;
+        while ((a = eventsToModele.remove()).getType() != ActionType.START) {
+            modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+        }
+        Start s = (Start) a.getData();
+        k3.init(s.getAiJ1(), s.getAiJ2());
+        return;
     }
 
     public void setGameType(int gameType) {
@@ -209,7 +220,7 @@ public class Game implements Runnable {
         k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos2(), c);
     }
 
-    synchronized public boolean build(Action a){
+    synchronized public boolean build(Action a) {
         Build b = (Build) a.getData();
         return k3.getCurrentPlayer().addToMountainFromAvailableToBuild(b.getPos(), b.getModelColor());
     }

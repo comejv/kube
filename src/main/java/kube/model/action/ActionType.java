@@ -2,6 +2,7 @@ package kube.model.action;
 
 public enum ActionType {
     // --- Model ---
+    START,
     SHOW_ALL,
     SHOW_MOUNTAIN,
     SWAP,
