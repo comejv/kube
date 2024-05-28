@@ -3,12 +3,7 @@ package kube.model;
 import kube.configuration.Config;
 import java.util.Random;
 
-import kube.model.action.Action;
-import kube.model.action.ActionType;
-import kube.model.action.Build;
-import kube.model.action.Queue;
-import kube.model.action.Start;
-import kube.model.action.Swap;
+import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.utilsAI;
 
@@ -20,19 +15,17 @@ public class Game implements Runnable {
 
     public static final int PORT = 1234;
 
-    Queue<Action> controllerToModele;
+    Queue<Action> eventsToModel;
     Queue<Action> modeleToView;
     Queue<Action> eventsToNetwork;
-    Queue<Action> eventsToModele;
     private int gameType;
     private final Kube k3;
 
-    public Game(int gameType, Kube k3, Queue<Action> controllerToModele, Queue<Action> modeleToView,
+    public Game(int gameType, Kube k3, Queue<Action> eventsToModel, Queue<Action> modeleToView,
             Queue<Action> eventsToNetwork) {
         this.gameType = gameType;
         this.k3 = k3;
-        this.controllerToModele = controllerToModele;
-        this.eventsToModele = controllerToModele;
+        this.eventsToModel = eventsToModel;
         this.eventsToNetwork = eventsToNetwork;
         this.modeleToView = modeleToView;
     }
@@ -45,7 +38,7 @@ public class Game implements Runnable {
 
     public void waitStartGame() {
         Action a;
-        while ((a = eventsToModele.remove()).getType() != ActionType.START) {
+        while ((a = eventsToModel.remove()).getType() != ActionType.START) {
             modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
         }
         Start s = (Start) a.getData();
@@ -76,15 +69,15 @@ public class Game implements Runnable {
                 break;
             case JOIN:
                 Action a;
-                while ((a = eventsToModele.remove()).getType() != ActionType.INIT_K3) {
+                while ((a = eventsToModel.remove()).getType() != ActionType.INIT_K3) {
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setK3((Mountain) a.getData());
-                while ((a = eventsToModele.remove()).getType() != ActionType.PLAYER_DATA) {
+                while ((a = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setP1((Player) a.getData());
-                while ((a = eventsToModele.remove()).getType() != ActionType.PLAYER_DATA) {
+                while ((a = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setP2((Player) a.getData());
@@ -127,7 +120,7 @@ public class Game implements Runnable {
                 break;
             case JOIN:
                 Action a;
-                while ((a = eventsToModele.remove()).getType() != ActionType.PLAYER_DATA) {
+                while ((a = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 Player starter = (Player) a.getData();
@@ -151,7 +144,7 @@ public class Game implements Runnable {
                 Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
                 playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
             } else {
-                Action a = controllerToModele.remove();
+                Action a = eventsToModel.remove();
                 switch (a.getType()) {
                     case MOVE:
                     case MOVE_NUMBER:
@@ -192,9 +185,12 @@ public class Game implements Runnable {
         k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos2(), c);
     }
 
-    synchronized public boolean build(Action a) {
-        Build b = (Build) a.getData();
+    synchronized public boolean build(Build b) {
         return k3.getCurrentPlayer().addToMountainFromAvailableToBuild(b.getPos(), b.getModelColor());
+    }
+
+    synchronized public ModelColor remove(Remove r) {
+        return k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(r.getPos());
     }
 
     public void playMove(Action a) {
@@ -280,7 +276,7 @@ public class Game implements Runnable {
     public void waitConstruction(Player p) {
         while (k3.getPhase() == Kube.PREPARATION_PHASE) {
             modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-            Action a = eventsToModele.remove();
+            Action a = eventsToModel.remove();
             if (a.getType() == ActionType.VALIDATE && a.getPlayer() == p.getId()) {
                 if (getGameType() == HOST) {
                     k3.setP2((Player) a.getData());
@@ -299,8 +295,17 @@ public class Game implements Runnable {
             constructionPhaseIA(p);
         }
         while (!p.getHasValidateBuilding()) {
-            Action a = eventsToModele.remove();
+            Action a = eventsToModel.remove();
+            Config.debug(a);
             switch (a.getType()) {
+                case REMOVE:
+                    remove((Remove) a.getData());
+                    modeleToView.add(a);
+                    break;
+                case BUILD:
+                    build((Build) a.getData());
+                    modeleToView.add(a);
+                    break;
                 case SWAP:
                     swap((Swap) a.getData());
                     modeleToView.add(a);
@@ -340,7 +345,7 @@ public class Game implements Runnable {
     public boolean waitAcknowledge() {
         modeleToView.add(new Action(ActionType.PRINT_WAITING_RESPONSE));
         Action a;
-        while ((a = eventsToModele.remove()).getType() != ActionType.ACKNOWLEDGEMENT) {
+        while ((a = eventsToModel.remove()).getType() != ActionType.ACKNOWLEDGEMENT) {
             modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
         }
         return (boolean) a.getData();

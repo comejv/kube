@@ -14,6 +14,7 @@ import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.awt.*;
@@ -22,6 +23,8 @@ import java.io.BufferedInputStream;
 
 import javax.swing.*;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 /*
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
@@ -29,9 +32,12 @@ public class FirstPhasePanel extends JPanel {
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
-    private JPanel constructPanel, piecesPanel;
+    private JPanel constructPanel, piecesPanel, gamePanel;
+    private HashMap<ModelColor, JPanel> sidePanels;
+    private JPanel[][] moutainPanels;
 
-    public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
+    public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
+            Queue<Action> eventsToModel) {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
@@ -66,7 +72,7 @@ public class FirstPhasePanel extends JPanel {
     }
 
     private JPanel gamePanel() {
-        JPanel gamePanel = new JPanel();
+        gamePanel = new JPanel();
         gamePanel.setLayout(new BorderLayout());
 
         // TOP BAR - GAME BASE
@@ -76,32 +82,18 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
-
-        topPanel.add(new HexIcon(ModelColor.YELLOW, false));
-        topPanel.add(new HexIcon(ModelColor.BLACK, false));
-        topPanel.add(new HexIcon(ModelColor.BLUE, false));
-        topPanel.add(new HexIcon(ModelColor.RED, false));
-        topPanel.add(new HexIcon(ModelColor.GREEN, false));
-        topPanel.add(new HexIcon(ModelColor.RED, false));
-        topPanel.add(new HexIcon(ModelColor.BLUE, false));
-        topPanel.add(new HexIcon(ModelColor.BLUE, false));
-        topPanel.add(new HexIcon(ModelColor.YELLOW, false));
+        for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
+            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false));
+        }
 
         gamePanel.add(topPanel, BorderLayout.NORTH);
 
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
-        constructPanel = new JPanel();
-        constructPanel.setOpaque(false);
-        constructPanel.setLayout(new GridBagLayout());
-        constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+        initGrid();
         gamePanel.add(constructPanel);
-        updateGrid();
         // SIDE BAR - PIECES AVAILABLE
         // for this part need: getAvailableColors() and loop on it
-        piecesPanel = new JPanel();
-        piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
-        piecesPanel.setLayout(new GridLayout(4, 2));
-        updateSide();
+        initSide();
         gamePanel.add(piecesPanel, BorderLayout.EAST);
         return gamePanel;
     }
@@ -134,9 +126,12 @@ public class FirstPhasePanel extends JPanel {
         return buttons;
     }
 
-    public void updateGrid(){
-        Config.debug("Start recolor");
-        constructPanel.removeAll();
+    public void initGrid() {
+        moutainPanels = new JPanel[6][6];
+        constructPanel = new JPanel();
+        constructPanel.setOpaque(false);
+        constructPanel.setLayout(new GridBagLayout());
+        constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
         GridBagConstraints gbc = new GridBagConstraints();
 
         for (int i = 1; i <= 6; i++) {
@@ -145,36 +140,65 @@ public class FirstPhasePanel extends JPanel {
             lineHexa.setOpaque(false);
             lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
             for (int j = 0; j < i; j++) {
-                HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i-1, j), false);
-                hex.setPosition(new Point(i-1, j));
-                lineHexa.add(hex);
+                JPanel hexPanel = new JPanel();
+                HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i - 1, j), false);
+                hex.setPosition(new Point(i - 1, j));
+                hexPanel.add(hex);
+                lineHexa.add(hexPanel);
+                moutainPanels[i - 1][j] = hexPanel;
             }
             gbc.gridx = 0;
             gbc.gridy = i;
             // gbc.anchor = GridBagConstraints.CENTER;
             constructPanel.add(lineHexa, gbc);
         }
-        Config.debug("End recolor");
+        constructPanel.revalidate();
+        constructPanel.repaint();
     }
 
-    public void updateSide(){
-        piecesPanel.removeAll();
-        List<Map.Entry<ModelColor, Integer>> entryList = new ArrayList<>(k3.getCurrentPlayer().getAvailaibleToBuild().entrySet());
-        Map.Entry<ModelColor, Integer> entry;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 2; j++) {
-                if (entryList.size() == 0){
-                    break;
-                }
-                entry = entryList.remove(0);
-                JPanel mini = new JPanel();
-                mini.setOpaque(false);
-                JLabel numOfPieces = new JLabel("x" + entry.getValue());
-                numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-                mini.add(new HexIcon(entry.getKey(), true));
-                mini.add(numOfPieces);
-                piecesPanel.add(mini);
-            }
+    public void initSide() {
+        sidePanels = new HashMap<>();
+        piecesPanel = new JPanel();
+        piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
+        piecesPanel.setLayout(new GridLayout(4, 2));
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+            JPanel mini = new JPanel();
+            mini.setOpaque(false);
+            JLabel numOfPieces = new JLabel("x" + k3.getCurrentPlayer().getAvailaibleToBuild().get(c));
+            numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+            mini.add(new HexIcon(c, true));
+            mini.add(numOfPieces);
+            piecesPanel.add(mini);
+            sidePanels.put(c, mini);
         }
+        piecesPanel.revalidate();
+        piecesPanel.repaint();
+    }
+
+    public void updateGrid(Point pos) {
+        Config.debug("Update the Point ", pos, "of the grid");
+        HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y), true);
+        JPanel panel = moutainPanels[pos.x][pos.y];
+        panel.removeAll();
+        panel.add(hex);
+        panel.revalidate();
+        panel.repaint();
+        Config.debug("End update");
+
+    }
+
+    public void updateSide(ModelColor c) {
+        Config.debug("Update the color ", c, "of the side");
+
+        JPanel mini = sidePanels.get(c);
+        mini.removeAll();
+        JLabel numOfPieces = new JLabel("x" + k3.getCurrentPlayer().getAvailaibleToBuild().get(c));
+        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        mini.add(new HexIcon(c, true));
+        mini.add(numOfPieces);
+        mini.revalidate();
+        mini.repaint();
+        Config.debug("End update");
+
     }
 }

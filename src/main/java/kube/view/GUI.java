@@ -2,7 +2,7 @@ package kube.view;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
-
+import java.nio.Buffer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -25,6 +25,7 @@ import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
+import kube.model.action.Build;
 import kube.model.action.Queue;
 import kube.view.panels.*;
 
@@ -214,8 +215,17 @@ public class GUI extends Thread {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public void updateFirstPanel() {
-        firstPhasePanel.updateGrid();
+    public void updateFirstPanel(Action a) {
+        switch (a.getType()) {
+            case BUILD:
+                Build b = (Build) a.getData();
+                firstPhasePanel.updateGrid(b.getPos());
+                firstPhasePanel.updateSide(b.getModelColor());
+                break;
+
+            default:
+                break;
+        }
     }
 
 }

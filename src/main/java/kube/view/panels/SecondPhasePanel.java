@@ -102,7 +102,7 @@ public class SecondPhasePanel extends JPanel {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(null);
         JPanel p1 = pyra(1, 0);
-        JPanel p2 = pyra(2, 3);
+        JPanel p2 = pyra(2, 0);
         JPanel base = base();
         int w1 = width_p1_mountain + 20;
         int w2 = width_p2_mountain + 20;
