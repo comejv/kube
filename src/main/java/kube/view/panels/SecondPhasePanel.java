@@ -74,7 +74,13 @@ public class SecondPhasePanel extends JPanel {
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
         annulerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
+        annulerButton.setActionCommand("undo");
         buttons.add(annulerButton);
+
+        JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
+        refaireButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
+        refaireButton.setActionCommand("redo");
+        buttons.add(refaireButton);
 
         JButton validerButton = new Buttons.GameFirstPhaseButton("Refaire");
         validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));

@@ -141,7 +141,7 @@ public class FirstPhasePanel extends JPanel {
             lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
             for (int j = 0; j < i; j++) {
                 JPanel hexPanel = new JPanel();
-                HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i - 1, j), false);
+                HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i - 1, j), false, 2);
                 hex.setPosition(new Point(i - 1, j));
                 hexPanel.add(hex);
                 lineHexa.add(hexPanel);
@@ -177,7 +177,7 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateGrid(Point pos) {
         Config.debug("Update the Point ", pos, "of the grid");
-        HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y), true);
+        HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y), true, 2);
         JPanel panel = moutainPanels[pos.x][pos.y];
         panel.removeAll();
         panel.add(hex);

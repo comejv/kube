@@ -24,6 +24,8 @@ public class HexIcon extends Icon {
     private static final int WIDTH = 50;
     private static final int HEIGHT = 50;
 
+    private double scale = 1;
+
     public HexIcon(ModelColor color, boolean actionable) {
         super(ResourceLoader.getBufferedImage(getImageName(color)));
         resizeIcon(WIDTH, HEIGHT);
@@ -43,6 +45,33 @@ public class HexIcon extends Icon {
         super(ResourceLoader.getBufferedImage(getImageName(color)));
         this.color = color;
         resizeIcon(width, height);
+    }
+
+    public HexIcon(ModelColor color, boolean actionable, double scale) {
+        super(ResourceLoader.getBufferedImage(getImageName(color)));
+        this.color = color;
+        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        if (isActionable() && isHovered) { // Draw darker image
+            float factor = isPressed ? 0.75f : 1.25f;
+            float[] scales = { factor }; // Multiply all bands of each pixel by factor
+            float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
+            RescaleOp rop = new RescaleOp(scales, offsets, null);
+            BufferedImage scaledImage = new BufferedImage((int) (WIDTH * scale), (int) (HEIGHT * scale),
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2dScaled = scaledImage.createGraphics();
+            g2dScaled.drawImage(getImage(), rop, 0, 0);
+            g2d.drawImage(scaledImage, (int) offsetX, (int) offsetY, null);
+            g2dScaled.dispose();
+            // g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
+        } else { // Draw the original image
+            g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
+        }
     }
 
     private static String getImageName(ModelColor color) {
@@ -66,21 +95,6 @@ public class HexIcon extends Icon {
             default:
                 System.err.println("Color not found: " + color);
                 return null;
-        }
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g.create();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        if (isActionable() && isHovered) { // Draw darker image
-            float factor = isPressed ? 0.75f : 1.25f;
-            float[] scales = { factor }; // Multiply all bands of each pixel by factor
-            float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
-            RescaleOp rop = new RescaleOp(scales, offsets, null);
-            g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
-        } else { // Draw the original image
-            g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
         }
     }
 
