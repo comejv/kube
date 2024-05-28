@@ -8,9 +8,6 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import kube.model.*;
 
 public class MountainTest {
@@ -297,37 +294,37 @@ public class MountainTest {
         assertTrue(m.isPenality(3, 3));
     }
 
-    @Test
-    public void serializationTest() {
+    // @Test
+    // public void serializationTest() {
 
-        ObjectMapper mapper = new ObjectMapper();
+    //     ObjectMapper mapper = new ObjectMapper();
 
-        Mountain m1 = new Mountain(5);
+    //     Mountain m1 = new Mountain(5);
 
-        m1.setCase(0, 0, ModelColor.BLUE);
-        m1.setCase(1, 0, ModelColor.RED);
-        m1.setCase(1, 1, ModelColor.GREEN);
-        m1.setCase(2, 0, ModelColor.YELLOW);
-        m1.setCase(2, 1, ModelColor.WHITE);
-        m1.setCase(2, 2, ModelColor.BLUE);
-        m1.setCase(3, 0, ModelColor.RED);
-        m1.setCase(3, 1, ModelColor.GREEN);
-        m1.setCase(3, 2, ModelColor.YELLOW);
-        m1.setCase(3, 3, ModelColor.WHITE);
-        m1.setCase(4, 0, ModelColor.BLUE);
-        m1.setCase(4, 1, ModelColor.RED);
-        m1.setCase(4, 2, ModelColor.GREEN);
-        m1.setCase(4, 3, ModelColor.YELLOW);
-        m1.setCase(4, 4, ModelColor.WHITE);
+    //     m1.setCase(0, 0, ModelColor.BLUE);
+    //     m1.setCase(1, 0, ModelColor.RED);
+    //     m1.setCase(1, 1, ModelColor.GREEN);
+    //     m1.setCase(2, 0, ModelColor.YELLOW);
+    //     m1.setCase(2, 1, ModelColor.WHITE);
+    //     m1.setCase(2, 2, ModelColor.BLUE);
+    //     m1.setCase(3, 0, ModelColor.RED);
+    //     m1.setCase(3, 1, ModelColor.GREEN);
+    //     m1.setCase(3, 2, ModelColor.YELLOW);
+    //     m1.setCase(3, 3, ModelColor.WHITE);
+    //     m1.setCase(4, 0, ModelColor.BLUE);
+    //     m1.setCase(4, 1, ModelColor.RED);
+    //     m1.setCase(4, 2, ModelColor.GREEN);
+    //     m1.setCase(4, 3, ModelColor.YELLOW);
+    //     m1.setCase(4, 4, ModelColor.WHITE);
 
-        try {
-            String json = mapper.writeValueAsString(m1);
-            Mountain m2 = mapper.readValue(json, Mountain.class);
-            assertTrue(areSameMountain(m1, m2));
-        } catch (JsonProcessingException e) {
-            e.printStackTrace();
-        }
-    }
+    //     try {
+    //         String json = mapper.writeValueAsString(m1);
+    //         Mountain m2 = mapper.readValue(json, Mountain.class);
+    //         assertTrue(areSameMountain(m1, m2));
+    //     } catch (JsonProcessingException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     private boolean areSameMountain(Mountain m1, Mountain m2) {
         if (m1.getBaseSize() != m2.getBaseSize()) {

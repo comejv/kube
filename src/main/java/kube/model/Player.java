@@ -3,10 +3,6 @@ package kube.model;
 // Import model classes
 import kube.model.ai.MiniMaxAI;
 
-// Import jackson classes
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 // Import java classes
 import java.awt.Point;
 import java.io.Serializable;
@@ -15,12 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 
-/**********
- * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
- **********/
-
-@JsonSerialize(using = Serializer.PlayerSerializer.class)
-@JsonDeserialize(using = Deserializer.PlayerDeserializer.class)
 public class Player implements Serializable {
 
     /**********

@@ -3,29 +3,19 @@ package kube.model;
 // Import model classes
 import kube.model.action.move.Move;
 
-// Import jackson classes
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-
 // Import java classes
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class History {
+public class History implements Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
-    @JsonProperty("first_player")
     private int firstPlayer;
-
-    @JsonProperty("done")
     private ArrayList<Move> done;
-
-    @JsonProperty("un_done")
     private ArrayList<Move> undone;
 
     /**********
@@ -35,7 +25,6 @@ public class History {
     /**
      * Constructor of the class History
      */
-    @JsonCreator
     public History() {
         this.firstPlayer = 0;
         this.done = new ArrayList<>();
@@ -46,17 +35,14 @@ public class History {
      * SETTERS
      **********/
 
-    @JsonSetter("first_player")
     public final void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
 
-    @JsonSetter("done")
     public final void setDone(ArrayList<Move> done) {
         this.done = done;
     }
 
-    @JsonSetter("un_done")
     public final void setUndone(ArrayList<Move> undone) {
         this.undone = undone;
     }
@@ -65,17 +51,14 @@ public class History {
      * GETTERS
      **********/
 
-    @JsonGetter("first_player")
     public int getFirstPlayer() {
         return this.firstPlayer;
     }
 
-    @JsonGetter("done")
     public ArrayList<Move> getDone() {
         return this.done;
     }
 
-    @JsonGetter("un_done")
     public ArrayList<Move> getUndone() {
         return this.undone;
     }

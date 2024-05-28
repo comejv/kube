@@ -148,12 +148,6 @@ public class Game implements Runnable {
                     case REDO:
                         redo();
                         break;
-                    case SAVE_KUBE:
-                        k3.saveInstance((String) a.getData());
-                        break;
-                    case LOAD_KUBE:
-                        k3.init(a.getData().toString());
-                        break;
                     default:
                         modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                         break;
@@ -309,15 +303,6 @@ public class Game implements Runnable {
                         }
                         k3.updatePhase();
                         modeleToView.add(new Action(ActionType.VALIDATE, isValidated));
-                    }
-                    break;
-                case SAVE_KUBE:
-                    k3.saveInstance((String) a.getData());
-                    break;
-                case LOAD_KUBE:
-                    k3.init(a.getData().toString());
-                    if (k3.getPhase() == Kube.GAME_PHASE) {
-                        gamePhase();
                     }
                     break;
                 default:

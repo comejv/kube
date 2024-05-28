@@ -308,15 +308,29 @@ public class Simulation implements Runnable {
         //Init the first IA
         k.setP1(new AI(1,new moveSetHeuristique(30),k));
         
-        
-        ModelColor[][]mountain= new ModelColor[][]{ {ModelColor.RED,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY},
-                                                    {ModelColor.GREEN,ModelColor.RED,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY},
-                                                    {ModelColor.BLUE,ModelColor.RED,ModelColor.BLUE,ModelColor.EMPTY,ModelColor.EMPTY,ModelColor.EMPTY},
-                                                    {ModelColor.NATURAL,ModelColor.RED,ModelColor.GREEN,ModelColor.WHITE,ModelColor.EMPTY,ModelColor.EMPTY},
-                                                    {ModelColor.YELLOW,ModelColor.WHITE,ModelColor.GREEN,ModelColor.YELLOW,ModelColor.GREEN,ModelColor.EMPTY},
-                                                    {ModelColor.YELLOW,ModelColor.BLACK,ModelColor.NATURAL,ModelColor.BLACK,ModelColor.YELLOW,ModelColor.BLACK}
-                                                };
-        Mountain iaMountain = new Mountain(mountain,6);
+        Mountain iaMountain = new Mountain(6);
+
+        iaMountain.setCase(0, 0, ModelColor.RED);
+        iaMountain.setCase(1, 0, ModelColor.GREEN);
+        iaMountain.setCase(2, 0, ModelColor.BLUE);
+        iaMountain.setCase(3, 0, ModelColor.NATURAL);
+        iaMountain.setCase(4, 0, ModelColor.YELLOW);
+        iaMountain.setCase(5, 0, ModelColor.YELLOW);
+        iaMountain.setCase(1, 1, ModelColor.RED);
+        iaMountain.setCase(2, 1, ModelColor.RED);
+        iaMountain.setCase(3, 1, ModelColor.RED);
+        iaMountain.setCase(4, 1, ModelColor.WHITE);
+        iaMountain.setCase(5, 1, ModelColor.BLACK);
+        iaMountain.setCase(2, 2, ModelColor.BLUE);
+        iaMountain.setCase(3, 2, ModelColor.GREEN);
+        iaMountain.setCase(4, 2, ModelColor.GREEN);
+        iaMountain.setCase(5, 2, ModelColor.NATURAL);
+        iaMountain.setCase(3, 3, ModelColor.WHITE);
+        iaMountain.setCase(4, 3, ModelColor.YELLOW);
+        iaMountain.setCase(5, 3, ModelColor.BLACK);
+        iaMountain.setCase(4, 4, ModelColor.GREEN);
+        iaMountain.setCase(5, 4, ModelColor.YELLOW);
+        iaMountain.setCase(5, 5, ModelColor.BLACK);
 
         HashMap<ModelColor, Integer> bag1 = new HashMap<>();
         bag1.put(ModelColor.RED, 0);
