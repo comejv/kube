@@ -60,7 +60,11 @@ public class ResourceLoader {
     static public String getText(String name) {
         String result;
         String relativePath = "texts/" + Config.getLanguage() + "/" + name + ".txt";
-        BufferedReader buf = new BufferedReader(new InputStreamReader(getResourceAsStream(relativePath)));
+        InputStream resource = getResourceAsStream(relativePath);
+        if (resource == null) {
+            resource = getResourceAsStream("texts/notFound.txt");
+        }
+        BufferedReader buf = new BufferedReader(new InputStreamReader(resource));
         result = buf.lines().collect(Collectors.joining("\n"));
         return result;
     }

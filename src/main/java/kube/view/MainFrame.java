@@ -1,14 +1,12 @@
 package kube.view;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
 
 import kube.configuration.Config;
 import kube.controller.graphical.DnDController;
 import kube.view.panels.GlassPanel;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 
 /*
  * This class initializes the game frame and its layout manager : an overlay layout that contains a card layout and potential overlay elements.
@@ -77,12 +75,12 @@ public class MainFrame extends JFrame {
         remove(getGlassPane());
         glassPane = null;
     }
-
-    public void addOverlay(Component p) {
-        if (p != null) {
-            System.err.println("Overlay already exists.");
-            return;
-        }
+    
+    public JPanel getOverlay() {
+        return overlayPanel;
+    }
+    
+    public void addToOverlay(Component p) {
         overlayPanel.add(p);
         overlayPanel.setVisible(true);
         framePanel.revalidate();
@@ -90,16 +88,14 @@ public class MainFrame extends JFrame {
         overlay = p;
     }
 
-    public void removeOverlay() {
-        if (overlay == null) {
-            System.err.println("No existing overlay.");
-            return;
+    public void removeAllFromOverlay() {
+        if (overlay != null) {
+            overlayPanel.remove(overlay);
+            overlayPanel.setVisible(false);
+            framePanel.revalidate();
+            framePanel.repaint();
+            overlay = null;
         }
-        overlayPanel.remove(overlay);
-        overlayPanel.setVisible(false);
-        framePanel.revalidate();
-        framePanel.repaint();
-        overlay = null;
     }
 
     public Component getOverlayComponent() {

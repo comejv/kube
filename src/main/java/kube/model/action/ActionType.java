@@ -56,10 +56,16 @@ public enum ActionType {
     SETTINGS,
 
     // Menu
-    PLAY_ONLINE,
+    LOCAL,
+    ONLINE,
     PLAY_LOCAL,
+    PLAY_ONLINE,
     RULES,
+    QUIT,
     VOLUME,
+    PARAMETERS,
+    NEXT_RULE,
+    END_RULE,
 
     // Phase 1
     GRAB_HEX,

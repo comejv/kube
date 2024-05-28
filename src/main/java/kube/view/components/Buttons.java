@@ -3,19 +3,16 @@ package kube.view.components;
 import kube.configuration.Config;
 import kube.view.GUIColors;
 
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
 
 /*
  * This class will have subclasses for all the buttons used.
@@ -35,15 +32,91 @@ public class Buttons {
         }
     }
 
-    public static class LocalButton extends JButton {
-        public LocalButton(String name) {
-            super(name);
-            setPreferredSize(new Dimension(Config.getInitWidth() / 2, Config.getInitWidth() / 6));
+    public static class SelectPlayerButton extends JPanel implements ActionListener{
+        public SelectPlayerButton(String name){
+            setLayout(new GridBagLayout());
+            setPreferredSize(new Dimension(Config.getInitWidth() / 2,
+                    Config.getInitWidth() / 12));
             setBackground(GUIColors.ACCENT.toColor());
-            setForeground(GUIColors.TEXT.toColor());
+            GridBagConstraints gbc = new GridBagConstraints();
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+
+            JLabel nameLabel = new JLabel();
+            nameLabel.setText(name);
+            nameLabel.setForeground(GUIColors.TEXT.toColor());
+            nameLabel.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
+            gbc.insets= new Insets(5,2,5,25);
+            add( nameLabel,gbc);
+
+           /* JComboBox<String> comboBox = new JComboBox<String>();
+            comboBox.addActionListener(this);
+
+            comboBox.addItem( "Humain" );
+            comboBox.addItem( "IA facile" );
+            comboBox.addItem( "IA moyenne" );
+            comboBox.addItem( "IA difficile" );
+            gbc.insets= new Insets(5,25,5,2);
+            add( comboBox,gbc);*/
+
+            String[] players = {"Humain", "IA Facile", "IA Moyenne","IA Difficile"};
+            final int[] currentIndex = {0};
+            JPanel selectComp = new JPanel();
+            selectComp.setLayout(new BorderLayout());
+
+            // Create buttons and label
+            JButton leftButton = new JButton("<");
+            leftButton.setFocusPainted(false);  // Remove focus border
+            leftButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            leftButton.setContentAreaFilled(false);
+            leftButton.setFocusPainted(false);  // Remove focus border
+            JButton rightButton = new JButton(">");
+            rightButton.setFocusPainted(false);  // Remove focus border
+            rightButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            rightButton.setContentAreaFilled(false);
+            rightButton.setFocusPainted(false);  // Remove focus border
+            JLabel displayLabel = new JLabel(players[currentIndex[0]], JLabel.CENTER);
+            displayLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 20)));
+            displayLabel.setForeground(GUIColors.ACCENT.toColor());
+            displayLabel.setPreferredSize(new Dimension(150, 50)); // Set fixed width for display label
+
+
+            // Add buttons and label to the panel
+            selectComp.add(leftButton, BorderLayout.WEST);
+            selectComp.add(displayLabel, BorderLayout.CENTER);
+            selectComp.add(rightButton, BorderLayout.EAST);
+
+            // Set button actions
+            leftButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    currentIndex[0] = (currentIndex[0] - 1 + players.length) % players.length;
+                    displayLabel.setText(players[currentIndex[0]]);
+                }
+            });
+
+            rightButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    currentIndex[0] = (currentIndex[0] + 1) % players.length;
+                    displayLabel.setText(players[currentIndex[0]]);
+                }
+            });
+
+            selectComp.setMaximumSize(new Dimension(150,40));
+            selectComp.setMinimumSize(new Dimension(150,40));
+
+
+            gbc.insets= new Insets(5,25,5,2);
+            add(selectComp,gbc);
+
         }
+        public void actionPerformed(ActionEvent e)
+        {
+           // System.out.println( e.getModifiers() );
+            JComboBox comboBox = (JComboBox)e.getSource();
+           // System.out.println( comboBox.getSelectedItem() );
+        }
+
     }
 
     public static class GameFirstPhaseButton extends JButton {

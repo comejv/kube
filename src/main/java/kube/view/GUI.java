@@ -153,12 +153,16 @@ public class GUI extends Thread {
         Config.debug("Panel ", panelName, " finished loading");
     }
 
-    public void addOverlay(Component p) {
-        mF.addOverlay(p);
+    public JPanel getOverlay() {
+        return mF.getOverlay();
     }
 
-    public void removeOverlay() {
-        mF.removeOverlay();
+    public void addToOverlay(Component p) {
+        mF.addToOverlay(p);
+    }
+
+    public void removeAllFromOverlay() {
+        mF.removeAllFromOverlay();
     }
 
     public Component getOverlayComponent() {

@@ -1,9 +1,11 @@
 package kube.view;
 
-import kube.model.Kube;
 import kube.configuration.Config;
+import kube.controller.graphical.MenuController;
+import kube.model.Kube;
 import kube.model.action.*;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.panels.RulesPanel;
 
 public class GUIEventsHandler implements Runnable {
 
@@ -47,6 +49,26 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case BUILD:
                     gui.updateFirstPanel();
+                    break;
+                case LOCAL:
+                    break;
+                case RULES:
+                    //toModel is null because we don't interract with the model in the rules
+                    gui.addToOverlay(new RulesPanel(gui, new MenuController(eventsToView, null)));
+                    break;
+                case NEXT_RULE:
+                    RulesPanel rulePanel = (RulesPanel) gui.getOverlay().getComponent(0);
+                    rulePanel.nextRule();
+                    break;
+                case END_RULE:
+                    gui.removeAllFromOverlay();
+                    break;
+                case QUIT:
+                    System.exit(0);
+                    gui.showPanel(GUI.PHASE1);
+                    break;
+                case SETTINGS:
+                    gui.showPanel(GUI.MENU);
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);

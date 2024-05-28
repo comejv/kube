@@ -75,15 +75,15 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
 
-        topPanel.add(newHexa(ModelColor.YELLOW, false));
-        topPanel.add(newHexa(ModelColor.BLACK, false));
-        topPanel.add(newHexa(ModelColor.BLUE, false));
-        topPanel.add(newHexa(ModelColor.RED, false));
-        topPanel.add(newHexa(ModelColor.GREEN, false));
-        topPanel.add(newHexa(ModelColor.RED, false));
-        topPanel.add(newHexa(ModelColor.BLUE, false));
-        topPanel.add(newHexa(ModelColor.BLUE, false));
-        topPanel.add(newHexa(ModelColor.YELLOW, false));
+        topPanel.add(new HexIcon(ModelColor.YELLOW, false));
+        topPanel.add(new HexIcon(ModelColor.BLACK, false));
+        topPanel.add(new HexIcon(ModelColor.BLUE, false));
+        topPanel.add(new HexIcon(ModelColor.RED, false));
+        topPanel.add(new HexIcon(ModelColor.GREEN, false));
+        topPanel.add(new HexIcon(ModelColor.RED, false));
+        topPanel.add(new HexIcon(ModelColor.BLUE, false));
+        topPanel.add(new HexIcon(ModelColor.BLUE, false));
+        topPanel.add(new HexIcon(ModelColor.YELLOW, false));
 
         gamePanel.add(topPanel, BorderLayout.NORTH);
 
@@ -143,7 +143,7 @@ public class FirstPhasePanel extends JPanel {
             lineHexa.setOpaque(false);
             lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
             for (int j = 0; j < i; j++) {
-                HexIcon hex = newHexa(k3.getPlayerCase(k3.getCurrentPlayer(), i-1, j), false);
+                HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i-1, j), false);
                 hex.setPosition(new Point(i-1, j));
                 lineHexa.add(hex);
             }
@@ -169,22 +169,10 @@ public class FirstPhasePanel extends JPanel {
                 mini.setOpaque(false);
                 JLabel numOfPieces = new JLabel("x" + entry.getValue());
                 numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-                mini.add(newHexa(entry.getKey(), true));
+                mini.add(new HexIcon(entry.getKey(), true));
                 mini.add(numOfPieces);
                 piecesPanel.add(mini);
             }
         }
-    }
-
-    public static HexIcon newHexa(ModelColor c, boolean isActionable) {
-        HexIcon hexa;
-        if (c == null) {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("wireHexa"), isActionable);
-        } else {
-            hexa = new HexIcon(ResourceLoader.getBufferedImage("hexaWhiteTextured"), isActionable, c);
-            hexa.recolor(c);
-        }
-        hexa.resizeIcon(80, 80);
-        return hexa;
     }
 }

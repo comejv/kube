@@ -13,6 +13,7 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.panels.RulesPanel;
 
 public class MenuController implements ActionListener, MouseListener {
     Queue<Action> toView;
@@ -25,6 +26,12 @@ public class MenuController implements ActionListener, MouseListener {
 
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
+            case "local":
+                toView.add(new Action(ActionType.LOCAL));
+                break;
+            case "online":
+                toView.add(new Action(ActionType.ONLINE));
+                break;
             case "play":
                 toView.add(new Action(ActionType.PLAY_LOCAL));
                 break;
@@ -32,7 +39,24 @@ public class MenuController implements ActionListener, MouseListener {
             // TODO Handle online game
 
             // TODO Handle game settings (AI, nb of players)
-
+            case "rules":
+                toView.add(new Action(ActionType.RULES));
+                break;
+            case "nextRule":
+                toView.add(new Action(ActionType.NEXT_RULE));
+                break;
+            case "endRule":
+                toView.add(new Action(ActionType.END_RULE));
+                break;
+            case "quit":
+                toView.add(new Action(ActionType.QUIT));
+                break;
+            case "volume":
+                toView.add(new Action(ActionType.VOLUME));
+                break;
+            case "parameters":
+                toView.add(new Action(ActionType.PARAMETERS));
+                break;
             default:
                 break;
         }
