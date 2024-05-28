@@ -98,11 +98,6 @@ public class MainFrame extends JFrame {
             framePanel.repaint();
             overlay = null;
         }
-        overlayPanel.remove(overlay);
-        overlayPanel.setVisible(false);
-        framePanel.revalidate();
-        framePanel.repaint();
-        overlay = null;
     }
 
     public Component getOverlayComponent() {
