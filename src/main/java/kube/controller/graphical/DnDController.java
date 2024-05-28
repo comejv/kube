@@ -1,4 +1,5 @@
 package kube.controller.graphical;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
@@ -27,11 +28,10 @@ public class DnDController implements MouseListener, MouseMotionListener {
     private Queue<Action> toModel;
     private Component component;
 
-    public DnDController(Queue<Action> eventsToView, Queue<Action> eventsToModel){
+    public DnDController(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.toView = eventsToView;
         this.toModel = eventsToModel;
     }
-
 
     @Override
     public void mousePressed(MouseEvent e) {
@@ -56,19 +56,24 @@ public class DnDController implements MouseListener, MouseMotionListener {
     public void mouseReleased(MouseEvent e) {
         Config.debug("Mouse release");
         GlassPanel g = (GlassPanel) e.getSource();
-        // Get the object that was clicked in the content pane underneath the glass panel
+        // Get the object that was clicked in the content pane underneath the glass
+        // panel
         Container container = ((JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource())).getContentPane();
         Component component = SwingUtilities.getDeepestComponentAt(container, e.getX(), e.getY());
-        if (g.getHexIcon() != null && component instanceof HexIcon){
-            HexIcon hex = (HexIcon) component;
+        if (g.getHexIcon() != null) {
+            Point to = null;
+            if (component instanceof HexIcon) {
+                HexIcon hex = (HexIcon) component;
+                to = hex.getPosition();
+            }
             Point from = g.getHexIcon().getPosition();
-            Point to = hex.getPosition();
-            if (from == null && to != null){
-                toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getPosition())));
-            } else if (from != null && to != null){
+            Config.debug("From: " + from + " To: " + to);
+            if (from == null && to != null) {
+                toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), to)));
+            } else if (from != null && to != null) {
                 toModel.add(new Action(ActionType.SWAP, new Swap(from, to)));
-            } else if (from != null && to == null){
-                toModel.add(new Action(ActionType.REMOVE, new Remove(from)));
+            } else if (from != null && to == null) {
+                toModel.add(new Action(ActionType.REMOVE, new Remove(g.getColor(), from)));
             }
         }
         g.setCursor(Cursor.getDefaultCursor());

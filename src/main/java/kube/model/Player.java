@@ -246,16 +246,15 @@ public class Player implements Serializable {
         }
 
         mountainColor = getMountain().getCase(x, y);
-        if (getAvailaibleToBuild().get(color) > 0) {
-
+        if (color == ModelColor.EMPTY || getAvailaibleToBuild().get(color) > 0) {
             getMountain().setCase(x, y, color);
             if (mountainColor != ModelColor.EMPTY) {
-
                 availableNumber = getAvailaibleToBuild().get(mountainColor) + 1;
                 getAvailaibleToBuild().put(mountainColor, availableNumber);
             }
-
-            getAvailaibleToBuild().put(color, getAvailaibleToBuild().get(color) - 1);
+            if (color != ModelColor.EMPTY){
+                getAvailaibleToBuild().put(color, getAvailaibleToBuild().get(color) - 1);
+            }
             return true;
         }
 

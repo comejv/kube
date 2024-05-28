@@ -42,7 +42,7 @@ public class Game implements Runnable {
             modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
         }
         Start s = (Start) a.getData();
-        if (s == null){
+        if (s == null) {
             k3.init();
         } else {
             k3.init(s.getAiJ1(), s.getAiJ2());
@@ -179,6 +179,7 @@ public class Game implements Runnable {
     }
 
     synchronized public void swap(Swap s) {
+
         ModelColor c = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos1().x, s.getPos1().y);
         ModelColor c2 = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos2().x, s.getPos2().y);
         k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos1(), c2);

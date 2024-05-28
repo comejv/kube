@@ -48,6 +48,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.showPanel(GUI.PHASE2);
                     break;
                 case BUILD:
+                case REMOVE:
+                case SWAP:
                     gui.updateFirstPanel(action);
                     break;
                 case LOCAL:

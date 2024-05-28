@@ -7,7 +7,10 @@ import kube.controller.graphical.Phase1Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.action.Queue;
+import kube.model.action.Remove;
+import kube.model.action.Swap;
 import kube.model.action.Action;
+import kube.model.action.Build;
 import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.components.Buttons;
@@ -164,9 +167,11 @@ public class FirstPhasePanel extends JPanel {
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             JPanel mini = new JPanel();
             mini.setOpaque(false);
-            JLabel numOfPieces = new JLabel("x" + k3.getCurrentPlayer().getAvailaibleToBuild().get(c));
+            int numberOfPieces =  k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+            JLabel numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-            mini.add(new HexIcon(c, true));
+            boolean actionable = numberOfPieces > 0;
+            mini.add(new HexIcon(c, actionable));
             mini.add(numOfPieces);
             piecesPanel.add(mini);
             sidePanels.put(c, mini);
@@ -177,7 +182,10 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateGrid(Point pos) {
         Config.debug("Update the Point ", pos, "of the grid");
-        HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y), true, 2);
+        ModelColor c = k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y);
+        boolean actionable = c != ModelColor.EMPTY;
+        HexIcon hex = new HexIcon(c, actionable, 2);
+        hex.setPosition(pos);
         JPanel panel = moutainPanels[pos.x][pos.y];
         panel.removeAll();
         panel.add(hex);
@@ -192,13 +200,37 @@ public class FirstPhasePanel extends JPanel {
 
         JPanel mini = sidePanels.get(c);
         mini.removeAll();
-        JLabel numOfPieces = new JLabel("x" + k3.getCurrentPlayer().getAvailaibleToBuild().get(c));
+        int numberOfPieces =  k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+        JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-        mini.add(new HexIcon(c, true));
+        mini.add(new HexIcon(c, numberOfPieces > 0));
         mini.add(numOfPieces);
         mini.revalidate();
         mini.repaint();
         Config.debug("End update");
 
+    }
+
+    public void update(Action a){
+        switch (a.getType()) {
+            case BUILD:
+                Build b = (Build) a.getData();
+                updateGrid(b.getPos());
+                updateSide(b.getModelColor());
+                break;
+            case REMOVE:
+                Remove r = (Remove) a.getData();
+                updateGrid(r.getPos());
+                updateSide(r.getModelColor());
+                break;
+            case SWAP:
+                Swap s = (Swap) a.getData();
+                updateGrid(s.getPos1());
+                updateGrid(s.getPos2());
+                break;
+            default:
+                break;
+        }
+    
     }
 }
