@@ -85,7 +85,7 @@ public class midLevelAI extends MiniMaxAI {
     }
 
     private void redistributeProbs(ModelColor c, Kube k3) {
-        if (getPlayer(k3).getAvailaibleToBuild().get(c) == 0) {
+        if (getPlayer(k3).getAvailableToBuild().get(c) == 0) {
             float probs = probabilities.get(c);
             probabilities.remove(c);
             for (ModelColor col : probabilities.keySet()) {

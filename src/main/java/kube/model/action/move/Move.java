@@ -1,10 +1,12 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-import java.io.Serializable;
-
+// Import model classes
 import kube.model.ModelColor;
 import kube.model.Player;
+
+// Import java classes
+import java.awt.Point;
+import java.io.Serializable;
 
 public abstract class Move implements Serializable {
 
@@ -23,6 +25,11 @@ public abstract class Move implements Serializable {
         this.color = ModelColor.EMPTY;
     }
 
+    /**
+     * Constructor of the class Move
+     * 
+     * @param color
+     */
     public Move(ModelColor color) {
         this.color = color;
     }
@@ -31,12 +38,11 @@ public abstract class Move implements Serializable {
      * SETTERS
      **********/
 
-     
     public void setPlayer(Player player) {
         this.player = player;
     }
 
-    public void setColor(ModelColor color) {
+    public final void setColor(ModelColor color) {
         this.color = color;
     }
 

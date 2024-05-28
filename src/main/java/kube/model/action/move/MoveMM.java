@@ -1,9 +1,11 @@
 
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import java class
+import java.awt.Point;
 
 public class MoveMM extends Move {
 
@@ -65,14 +67,14 @@ public class MoveMM extends Move {
         this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
 
         coords = toString.split(",");
-        this.to= new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
+        this.to = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
     }
 
     /**********
      * SETTERS
      **********/
 
-    public void setFrom(Point from) {
+    public final void setFrom(Point from) {
         this.from = from;
     }
 
@@ -80,7 +82,7 @@ public class MoveMM extends Move {
         setFrom(new Point(x, y));
     }
 
-    public void setTo(Point to) {
+    public final void setTo(Point to) {
         this.to = to;
     }
 

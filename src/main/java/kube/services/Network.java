@@ -6,19 +6,17 @@ import java.io.ObjectOutputStream;
 
 import kube.model.action.Action;
 
-
 public abstract class Network {
-    
+
     private String ip;
     private int port;
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-
-
     public abstract boolean connect(String ip, int port);
+
     public abstract boolean disconnect();
-    
+
     public String getIp() {
         return ip;
     }
@@ -54,6 +52,7 @@ public abstract class Network {
     public boolean isServer() {
         return false;
     }
+
     public boolean send(Action data) {
         try {
             if (getOut() != null) {
@@ -70,14 +69,13 @@ public abstract class Network {
         return true;
     }
 
-    public Action receive() {
+    public Action receive() throws IOException {
         try {
             Action o = (Action) getIn().readObject();
             return o;
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             return null;
         }
     }
 
-    
 }

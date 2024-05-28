@@ -1,6 +1,5 @@
 package kube.model;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,9 +21,8 @@ public class AI extends Player {
      * 
      * @param id the id of the player
      * @param ai the AI of the player
-     * @param k3 the game
      */
-    AI(int id, MiniMaxAI ai) {
+    public AI(int id, MiniMaxAI ai) {
         super(id);
         ai.setPlayerId(id);
         setName("AI" + id);
@@ -65,10 +63,10 @@ public class AI extends Player {
         AI copy = new AI(getId(), getAI().clone());
         copy.setAdditionals(new ArrayList<>(getAdditionals()));
         if (!getHasValidateBuilding()) {
-            copy.setAvailableToBuild(new HashMap<>(getAvailaibleToBuild()));
+            copy.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
         }
         copy.setName(getName());
-        copy.setusedPiece(new HashMap<>(getUsedPiece()));
+        copy.setUsedPiece(new HashMap<>(getUsedPiece()));
         copy.setMountain(getMountain().clone());
         copy.setHasValidateBuilding(getHasValidateBuilding());
         return copy;

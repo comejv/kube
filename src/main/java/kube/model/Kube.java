@@ -1,6 +1,13 @@
 package kube.model;
 
 import java.awt.Point;
+
+// Import model classes
+import kube.model.action.move.*;
+import kube.model.ai.MiniMaxAI;
+
+// Import java classes
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -15,9 +22,8 @@ import kube.model.action.move.MoveAW;
 import kube.model.action.move.MoveMA;
 import kube.model.action.move.MoveMM;
 import kube.model.action.move.MoveMW;
-import kube.model.ai.MiniMaxAI;
 
-public class Kube {
+public class Kube implements Serializable {
 
     /**********
      * CONSTANTS
@@ -26,6 +32,8 @@ public class Kube {
     public static final int NB_CUBE_PER_COLOR = 9;
     public static final int PREPARATION_PHASE = 1;
     public static final int GAME_PHASE = 2;
+    public static final int ID_PLAYER_1 = 1;
+    public static final int ID_PLAYER_2 = 1;
 
     /**********
      * ATTRIBUTES
@@ -54,6 +62,22 @@ public class Kube {
     public Kube(boolean empty) {
         if (!empty) {
             init();
+        }
+    }
+
+    /**********
+     * EXCEPTION
+     **********/
+
+    public class KubeReadException extends Exception {
+
+        /**
+         * Constructor of the KubeReadException
+         * 
+         * @param message the message of the exception
+         */
+        public KubeReadException(String message) {
+            super(message);
         }
     }
 
@@ -89,13 +113,13 @@ public class Kube {
         setPenality(false);
 
         if (typeAI1 != null) {
-            setP1(new AI(1, typeAI1));
+            setP1(new AI(ID_PLAYER_1, typeAI1));
         } else {
             setP1(new Player(1));
         }
 
         if (typeAI2 != null) {
-            setP2(new AI(2, typeAI2));
+            setP2(new AI(ID_PLAYER_2, typeAI2));
         } else {
             setP2(new Player(2));
         }
@@ -218,8 +242,8 @@ public class Kube {
         }
     }
 
-    public Player getRandomPlayer(){
-        if (new Random().nextInt(2) == 0){
+    public Player getRandomPlayer() {
+        if (new Random().nextInt(2) == 0) {
             return getP1();
         } else {
             return getP2();
@@ -359,13 +383,13 @@ public class Kube {
      * 
      * @param move the move to check
      * @return true if the move is playable, false otherwise
-     * @throws UnsupportedOperationException                if the phase is not the
-     *                                                      game phase
-     * @throws IllegalArgumentException                     if the move is not a
-     * @throws UnsupportedOperationException                if the move is not a
-     *                                                      MoveAA, MoveMA,
-     *                                                      MoveAW, MoveMW, MoveAM
-     *                                                      or MoveMM
+     * @throws UnsupportedOperationException if the phase is not the
+     *                                       game phase
+     * @throws IllegalArgumentException      if the move is not a
+     * @throws UnsupportedOperationException if the move is not a
+     *                                       MoveAA, MoveMA,
+     *                                       MoveAW, MoveMW, MoveAM
+     *                                       or MoveMM
      */
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
 
@@ -538,7 +562,7 @@ public class Kube {
         if (!move.isToAdditionals()) {
             player.addUsedPiece(move.getColor());
             nextPlayer();
-        } 
+        }
         lastMovePlayed = move;
         return true;
     }
@@ -646,7 +670,7 @@ public class Kube {
             setPenality(false);
         }
 
-        if (!move.isToAdditionals()){
+        if (!move.isToAdditionals()) {
             player.removeUsedPiece(move.getColor());
         }
         // Set the next player
@@ -754,7 +778,7 @@ public class Kube {
      * @return the list of moves that can be played
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    synchronized public ArrayList<Move> moveSet(){
+    synchronized public ArrayList<Move> moveSet() {
         return moveSet(getCurrentPlayer());
     }
 
@@ -866,20 +890,6 @@ public class Kube {
         }
 
         return getPhase();
-    }
-
-    /**
-     * Give a String representation of the Kube for saving
-     * 
-     * @return the String representation of the Kube for saving
-     */
-    public String forSave() {
-        
-        String save;
-
-        save = "";
-
-        return save;
     }
 
     @Override

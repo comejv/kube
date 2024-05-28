@@ -1,5 +1,6 @@
 package kube.model;
 
+// Import java classes
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,44 +30,11 @@ public class Mountain implements Serializable {
         clear();
     }
 
-    /**
-     * Constructor of the class Mountain from a save string
-     * 
-     * @param save the string to load
-     */
-    public Mountain(String save) {
-
-        String[] parts, cases;
-        int size, i, j, k;
-
-        save = save.substring(1, save.length() - 1);
-
-        parts = save.split(";");
-        size = Integer.parseInt(parts[0]);
-
-        this.baseSize  = size;
-        this.content = new ModelColor[size][size];
-
-        cases = parts[1].split(",");
-
-        k = 0;
-        for (i = 0; i < this.baseSize; i++) {
-            for (j = 0; j < i + 1; j++) {
-                setCase(i, j, ModelColor.fromSave(cases[k]));
-                k++;
-            }
-        }
-    }
-
-    /**********
-     * SETTERS
-     **********/
-
-    public void setBaseSize(int size) {
+    public final void setBaseSize(int size) {
         baseSize = size;
     }
 
-    public void setMountain(ModelColor[][] mountain) {
+    public final void setMountain(ModelColor[][] mountain) {
         content = mountain;
     }
 
@@ -149,10 +117,10 @@ public class Mountain implements Serializable {
         }
 
         return r;
-    
+
     }
 
-    public boolean isCompatible(int i, int j, ModelColor c){
+    public boolean isCompatible(int i, int j, ModelColor c) {
         ModelColor natural, empty, bottomLeft, bottomRight;
         boolean isBottomLeftEmpty, isBottomRightEmpty, isBottomEmpty, isNatural, isBottomLeftCompatible,
                 isBottomRightCompatible, isCompatible;
@@ -193,11 +161,10 @@ public class Mountain implements Serializable {
         ArrayList<Point> comp;
         comp = new ArrayList<>();
 
-
         // Loop through the mountain to add compatible positions
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (isCompatible(i, j, c)){
+                if (isCompatible(i, j, c)) {
                     comp.add(new Point(i, j));
                 }
             }
@@ -279,12 +246,12 @@ public class Mountain implements Serializable {
      * @return the String representation of the mountain for saving
      */
     public String forSave() {
-        
+
         String save;
         int i, j;
 
         save = "{" + getBaseSize() + ";";
-        
+
         for (i = 0; i < getBaseSize(); i++) {
             for (j = 0; j < i + 1; j++) {
                 save += getCase(i, j).forSave() + ",";
@@ -302,7 +269,7 @@ public class Mountain implements Serializable {
 
     @Override
     public String toString() {
-        
+
         String s;
         boolean space;
 

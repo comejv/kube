@@ -1,11 +1,14 @@
 package kube.model;
 
-import java.awt.Point;
-import java.util.ArrayList;
-
+// Import model classes
 import kube.model.action.move.Move;
 
-public class History {
+// Import java classes
+import java.awt.Point;
+import java.io.Serializable;
+import java.util.ArrayList;
+
+public class History implements Serializable {
 
     /**********
      * ATTRIBUTES
@@ -23,7 +26,7 @@ public class History {
      * Constructor of the class History
      */
     public History() {
-        this.firstPlayer=0;
+        this.firstPlayer = 0;
         this.done = new ArrayList<>();
         this.undone = new ArrayList<>();
     }
@@ -41,7 +44,7 @@ public class History {
         parts = save.split("\n");
 
         player = parts[0];
-        this.firstPlayer=Integer.parseInt(player);
+        this.firstPlayer = Integer.parseInt(player);
 
         doneString = parts[1].substring(1, parts[1].length() - 1);
         doneStringTab = doneString.split(" ");
@@ -57,19 +60,20 @@ public class History {
             this.undone.add(Move.fromSave(move));
         }
     }
+
     /**********
      * SETTERS
      **********/
 
-    public void setFirstPlayer(int player) {
+    public final void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
 
-    public void setDone(ArrayList<Move> done) {
+    public final void setDone(ArrayList<Move> done) {
         this.done = done;
     }
 
-    public void setUndone(ArrayList<Move> undone) {
+    public final void setUndone(ArrayList<Move> undone) {
         this.undone = undone;
     }
 

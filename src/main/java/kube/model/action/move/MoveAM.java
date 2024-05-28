@@ -1,8 +1,10 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import java class
+import java.awt.Point;
 
 public class MoveAM extends Move {
 
@@ -16,15 +18,15 @@ public class MoveAM extends Move {
      * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      *
-      * @param to the destination of the move
-      * @param color the color of the moved cube
-      */
+    /**
+     * Constructor of the class MoveAM
+     *
+     * @param to    the destination of the move
+     * @param color the color of the moved cube
+     */
     public MoveAM(Point to, ModelColor color) {
         super(color);
-        this.to =to;
+        this.to = to;
     }
 
     /**
@@ -62,7 +64,7 @@ public class MoveAM extends Move {
      * SETTERS
      **********/
 
-    public void setTo(Point to) {
+    public final void setTo(Point to) {
         this.to = to;
     }
 
@@ -82,11 +84,11 @@ public class MoveAM extends Move {
      * METHODS
      **********/
 
-     /**
-      * Check if the move is from the additionals 
-      *
-      * @return true if the move is from the additionals, false otherwise
-      */
+    /**
+     * Check if the move is from the additionals
+     *
+     * @return true if the move is from the additionals, false otherwise
+     */
     @Override
     public boolean isFromAdditionals() {
         return true;

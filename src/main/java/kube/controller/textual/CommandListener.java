@@ -66,6 +66,16 @@ public class CommandListener implements Runnable {
                 case "redo":
                     eventsToModel(new Action(ActionType.REDO));
                     break;
+                case "sauvegarder":
+                case "save":
+                    // TODO
+                    break;
+                case "restaurer":
+                case "charger":
+                case "restore":
+                case "load":
+                    // TODO
+                    break;
                 case "aide":
                 case "help":
                 case "":
@@ -105,7 +115,7 @@ public class CommandListener implements Runnable {
         String s = sc.nextLine();
         try {
             int n = Integer.parseInt(s);
-            eventsToModel(new Action(ActionType.MOVE_NUMBER,(Integer) n));
+            eventsToModel(new Action(ActionType.MOVE_NUMBER, (Integer) n));
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(ActionType.MOVE));

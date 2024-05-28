@@ -1,6 +1,5 @@
 package kube;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -12,7 +11,7 @@ import kube.model.ModelColor;
 import kube.model.action.move.*;
 
 public class MoveTest {
-    
+
     @Test
     public void isWhiteTest() {
 
@@ -23,7 +22,7 @@ public class MoveTest {
         // MoveAM
         MoveAM am = new MoveAM(0, 0, ModelColor.RED);
         assertFalse(am.isWhite());
-        
+
         // MoveMM
         MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
         assertFalse(mm.isWhite());
@@ -43,7 +42,7 @@ public class MoveTest {
         // MoveAM
         MoveAM am = new MoveAM(0, 0, ModelColor.RED);
         assertFalse(am.isClassicMove());
-        
+
         // MoveMM
         MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
         assertTrue(mm.isClassicMove());
@@ -63,7 +62,7 @@ public class MoveTest {
         // MoveAM
         MoveAM am = new MoveAM(0, 0, ModelColor.RED);
         assertTrue(am.isFromAdditionals());
-        
+
         // MoveMM
         MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
         assertFalse(mm.isFromAdditionals());
@@ -74,7 +73,7 @@ public class MoveTest {
     }
 
     @Test
-    public void isToAdditionalsTest(){
+    public void isToAdditionalsTest() {
         MoveAA aa = new MoveAA(ModelColor.RED);
         assertTrue(aa.isToAdditionals());
         assertFalse(aa.isClassicMove());
@@ -86,60 +85,50 @@ public class MoveTest {
         assertFalse(ma.isFromAdditionals());
     }
 
-    @Test
-    public void forSaveTest() {
-        
-        MoveMW mw = new MoveMW(0, 0);
-        assertEquals("{MW;" + ModelColor.WHITE.getColorCode() + ";(0,0)}", mw.forSave());
+    // @Test
+    // public void serializationTest() {
 
-        MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
-        assertEquals("{MM;" + ModelColor.RED.getColorCode() + ";(0,0);(0,0)}", mm.forSave());
+    // ObjectMapper mapper = new ObjectMapper();
 
-        MoveAM am = new MoveAM(0, 0, ModelColor.RED);
-        assertEquals("{AM;" + ModelColor.RED.getColorCode() + ";(0,0)}", am.forSave());
+    // MoveMW mw = new MoveMW(0, 0);
+    // MoveAM am = new MoveAM(0, 0, ModelColor.RED);
+    // MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
+    // MoveAW aw = new MoveAW();
+    // MoveAA aa = new MoveAA(ModelColor.RED);
+    // MoveMA ma = new MoveMA(new Point(1, 1), ModelColor.BLACK);
 
-        MoveAW aw = new MoveAW();
-        assertEquals("{AW}", aw.forSave());
+    // try {
+    // String mwJson = mapper.writeValueAsString(mw);
+    // MoveMW mw2 = mapper.readValue(mwJson, MoveMW.class);
+    // assertEquals(mw.getColor(), mw2.getColor());
+    // assertEquals(mw.getFrom(), mw2.getFrom());
 
-        MoveMA ma = new MoveMA(new Point(1, 1), ModelColor.BLACK);
-        assertEquals("{MA;" + ModelColor.BLACK.getColorCode() + ";(1,1)}", ma.forSave());
+    // String amJson = mapper.writeValueAsString(am);
+    // MoveAM am2 = mapper.readValue(amJson, MoveAM.class);
+    // assertEquals(am.getColor(), am2.getColor());
+    // assertEquals(am.getFrom(), am2.getFrom());
 
-        MoveAA aa = new MoveAA(ModelColor.RED);
-        assertEquals("{AA;" + ModelColor.RED.getColorCode() + "}", aa.forSave());
-    }
+    // String mmJson = mapper.writeValueAsString(mm);
+    // MoveMM mm2 = mapper.readValue(mmJson, MoveMM.class);
+    // assertEquals(mm.getColor(), mm2.getColor());
+    // assertEquals(mm.getFrom(), mm2.getFrom());
+    // assertEquals(mm.getTo(), mm2.getTo());
 
-    @Test
-    public void fromSaveTest() {
+    // String awJson = mapper.writeValueAsString(aw);
+    // MoveAW aw2 = mapper.readValue(awJson, MoveAW.class);
+    // assertEquals(aw.getColor(), aw2.getColor());
 
-        MoveMW mw = new MoveMW(0, 0);
-        String save = mw.forSave();
-        Move m = Move.fromSave(save);
-        assertTrue(m instanceof MoveMW);
-        assertEquals(m, mw);
+    // String aaJson = mapper.writeValueAsString(aa);
+    // MoveAA aa2 = mapper.readValue(aaJson, MoveAA.class);
+    // assertEquals(aa.getColor(), aa2.getColor());
 
-        MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
-        m = Move.fromSave(mm.forSave());
-        assertTrue(m instanceof MoveMM);
-        assertEquals(m, mm);
-
-        MoveAM am = new MoveAM(0, 0, ModelColor.RED);
-        m = Move.fromSave(am.forSave());
-        assertTrue(m instanceof MoveAM);
-        assertEquals(m, am);
-
-        MoveAW aw = new MoveAW();
-        m = Move.fromSave(aw.forSave());
-        assertTrue(m instanceof MoveAW);
-        assertEquals(m, aw);
-
-        MoveMA ma = new MoveMA(1, 1, ModelColor.BLACK);
-        m = Move.fromSave(ma.forSave());
-        assertTrue(m instanceof MoveMA);
-        assertEquals(m, ma);
-
-        MoveAA aa = new MoveAA(ModelColor.RED);
-        m = Move.fromSave(aa.forSave());
-        assertTrue(m instanceof MoveAA);
-        assertEquals(m, aa);
-    }
+    // String maJson = mapper.writeValueAsString(ma);
+    // MoveMA ma2 = mapper.readValue(maJson, MoveMA.class);
+    // assertEquals(ma.getColor(), ma2.getColor());
+    // assertEquals(ma.getFrom(), ma2.getFrom());
+    // } catch (Exception e) {
+    // assertTrue(false);
+    // e.printStackTrace();
+    // }
+    // }
 }

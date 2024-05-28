@@ -1,8 +1,10 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import java class
+import java.awt.Point;
 
 public class MoveMW extends Move {
 
@@ -61,7 +63,7 @@ public class MoveMW extends Move {
      * SETTERS
      **********/
 
-    public void setFrom(Point from) {
+    public final void setFrom(Point from) {
         this.from = from;
     }
 

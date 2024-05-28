@@ -12,7 +12,7 @@ import org.junit.Test;
 import kube.model.*;
 
 public class MountainTest {
-    
+
     @Test
     public void simpleSetTest() {
 
@@ -141,7 +141,7 @@ public class MountainTest {
 
     @Test
     public void notOverflowMultipleLineSetTest() {
-            
+
         Mountain m = new Mountain(5);
 
         m.setCase(4, 0, ModelColor.BLUE);
@@ -168,7 +168,7 @@ public class MountainTest {
             }
         }
     }
-    
+
     @Test
     public void notOverflowAllMountainSetTest() {
 
@@ -237,7 +237,7 @@ public class MountainTest {
         m.setCase(2, 0, ModelColor.BLUE);
         m.setCase(2, 1, ModelColor.BLUE);
         m.setCase(2, 2, ModelColor.BLUE);
-        
+
         m.setCase(1, 0, ModelColor.RED);
         m.setCase(1, 1, ModelColor.RED);
 
@@ -252,7 +252,7 @@ public class MountainTest {
 
     @Test
     public void compatibleTest() {
-        
+
         Mountain m = new Mountain(3);
 
         m.setCase(2, 0, ModelColor.BLUE);
@@ -280,7 +280,7 @@ public class MountainTest {
 
     @Test
     public void isPenalityTest() {
-        
+
         Mountain m = new Mountain(5);
 
         m.setCase(4, 0, ModelColor.BLUE);
@@ -295,17 +295,49 @@ public class MountainTest {
         assertTrue(m.isPenality(3, 3));
     }
 
-    @Test
-    public void SaveTest() {
+    // @Test
+    // public void serializationTest() {
 
-        Mountain m = new Mountain(5);
+    // ObjectMapper mapper = new ObjectMapper();
 
-        m.setCase(4, 0, ModelColor.BLUE);
-        m.setCase(4, 1, ModelColor.RED);
-        m.setCase(4, 2, ModelColor.RED);
-        m.setCase(4, 3, ModelColor.NATURAL);
-        m.setCase(4, 4, ModelColor.NATURAL);
+    // Mountain m1 = new Mountain(5);
 
-        assertEquals(m, new Mountain(m.forSave()));
+    // m1.setCase(0, 0, ModelColor.BLUE);
+    // m1.setCase(1, 0, ModelColor.RED);
+    // m1.setCase(1, 1, ModelColor.GREEN);
+    // m1.setCase(2, 0, ModelColor.YELLOW);
+    // m1.setCase(2, 1, ModelColor.WHITE);
+    // m1.setCase(2, 2, ModelColor.BLUE);
+    // m1.setCase(3, 0, ModelColor.RED);
+    // m1.setCase(3, 1, ModelColor.GREEN);
+    // m1.setCase(3, 2, ModelColor.YELLOW);
+    // m1.setCase(3, 3, ModelColor.WHITE);
+    // m1.setCase(4, 0, ModelColor.BLUE);
+    // m1.setCase(4, 1, ModelColor.RED);
+    // m1.setCase(4, 2, ModelColor.GREEN);
+    // m1.setCase(4, 3, ModelColor.YELLOW);
+    // m1.setCase(4, 4, ModelColor.WHITE);
+
+    // try {
+    // String json = mapper.writeValueAsString(m1);
+    // Mountain m2 = mapper.readValue(json, Mountain.class);
+    // assertTrue(areSameMountain(m1, m2));
+    // } catch (JsonProcessingException e) {
+    // e.printStackTrace();
+    // }
+    // }
+
+    private boolean areSameMountain(Mountain m1, Mountain m2) {
+        if (m1.getBaseSize() != m2.getBaseSize()) {
+            return false;
+        }
+        for (int i = 0; i < m1.getBaseSize(); i++) {
+            for (int j = 0; j < m1.getBaseSize(); j++) {
+                if (m1.getCase(i, j) != m2.getCase(i, j)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

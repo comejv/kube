@@ -27,6 +27,7 @@ public class MiniMaxAI implements ActionListener, Serializable {
     private Timer timer;
     private int nbMoves;
     private int horizonMax;
+    private Kube k3;
 
     /**********
      * CONSTRUCTORS
@@ -56,7 +57,11 @@ public class MiniMaxAI implements ActionListener, Serializable {
      * SETTERS
      **********/
 
-    public void setPlayerId(int id) {
+    public final void setK3(Kube k) {
+        k3 = k;
+    }
+
+    public final void setPlayerId(int id) {
         iaPlayerId = id;
     }
 
@@ -80,7 +85,7 @@ public class MiniMaxAI implements ActionListener, Serializable {
         nbMoves++;
     }
 
-    public void setHorizonMax(int h) {
+    public final void setHorizonMax(int h) {
         horizonMax = h;
     }
 
@@ -268,10 +273,10 @@ public class MiniMaxAI implements ActionListener, Serializable {
         }
     }
 
-    public MiniMaxAI clone(){
-        if (this instanceof moveSetHeuristique){
+    public MiniMaxAI clone() {
+        if (this instanceof moveSetHeuristique) {
             return new moveSetHeuristique(getTime());
-        } else if (this instanceof randomAI){
+        } else if (this instanceof randomAI) {
             return new randomAI(getTime());
         } else {
             throw new UnsupportedOperationException("Unsupported type for cloning.");

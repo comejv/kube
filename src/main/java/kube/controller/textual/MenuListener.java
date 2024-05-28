@@ -19,10 +19,11 @@ import kube.services.Server;
 public class MenuListener implements Runnable {
 
     private static final int PORT = 1234;
+
     Queue<Action> eventsToView;
     Queue<Action> eventsToModel;
-
     Queue<Action> eventsToNetwork;
+
     Kube kube;
     Scanner scanner;
 
@@ -77,6 +78,7 @@ public class MenuListener implements Runnable {
             }
             eventsToNetwork = new Queue<>();
             controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, type, scanner);
+            networkSender = new NetworkSender(network, eventsToNetwork, type);
             networkSender = new NetworkSender(network, eventsToNetwork, type);
             networkListener = new NetworkListener(network, eventsToModel);
 

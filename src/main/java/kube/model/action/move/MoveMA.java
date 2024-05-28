@@ -1,9 +1,11 @@
 
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import java class
+import java.awt.Point;
 
 public class MoveMA extends Move {
 
@@ -25,7 +27,7 @@ public class MoveMA extends Move {
      */
     public MoveMA(Point from, ModelColor color) {
         super(color);
-        this.from= from;
+        this.from = from;
     }
 
     /**
@@ -63,7 +65,7 @@ public class MoveMA extends Move {
      * SETTERS
      **********/
 
-    public void setFrom(Point from) {
+    public final void setFrom(Point from) {
         this.from = from;
     }
 

@@ -1,5 +1,9 @@
 package kube.model;
 
+// Import model classes
+import kube.model.ai.MiniMaxAI;
+
+// Import java classes
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -7,8 +11,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-
-import kube.model.ai.MiniMaxAI;
 
 public class Player implements Serializable {
 
@@ -42,50 +44,9 @@ public class Player implements Serializable {
         this.initialAdditionals = getAdditionals();
         this.hasValidateBuilding = false;
         this.usedPiece = new HashMap<>();
-        for (ModelColor c : ModelColor.getAllColoredAndJokers()){
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             usedPiece.put(c, 0);
         }
-    }
-
-    public Player(String save, boolean hasValidateBuilding) {
-
-        String id, name, mountain, additionals, availableToBuild;
-        String[] parts, additionalsTab, availableToBuildTab, hashTab;
-
-        save = save.substring(1, save.length() - 1);
-        parts = save.split(" ");
-
-        id = parts[0];
-        this.id = Integer.parseInt(id);
-
-        name = parts[1];
-        this.name = name;
-
-        mountain = parts[2];
-        this.mountain = new Mountain(mountain);
-
-        this.initialMountain = getMountain().clone();
-
-        if (hasValidateBuilding) {
-            additionals = parts[3].substring(1, parts[3].length() - 1);
-            additionalsTab = additionals.split(",");
-            this.additionals = new ArrayList<>();
-            for (String color : additionalsTab) {
-                this.additionals.add(ModelColor.fromSave(color));
-            }
-            this.initialAdditionals = getAdditionals();
-        }
-        else {
-            availableToBuild = parts[3].substring(1, parts[3].length() - 1);
-            availableToBuildTab = availableToBuild.split(",");
-            this.avalaibleToBuild = new HashMap<>();
-            for (String hash : availableToBuildTab) {
-                hashTab = hash.split(":");
-                this.avalaibleToBuild.put(ModelColor.fromSave(hashTab[0]), Integer.parseInt(hashTab[1]));
-            }
-        }
-
-        this.hasValidateBuilding = hasValidateBuilding;
     }
 
     /**
@@ -124,15 +85,14 @@ public class Player implements Serializable {
         this.hasValidateBuilding = hasValidateBuilding;
     }
 
-
-    public void setusedPiece(HashMap<ModelColor, Integer> usedPiece){
+    public void setUsedPiece(HashMap<ModelColor, Integer> usedPiece) {
         this.usedPiece = usedPiece;
     }
 
     /**********
      * GETTERS
      *********/
-    
+
     public int getId() {
         return this.id;
     }
@@ -164,7 +124,7 @@ public class Player implements Serializable {
         return this.additionals;
     }
 
-    public HashMap<ModelColor, Integer> getAvailaibleToBuild() {
+    public HashMap<ModelColor, Integer> getAvailableToBuild() {
         return this.avalaibleToBuild;
     }
 
@@ -176,10 +136,9 @@ public class Player implements Serializable {
         return null;
     }
 
-    public HashMap<ModelColor, Integer> getUsedPiece(){
+    public HashMap<ModelColor, Integer> getUsedPiece() {
         return usedPiece;
     }
-
 
     /**
      * ********
@@ -190,7 +149,7 @@ public class Player implements Serializable {
      *
      * @param c the color to check
      * @return true if the player can build a cube of the given color, false
-     * otherwise
+     *         otherwise
      */
     public boolean isAvailableToBuild(ModelColor c) throws UnsupportedOperationException {
 
@@ -199,7 +158,7 @@ public class Player implements Serializable {
                     "Forbidden operation, the player has already validate his building");
         }
 
-        return getAvailaibleToBuild().get(c) > 0;
+        return getAvailableToBuild().get(c) > 0;
     }
 
     /**
@@ -223,8 +182,8 @@ public class Player implements Serializable {
     /**
      * Add a color to the player's mountain using available colors
      *
-     * @param x the x position to build
-     * @param y the y position to build
+     * @param x     the x position to build
+     * @param y     the y position to build
      * @param color the color to build
      * @return true if the color has been built, false otherwise
      */
@@ -246,14 +205,14 @@ public class Player implements Serializable {
         }
 
         mountainColor = getMountain().getCase(x, y);
-        if (color == ModelColor.EMPTY || getAvailaibleToBuild().get(color) > 0) {
+        if (color == ModelColor.EMPTY || getAvailableToBuild().get(color) > 0) {
             getMountain().setCase(x, y, color);
             if (mountainColor != ModelColor.EMPTY) {
-                availableNumber = getAvailaibleToBuild().get(mountainColor) + 1;
-                getAvailaibleToBuild().put(mountainColor, availableNumber);
+                availableNumber = getAvailableToBuild().get(mountainColor) + 1;
+                getAvailableToBuild().put(mountainColor, availableNumber);
             }
-            if (color != ModelColor.EMPTY){
-                getAvailaibleToBuild().put(color, getAvailaibleToBuild().get(color) - 1);
+            if (color != ModelColor.EMPTY) {
+                getAvailableToBuild().put(color, getAvailableToBuild().get(color) - 1);
             }
             return true;
         }
@@ -300,7 +259,7 @@ public class Player implements Serializable {
         mountainColor = getMountain().getCase(x, y);
         if (mountainColor != ModelColor.EMPTY) {
             getMountain().remove(x, y);
-            getAvailaibleToBuild().put(mountainColor, getAvailaibleToBuild().get(mountainColor) + 1);
+            getAvailableToBuild().put(mountainColor, getAvailableToBuild().get(mountainColor) + 1);
             return mountainColor;
         }
 
@@ -324,7 +283,7 @@ public class Player implements Serializable {
             setInitialMountain(getMountain().clone());
         }
 
-        //return getHasValidateBuilding();
+        // return getHasValidateBuilding();
         return getMountain().isFull();
     }
 
@@ -426,7 +385,7 @@ public class Player implements Serializable {
         return playable;
     }
 
-    public void addUsedPiece(ModelColor c){
+    public void addUsedPiece(ModelColor c) {
         if (!getHasValidateBuilding()) {
             throw new UnsupportedOperationException(
                     "removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
@@ -434,7 +393,7 @@ public class Player implements Serializable {
         usedPiece.put(c, usedPiece.get(c) + 1);
     }
 
-    public void removeUsedPiece(ModelColor c){
+    public void removeUsedPiece(ModelColor c) {
         if (!getHasValidateBuilding()) {
             throw new UnsupportedOperationException(
                     "removeFromAdditionals: Forbidden operation, the player hasn't validate his building");
@@ -498,7 +457,7 @@ public class Player implements Serializable {
             addedAvailableToBuild = false;
             save += getMountain().forSave() + " ";
             save += "[";
-            for (Map.Entry<ModelColor, Integer> entry : getAvailaibleToBuild().entrySet()) {
+            for (Map.Entry<ModelColor, Integer> entry : getAvailableToBuild().entrySet()) {
                 save += entry.getKey().forSave() + ":" + entry.getValue() + ",";
                 addedAvailableToBuild = true;
             }
@@ -506,8 +465,7 @@ public class Player implements Serializable {
                 save = save.substring(0, save.length() - 1);
             }
             save += "]";
-        }
-        else {
+        } else {
             save += getInitialMountain().forSave() + " ";
             save += "[";
             if (getInitialAdditionals().size() > 0) {
@@ -560,11 +518,11 @@ public class Player implements Serializable {
     public Player clone() {
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
-        if (!getHasValidateBuilding()){
-            p.setAvailableToBuild(new HashMap<>(getAvailaibleToBuild()));
+        if (!getHasValidateBuilding()) {
+            p.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
         }
         p.setName(getName());
-        p.setusedPiece(new HashMap<>(getUsedPiece()));
+        p.setUsedPiece(new HashMap<>(getUsedPiece()));
         p.setMountain(getMountain().clone());
         p.setHasValidateBuilding(getHasValidateBuilding());
         return p;

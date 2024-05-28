@@ -2,8 +2,11 @@ package kube;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
+import kube.model.AI;
+import kube.model.History;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
@@ -23,7 +26,12 @@ public class Simulation implements Runnable {
     int sumHorizonJ2;
 
     public static void main(String[] args) throws Exception {
-        int nbGames = 1000;
+        int nbGames = 100;
+        try {
+            nbGames = Integer.parseInt(args[0]);
+        } catch (Exception e) {
+            System.out.println("Nombre de parties par défaut: 100");
+        }
         int nbThreads = 8;
         Simulation s = new Simulation(nbGames);
         s.winJ1 = 0;
@@ -124,7 +132,7 @@ public class Simulation implements Runnable {
             k.updatePhase();
             // Phsae 2
             k.setCurrentPlayer(k.getRandomPlayer());
-            while (k.canCurrentPlayerPlay()) {  
+            while (k.canCurrentPlayerPlay()) {
                 Move move = k.getCurrentPlayer().getAI().nextMove(k);
                 if (k.getCurrentPlayer() == k.getP1()) {
                     horizonReachedJ1.add(k.getCurrentPlayer().getAI().getHorizonMax());
@@ -144,13 +152,13 @@ public class Simulation implements Runnable {
             addNbMovesJ1(k.getP1().getAI().getNbMoves());
             addNbMovesJ2(k.getP2().getAI().getNbMoves());
             incrnGamesFinished();
-            for (int i : horizonReachedJ1){
-                if (i < 20){
+            for (int i : horizonReachedJ1) {
+                if (i < 20) {
                     addToSumHorizonJ1(i);
                 }
             }
-            for (int i : horizonReachedJ2){
-                if (i < 20){
+            for (int i : horizonReachedJ2) {
+                if (i < 20) {
                     addToSumHorizonJ2(i);
                 }
             }
@@ -189,7 +197,7 @@ public class Simulation implements Runnable {
             k.fillBag(seed);
             k.fillBase();
             k.distributeCubesToPlayers();
-            if (k.getP1().getAvailaibleToBuild().equals(k.getP2().getAvailaibleToBuild())) {
+            if (k.getP1().getAvailableToBuild().equals(k.getP2().getAvailableToBuild())) {
                 break;
             }
         }
@@ -277,6 +285,101 @@ public class Simulation implements Runnable {
         }
         return availableSum / nMove;
 
+    }
+
+    private void testMountain() {
+        Kube k = new Kube(true);
+        k.setHistory(new History());
+        k.setBag(new ArrayList<>());
+        while (getnGamesFinished() < getNbGames()) {
+            Mountain m = new Mountain(9);
+            // Init the base
+            m.setCase(8, 0, ModelColor.RED);
+            m.setCase(8, 1, ModelColor.BLUE);
+            m.setCase(8, 2, ModelColor.YELLOW);
+            m.setCase(8, 3, ModelColor.GREEN);
+            m.setCase(8, 4, ModelColor.RED);
+            m.setCase(8, 5, ModelColor.BLUE);
+            m.setCase(8, 6, ModelColor.GREEN);
+            m.setCase(8, 7, ModelColor.GREEN);
+            m.setCase(8, 8, ModelColor.BLUE);
+            k.setK3(m);
+            // Init the first IA
+            k.setP1(new AI(1, new moveSetHeuristique(30)));
+
+            Mountain iaMountain = new Mountain(6);
+
+            iaMountain.setCase(0, 0, ModelColor.RED);
+            iaMountain.setCase(1, 0, ModelColor.GREEN);
+            iaMountain.setCase(2, 0, ModelColor.BLUE);
+            iaMountain.setCase(3, 0, ModelColor.NATURAL);
+            iaMountain.setCase(4, 0, ModelColor.YELLOW);
+            iaMountain.setCase(5, 0, ModelColor.YELLOW);
+            iaMountain.setCase(1, 1, ModelColor.RED);
+            iaMountain.setCase(2, 1, ModelColor.RED);
+            iaMountain.setCase(3, 1, ModelColor.RED);
+            iaMountain.setCase(4, 1, ModelColor.WHITE);
+            iaMountain.setCase(5, 1, ModelColor.BLACK);
+            iaMountain.setCase(2, 2, ModelColor.BLUE);
+            iaMountain.setCase(3, 2, ModelColor.GREEN);
+            iaMountain.setCase(4, 2, ModelColor.GREEN);
+            iaMountain.setCase(5, 2, ModelColor.NATURAL);
+            iaMountain.setCase(3, 3, ModelColor.WHITE);
+            iaMountain.setCase(4, 3, ModelColor.YELLOW);
+            iaMountain.setCase(5, 3, ModelColor.BLACK);
+            iaMountain.setCase(4, 4, ModelColor.GREEN);
+            iaMountain.setCase(5, 4, ModelColor.YELLOW);
+            iaMountain.setCase(5, 5, ModelColor.BLACK);
+
+            HashMap<ModelColor, Integer> bag1 = new HashMap<>();
+            bag1.put(ModelColor.RED, 0);
+            bag1.put(ModelColor.BLUE, 0);
+            bag1.put(ModelColor.YELLOW, 0);
+            bag1.put(ModelColor.GREEN, 0);
+            bag1.put(ModelColor.BLACK, 0);
+            bag1.put(ModelColor.WHITE, 0);
+            bag1.put(ModelColor.NATURAL, 0);
+            k.getP1().setAvailableToBuild(bag1);
+            k.getP1().setMountain(iaMountain);
+            k.getP1().validateBuilding();
+            k.updatePhase();
+            // Init the second IA
+
+            k.setP2(new AI(2, new moveSetHeuristique(30)));
+            HashMap<ModelColor, Integer> bag = new HashMap<>();
+            bag.put(ModelColor.RED, 3);
+            bag.put(ModelColor.BLUE, 4);
+            bag.put(ModelColor.YELLOW, 4);
+            bag.put(ModelColor.GREEN, 2);
+            bag.put(ModelColor.BLACK, 4);
+            bag.put(ModelColor.WHITE, 2);
+            bag.put(ModelColor.NATURAL, 2);
+            k.getP2().setAvailableToBuild(bag);
+            k.getP2().getAI().constructionPhase(k);
+
+            k.setPhase(2);
+
+            // Phase 2
+
+            k.setCurrentPlayer(k.getRandomPlayer());
+            while (k.canCurrentPlayerPlay()) {
+                Move move = k.getCurrentPlayer().getAI().nextMove(k);
+                k.playMove(move);
+            }
+            if (getnGamesFinished() >= getNbGames()) {
+                return;
+            }
+            if (k.getCurrentPlayer() == k.getP1()) {
+                upWinJ2();
+            } else {
+                upWinJ1();
+            }
+            addNbMovesJ1(k.getP1().getAI().getNbMoves());
+            addNbMovesJ2(k.getP2().getAI().getNbMoves());
+            incrnGamesFinished();
+            System.out.print("\rPartie n°" + getnGamesFinished() + " finie");
+
+        }
     }
 
 }

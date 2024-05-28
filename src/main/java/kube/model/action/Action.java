@@ -3,6 +3,10 @@ package kube.model.action;
 import java.io.Serializable;
 
 public class Action implements Serializable {
+    /**********
+     * ATTRIBUTES
+     **********/
+
     private ActionType type;
     private Object data;
     private int playerId;
@@ -51,7 +55,7 @@ public class Action implements Serializable {
         if (data != null) {
             s += ", data = " + data.toString();
         }
-        s += ", id = " + getPlayer(); 
+        s += ", id = " + getPlayer();
         s += "}";
         return s;
     }

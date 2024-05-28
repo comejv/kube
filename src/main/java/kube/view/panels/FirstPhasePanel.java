@@ -1,7 +1,6 @@
 package kube.view.panels;
 
 import kube.configuration.Config;
-import kube.controller.graphical.DnDController;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
@@ -85,7 +84,6 @@ public class FirstPhasePanel extends JPanel {
         initGrid();
         gamePanel.add(constructPanel);
         // SIDE BAR - PIECES AVAILABLE
-        // for this part need: getAvailableColors() and loop on it
         initSide();
         gamePanel.add(piecesPanel, BorderLayout.EAST);
         return gamePanel;
@@ -159,7 +157,7 @@ public class FirstPhasePanel extends JPanel {
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             JPanel mini = new JPanel();
             mini.setOpaque(false);
-            int numberOfPieces = k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+            int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
             JLabel numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             boolean actionable = numberOfPieces > 0;
@@ -192,7 +190,7 @@ public class FirstPhasePanel extends JPanel {
 
         JPanel mini = sidePanels.get(c);
         mini.removeAll();
-        int numberOfPieces = k3.getCurrentPlayer().getAvailaibleToBuild().get(c);
+        int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
         JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(c, numberOfPieces > 0));

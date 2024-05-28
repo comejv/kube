@@ -51,7 +51,7 @@ public class Game implements Runnable {
         return;
     }
 
-    public void setGameType(int gameType) {
+    public final void setGameType(int gameType) {
         this.gameType = gameType;
     }
 
