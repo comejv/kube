@@ -1,14 +1,12 @@
 package kube.view;
 
 import javax.swing.*;
-import javax.swing.event.MouseInputAdapter;
 
 import kube.configuration.Config;
 import kube.controller.graphical.DnDController;
 import kube.view.panels.GlassPanel;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 
 /*
  * This class initializes the game frame and its layout manager : an overlay layout that contains a card layout and potential overlay elements.

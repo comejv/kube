@@ -1,13 +1,8 @@
 package kube.view;
 
-import java.awt.CardLayout;
-
-import javax.swing.JPanel;
-
 import kube.configuration.Config;
 import kube.controller.graphical.MenuController;
 import kube.model.Kube;
-import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
@@ -66,6 +61,10 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case QUIT:
                     System.exit(0);
+                    gui.showPanel(GUI.PHASE1);
+                    break;
+                case SETTINGS:
+                    gui.showPanel(GUI.MENU);
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);
