@@ -561,7 +561,7 @@ public class Player implements Serializable {
     public Player clone() {
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
-        if (!hasValidateBuilding){
+        if (!getHasValidateBuilding()){
             p.setAvailableToBuild(new HashMap<>(getAvailaibleToBuild()));
         }
         p.setName(getName());

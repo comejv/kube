@@ -1,10 +1,15 @@
 package kube.model;
 
+import kube.configuration.Config;
 import java.util.Random;
 
-import kube.configuration.Config;
-import kube.model.action.*;
-import kube.model.action.move.*;
+import kube.model.action.Action;
+import kube.model.action.ActionType;
+import kube.model.action.Build;
+import kube.model.action.Queue;
+import kube.model.action.Start;
+import kube.model.action.Swap;
+import kube.model.action.move.Move;
 import kube.model.ai.utilsAI;
 
 public class Game implements Runnable {
@@ -112,10 +117,10 @@ public class Game implements Runnable {
             case HOST:
                 k3.setCurrentPlayer(k3.getRandomPlayer());
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getCurrentPlayer()));
-                if (k3.getCurrentPlayer().getId() != HOST) {
-                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                } else {
+                if (k3.getCurrentPlayer().getId() == HOST) {
                     modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                } else {
+                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 }
                 waitAcknowledge();
                 break;
@@ -126,10 +131,10 @@ public class Game implements Runnable {
                 }
                 Player starter = (Player) a.getData();
                 k3.setCurrentPlayer(k3.getPlayerById(starter.getId()));
-                if (k3.getCurrentPlayer().getId() != JOIN) {
-                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                } else {
+                if (k3.getCurrentPlayer().getId() == JOIN) {
                     modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                } else {
+                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 }
                 acknowledge(true);
                 break;
@@ -137,13 +142,12 @@ public class Game implements Runnable {
                 k3.setCurrentPlayer(k3.getRandomPlayer());
                 break;
         }
-        Config.debug("Le joueur " + k3.getCurrentPlayer().getName() + " commence");
     }
 
     public void gamePhase() {
         while (k3.canCurrentPlayerPlay()) {
             if (k3.getCurrentPlayer().isAI()) {
-                Move move = k3.getCurrentPlayer().getAI().nextMove();
+                Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
                 playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
             } else {
                 Action a = controllerToModele.remove();
@@ -170,14 +174,14 @@ public class Game implements Runnable {
         initPhase();
         constructionPhase();
         setFirstPlayer();
+        modeleToView.add(new Action(ActionType.PRINT_STATE));
         gamePhase();
-
+        modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
         if (k3.getCurrentPlayer() == k3.getP1()) {
             modeleToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
         } else {
             modeleToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
         }
-        Config.debug("Fin phase 2");
     }
 
     synchronized public void swap(Swap s) {
@@ -204,7 +208,6 @@ public class Game implements Runnable {
         } else {
             move = (Move) a.getData();
         }
-
         switch (getGameType()) {
             case LOCAL:
                 if (k3.playMove(move)) {
@@ -215,24 +218,26 @@ public class Game implements Runnable {
                 break;
             case HOST:
             case JOIN:
-                if (a.getPlayer() != k3.getCurrentPlayer().getId()) {
+                if (a.getPlayer() == getGameType() && a.getPlayer() != k3.getCurrentPlayer().getId()) {
                     modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 } else if (a.getPlayer() != getGameType()) {
-                    Config.debug("Reception d'un coup adverse");
                     // Move from the outside
-                    acknowledge(k3.playMove(move));
-                    modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
-                    modeleToView.add(new Action(ActionType.MOVE, move));
+                    boolean validMove = k3.playMove(move);
+                    acknowledge(validMove);
+                    if (validMove) {
+                        modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                        modeleToView.add(new Action(ActionType.MOVE, move));
+                    }
                 } else {
                     // Local move
-                    Config.debug("Envoi d'un coup");
                     eventsToNetwork.add(new Action(ActionType.MOVE, move));
-                    if (waitAcknowledge()) {
-                        k3.playMove(move);
+                    if (waitAcknowledge() && k3.playMove(move)) {
                         modeleToView.add(new Action(ActionType.MOVE, move));
-                        modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                        if (k3.getCurrentPlayer().getId() != getGameType()) {
+                            modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                        }
                     } else {
-                        Config.debug("Coup non accepté par l'autre joueur");
+
                     }
                 }
                 break;
@@ -260,7 +265,13 @@ public class Game implements Runnable {
     }
 
     public void constructionPhaseIA(Player p) {
-        k3.getCurrentPlayer().getAI().constructionPhase();
+        p.getAI().constructionPhase(k3);
+        if (!p.getHasValidateBuilding()) {
+            p.validateBuilding();
+        }
+        if (getGameType() != LOCAL) {
+            eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
+        }
         modeleToView.add(new Action(ActionType.VALIDATE, true));
         k3.updatePhase();
     }
@@ -284,14 +295,7 @@ public class Game implements Runnable {
 
     public void constructionPhasePlayer(Player p) {
         if (p.isAI()) {
-            p.getAI().constructionPhase();
-            if (!p.getHasValidateBuilding()) {
-                p.validateBuilding();
-            }
-            if (getGameType() != LOCAL) {
-                eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
-                modeleToView.add(new Action(ActionType.VALIDATE, true));
-            }
+            constructionPhaseIA(p);
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModele.remove();

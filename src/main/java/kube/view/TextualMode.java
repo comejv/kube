@@ -62,7 +62,6 @@ public class TextualMode implements Runnable {
                     printListMoves();
                     break;
                 case MOVE:
-                    Config.debug(action);
                     if (action.getData() == null) {
                         printMoveError();
                         printHelp();
@@ -208,9 +207,9 @@ public class TextualMode implements Runnable {
 
     private void printWaitCoordinates(int i) {
         if (i == 1) {
-            System.out.println("Entrez les coordonnées de la première pièce à déplacer");
+            System.out.println("Entrez les coordonnées de la première pièce à déplacer (ex : 0 2)");
         } else {
-            System.out.println("Entrez les coordonnées de la deuxième pièce à déplacer");
+            System.out.println("Entrez les coordonnées de la deuxième pièce à déplacer (ex : 0 2)");
         }
     }
 
@@ -241,7 +240,7 @@ public class TextualMode implements Runnable {
     }
 
     private void printMove(Move move) {
-        System.out.println("Vous avez joué : " + move);
+        System.out.println(move.getPlayer().getName() + " a joué : " + move);
     }
 
     private void printMoveError() {
