@@ -27,14 +27,14 @@ public class MenuPanel extends JPanel {
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
-       // BufferedImage backgroundCow = ResourceLoader.getBufferedImage("background");
-        JPanel modal = new JPanel();/*{
+       BufferedImage backgroundCow = ResourceLoader.getBufferedImage("background");
+        JPanel modal = new JPanel(){
             @Override
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 g.drawImage(backgroundCow, 0, 0, this); // Draw the background image
             }
-        };*/
+        };
         modal.setLayout(new GridBagLayout());
 
         add(modal);
@@ -72,7 +72,7 @@ public class MenuPanel extends JPanel {
         modal.add(volume, elemGBC);
 
         JPanel buttonsPanel = new JPanel(new CardLayout());
-        //buttonsPanel.setOpaque(false);
+        buttonsPanel.setOpaque(false);
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 1;
         elemGBC.gridy = 1;
@@ -86,7 +86,7 @@ public class MenuPanel extends JPanel {
         // START BUTTONS //
         // ***************************************************************************************//
         JPanel startButtons = new JPanel();
-        //startButtons.setOpaque(false);
+        startButtons.setOpaque(false);
         startButtons.setLayout(new GridBagLayout());
         GridBagConstraints buttonsGBC = new GridBagConstraints();
         Insets insets = new Insets(10, 0, 10, 0);
@@ -133,7 +133,7 @@ public class MenuPanel extends JPanel {
 
         // Players buttons - fill entire row
         JPanel playersButtons = new JPanel();
-        //playersButtons.setOpaque(false);
+        playersButtons.setOpaque(false);
         playersButtons.setLayout(new GridBagLayout());
         buttonsGBC = new GridBagConstraints();
         insets = new Insets(10, 0, 10, 0);
@@ -145,13 +145,8 @@ public class MenuPanel extends JPanel {
         JPanel player1 = new SelectPlayerButton("PLAYER 1");
         JPanel player2 = new SelectPlayerButton("PLAYER 2");
 
-
         playersButtons.add(player1, buttonsGBC);
         playersButtons.add(player2, buttonsGBC);
-
-
-        /*JButton playerTwo = new MenuButton("JOUEUR 2");
-        playersButtons.add(playerTwo, buttonsGBC);*/
 
         JButton play = new MenuButton("PLAY");
         playersButtons.add(play, buttonsGBC);
