@@ -1,9 +1,17 @@
 package kube.model;
 
+// Import model classes
+import kube.model.action.move.Move;
+
+// Import jackson classes
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+// Import java classes
 import java.awt.Point;
 import java.util.ArrayList;
-
-import kube.model.action.move.Move;
 
 public class History {
 
@@ -11,65 +19,45 @@ public class History {
      * ATTRIBUTES
      **********/
 
+    @JsonProperty("first_player")
     private int firstPlayer;
+
+    @JsonProperty("done")
     private ArrayList<Move> done;
+
+    @JsonProperty("un_done")
     private ArrayList<Move> undone;
 
     /**********
-     * CONSTRUCTORS
+     * CONSTRUCTOR
      **********/
 
     /**
      * Constructor of the class History
      */
+    @JsonCreator
     public History() {
-        this.firstPlayer=0;
+        this.firstPlayer = 0;
         this.done = new ArrayList<>();
         this.undone = new ArrayList<>();
     }
 
-    /**
-     * Constructor of the class History from a save string
-     * 
-     * @param save the string to load
-     */
-    public History(String save) {
-
-        String player, doneString, undoneString;
-        String[] parts, doneStringTab, undoneStringTab;
-
-        parts = save.split("\n");
-
-        player = parts[0];
-        this.firstPlayer=Integer.parseInt(player);
-
-        doneString = parts[1].substring(1, parts[1].length() - 1);
-        doneStringTab = doneString.split(" ");
-        this.done = new ArrayList<>();
-        for (String move : doneStringTab) {
-            this.done.add(Move.fromSave(move));
-        }
-
-        undoneString = parts[2].substring(1, parts[2].length() - 1);
-        undoneStringTab = undoneString.split(" ");
-        this.undone = new ArrayList<>();
-        for (String move : undoneStringTab) {
-            this.undone.add(Move.fromSave(move));
-        }
-    }
     /**********
      * SETTERS
      **********/
 
-    public void setFirstPlayer(int player) {
+    @JsonSetter("first_player")
+    public final void setFirstPlayer(int player) {
         this.firstPlayer = player;
     }
 
-    public void setDone(ArrayList<Move> done) {
+    @JsonSetter("done")
+    public final void setDone(ArrayList<Move> done) {
         this.done = done;
     }
 
-    public void setUndone(ArrayList<Move> undone) {
+    @JsonSetter("un_done")
+    public final void setUndone(ArrayList<Move> undone) {
         this.undone = undone;
     }
 
@@ -77,14 +65,17 @@ public class History {
      * GETTERS
      **********/
 
+    @JsonGetter("first_player")
     public int getFirstPlayer() {
         return this.firstPlayer;
     }
 
+    @JsonGetter("done")
     public ArrayList<Move> getDone() {
         return this.done;
     }
 
+    @JsonGetter("un_done")
     public ArrayList<Move> getUndone() {
         return this.undone;
     }
@@ -174,36 +165,6 @@ public class History {
      */
     public boolean canRedo() {
         return getUndone().size() > 0;
-    }
-
-    /**
-     * Return a string representing the history for saving it
-     * 
-     * @return a string representing the history
-     */
-    public String forSave() {
-
-        String save;
-        // Saving the first player
-        save = getFirstPlayer() + "\n[";
-        // Saving the done moves
-        for (Move move : getDone()) {
-            save += move.forSave() + " ";
-        }
-        if (canUndo()) {
-            save = save.substring(0, save.length() - 1);
-        }
-        // Saving the undone moves
-        save += "]\n[";
-        for (Move move : getUndone()) {
-            save += move.forSave() + " ";
-        }
-        if (canRedo()) {
-            save = save.substring(0, save.length() - 1);
-        }
-
-        save += "]";
-        return save;
     }
 
     /**

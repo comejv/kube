@@ -1,8 +1,16 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import jackson classes
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+// Import java class
+import java.awt.Point;
 
 public class MoveMW extends Move {
 
@@ -10,6 +18,7 @@ public class MoveMW extends Move {
      * ATTRIBUTE
      **********/
 
+    @JsonProperty("from")
     private Point from;
 
     /**********
@@ -22,7 +31,8 @@ public class MoveMW extends Move {
      * @param from  the source of the move
      * @param color the color of the moved cube
      */
-    public MoveMW(Point from) {
+    @JsonCreator
+    public MoveMW(@JsonProperty("from") Point from) {
         super(ModelColor.WHITE);
         this.from = from;
     }
@@ -38,34 +48,16 @@ public class MoveMW extends Move {
         this(new Point(fromX, fromY));
     }
 
-    /**
-     * Constructor of the class MoveMW from a save string
-     * 
-     * @param save the string to load
-     */
-    public MoveMW(String save) {
-
-        super(ModelColor.WHITE);
-
-        String fromString;
-        String[] parts, coords;
-
-        parts = save.split(";");
-        fromString = parts[2].substring(1, parts[2].length() - 1);
-
-        coords = fromString.split(",");
-        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-    }
-
     /**********
      * SETTERS
      **********/
 
-    public void setFrom(Point from) {
+    @JsonSetter("from")
+    public final void setFrom(Point from) {
         this.from = from;
     }
 
-    public void setFrom(int x, int y) {
+    public final void setFrom(int x, int y) {
         setFrom(new Point(x, y));
     }
 
@@ -73,6 +65,7 @@ public class MoveMW extends Move {
      * GETTER
      **********/
 
+    @JsonGetter("from")
     public Point getFrom() {
         return from;
     }
@@ -89,17 +82,6 @@ public class MoveMW extends Move {
     @Override
     public boolean isWhite() {
         return true;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{MW;" + super.forSave() + ";" +
-                "(" + getFrom().x + "," + getFrom().y + ")}";
     }
 
     @Override

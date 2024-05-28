@@ -31,7 +31,7 @@ public class Server extends Network {
         return serverSocket;
     }
 
-    public void setServerSocket(ServerSocket serverSocket) {
+    public final void setServerSocket(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
@@ -39,7 +39,7 @@ public class Server extends Network {
         return clientSocket;
     }
 
-    public void setClientSocket(Socket clientSocket) {
+    public final void setClientSocket(Socket clientSocket) {
         this.clientSocket = clientSocket;
     }
 

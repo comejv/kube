@@ -24,7 +24,7 @@ public class AI extends Player {
      * @param ai the AI of the player
      * @param k3 the game
      */
-    AI(int id, MiniMaxAI ai) {
+    public AI(int id, MiniMaxAI ai) {
         super(id);
         ai.setPlayerId(id);
         setName("AI" + id);
@@ -35,7 +35,7 @@ public class AI extends Player {
      * SETTER
      **********/
 
-    public void setAI(MiniMaxAI ai) {
+    public final void setAI(MiniMaxAI ai) {
         this.ai = ai;
     }
 

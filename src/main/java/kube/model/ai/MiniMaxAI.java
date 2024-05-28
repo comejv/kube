@@ -56,23 +56,27 @@ public class MiniMaxAI implements ActionListener, Serializable {
      * SETTERS
      **********/
 
-    public void setPlayerId(int id) {
+    public final void setK3(Kube k) {
+        k3 = k;
+    }
+
+    public final void setPlayerId(int id) {
         iaPlayerId = id;
     }
 
-    public void setR(Random r) {
+    public final void setR(Random r) {
         this.r = r;
     }
 
-    public void setTime(int t) {
+    public final void setTime(int t) {
         time = t;
     }
 
-    public void setNoMoreTime(boolean b) {
+    public final void setNoMoreTime(boolean b) {
         noMoreTime = b;
     }
 
-    public void setTimer(Timer t) {
+    public final void setTimer(Timer t) {
         timer = t;
     }
 
@@ -80,7 +84,7 @@ public class MiniMaxAI implements ActionListener, Serializable {
         nbMoves++;
     }
 
-    public void setHorizonMax(int h) {
+    public final void setHorizonMax(int h){
         horizonMax = h;
     }
 

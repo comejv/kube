@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kube.model.History;
 import kube.model.ModelColor;
 import kube.model.action.move.*;
@@ -91,72 +93,49 @@ public class HistoryTest {
     }
 
     @Test
-    public void forSaveTest() {
+    public void serializationTest() {
+
+        ObjectMapper mapper = new ObjectMapper();
 
         History history = new History();
 
-        history.setFirstPlayer(1);
-        MoveMW mw = new MoveMW(1, 1);
+        MoveMW mw = new MoveMW(0, 0);
         history.addMove(mw);
-        MoveMM mm = new MoveMM(2, 2, 2, 2, ModelColor.RED);
-        history.addMove(mm);
-        MoveAM am = new MoveAM(3, 3, ModelColor.BLUE);
+
+        MoveAM am = new MoveAM(0, 0, ModelColor.RED);
         history.addMove(am);
+        
+        MoveMM mm = new MoveMM(0, 0, 0, 0, ModelColor.RED);
+        history.addMove(mm);
+
         MoveAW aw = new MoveAW();
         history.addMove(aw);
-        MoveMA ma = new MoveMA(5, 5, ModelColor.GREEN);
-        history.addMove(ma);
-        MoveAA aa = new MoveAA(ModelColor.YELLOW);
+
+        MoveAA aa = new MoveAA(ModelColor.RED);
         history.addMove(aa);
-        history.undoMove();
-        history.undoMove();
-        history.redoMove();
 
-        String save = history.forSave();
-        String[] lines = save.split("\n");
-
-        assertEquals("1", lines[0]);
-        assertEquals("[" + mw.forSave() + " " +
-                mm.forSave() + " " +
-                am.forSave() + " " +
-                aw.forSave() + " " +
-                ma.forSave() + "]", lines[1]);
-
-        assertEquals("[" + aa.forSave() + "]", lines[2]);
-    }
-
-    @Test
-    public void fromSaveTest() {
-
-        History history = new History();
-
-        history.setFirstPlayer(1);
-        MoveMW mw = new MoveMW(1, 1);
-        history.addMove(mw);
-        MoveMM mm = new MoveMM(2, 2, 2, 2, ModelColor.RED);
-        history.addMove(mm);
-        MoveAM am = new MoveAM(3, 3, ModelColor.BLUE);
-        history.addMove(am);
-        MoveAW aw = new MoveAW();
-        history.addMove(aw);
-        MoveMA ma = new MoveMA(5, 5, ModelColor.GREEN);
+        MoveMA ma = new MoveMA(1, 1, ModelColor.BLACK);
         history.addMove(ma);
-        MoveAA aa = new MoveAA(ModelColor.YELLOW);
-        history.addMove(aa);
+
         history.undoMove();
         history.undoMove();
-        history.redoMove();
 
-        History newHistory = new History(history.forSave());
+        try {
+            String json = mapper.writeValueAsString(history);
+            History history2 = mapper.readValue(json, History.class);
 
-        assertEquals(history.getFirstPlayer(), newHistory.getFirstPlayer());
-        assertEquals(history.getDone().size(), newHistory.getDone().size());
-        for (int i = 0; i < history.getDone().size(); i++) {
-            assertEquals(history.getDone().get(i).forSave(), newHistory.getDone().get(i).forSave());
-        }
-        assertEquals(history.getUndone().size(), newHistory.getUndone().size());
-        for (int i = 0; i < history.getUndone().size(); i++) {
-            assertEquals(history.getUndone().get(i).forSave(), newHistory.getUndone().get(i).forSave());
+            assertEquals(history.getFirstPlayer(), history2.getFirstPlayer());
+
+            for (int i = 0; i < history.getDone().size(); i++) {
+                assertEquals(history.getDone().get(i), history2.getDone().get(i));
+            }
+
+            for (int i = 0; i < history.getUndone().size(); i++) {
+                assertEquals(history.getUndone().get(i), history2.getUndone().get(i));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

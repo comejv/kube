@@ -7,6 +7,9 @@ import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.utilsAI;
 
+// Import java class
+import java.util.Random;
+
 public class Game implements Runnable {
 
     public static final int LOCAL = 0;
@@ -23,6 +26,7 @@ public class Game implements Runnable {
 
     public Game(int gameType, Kube k3, Queue<Action> eventsToModel, Queue<Action> modeleToView,
             Queue<Action> eventsToNetwork) {
+                
         this.gameType = gameType;
         this.k3 = k3;
         this.eventsToModel = eventsToModel;
@@ -51,7 +55,7 @@ public class Game implements Runnable {
         return;
     }
 
-    public void setGameType(int gameType) {
+    public final void setGameType(int gameType) {
         this.gameType = gameType;
     }
 
@@ -106,7 +110,7 @@ public class Game implements Runnable {
         }
     }
 
-    public void setFirstPlayer() {
+    public final void setFirstPlayer() {
         switch (getGameType()) {
             case HOST:
                 k3.setCurrentPlayer(k3.getRandomPlayer());
@@ -139,6 +143,7 @@ public class Game implements Runnable {
     }
 
     public void gamePhase() {
+
         while (k3.canCurrentPlayerPlay()) {
             if (k3.getCurrentPlayer().isAI()) {
                 Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
@@ -155,6 +160,12 @@ public class Game implements Runnable {
                         break;
                     case REDO:
                         redo();
+                        break;
+                    case SAVE_KUBE:
+                        k3.saveInstance((String) a.getData());
+                        break;
+                    case LOAD_KUBE:
+                        k3.init(a.getData().toString());
                         break;
                     default:
                         modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -315,7 +326,7 @@ public class Game implements Runnable {
                     utilsAI.randomFillMountain(k3.getCurrentPlayer(), new Random());
                     modeleToView.add(new Action(ActionType.SHUFFLE));
                     break;
-                case VALIDATE:
+                    case VALIDATE:
                     // Reception of the other player mountain
                     if (getGameType() != LOCAL && a.getPlayer() != getGameType()) {
                         if (getGameType() == JOIN) {
@@ -330,6 +341,15 @@ public class Game implements Runnable {
                         }
                         k3.updatePhase();
                         modeleToView.add(new Action(ActionType.VALIDATE, isValidated));
+                    }
+                    break;
+                case SAVE_KUBE:
+                    k3.saveInstance((String) a.getData());
+                    break;
+                case LOAD_KUBE:
+                    k3.init(a.getData().toString());
+                    if (k3.getPhase() == Kube.GAME_PHASE) {
+                        gamePhase();
                     }
                     break;
                 default:

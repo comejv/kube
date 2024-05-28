@@ -1,8 +1,16 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import jackson classes
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+// Import java class
+import java.awt.Point;
 
 public class MoveAM extends Move {
 
@@ -10,21 +18,23 @@ public class MoveAM extends Move {
      * ATTRIBUTE
      **********/
 
+    @JsonProperty("to")
     private Point to;
 
     /**********
      * CONSTRUCTORS
      **********/
 
-     /**
-      * Constructor of the class MoveAM
-      *
-      * @param to the destination of the move
-      * @param color the color of the moved cube
-      */
-    public MoveAM(Point to, ModelColor color) {
+    /**
+     * Constructor of the class MoveAM
+     *
+     * @param to    the destination of the move
+     * @param color the color of the moved cube
+     */
+    @JsonCreator
+    public MoveAM(@JsonProperty("to") Point to, @JsonProperty("color") ModelColor color) {
         super(color);
-        this.to =to;
+        this.to = to;
     }
 
     /**
@@ -38,35 +48,16 @@ public class MoveAM extends Move {
         this(new Point(toX, toY), color);
     }
 
-    /**
-     * Constructor of the class MoveAM from a save string
-     * 
-     * @param save the string to load
-     */
-    public MoveAM(String save) {
-
-        String toString, color;
-        String[] parts, coords;
-
-        parts = save.split(";");
-        color = parts[1];
-        toString = parts[2].substring(1, parts[2].length() - 1);
-
-        setColor(ModelColor.getColor(Integer.parseInt(color)));
-
-        coords = toString.split(",");
-        this.to = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-    }
-
     /**********
      * SETTERS
      **********/
 
-    public void setTo(Point to) {
+    @JsonSetter("to")
+    public final void setTo(Point to) {
         this.to = to;
     }
 
-    public void setTo(int toX, int toY) {
+    public final void setTo(int toX, int toY) {
         setTo(new Point(toX, toY));
     }
 
@@ -74,6 +65,7 @@ public class MoveAM extends Move {
      * GETTER
      **********/
 
+    @JsonGetter("to")
     public Point getTo() {
         return to;
     }
@@ -82,25 +74,14 @@ public class MoveAM extends Move {
      * METHODS
      **********/
 
-     /**
-      * Check if the move is from the additionals 
-      *
-      * @return true if the move is from the additionals, false otherwise
-      */
+    /**
+     * Check if the move is from the additionals
+     *
+     * @return true if the move is from the additionals, false otherwise
+     */
     @Override
     public boolean isFromAdditionals() {
         return true;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{AM;" + super.forSave() + ";" +
-                "(" + to.x + "," + to.y + ")}";
     }
 
     @Override

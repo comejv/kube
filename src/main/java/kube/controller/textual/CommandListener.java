@@ -66,6 +66,16 @@ public class CommandListener implements Runnable {
                 case "redo":
                     eventsToModel(new Action(ActionType.REDO));
                     break;
+                case "sauvegarder":
+                case "save":
+                    save(sc);
+                    break;
+                case "restaurer":
+                case "charger":
+                case "restore":
+                case "load":
+                    load(sc);
+                    break;
                 case "aide":
                 case "help":
                 case "":
@@ -93,8 +103,9 @@ public class CommandListener implements Runnable {
             Swap swap = new Swap(x1, y1, x2, y2);
             eventsToModel.add(new Action(ActionType.SWAP, swap));
             eventsToView.add(new Action(ActionType.SWAP, swap));
+            eventsToModel(new Action(ActionType.SWAP, swap));
             return true;
-        } catch (NumberFormatException e) {
+        } catch (ArrayIndexOutOfBoundsException | NumberFormatException e) {
             eventsToView.add(new Action(ActionType.SWAP));
             return false;
         }
@@ -109,6 +120,30 @@ public class CommandListener implements Runnable {
             return true;
         } catch (NumberFormatException e) {
             eventsToView.add(new Action(ActionType.MOVE));
+            return false;
+        }
+    }
+
+    private boolean save(Scanner sc) {
+        try {
+            eventsToView.add(new Action(ActionType.SAVE_KUBE));
+            String s = sc.nextLine();
+            eventsToModel(new Action(ActionType.SAVE_KUBE, s));
+            eventsToView.add(new Action(ActionType.SAVED_KUBE, s));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean load(Scanner sc) {
+        try {
+            eventsToView.add(new Action(ActionType.LOAD_KUBE));
+            String s = sc.nextLine();
+            eventsToModel(new Action(ActionType.LOAD_KUBE, s));
+            eventsToView.add(new Action(ActionType.LOADED_KUBE, s));
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }

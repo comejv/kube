@@ -1,5 +1,6 @@
 package kube.model;
 
+// Import java classes
 import java.util.Random;
 import java.util.Comparator;
 
@@ -41,7 +42,7 @@ public enum ModelColor {
      * SETTER
      **********/
 
-    public void setColorCode(int colorCode) {
+    public final void setColorCode(int colorCode) {
         this.colorCode = colorCode;
     }
 
@@ -140,18 +141,5 @@ public enum ModelColor {
             default:
                 return " ";
         }
-    }
-
-    /**
-     * Give a string representation of the color for saving
-     * 
-     * @return a string representation of the color for saving
-     */
-    public String forSave() {
-        return getColorCode() + "";
-    }
-
-    public static ModelColor fromSave(String save) {
-        return getColor(Integer.parseInt(save));
     }
 }

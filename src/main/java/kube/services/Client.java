@@ -23,7 +23,7 @@ public class Client extends Network {
         return socket;
     }
 
-    public void setSocket(Socket socket) {
+    public final void setSocket(Socket socket) {
         this.socket = socket;
     }
 

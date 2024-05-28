@@ -1,22 +1,32 @@
 package kube.model;
 
+// Import model classes
+import kube.model.action.move.*;
+import kube.model.ai.MiniMaxAI;
+import kube.configuration.Config;
+
+// Import jackson classes
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+// Import java classes
 import java.awt.Point;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 
-import kube.model.action.move.Move;
-import kube.model.action.move.MoveAA;
-import kube.model.action.move.MoveAM;
-import kube.model.action.move.MoveAW;
-import kube.model.action.move.MoveMA;
-import kube.model.action.move.MoveMM;
-import kube.model.action.move.MoveMW;
-import kube.model.ai.MiniMaxAI;
+/**********
+ * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
+ **********/
 
+@JsonSerialize(using = Serializer.KubeSerializer.class)
+@JsonDeserialize(using = Deserializer.KubeDeserializer.class)
 public class Kube {
 
     /**********
@@ -26,6 +36,13 @@ public class Kube {
     public static final int NB_CUBE_PER_COLOR = 9;
     public static final int PREPARATION_PHASE = 1;
     public static final int GAME_PHASE = 2;
+    public static final int ID_PLAYER_1 = 1;
+    public static final int ID_PLAYER_2 = 2;
+    public static final int DEFAULT_BASE_SIZE = 9;
+    public static final int NB_PLAYER = 2;
+    public static final int MIN_NB_CUBE_IN_BASE = 4;
+    public static final int NB_WHITE_PER_PLAYER = 2;
+    public static final int NB_NATURAL_PER_PLAYER = 2;
 
     /**********
      * ATTRIBUTES
@@ -35,13 +52,12 @@ public class Kube {
     private ArrayList<ModelColor> bag;
     private boolean penality;
     private History history;
-    private int baseSize;
+    private int phase, baseSize;
     private Mountain k3;
-    private int phase;
     private Move lastMovePlayed;
 
     /**********
-     * CONSTRUCTOR
+     * CONSTRUCTORS
      **********/
 
     /**
@@ -51,9 +67,34 @@ public class Kube {
         init();
     }
 
+    /**
+     * Constructor of the Kube
+     * 
+     * @param empty true if the Kube should be empty, false otherwise
+     */
     public Kube(boolean empty) {
         if (!empty) {
             init();
+        }
+    }
+
+    public Kube(String fileName) {
+        init(fileName);
+    }
+
+    /**********
+     * EXCEPTION
+     **********/
+
+    public class KubeReadException extends Exception {
+
+        /**
+         * Constructor of the KubeReadException
+         * 
+         * @param message the message of the exception
+         */
+        public KubeReadException(String message) {
+            super(message);
         }
     }
 
@@ -61,25 +102,59 @@ public class Kube {
      * INITIALIZATION
      **********/
 
+    /**
+     * Initialize the Kube with the default values
+     * 
+     * @return void
+     */
     public final void init() {
         init(null, null, new Random());
     }
 
+    /**
+     * Initialize the Kube with one AI
+     * 
+     * @param typeAI1 the type of the AI
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1) {
         init(typeAI1, null, new Random());
     }
 
+    /**
+     * Initialize the Kube with two AIs
+     * 
+     * @param typeAI1 the type of the first AI
+     * @param typeAI2 the type of the second AI
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2) {
         init(typeAI1, typeAI2, new Random());
     }
 
+    /**
+     * Initialize the Kube with two AIs and a seed
+     * 
+     * @param typeAI1 the type of the first AI
+     * @param typeAI2 the type of the second AI
+     * @param seed    the seed to shuffle the bag
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, int seed) {
         init(typeAI1, typeAI2, new Random(seed));
     }
 
+    /**
+     * Initialize the Kube with two AIs and a Random
+     * 
+     * @param typeAI1 the type of the first AI
+     * @param typeAI2 the type of the second AI
+     * @param r       the Random to shuffle the bag
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, Random r) {
 
-        setBaseSize(9);
+        setBaseSize(DEFAULT_BASE_SIZE);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<>());
@@ -89,66 +164,87 @@ public class Kube {
         setPenality(false);
 
         if (typeAI1 != null) {
-            setP1(new AI(1, typeAI1));
+            setP1(new AI(ID_PLAYER_1, typeAI1));
         } else {
-            setP1(new Player(1));
+            setP1(new Player(ID_PLAYER_1));
         }
 
         if (typeAI2 != null) {
-            setP2(new AI(2, typeAI2));
+            setP2(new AI(ID_PLAYER_2, typeAI2));
         } else {
-            setP2(new Player(2));
+            setP2(new Player(ID_PLAYER_2));
         }
-
         setCurrentPlayer(getP1());
         distributeCubesToPlayers();
+    }
+
+    public void init(String fileName) {
+        try {
+            Kube kube = loadInstance(fileName);
+            setP1(kube.getP1());
+            setP2(kube.getP2());
+            setCurrentPlayer(kube.getCurrentPlayer());
+            setBag(kube.getBag());
+            setPenality(kube.getPenality());
+            setHistory(kube.getHistory());
+            setPhase(kube.getPhase());
+            setBaseSize(kube.getBaseSize());
+            setK3(kube.getK3());
+            setLastMovePlayed(kube.getLastMovePlayed());
+        } catch (KubeReadException e) {
+            e.printStackTrace();
+        }
     }
 
     /**********
      * SETTERS
      **********/
 
-    public void setBag(ArrayList<ModelColor> b) {
+    public final void setBag(ArrayList<ModelColor> b) {
         bag = b;
     }
 
-    synchronized public void setCurrentPlayer(Player p) {
+    synchronized public final void setCurrentPlayer(Player p) {
         currentPlayer = p;
     }
 
-    public void setHistory(History h) {
+    public final void setHistory(History h) {
         history = h;
     }
 
-    public void setK3(Mountain m) {
+    public final void setK3(Mountain m) {
         k3 = m;
     }
 
-    public void setP1(Player p) {
+    public final void setP1(Player p) {
         p1 = p;
     }
 
-    public void setP2(Player p) {
+    public final void setP2(Player p) {
         p2 = p;
     }
 
-    public void setPhase(int p) {
+    public final void setPhase(int p) {
         phase = p;
     }
 
-    public void setPenality(boolean p) {
+    public final void setPenality(boolean p) {
         penality = p;
     }
 
-    public void setBaseSize(int b) {
+    public final void setBaseSize(int b) {
         baseSize = b;
     }
 
-    public void setPlayerCase(Player player, Point point, ModelColor color) {
+    public final void setLastMovePlayed(Move move) {
+        lastMovePlayed = move;
+    }
+
+    public final void setPlayerCase(Player player, Point point, ModelColor color) {
         player.getMountain().setCase(point, color);
     }
 
-    public void setPlayerCase(Player player, int x, int y, ModelColor color) {
+    public final void setPlayerCase(Player player, int x, int y, ModelColor color) {
         player.getMountain().setCase(x, y, color);
     }
 
@@ -209,17 +305,17 @@ public class Kube {
     }
 
     public Player getPlayerById(int id) {
-        if (id == 1) {
+        if (id == ID_PLAYER_1) {
             return getP1();
-        } else if (id == 2) {
+        } else if (id == ID_PLAYER_2) {
             return getP2();
         } else {
             return null;
         }
     }
 
-    public Player getRandomPlayer(){
-        if (new Random().nextInt(2) == 0){
+    public Player getRandomPlayer() {
+        if (new Random().nextInt(NB_PLAYER) == 0) {
             return getP1();
         } else {
             return getP2();
@@ -247,16 +343,16 @@ public class Kube {
         }
 
         // Fill the bag with nCubePerColor cubes of each color
-        bag = new ArrayList<>();
+        setBag(new ArrayList<>());
         for (ModelColor c : ModelColor.getAllColored()) {
             for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
-                bag.add(c);
+                getBag().add(c);
             }
         }
         try {
             // Shuffle the bag until the 9 first cubes have 4 differents colors
-            while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
-                Collections.shuffle(bag, r);
+            while (new HashSet<>(getBag().subList(0, DEFAULT_BASE_SIZE)).size() < 4) {
+                Collections.shuffle(getBag(), r);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -302,8 +398,8 @@ public class Kube {
         }
 
         // Fill the base with the 9 first cubes of the bag
-        for (int y = 0; y < baseSize; y++) {
-            k3.setCase(baseSize - 1, y, bag.remove(0));
+        for (int y = 0; y < getBaseSize(); y++) {
+            getK3().setCase(getBaseSize() - 1, y, getBag().remove(0));
         }
     }
 
@@ -317,7 +413,7 @@ public class Kube {
      */
     public void distributeCubesToPlayers() throws UnsupportedOperationException {
 
-        HashMap<ModelColor, Integer> p1Cubes, p2Cubes;
+        int colorFrequency;
         ModelColor cAvailable;
 
         // Check if the phase is the preparation phase
@@ -326,28 +422,22 @@ public class Kube {
         }
 
         // Distribute the cubes to the players
-        p1Cubes = new HashMap<>();
-        p2Cubes = new HashMap<>();
+        getP1().initAvailableToBuild();
+        getP2().initAvailableToBuild();
 
-        p1Cubes.put(ModelColor.WHITE, 2);
-        p2Cubes.put(ModelColor.WHITE, 2);
-        p1Cubes.put(ModelColor.NATURAL, 2);
-        p2Cubes.put(ModelColor.NATURAL, 2);
-
-        for (ModelColor c : ModelColor.getAllColored()) {
-            p1Cubes.put(c, 0);
-            p2Cubes.put(c, 0);
-        }
+        getP1().getAvailableToBuild().put(ModelColor.WHITE, NB_WHITE_PER_PLAYER);
+        getP2().getAvailableToBuild().put(ModelColor.WHITE, NB_WHITE_PER_PLAYER);
+        getP1().getAvailableToBuild().put(ModelColor.NATURAL, NB_NATURAL_PER_PLAYER);
+        getP2().getAvailableToBuild().put(ModelColor.NATURAL, NB_NATURAL_PER_PLAYER);
 
         for (int i = 0; i < 17; i++) {
-            cAvailable = bag.remove(0);
-            p1Cubes.put(cAvailable, p1Cubes.get(cAvailable) + 1);
-            cAvailable = bag.remove(0);
-            p2Cubes.put(cAvailable, p2Cubes.get(cAvailable) + 1);
+            cAvailable = getBag().remove(0);
+            colorFrequency = getP1().getAvailableToBuild().get(cAvailable);
+            getP1().getAvailableToBuild().put(cAvailable, colorFrequency + 1);
+            cAvailable = getBag().remove(0);
+            colorFrequency = getP2().getAvailableToBuild().get(cAvailable);
+            getP2().getAvailableToBuild().put(cAvailable, colorFrequency + 1);
         }
-
-        p1.setAvailableToBuild(p1Cubes);
-        p2.setAvailableToBuild(p2Cubes);
     }
 
     /**********
@@ -359,13 +449,13 @@ public class Kube {
      * 
      * @param move the move to check
      * @return true if the move is playable, false otherwise
-     * @throws UnsupportedOperationException                if the phase is not the
-     *                                                      game phase
-     * @throws IllegalArgumentException                     if the move is not a
-     * @throws UnsupportedOperationException                if the move is not a
-     *                                                      MoveAA, MoveMA,
-     *                                                      MoveAW, MoveMW, MoveAM
-     *                                                      or MoveMM
+     * @throws UnsupportedOperationException if the phase is not the
+     *                                       game phase
+     * @throws IllegalArgumentException      if the move is not a
+     * @throws UnsupportedOperationException if the move is not a
+     *                                       MoveAA, MoveMA,
+     *                                       MoveAW, MoveMW, MoveAM
+     *                                       or MoveMM
      */
     public boolean isPlayable(Move move) throws UnsupportedOperationException, IllegalArgumentException {
 
@@ -538,8 +628,8 @@ public class Kube {
         if (!move.isToAdditionals()) {
             player.addUsedPiece(move.getColor());
             nextPlayer();
-        } 
-        lastMovePlayed = move;
+        }
+        setLastMovePlayed(move);
         return true;
     }
 
@@ -633,7 +723,7 @@ public class Kube {
             // Cancel the move
             am = (MoveAM) move;
             player.addToAdditionals(am.getColor());
-            k3.remove(am.getTo());
+            getK3().remove(am.getTo());
             setPenality(false);
         }
         // Catching if the move is a MoveMM (placing a cube from player's mountain on
@@ -642,16 +732,16 @@ public class Kube {
             // Cancel the move
             mm = (MoveMM) move;
             setPlayerCase(player, mm.getFrom(), mm.getColor());
-            k3.remove(mm.getTo());
+            getK3().remove(mm.getTo());
             setPenality(false);
         }
 
-        if (!move.isToAdditionals()){
+        if (!move.isToAdditionals()) {
             player.removeUsedPiece(move.getColor());
         }
         // Set the next player
         setCurrentPlayer(move.getPlayer());
-        lastMovePlayed = move;
+        setLastMovePlayed(move);
     }
 
     /**
@@ -754,7 +844,7 @@ public class Kube {
      * @return the list of moves that can be played
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    synchronized public ArrayList<Move> moveSet(){
+    synchronized public ArrayList<Move> moveSet() {
         return moveSet(getCurrentPlayer());
     }
 
@@ -817,7 +907,7 @@ public class Kube {
      * @return true if the current player can play, false otherwise
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    public Boolean canCurrentPlayerPlay() throws UnsupportedOperationException {
+    public boolean canCurrentPlayerPlay() throws UnsupportedOperationException {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
@@ -858,7 +948,7 @@ public class Kube {
         p2ValidateBuilding = getP2() != null && getP2().getHasValidateBuilding();
         isPreparationPhase = getPhase() == PREPARATION_PHASE;
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
-            setPhase(2);
+            setPhase(GAME_PHASE);
         } else if (isPreparationPhase && p1ValidateBuilding && !p2ValidateBuilding) {
             setCurrentPlayer(getP2());
         } else if (isPreparationPhase && !p1ValidateBuilding && p2ValidateBuilding) {
@@ -868,18 +958,29 @@ public class Kube {
         return getPhase();
     }
 
-    /**
-     * Give a String representation of the Kube for saving
-     * 
-     * @return the String representation of the Kube for saving
-     */
-    public String forSave() {
-        
-        String save;
+    public void saveInstance(String fileName) {
 
-        save = "";
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            File directory = new File(Config.SAVING_PATH_DIRECTORY);
+            if (!directory.exists()) {
+                directory.mkdirs();
+            }
+            File file = new File(Config.SAVING_PATH_DIRECTORY, fileName);
+            mapper.writeValue(file, this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        return save;
+    public Kube loadInstance(String fileName) throws KubeReadException {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            FileReader file = new FileReader(Config.SAVING_PATH_DIRECTORY + fileName);
+            return mapper.readValue(file, Kube.class);
+        } catch (IOException e) {
+            throw new KubeReadException("Failed to read Kube from file: " + fileName);
+        }
     }
 
     @Override

@@ -35,26 +35,26 @@ public abstract class Network {
         return in;
     }
 
-    public void setIp(String ip) {
+    public final void setIp(String ip) {
         this.ip = ip;
     }
 
-    public void setPort(int port) {
+    public final void setPort(int port) {
         this.port = port;
     }
 
-    public void setOut(ObjectOutputStream out) {
+    public final void setOut(ObjectOutputStream out) {
         this.out = out;
     }
 
-    public void setIn(ObjectInputStream in) {
+    public final void setIn(ObjectInputStream in) {
         this.in = in;
     }
 
     public boolean isServer() {
         return false;
     }
-    public boolean send(Action data) {
+    public boolean send(Action data) throws IOException {
         try {
             if (getOut() != null) {
                 getOut().writeObject(data);
@@ -63,21 +63,20 @@ public abstract class Network {
                 return false;
             }
         } catch (IOException e) {
-            System.err.println(e);
-            return false;
+            disconnect();
+            throw e;
         }
-
         return true;
     }
 
-    public Action receive() {
+    public Action receive () throws IOException{
         try {
             Action o = (Action) getIn().readObject();
             return o;
         } catch (IOException | ClassNotFoundException e) {
-            return null;
+            disconnect();
+            throw new IOException();
         }
     }
-
     
 }

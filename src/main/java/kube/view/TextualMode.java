@@ -3,7 +3,6 @@ package kube.view;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.Player;
@@ -110,7 +109,6 @@ public class TextualMode implements Runnable {
                         printHelp();
                     }
                     break;
-
                 case UNDO:
                     if (action.getData() == null) {
                         printState();
@@ -122,7 +120,6 @@ public class TextualMode implements Runnable {
                         printHelp();
                     }
                     break;
-
                 case VALIDATE:
                     printValidate((boolean) action.getData());
                     printHelp();
@@ -161,6 +158,18 @@ public class TextualMode implements Runnable {
                 case PRINT_WAITING_RESPONSE:
                     printWaitingOtherPlayer();
                     break;
+                case SAVE_KUBE:
+                    printSaveAskFileName();
+                    break;
+                case SAVED_KUBE:
+                    printSaved();
+                    break;
+                case LOAD_KUBE:
+                    printLoadAskFileName();
+                    break;
+                case LOADED_KUBE:
+                    printLoaded();
+                    break;
                 default:
                     break;
             }
@@ -173,6 +182,8 @@ public class TextualMode implements Runnable {
                 "-echanger : permet d'échanger la position de 2 pièces de son choix\n" +
                 "-valider : valider que sa montagne est prête\n" +
                 "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
+                "-sauvegarder : sauvegarde la partie\n" +
+                "-aide : affiche cette liste\n" +
                 "Tour de " + kube.getCurrentPlayer().getName() + "\n" +
                 "Vous devez consruire votre montagne. \n");
     }
@@ -183,6 +194,7 @@ public class TextualMode implements Runnable {
                 "-annuler : annuler le dernier coup\n" +
                 "-rejouer : rejouer le dernier coup\n" +
                 "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
+                "-sauvegarder : sauvegarde la partie\n" +
                 "-aide : affiche cette liste\n" +
                 "Tour de " + kube.getCurrentPlayer().getName() + "\n" +
                 "Vous devez choisir une de vos pièces pour la mettre sur la montagne centrale.";
@@ -190,7 +202,7 @@ public class TextualMode implements Runnable {
     }
 
     private void askNbPlayers() {
-        System.out.println("Combien de joueurs? (0 -2)");
+        System.out.println("Combien de joueurs? (0-2)");
     }
 
     private void printAI() {
@@ -371,5 +383,21 @@ public class TextualMode implements Runnable {
 
     private void printWaitingOtherPlayer() {
         System.out.println("En attente de l'adversaire");
+    }
+
+    private void printSaveAskFileName() {
+        System.out.println("Veuillez entrer le nom du fichier de sauvegarde");
+    }
+
+    private void printSaved() {
+        System.out.println("Partie sauvegardée");
+    }
+
+    private void printLoadAskFileName() {
+        System.out.println("Veuillez entrer le nom du fichier de sauvegarde");
+    }
+
+    private void printLoaded() {
+        System.out.println("Partie chargée");
     }
 }

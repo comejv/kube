@@ -1,5 +1,13 @@
 package kube.model;
 
+// Import jackson classes
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+// Import java classes
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,7 +19,10 @@ public class Mountain implements Serializable {
      * ATTRIBUTES
      **********/
 
+    @JsonProperty("content")
     private ModelColor[][] content;
+
+    @JsonProperty("base_size")
     private int baseSize;
 
     /**********
@@ -21,56 +32,41 @@ public class Mountain implements Serializable {
     /**
      * Constructor of the class Mountain
      * 
-     * @param size the size of the mountain's base
+     * @param baseSize the size of the mountain's base
      */
-    public Mountain(int size) {
-        this.baseSize = size;
-        this.content = new ModelColor[size][size];
+    public Mountain(int baseSize) {
+        this.baseSize = baseSize;
+        this.content = new ModelColor[baseSize][baseSize];
         clear();
     }
 
     /**
-     * Constructor of the class Mountain from a save string
+     * Constructor of the class Mountain from a json file
      * 
-     * @param save the string to load
+     * @param content  the content of the mountain
+     * @param baseSize the size of the mountain's base
      */
-    public Mountain(String save) {
-
-        String[] parts, cases;
-        int size, i, j, k;
-
-        save = save.substring(1, save.length() - 1);
-
-        parts = save.split(";");
-        size = Integer.parseInt(parts[0]);
-
-        this.baseSize  = size;
-        this.content = new ModelColor[size][size];
-
-        cases = parts[1].split(",");
-
-        k = 0;
-        for (i = 0; i < this.baseSize; i++) {
-            for (j = 0; j < i + 1; j++) {
-                setCase(i, j, ModelColor.fromSave(cases[k]));
-                k++;
-            }
-        }
+    @JsonCreator
+    public Mountain(@JsonProperty("content") ModelColor[][] content, @JsonProperty("base_size") int baseSize) {
+        this.content = content;
+        this.baseSize = baseSize;
     }
 
     /**********
      * SETTERS
      **********/
 
-    public void setBaseSize(int size) {
+    @JsonSetter("base_size")
+    public final void setBaseSize(int size) {
         baseSize = size;
     }
 
-    public void setMountain(ModelColor[][] mountain) {
+    @JsonSetter("content")
+    public final void setMountain(ModelColor[][] mountain) {
         content = mountain;
     }
 
-    public void setCase(Point p, ModelColor c) {
+    public final void setCase(Point p, ModelColor c) {
         setCase(p.x, p.y, c);
     }
 
@@ -82,10 +78,12 @@ public class Mountain implements Serializable {
      * GETTERS
      **********/
 
+    @JsonGetter("base_size")
     public int getBaseSize() {
         return baseSize;
     }
 
+    @JsonGetter("content")
     public ModelColor[][] getMountain() {
         return content;
     }
@@ -149,10 +147,10 @@ public class Mountain implements Serializable {
         }
 
         return r;
-    
+
     }
 
-    public boolean isCompatible(int i, int j, ModelColor c){
+    public boolean isCompatible(int i, int j, ModelColor c) {
         ModelColor natural, empty, bottomLeft, bottomRight;
         boolean isBottomLeftEmpty, isBottomRightEmpty, isBottomEmpty, isNatural, isBottomLeftCompatible,
                 isBottomRightCompatible, isCompatible;
@@ -193,11 +191,10 @@ public class Mountain implements Serializable {
         ArrayList<Point> comp;
         comp = new ArrayList<>();
 
-
         // Loop through the mountain to add compatible positions
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (isCompatible(i, j, c)){
+                if (isCompatible(i, j, c)) {
                     comp.add(new Point(i, j));
                 }
             }
@@ -246,6 +243,7 @@ public class Mountain implements Serializable {
      * 
      * @return true if the mountain is full, false otherwise
      */
+    @JsonIgnore
     public boolean isFull() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
@@ -262,6 +260,7 @@ public class Mountain implements Serializable {
      * 
      * @return true if the mountain is empty, false otherwise
      */
+    @JsonIgnore
     public boolean isEmpty() {
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
@@ -273,36 +272,9 @@ public class Mountain implements Serializable {
         return true;
     }
 
-    /**
-     * Give a String representation of the mountain for saving
-     * 
-     * @return the String representation of the mountain for saving
-     */
-    public String forSave() {
-        
-        String save;
-        int i, j;
-
-        save = "{" + getBaseSize() + ";";
-        
-        for (i = 0; i < getBaseSize(); i++) {
-            for (j = 0; j < i + 1; j++) {
-                save += getCase(i, j).forSave() + ",";
-            }
-        }
-
-        if (getBaseSize() > 0) {
-            save = save.substring(0, save.length() - 1);
-        }
-
-        save += "}";
-
-        return save;
-    }
-
     @Override
     public String toString() {
-        
+
         String s;
         boolean space;
 

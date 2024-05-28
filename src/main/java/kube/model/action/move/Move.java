@@ -1,29 +1,64 @@
 package kube.model.action.move;
 
-import java.awt.Point;
-import java.io.Serializable;
-
+// Import model classes
 import kube.model.ModelColor;
 import kube.model.Player;
 
+// Import jackson classes
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+// Import java classes
+import java.awt.Point;
+import java.io.Serializable;
+
+/**********
+ * JSON SERIALIZATION/DESERIALIZATION ANNOTATIONS
+ **********/
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = MoveMW.class, name = "MW"),
+        @JsonSubTypes.Type(value = MoveMM.class, name = "MM"),
+        @JsonSubTypes.Type(value = MoveAM.class, name = "AM"),
+        @JsonSubTypes.Type(value = MoveAW.class, name = "AW"),
+        @JsonSubTypes.Type(value = MoveMA.class, name = "MA"),
+        @JsonSubTypes.Type(value = MoveAA.class, name = "AA")
+})
 public abstract class Move implements Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
+    @JsonIgnore
     private Player player;
+
+    @JsonProperty("color")
     private ModelColor color;
 
     /**********
      * CONSTRUCTORS
      **********/
 
+    /**
+     * Constructor of the class Move for an empty move
+     */
     public Move() {
         this.color = ModelColor.EMPTY;
     }
 
-    public Move(ModelColor color) {
+    /**
+     * Constructor of the class Move
+     * 
+     * @param color
+     */
+    @JsonCreator
+    public Move(@JsonProperty("color") ModelColor color) {
         this.color = color;
     }
 
@@ -31,12 +66,12 @@ public abstract class Move implements Serializable {
      * SETTERS
      **********/
 
-     
-    public void setPlayer(Player player) {
+    public final void setPlayer(Player player) {
         this.player = player;
     }
 
-    public void setColor(ModelColor color) {
+    @JsonSetter("color")
+    public final void setColor(ModelColor color) {
         this.color = color;
     }
 
@@ -48,14 +83,17 @@ public abstract class Move implements Serializable {
         return this.player;
     }
 
+    @JsonProperty("color")
     public ModelColor getColor() {
         return this.color;
     }
 
+    @JsonIgnore
     public Point getFrom() {
         return null;
     }
 
+    @JsonIgnore
     public Point getTo() {
         return null;
     }
@@ -69,6 +107,7 @@ public abstract class Move implements Serializable {
      *
      * @return true if the move is from the additionals, false otherwise
      */
+    @JsonIgnore
     public boolean isFromAdditionals() {
         return false;
     }
@@ -78,6 +117,7 @@ public abstract class Move implements Serializable {
      * 
      * @return true if the move is to the additionals, false otherwise
      */
+    @JsonIgnore
     public boolean isToAdditionals() {
         return false;
     }
@@ -87,6 +127,7 @@ public abstract class Move implements Serializable {
      * 
      * @return true if the move is a white move, false otherwise
      */
+    @JsonIgnore
     public boolean isWhite() {
         return false;
     }
@@ -96,17 +137,9 @@ public abstract class Move implements Serializable {
      * 
      * @return true if the move is a classic move, false otherwise
      */
+    @JsonIgnore
     public boolean isClassicMove() {
         return false;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    public String forSave() {
-        return getColor().forSave();
     }
 
     @Override
@@ -131,32 +164,5 @@ public abstract class Move implements Serializable {
             return false;
 
         return getColor() == that.getColor();
-    }
-
-    public static Move fromSave(String save) throws IllegalArgumentException {
-
-        String moveType;
-        String[] parts;
-
-        save = save.substring(1, save.length() - 1);
-        parts = save.split(";");
-        moveType = parts[0];
-
-        switch (moveType) {
-            case "MW":
-                return new MoveMW(save);
-            case "MM":
-                return new MoveMM(save);
-            case "AM":
-                return new MoveAM(save);
-            case "AW":
-                return new MoveAW();
-            case "MA":
-                return new MoveMA(save);
-            case "AA":
-                return new MoveAA(save);
-            default:
-                throw new IllegalArgumentException("Unknown move type");
-        }
     }
 }
