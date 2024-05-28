@@ -44,9 +44,11 @@ public class GUIEventsHandler implements Runnable {
                 case PLAY_LOCAL:
                     System.out.println("play local");
                     gui.showPanel(GUI.PHASE1);
+                    gui.setGlassPanelVisible(true);
                     gui.loadPanel(GUI.PHASE2);
                     break;
                 case VALIDATE:
+                    gui.setGlassPanelVisible(true);
                     gui.showPanel(GUI.PHASE2);
                     break;
                 case LOCAL:

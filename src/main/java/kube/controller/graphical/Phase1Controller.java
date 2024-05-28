@@ -24,7 +24,12 @@ public class Phase1Controller implements ActionListener, MouseListener {
         this.toModel = toModel;
     }
 
+    public DnDController getDragNDropController() {
+        return new DnDController(toView);
+    }
+
     public void actionPerformed(ActionEvent evt) {
+        Config.debug("Action ", evt.getActionCommand(), " received.");
         switch (evt.getActionCommand()) {
             case "phase2":
                 toView.add(new Action(ActionType.VALIDATE));
@@ -39,25 +44,13 @@ public class Phase1Controller implements ActionListener, MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
-        Object source = e.getSource();
-        if (source instanceof HexIcon) {
-            Config.debug("Hexa pressed");
-            HexIcon hex = (HexIcon) source;
-            // TODO Implement this in GUI
-            // HexIcon overlay = hex.clone();
-            // overlay.setLocation(0, 0);
-            // overlay.setPreferredSize(gui.getFrameSize());
-            // overlay.setOffset(e.getXOnScreen(), e.getYOnScreen());
-            // overlay.addMouseListener(overlayedHexaListener);
-            // overlay.addMouseMotionListener(overlayedHexaListener);
-            toView.add(new Action(ActionType.GRAB_HEX, hex));
-        }
+        Config.debug("Mouse clicked in " + e.getSource());
     }
 
     public void mousePressed(MouseEvent e) {
         Object source = e.getSource();
         if (SwingUtilities.isLeftMouseButton(e)) {
-            if (source instanceof JButton || source instanceof ButtonIcon) {
+            if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_PRESSED, source));
             }
         }
@@ -66,7 +59,7 @@ public class Phase1Controller implements ActionListener, MouseListener {
     public void mouseReleased(MouseEvent e) {
         Object source = e.getSource();
         if (SwingUtilities.isLeftMouseButton(e)) {
-            if (source instanceof JButton || source instanceof ButtonIcon) {
+            if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_RELEASED, source));
             }
         }
@@ -74,14 +67,15 @@ public class Phase1Controller implements ActionListener, MouseListener {
 
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
-        if (source instanceof JButton || source instanceof ButtonIcon) {
+        Config.debug("Mouse entered in " + source);
+        if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_HOVERED, source));
         }
     }
 
     public void mouseExited(MouseEvent e) {
         Object source = e.getSource();
-        if (source instanceof JButton || source instanceof ButtonIcon) {
+        if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
         }
     }

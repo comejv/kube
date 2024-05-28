@@ -1,19 +1,15 @@
 package kube.view.panels;
 
 import java.awt.CardLayout;
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.Rectangle;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.OverlayLayout;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
@@ -37,8 +33,6 @@ public class MenuPanel extends JPanel {
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
-
-        setLayout(new OverlayLayout(this));
 
         JPanel modal = new JPanel();
         modal.setLayout(new GridBagLayout());
@@ -106,7 +100,7 @@ public class MenuPanel extends JPanel {
         local.addActionListener(e -> {
             // Switch to the players panel
             CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
-            cl.show(buttonsPanel, "localPlayers");
+            cl.show(buttonsPanel, "players");
         });
 
         // Online button
@@ -156,7 +150,7 @@ public class MenuPanel extends JPanel {
         play.addActionListener(buttonListener);
         play.setActionCommand("play");
 
-        buttonsPanel.add("localPlayers", playersButtons);
+        buttonsPanel.add("players", playersButtons);
 
         // ***************************************************************************************//
         // RULES //

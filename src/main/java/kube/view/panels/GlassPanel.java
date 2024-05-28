@@ -1,48 +1,69 @@
 package kube.view.panels;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 
-import javax.swing.JComponent;
+import javax.swing.JPanel;
 
-public class GlassPanel extends JComponent {
-    private Component object;
+import kube.configuration.Config;
+import kube.model.ModelColor;
+
+public class GlassPanel extends JPanel {
+    private BufferedImage image;
     private Point point;
+    private ModelColor color;
 
-    public GlassPanel(Component obj, Container contentPane) {
-        object = obj;
+    public GlassPanel() {
+        setLayout(null);
+        setOpaque(false);
         point = new Point(0, 0);
-        // TODO add mouseListener from the controller
-        /*
-         * it must take in arg:
-         * - a Component (to draw it)
-         * - a Container (where to draw it)
-         * - a glassPane (who calls it)
-         */
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
+        super.paintComponent(g); // Call the superclass method to ensure proper rendering
+        if (getImage() != null) {
+            Graphics2D g2d = (Graphics2D) g.create();
+            g2d.drawImage(getImage(), point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2), null);
+            g2d.dispose();
+        }
     }
 
-    public void setPoint(Point ptn) {
-        point = ptn;
+    public void setPoint(Point p) {
+        repaint(point.x - (getImage().getWidth() / 2),point.y - (getImage().getHeight() / 2), getImage().getWidth(), getImage().getHeight()); // Repaint old area
+        point = p;
+        repaint(point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2), getImage().getWidth(), getImage().getHeight()); // Repaint new area
     }
 
     public void setPoint(int x, int y) {
-        point = new Point(x, y);
+        setPoint(new Point(x, y));
     }
 
-    public void setObject(Component obj) {
-        object = obj;
+    public void setImage(BufferedImage img) {
+        image = img;
+        repaint(); // Redraw the panel
+    }
+
+    public void setColor(ModelColor c) {
+        color = c;
+    }
+
+    public ModelColor getColor() {
+        return color;
     }
 
     public Point getPoint() {
         return point;
     }
 
-    public Component getObject() {
-        return object;
+    public BufferedImage getImage() {
+        return image;
+    }
+
+    public void clear() {
+        setImage(null);
+        repaint();
     }
 }

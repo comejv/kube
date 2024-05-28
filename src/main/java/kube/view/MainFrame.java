@@ -4,12 +4,14 @@ import javax.swing.*;
 import javax.swing.event.MouseInputAdapter;
 
 import kube.configuration.Config;
+import kube.controller.graphical.DnDController;
 import kube.view.panels.GlassPanel;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 
 /*
- * This class initializes the game frame and its layout manager : a card layout that contains all pannels of the game.
+ * This class initializes the game frame and its layout manager : an overlay layout that contains a card layout and potential overlay elements.
  */
 public class MainFrame extends JFrame {
     private JPanel cardPanel;
@@ -39,7 +41,7 @@ public class MainFrame extends JFrame {
         cardPanel = new JPanel(cardLayout);
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
-        createGlassPane(null);
+        pack();
         setVisible(true);
     }
 
@@ -52,25 +54,28 @@ public class MainFrame extends JFrame {
         cardLayout.show(cardPanel, name);
     }
 
-    public void createGlassPane(Component obj) {
-        GlassPanel g = new GlassPanel(obj, cardPanel);
+    public void createGlassPane() {
+        if (glassPane != null) {
+            System.err.println("Glass pane already exists.");
+            return;
+        }
+        GlassPanel g = new GlassPanel();
         this.glassPane = g;
-        setGlassPane(g);
-        g.setVisible(true);
+        super.setGlassPane(g);
     }
 
-    public void setGlassPaneController(MouseInputAdapter mia) {
-        if (glassPane != null) {
-            glassPane.addMouseMotionListener(mia);
-            glassPane.addMouseListener(mia);
-        }
+    public void setGlassPaneController(DnDController ma) {
+        glassPane.addMouseMotionListener(ma);
+        glassPane.addMouseListener(ma);
     }
 
     public void removeGlassPane() {
-        if (glassPane != null) {
-            remove(getGlassPane());
-            glassPane = null;
+        if (glassPane == null) {
+            System.err.println("No glass pane exists.");
+            return;
         }
+        remove(getGlassPane());
+        glassPane = null;
     }
     
     public JPanel getOverlay() {
@@ -93,6 +98,11 @@ public class MainFrame extends JFrame {
             framePanel.repaint();
             overlay = null;
         }
+        overlayPanel.remove(overlay);
+        overlayPanel.setVisible(false);
+        framePanel.revalidate();
+        framePanel.repaint();
+        overlay = null;
     }
 
     public Component getOverlayComponent() {

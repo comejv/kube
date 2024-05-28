@@ -9,11 +9,11 @@ import javax.swing.JScrollPane;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.HSL;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
-import kube.view.components.Icon;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -27,8 +27,9 @@ import kube.model.Game;
 public class SecondPhasePanel extends JPanel {
     private Phase2Controller controller;
     private Game model;
+    private GUI gui;
 
-    public SecondPhasePanel(Game model, Phase2Controller controller) {
+    public SecondPhasePanel(GUI gui, Game model, Phase2Controller controller) {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         setBackground(GUIColors.GAME_BG.toColor());

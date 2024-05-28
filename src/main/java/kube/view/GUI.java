@@ -18,6 +18,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.controller.graphical.DnDController;
 import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
 import kube.model.action.Action;
@@ -179,6 +180,18 @@ public class GUI extends Thread {
         mF.addPanel(panel, panelName);
     }
 
+    public void createGlassPane() {
+        mF.createGlassPane();
+    }
+
+    public void setGlassPaneController(DnDController ma) {
+        mF.setGlassPaneController(ma);
+    }
+
+    public void setGlassPanelVisible(boolean b){
+        mF.getGlassPane().setVisible(b);
+    }
+
     private void showAllBorders(Container container) {
         for (Component comp : container.getComponents()) {
             if (comp instanceof Container) {
@@ -189,4 +202,6 @@ public class GUI extends Thread {
             }
         }
     }
+
+    
 }
