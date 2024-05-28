@@ -9,9 +9,10 @@ import javax.swing.JPanel;
 
 import kube.configuration.Config;
 import kube.model.ModelColor;
+import kube.view.components.HexIcon;
 
 public class GlassPanel extends JPanel {
-    private BufferedImage image;
+    private HexIcon hex;
     private Point point;
     private ModelColor color;
 
@@ -41,8 +42,8 @@ public class GlassPanel extends JPanel {
         setPoint(new Point(x, y));
     }
 
-    public void setImage(BufferedImage img) {
-        image = img;
+    public void setHexIcon(HexIcon hex) {
+        this.hex = hex;
         repaint(); // Redraw the panel
     }
 
@@ -57,13 +58,20 @@ public class GlassPanel extends JPanel {
     public Point getPoint() {
         return point;
     }
+    
+    public HexIcon getHexIcon() {
+        return hex;
+    }
 
     public BufferedImage getImage() {
-        return image;
+        if (getHexIcon() != null){
+            return getHexIcon().getImage();
+        }
+        return null;
     }
 
     public void clear() {
-        setImage(null);
+        setHexIcon(null);
         repaint();
     }
 }

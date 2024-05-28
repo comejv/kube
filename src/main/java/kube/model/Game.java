@@ -3,12 +3,7 @@ package kube.model;
 import kube.configuration.Config;
 import java.util.Random;
 
-import kube.model.action.Action;
-import kube.model.action.ActionType;
-import kube.model.action.Build;
-import kube.model.action.Queue;
-import kube.model.action.Start;
-import kube.model.action.Swap;
+import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.utilsAI;
 
@@ -190,9 +185,12 @@ public class Game implements Runnable {
         k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos2(), c);
     }
 
-    synchronized public boolean build(Action a) {
-        Build b = (Build) a.getData();
+    synchronized public boolean build(Build b) {
         return k3.getCurrentPlayer().addToMountainFromAvailableToBuild(b.getPos(), b.getModelColor());
+    }
+
+    synchronized public ModelColor remove(Remove r) {
+        return k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(r.getPos());
     }
 
     public void playMove(Action a) {
@@ -298,9 +296,14 @@ public class Game implements Runnable {
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModel.remove();
+            Config.debug(a);
             switch (a.getType()) {
+                case REMOVE:
+                    remove((Remove) a.getData());
+                    modeleToView.add(a);
+                    break;
                 case BUILD:
-                    build(a);
+                    build((Build) a.getData());
                     modeleToView.add(a);
                     break;
                 case SWAP:

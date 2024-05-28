@@ -48,7 +48,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.showPanel(GUI.PHASE2);
                     break;
                 case BUILD:
-                    gui.updateFirstPanel();
+                    gui.updateFirstPanel(action);
                     break;
                 case LOCAL:
                     break;

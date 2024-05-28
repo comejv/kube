@@ -13,6 +13,7 @@ public enum ActionType {
     MOVE_NUMBER,
     UNDO,
     REDO,
+    REMOVE,
     PRINT_AI,
     PRINT_COMMAND_ERROR,
     PRINT_WAIT_COORDINATES,

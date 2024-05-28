@@ -1,7 +1,7 @@
 package kube.view;
 
 import java.io.IOException;
-
+import java.nio.Buffer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -23,6 +23,7 @@ import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
+import kube.model.action.Build;
 import kube.model.action.Queue;
 import kube.view.panels.*;
 
@@ -193,7 +194,7 @@ public class GUI extends Thread {
         mF.setGlassPaneController(ma);
     }
 
-    public void setGlassPanelVisible(boolean b){
+    public void setGlassPanelVisible(boolean b) {
         mF.getGlassPane().setVisible(b);
     }
 
@@ -208,9 +209,17 @@ public class GUI extends Thread {
         }
     }
 
-    public void updateFirstPanel(){
-        firstPhasePanel.updateGrid();
+    public void updateFirstPanel(Action a) {
+        switch (a.getType()) {
+            case BUILD:
+                Build b = (Build) a.getData();
+                firstPhasePanel.updateGrid(b.getPos());
+                firstPhasePanel.updateSide(b.getModelColor());
+                break;
+
+            default:
+                break;
+        }
     }
 
-    
 }

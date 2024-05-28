@@ -2,6 +2,7 @@ package kube.controller.graphical;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -16,6 +17,8 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Build;
 import kube.model.action.Queue;
+import kube.model.action.Remove;
+import kube.model.action.Swap;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
@@ -42,7 +45,7 @@ public class DnDController implements MouseListener, MouseMotionListener {
             // Set cursor to drag
             g.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             HexIcon icon = (HexIcon) component;
-            g.setImage(icon.getImage());
+            g.setHexIcon(icon);
             g.setPoint(e.getPoint());
             g.setColor(icon.getColor());
             Config.debug(icon);
@@ -56,13 +59,17 @@ public class DnDController implements MouseListener, MouseMotionListener {
         // Get the object that was clicked in the content pane underneath the glass panel
         Container container = ((JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource())).getContentPane();
         Component component = SwingUtilities.getDeepestComponentAt(container, e.getX(), e.getY());
-        if (g.getImage() != null && component instanceof HexIcon){
+        if (g.getHexIcon() != null && component instanceof HexIcon){
             HexIcon hex = (HexIcon) component;
-            Config.debug("Mouse release on " + hex);
-            if (hex.getPosition() == null){
-                return;
+            Point from = g.getHexIcon().getPosition();
+            Point to = hex.getPosition();
+            if (from == null && to != null){
+                toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getPosition())));
+            } else if (from != null && to != null){
+                toModel.add(new Action(ActionType.SWAP, new Swap(from, to)));
+            } else if (from != null && to == null){
+                toModel.add(new Action(ActionType.REMOVE, new Remove(from)));
             }
-            toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getPosition())));
         }
         g.setCursor(Cursor.getDefaultCursor());
         g.clear();
