@@ -13,6 +13,9 @@ import kube.view.GUIColors;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.awt.*;
 
 import javax.swing.*;
@@ -24,7 +27,7 @@ public class FirstPhasePanel extends JPanel {
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
-    private JPanel constructPanel;
+    private JPanel constructPanel, piecesPanel;
 
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.gui = gui;
@@ -93,24 +96,10 @@ public class FirstPhasePanel extends JPanel {
         updateGrid();
         // SIDE BAR - PIECES AVAILABLE
         // for this part need: getAvailableColors() and loop on it
-        JPanel piecesPanel = new JPanel();
+        piecesPanel = new JPanel();
         piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
         piecesPanel.setLayout(new GridLayout(4, 2));
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 2; j++) {
-                JPanel mini = new JPanel();
-                mini.setOpaque(false);
-                JLabel numOfPieces = new JLabel("x3");
-                numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
-                if (i == 2) {
-                    mini.add(newHexa(ModelColor.NATURAL, true));
-                } else {
-                    mini.add(newHexa(ModelColor.WHITE, true));
-                }
-                mini.add(numOfPieces);
-                piecesPanel.add(mini);
-            }
-        }
+        updateSide();
         gamePanel.add(piecesPanel, BorderLayout.EAST);
         return gamePanel;
     }
@@ -164,7 +153,23 @@ public class FirstPhasePanel extends JPanel {
             constructPanel.add(lineHexa, gbc);
         }
         Config.debug("End recolor");
+    }
 
+    public void updateSide(){
+        piecesPanel.removeAll();
+        List<Map.Entry<ModelColor, Integer>> entryList = new ArrayList<>(k3.getCurrentPlayer().getAvailaibleToBuild().entrySet());
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 2; j++) {
+                Map.Entry<ModelColor, Integer> entry = entryList.remove(0);
+                JPanel mini = new JPanel();
+                mini.setOpaque(false);
+                JLabel numOfPieces = new JLabel("x" + entry.getValue());
+                numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 20));
+                mini.add(newHexa(entry.getKey(), true));
+                mini.add(numOfPieces);
+                piecesPanel.add(mini);
+            }
+        }
     }
 
     public static HexIcon newHexa(ModelColor c, boolean isActionable) {

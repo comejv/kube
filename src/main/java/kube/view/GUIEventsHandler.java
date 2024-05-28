@@ -2,8 +2,7 @@ package kube.view;
 
 import kube.model.Kube;
 import kube.configuration.Config;
-import kube.model.action.Action;
-import kube.model.action.Queue;
+import kube.model.action.*;
 import kube.view.components.Buttons.ButtonIcon;
 
 public class GUIEventsHandler implements Runnable {
@@ -37,6 +36,7 @@ public class GUIEventsHandler implements Runnable {
                     ((ButtonIcon) action.getData()).setPressed(false);
                     break;
                 case PLAY_LOCAL:
+                    eventsToModel.add(new Action(ActionType.START, new Start()));
                     gui.showPanel(GUI.PHASE1);
                     gui.setGlassPanelVisible(true);
                     gui.loadPanel(GUI.PHASE2);

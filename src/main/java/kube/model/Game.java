@@ -44,7 +44,11 @@ public class Game implements Runnable {
             modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
         }
         Start s = (Start) a.getData();
-        k3.init(s.getAiJ1(), s.getAiJ2());
+        if (s == null){
+            k3.init();
+        } else {
+            k3.init(s.getAiJ1(), s.getAiJ2());
+        }
         return;
     }
 
