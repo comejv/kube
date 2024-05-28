@@ -70,6 +70,11 @@ public class GUIEventsHandler implements Runnable {
                 case SETTINGS:
                     gui.showPanel(GUI.MENU);
                     break;
+                case PRINT_FORBIDDEN_ACTION:
+                    Config.debug("Forbidden action : " + action.getData());
+                    String message = (String) action.getData() == null ? "You can't do that now." : (String) action.getData();
+                    gui.showWarning("Forbidden action", message);                    
+                    break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;

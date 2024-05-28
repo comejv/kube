@@ -11,6 +11,7 @@ import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
 
 import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -183,7 +184,7 @@ public class GUI extends Thread {
         mF.setGlassPaneController(ma);
     }
 
-    public void setGlassPanelVisible(boolean b){
+    public void setGlassPanelVisible(boolean b) {
         mF.getGlassPane().setVisible(b);
     }
 
@@ -198,9 +199,18 @@ public class GUI extends Thread {
         }
     }
 
-    public void updateFirstPanel(){
+    public void showWarning(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void showError(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void updateFirstPanel() {
         firstPhasePanel.updateGrid();
     }
 
-    
 }
