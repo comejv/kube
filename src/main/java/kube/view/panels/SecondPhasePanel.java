@@ -76,18 +76,22 @@ public class SecondPhasePanel extends JPanel {
         buttons.add(optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
+        sugIaButton.addActionListener(a);
         buttons.add(sugIaButton);
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
         annulerButton.setActionCommand("undo");
+        annulerButton.addActionListener(a);
         buttons.add(annulerButton);
 
         JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
         refaireButton.setActionCommand("redo");
+        refaireButton.addActionListener(a);
         buttons.add(refaireButton);
 
         JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
         histoButton.setActionCommand("updateHist");
+        histoButton.addActionListener(a);
         buttons.add(histoButton);
 
         panel.add(buttons);
@@ -182,7 +186,9 @@ public class SecondPhasePanel extends JPanel {
     public void updateHisto() {
         Config.debug("update histo");
         histPanel.removeAll();
-        histPanel.add(new JTextArea(k3.getHistory().forDisplay()));
+        JTextArea text = new JTextArea(k3.getHistory().forDisplay());
+        Config.debug(text);
+        histPanel.add(text);
         histPanel.revalidate();
         histPanel.repaint();
     }
