@@ -28,7 +28,6 @@ public class Phase1Controller implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
             case "phase2":
-                toView.add(new Action(ActionType.VALIDATE));
                 toModel.add(new Action(ActionType.VALIDATE));
                 break;
             case "settings": // change to opts.

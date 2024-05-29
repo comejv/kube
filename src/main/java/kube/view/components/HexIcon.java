@@ -65,7 +65,6 @@ public class HexIcon extends Icon {
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor }; // Multiply all bands of each pixel by factor
             float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
-            Config.debug("scale in paint: " + scale);
             RescaleOp rop = new RescaleOp(scales, offsets, null);
             g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
         } else { // Draw the original image
