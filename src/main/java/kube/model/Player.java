@@ -25,7 +25,7 @@ public class Player implements Serializable {
     private ArrayList<ModelColor> initialAdditionals, additionals;
     private HashMap<ModelColor, Integer> avalaibleToBuild;
     private HashMap<ModelColor, Integer> usedPiece;
-
+    private MiniMaxAI ai;
     /**
      * ********
      * CONSTRUCTORS ********
@@ -88,6 +88,10 @@ public class Player implements Serializable {
     public void setUsedPiece(HashMap<ModelColor, Integer> usedPiece) {
         this.usedPiece = usedPiece;
     }
+    
+    public void setAI(MiniMaxAI ai) {
+        this.ai = ai;
+    }
 
     /**********
      * GETTERS
@@ -133,7 +137,7 @@ public class Player implements Serializable {
     }
 
     public MiniMaxAI getAI() {
-        return null;
+        return ai;
     }
 
     public HashMap<ModelColor, Integer> getUsedPiece() {

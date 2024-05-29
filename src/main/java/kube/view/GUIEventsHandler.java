@@ -98,6 +98,7 @@ public class GUIEventsHandler implements Runnable {
                 case BUILD:
                 case REMOVE:
                 case SWAP:
+                case AI_MOVE:
                     gui.updateFirstPanel(action);
                     break;
                 case MOVE:

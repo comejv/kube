@@ -40,7 +40,7 @@ public class randomAI extends MiniMaxAI {
 
     @Override
     public void constructionPhase(Kube k3) {
-        while (getPlayer(k3).getPlayableColors().isEmpty() && !getPlayer(k3).validateBuilding()) {
+        while (getPlayer(k3).getPlayableColors().isEmpty()) {
             utilsAI.randomFillMountain(getPlayer(k3), getR());
         }
     }

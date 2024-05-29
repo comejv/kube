@@ -110,11 +110,14 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap.put("Option", optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
+        sugIaButton.setActionCommand("AI");
+        sugIaButton.addActionListener(controller);
+        buttons.add(sugIaButton);
         buttonsMap.put("AI", sugIaButton);
 
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
         validerButton.setEnabled(false);
-        validerButton.setActionCommand("phase2");
+        validerButton.setActionCommand("validate");
         validerButton.addActionListener(controller);
         buttons.add(validerButton);
         buttonsMap.put("Validate", validerButton);
@@ -180,6 +183,10 @@ public class FirstPhasePanel extends JPanel {
         }
     }
 
+    public void updateGrid(int i, int j){
+        updateGrid(new Point(i,j));
+    }
+
     public void updateGrid(Point pos) {
         ModelColor c = k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y);
         boolean actionable = c != ModelColor.EMPTY;
@@ -229,6 +236,16 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(s.getPos2());
                 break;
             default:
+            case AI_MOVE:
+                for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++){
+                    for (int j = 0; j < i+1; j++){
+                        updateGrid(i,j);
+                    }
+                }
+                for (ModelColor c : ModelColor.getAllColoredAndJokers()){
+                    updateSide(c);
+                }
+                updateButton();
                 break;
         }
     }
