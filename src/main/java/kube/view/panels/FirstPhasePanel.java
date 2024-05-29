@@ -98,25 +98,21 @@ public class FirstPhasePanel extends JPanel {
         buttons.setBackground(GUIColors.GAME_BG.toColor());
         
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
-        quitButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         quitButton.setActionCommand("quit");
         quitButton.addActionListener(controller);
         buttons.add(quitButton);
         buttonsMap.put("Quit", quitButton);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
-        optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("settings");
         optButton.addActionListener(controller);
         buttons.add(optButton);
         buttonsMap.put("Option", optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
-        sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         buttonsMap.put("AI", sugIaButton);
 
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
-        validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         validerButton.setEnabled(false);
         validerButton.setActionCommand("phase2");
         validerButton.addActionListener(controller);
