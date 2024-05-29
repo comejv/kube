@@ -118,7 +118,6 @@ public class SecondPhasePanel extends JPanel {
         gbc.weighty=1;
         gbc.fill=GridBagConstraints.HORIZONTAL;
         panel.add(histo,gbc);
-
         return panel;
     }
 
