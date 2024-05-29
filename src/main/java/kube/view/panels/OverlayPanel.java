@@ -22,7 +22,6 @@ public class OverlayPanel extends JPanel{
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
         setBackground(new Color(0, 0, 0, 150));
-        setOpaque(false);
 
         GridBagConstraints center = new GridBagConstraints();
         center.anchor = GridBagConstraints.CENTER;
