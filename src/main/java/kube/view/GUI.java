@@ -25,6 +25,7 @@ import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.Build;
 import kube.model.action.Queue;
 import kube.view.panels.*;
@@ -108,6 +109,22 @@ public class GUI extends Thread {
     public void showPanel(String panelName) {
         waitPanel(panelName);
         mF.showPanel(panelName);
+    }
+
+    public void updatePanel() {
+        Config.debug(k3.getCurrentPlayer());
+        switch (k3.getPhase()) {
+            case Kube.PREPARATION_PHASE:
+                waitPanel(PHASE1);
+                mF.showPanel(PHASE1);
+                firstPhasePanel.updateAll();
+                loadPanel(PHASE2);
+                break;
+            case Kube.GAME_PHASE:
+                waitPanel(PHASE2);
+                mF.showPanel(PHASE2);
+                break;
+        }
     }
 
     public void loadPanel(String panelName) {
