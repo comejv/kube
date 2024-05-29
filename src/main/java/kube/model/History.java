@@ -7,6 +7,7 @@ import kube.model.action.move.Move;
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class History implements Serializable {
 
@@ -15,8 +16,8 @@ public class History implements Serializable {
      **********/
 
     private int firstPlayer;
-    private ArrayList<Move> done;
-    private ArrayList<Move> undone;
+    private CopyOnWriteArrayList<Move> done;
+    private CopyOnWriteArrayList<Move> undone;
 
     /**********
      * CONSTRUCTORS
@@ -27,8 +28,8 @@ public class History implements Serializable {
      */
     public History() {
         this.firstPlayer = 0;
-        this.done = new ArrayList<>();
-        this.undone = new ArrayList<>();
+        this.done = new CopyOnWriteArrayList<>();
+        this.undone = new CopyOnWriteArrayList<>();
     }
 
     /**
@@ -48,14 +49,14 @@ public class History implements Serializable {
 
         doneString = parts[1].substring(1, parts[1].length() - 1);
         doneStringTab = doneString.split(" ");
-        this.done = new ArrayList<>();
+        this.done = new CopyOnWriteArrayList<>();
         for (String move : doneStringTab) {
             this.done.add(Move.fromSave(move));
         }
 
         undoneString = parts[2].substring(1, parts[2].length() - 1);
         undoneStringTab = undoneString.split(" ");
-        this.undone = new ArrayList<>();
+        this.undone = new CopyOnWriteArrayList<>();
         for (String move : undoneStringTab) {
             this.undone.add(Move.fromSave(move));
         }
@@ -65,15 +66,11 @@ public class History implements Serializable {
      * SETTERS
      **********/
 
-    public final void setFirstPlayer(int player) {
-        this.firstPlayer = player;
-    }
-
-    public final void setDone(ArrayList<Move> done) {
+    public final void setDone(CopyOnWriteArrayList<Move> done) {
         this.done = done;
     }
 
-    public final void setUndone(ArrayList<Move> undone) {
+    public final void setUndone(CopyOnWriteArrayList<Move> undone) {
         this.undone = undone;
     }
 
@@ -85,11 +82,11 @@ public class History implements Serializable {
         return this.firstPlayer;
     }
 
-    public ArrayList<Move> getDone() {
+    public CopyOnWriteArrayList<Move> getDone() {
         return this.done;
     }
 
-    public ArrayList<Move> getUndone() {
+    public CopyOnWriteArrayList<Move> getUndone() {
         return this.undone;
     }
 
@@ -228,6 +225,10 @@ public class History implements Serializable {
         s += "</html>";
         return s;
     }
+
+    /**********
+     * OVERRIDES
+     **********/
 
     @Override
     public String toString() {

@@ -135,4 +135,12 @@ public class MoveMM extends Move {
                 " depuis (" + getFrom().x + ", " + getFrom().y + ")" +
                 " en (" + getTo().x + ", " + getTo().y + ")";
     }
+
+    @Override
+    public String toHTML() {
+        return "Poser " +
+                getColor().forDisplayHTML() +
+                " depuis (" + getFrom().x + ", " + getFrom().y + ")" +
+                " en (" + getTo().x + ", " + getTo().y + ")";
+    }
 }

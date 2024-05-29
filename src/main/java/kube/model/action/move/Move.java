@@ -115,6 +115,10 @@ public abstract class Move implements Serializable {
         return getColor().forSave();
     }
 
+    public String toHTML() {
+        return "";
+    }
+
     @Override
     public boolean equals(Object o) {
 

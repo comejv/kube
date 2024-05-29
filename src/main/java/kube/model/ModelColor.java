@@ -142,6 +142,30 @@ public enum ModelColor {
         }
     }
 
+    public String forDisplayHTML() {
+
+        switch (this) {
+            case EMPTY:
+                return " ";
+            case WHITE:
+                return "<font color='white'>▣</font>";
+            case NATURAL:
+                return "<font color='gray'>▣</font>";
+            case RED:
+                return "<font color='red'>▣</font>";
+            case GREEN:
+                return "<font color='green'>▣</font>";
+            case BLUE:
+                return "<font color='blue'>▣</font>";
+            case YELLOW:
+                return "<font color='yellow'>▣</font>";
+            case BLACK:
+                return "<font color='black'>▣</font>";
+            default:
+                return " ";
+        }
+    }
+
     /**
      * Give a string representation of the color for saving
      * 

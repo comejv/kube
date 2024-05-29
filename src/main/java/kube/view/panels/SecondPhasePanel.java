@@ -1,26 +1,34 @@
 package kube.view.panels;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 import kube.configuration.Config;
-import kube.view.GUI;
-import kube.view.GUIColors;
-import kube.view.components.Buttons;
-import kube.view.components.HexIcon;
-
-import java.awt.*;
-import java.awt.event.ActionListener;
-
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.action.Action;
+import kube.model.action.move.Move;
+import kube.view.GUI;
+import kube.view.GUIColors;
+import kube.view.components.Buttons;
+import kube.view.components.HexIcon;
 
 /*
  * This class extends JPanel and creates the GUI for the second phase of the game.
@@ -29,13 +37,12 @@ public class SecondPhasePanel extends JPanel {
     private Phase2Controller controller;
     private Kube k3;
     private GUI gui;
-    private JPanel histPanel;
+    private JTextPane editorPane;
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
-        Config.debug("SecondPhasePanel k3 : " + k3);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         setBackground(GUIColors.GAME_BG.toColor());
@@ -117,14 +124,25 @@ public class SecondPhasePanel extends JPanel {
 
     private JScrollPane getHisto() {
         JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                "Historique", TitledBorder.CENTER, TitledBorder.TOP));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        histPanel = new JPanel();
-        histPanel.setLayout(new BoxLayout(histPanel, BoxLayout.Y_AXIS));
-        scrollPane.setViewportView(histPanel);
+        editorPane = new JTextPane(); // Assign the editorPane to the reference
+        editorPane.setContentType("text/html");
+        editorPane.setEditable(false);
+        scrollPane.setViewportView(editorPane);
         scrollPane.setPreferredSize(new Dimension(75, 300));
         scrollPane.setOpaque(false);
 
         return scrollPane;
+    }
+
+    public synchronized void updateHisto() {
+        StringBuilder htmlContent = new StringBuilder();
+        for (Move m : k3.getHistory().getDone()) {
+            htmlContent.append(m.toHTML()).append("<br>");
+        }
+        editorPane.setText(htmlContent.toString());
     }
 
     private JPanel gamePanel() {
@@ -185,14 +203,5 @@ public class SecondPhasePanel extends JPanel {
             constructPanel.add(lineHexa, gbc);
         }
         return constructPanel;
-    }
-
-    public void updateHisto() {
-        histPanel.removeAll();
-        JTextArea text = new JTextArea(k3.getHistory().forDisplay());
-        Config.debug(text);
-        histPanel.add(text);
-        histPanel.revalidate();
-        histPanel.repaint();
     }
 }

@@ -110,4 +110,11 @@ public class MoveMW extends Move {
                 getColor().forDisplay() +
                 " depuis (" + getFrom().x + ", " + getFrom().y + ")";
     }
+
+    @Override
+    public String toHTML() {
+        return "Passer son tour " +
+                getColor().forDisplay() +
+                " depuis (" + getFrom().x + ", " + getFrom().y + ")";
+    }
 }
