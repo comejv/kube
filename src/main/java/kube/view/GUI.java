@@ -159,8 +159,16 @@ public class GUI extends Thread {
         mF.removeAllFromOverlay();
     }
 
+    public JPanel getContentPane(){
+        return mF.getFramePanel();
+    }
+
     public Component getOverlayComponent() {
         return mF.getOverlayComponent();
+    }
+
+    public GUIControllers getControllers(){
+        return controllers;
     }
 
     protected void setPanel(String panelName, JPanel panel) {

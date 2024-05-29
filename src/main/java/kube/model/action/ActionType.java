@@ -68,6 +68,7 @@ public enum ActionType {
     SET_BUTTON_CLICKED,
     SET_BUTTON_DEFAULT,
     SETTINGS,
+    CONFIRMED_SETTINGS,
     RETURN_TO_MENU,
 
     // Menu

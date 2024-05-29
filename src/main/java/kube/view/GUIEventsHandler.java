@@ -1,11 +1,15 @@
 package kube.view;
 
+import java.awt.Container;
+
 import kube.configuration.Config;
 import kube.controller.graphical.DnDController;
 import kube.controller.graphical.MenuController;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.components.Buttons.MenuButton;
+import kube.view.panels.MenuPanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
 import kube.view.panels.SettingsPanel;
@@ -61,7 +65,6 @@ public class GUIEventsHandler implements Runnable {
                     Config.debug("Win message");
                     gui.showInfo("You won !", "Congratulations, you won the game !");
                     break;
-
                 // MENU
                 case START:
                     eventsToModel.add(new Action(ActionType.START, new Start()));
@@ -70,32 +73,34 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(true);
                     gui.loadPanel(GUI.PHASE2);
                     break;
-                case RULES:
-                    // toModel is null because we don't interract with the model in the rules
-                    // TODO : maybe reuse old controller ?
-                    gui.addToOverlay(new RulesPanel(gui, new MenuController(eventsToView, null)));
-                    break;
-                case NEXT_RULE:
-                    RulesPanel rulesPanel = (RulesPanel) gui.getOverlay().getComponent(0);
-                    rulesPanel.nextRule();
-                    break;
-                case END_RULE:
-                    gui.removeAllFromOverlay();
-                    break;
                 case PLAY_LOCAL:
                     // TODO : maybe tell model about it ?
                     break;
                 case PLAY_ONLINE:
                     // TODO : maybe tell model about it ?
                     break;
-
+                case RULES:
+                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController()
+                                                      , action.getType()));
+                    gui.setGlassPanelVisible(true);
+                    break;
+                case NEXT_RULE:
+                    OverlayPanel overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    RulesPanel rulesPanel = (RulesPanel) overlay.getComponent(0);
+                    rulesPanel.nextRule();
+                    break;
+                case END_RULE:
+                    gui.removeAllFromOverlay();
+                    gui.setGlassPanelVisible(false);
+                    break;
+                case SETTINGS:
+                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController()
+                                                      , action.getType()));
+                    break;
                 // FIRST PHASE
                 case VALIDATE:
                     gui.setGlassPanelVisible(true);
                     gui.showPanel(GUI.PHASE2);
-                    break;
-                case SETTINGS:
-                    
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);

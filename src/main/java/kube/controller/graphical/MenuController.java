@@ -49,8 +49,11 @@ public class MenuController implements ActionListener, MouseListener {
             case "volume":
                 toView.add(new Action(ActionType.VOLUME));
                 break;
-            case "SETTINGS":
+            case "settings":
                 toView.add(new Action(ActionType.SETTINGS));
+                break;
+            case "confirmed_settings":
+                toView.add(new Action(ActionType.CONFIRMED_SETTINGS));
                 break;
             default:
                 break;

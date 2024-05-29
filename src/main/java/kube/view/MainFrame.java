@@ -82,6 +82,10 @@ public class MainFrame extends JFrame {
     public JPanel getOverlay() {
         return overlayPanel;
     }
+
+    public JPanel getFramePanel(){
+        return framePanel;
+    }
     
     public void addToOverlay(Component p) {
         overlayPanel.add(p);
@@ -93,7 +97,7 @@ public class MainFrame extends JFrame {
 
     public void removeAllFromOverlay() {
         if (overlay != null) {
-            overlayPanel.remove(overlay);
+            overlayPanel.removeAll();
             overlayPanel.setVisible(false);
             framePanel.revalidate();
             framePanel.repaint();
