@@ -7,7 +7,7 @@ public enum ActionType {
 
     // --- GAME ---
     START,
-    RESET, // TODO : handle reset event
+    RESET,
     SHOW_ALL,
     SHOW_MOUNTAIN,
     SWAP,
@@ -36,10 +36,12 @@ public enum ActionType {
     PRINT_ASK_NB_PLAYERS,
     PRINT_ASK_PLAYER_NAME,
     PRINT_ASK_GAME_MODE,
-    SAVE_KUBE,
-    SAVED_KUBE,
-    LOAD_KUBE,
-    LOADED_KUBE,
+    PRINT_ASK_SAVE_FILE_NAME,
+    PRINT_ASK_LOAD_FILE_NAME,
+    SAVE,
+    PRINT_SAVED,
+    LOAD,
+    PRINT_LOADED,
 
     // --- NETWORK ---
     PRINT_ASK_HOST_OR_JOIN,

@@ -29,11 +29,14 @@ public class KubeTest {
         Kube k1 = null;
         Kube k2 = null;
 
+        
+
         File ser_test = new File(Config.SAVING_PATH_DIRECTORY + "kube.ser");
 
         try (FileOutputStream fos = new FileOutputStream(ser_test);
                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             k1 = new Kube(); // Initialize your Kube object
+            initPlayMove(k1);
             oos.writeObject(k1);
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,9 +66,6 @@ public class KubeTest {
         assertTrue(areSameMountain(k1.getP2().getMountain(),
                 k2.getP2().getMountain()));
 
-        assertEquals(k1.getHistory().getFirstPlayer(),
-                k2.getHistory().getFirstPlayer());
-
         for (int i = 0; i < k1.getHistory().getDone().size(); i++) {
             assertEquals(k1.getHistory().getDone().get(i),
                     k2.getHistory().getDone().get(i));
@@ -87,7 +87,6 @@ public class KubeTest {
         assertEquals(9, kube.getK3().getBaseSize());
         assertEquals(0, kube.getHistory().getDone().size());
         assertEquals(0, kube.getHistory().getUndone().size());
-        assertEquals(0, kube.getHistory().getFirstPlayer());
         assertEquals(1, kube.getPhase());
     }
 

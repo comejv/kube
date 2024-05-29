@@ -12,7 +12,6 @@ public class HistoryTest {
     public void constructorTest() {
 
         History history = new History();
-        assertEquals(0, history.getFirstPlayer());
         assertEquals(0, history.getDone().size());
         assertEquals(0, history.getUndone().size());
     }

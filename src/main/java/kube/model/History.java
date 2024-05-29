@@ -14,7 +14,6 @@ public class History implements Serializable {
      * ATTRIBUTES
      **********/
 
-    private int firstPlayer;
     private ArrayList<Move> done;
     private ArrayList<Move> undone;
 
@@ -26,48 +25,13 @@ public class History implements Serializable {
      * Constructor of the class History
      */
     public History() {
-        this.firstPlayer = 0;
         this.done = new ArrayList<>();
         this.undone = new ArrayList<>();
-    }
-
-    /**
-     * Constructor of the class History from a save string
-     * 
-     * @param save the string to load
-     */
-    public History(String save) {
-
-        String player, doneString, undoneString;
-        String[] parts, doneStringTab, undoneStringTab;
-
-        parts = save.split("\n");
-
-        player = parts[0];
-        this.firstPlayer = Integer.parseInt(player);
-
-        doneString = parts[1].substring(1, parts[1].length() - 1);
-        doneStringTab = doneString.split(" ");
-        this.done = new ArrayList<>();
-        for (String move : doneStringTab) {
-            this.done.add(Move.fromSave(move));
-        }
-
-        undoneString = parts[2].substring(1, parts[2].length() - 1);
-        undoneStringTab = undoneString.split(" ");
-        this.undone = new ArrayList<>();
-        for (String move : undoneStringTab) {
-            this.undone.add(Move.fromSave(move));
-        }
     }
 
     /**********
      * SETTERS
      **********/
-
-    public final void setFirstPlayer(int player) {
-        this.firstPlayer = player;
-    }
 
     public final void setDone(ArrayList<Move> done) {
         this.done = done;
@@ -80,10 +44,6 @@ public class History implements Serializable {
     /**********
      * GETTERS
      **********/
-
-    public int getFirstPlayer() {
-        return this.firstPlayer;
-    }
 
     public ArrayList<Move> getDone() {
         return this.done;
@@ -178,36 +138,6 @@ public class History implements Serializable {
      */
     public boolean canRedo() {
         return getUndone().size() > 0;
-    }
-
-    /**
-     * Return a string representing the history for saving it
-     * 
-     * @return a string representing the history
-     */
-    public String forSave() {
-
-        String save;
-        // Saving the first player
-        save = getFirstPlayer() + "\n[";
-        // Saving the done moves
-        for (Move move : getDone()) {
-            save += move.forSave() + " ";
-        }
-        if (canUndo()) {
-            save = save.substring(0, save.length() - 1);
-        }
-        // Saving the undone moves
-        save += "]\n[";
-        for (Move move : getUndone()) {
-            save += move.forSave() + " ";
-        }
-        if (canRedo()) {
-            save = save.substring(0, save.length() - 1);
-        }
-
-        save += "]";
-        return save;
     }
 
     /**

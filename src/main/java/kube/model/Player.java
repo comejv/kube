@@ -9,27 +9,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
 
 public class Player implements Serializable {
 
-    /**
-     * ********
-     * ATTRIBUTES ********
-     */
+    /**********
+     * ATTRIBUTES
+     **********/
+
     private String name;
     private int id;
     private Mountain mountain;
     private boolean hasValidateBuilding;
-    private ArrayList<ModelColor> initialAdditionals, additionals;
+    private ArrayList<ModelColor> additionals;
     private HashMap<ModelColor, Integer> avalaibleToBuild;
     private HashMap<ModelColor, Integer> usedPiece;
 
-    /**
-     * ********
-     * CONSTRUCTORS ********
-     */
+    /**********
+     * CONSTRUCTORS 
+     **********/
+
     /**
      * Constructor of the class Player
      *
@@ -41,7 +40,6 @@ public class Player implements Serializable {
         this.mountain = new Mountain(6);
         clearMountain();
         this.additionals = new ArrayList<>();
-        this.initialAdditionals = getAdditionals();
         this.hasValidateBuilding = false;
         this.usedPiece = new HashMap<>();
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
@@ -49,10 +47,10 @@ public class Player implements Serializable {
         }
     }
 
-    /**
-     * ********
-     * SETTERS ********
-     */
+    /**********
+     * SETTERS 
+     **********/
+
     public void setId(int id) {
         this.id = id;
     }
@@ -63,10 +61,6 @@ public class Player implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public void setInitialAdditionals(ArrayList<ModelColor> initialAdditionals) {
-        this.initialAdditionals = initialAdditionals;
     }
 
     public void setAdditionals(ArrayList<ModelColor> additionals) {
@@ -87,7 +81,7 @@ public class Player implements Serializable {
 
     /**********
      * GETTERS
-     *********/
+     **********/
 
     public int getId() {
         return this.id;
@@ -106,10 +100,6 @@ public class Player implements Serializable {
             return "Joueur " + getId();
         }
         return this.name;
-    }
-
-    public ArrayList<ModelColor> getInitialAdditionals() {
-        return this.initialAdditionals;
     }
 
     public ArrayList<ModelColor> getAdditionals() {
@@ -278,10 +268,10 @@ public class Player implements Serializable {
         return getMountain().isFull();
     }
 
-    /**
-     * ********
-     * AFTER HAS VALIDATE BUILDING METHODS ********
-     */
+    /**********
+     * AFTER HAS VALIDATE BUILDING METHODS 
+     **********/
+
     /**
      * Add a color to the player's additionals
      *
@@ -430,46 +420,6 @@ public class Player implements Serializable {
      */
     public boolean isMountainEmpty() {
         return getMountain().isEmpty();
-    }
-
-    /**
-     * Return a string representing the player for saving it
-     *
-     * @return a string representing the player
-     */
-    public String forSave() {
-
-        String save;
-        boolean addedAvailableToBuild;
-
-        save = "{" + getId() + " " + getName() + " ";
-
-        if (!hasValidateBuilding) {
-            addedAvailableToBuild = false;
-            save += getMountain().forSave() + " ";
-            save += "[";
-            for (Map.Entry<ModelColor, Integer> entry : getAvailableToBuild().entrySet()) {
-                save += entry.getKey().forSave() + ":" + entry.getValue() + ",";
-                addedAvailableToBuild = true;
-            }
-            if (addedAvailableToBuild) {
-                save = save.substring(0, save.length() - 1);
-            }
-            save += "]";
-        } else {
-            save += getInitialMountain().forSave() + " ";
-            save += "[";
-            if (getInitialAdditionals().size() > 0) {
-                for (ModelColor c : getInitialAdditionals()) {
-                    save += c.forSave() + " ";
-                }
-                save = save.substring(0, save.length() - 1);
-            }
-            save += "]";
-        }
-
-        save += "}";
-        return save;
     }
 
     @Override
