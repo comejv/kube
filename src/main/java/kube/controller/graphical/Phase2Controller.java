@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.configuration.Config;
 
 public class Phase2Controller implements ActionListener, MouseListener {
     private Queue<Action> toView;
@@ -19,12 +20,16 @@ public class Phase2Controller implements ActionListener, MouseListener {
     }
 
     public void actionPerformed(ActionEvent evt) {
+        Config.debug("Phase2Controller.actionPerformed : " + evt.getActionCommand());
         switch (evt.getActionCommand()) {
             case "settings":
                 toView.add(new Action(ActionType.SETTINGS));
                 break;
             case "updateHist":
                 toView.add(new Action(ActionType.MOVE));
+                toModel.add(new Action(ActionType.MOVE_NUMBER, 0));
+                toModel.add(new Action(ActionType.MOVE_NUMBER, 0));
+                toModel.add(new Action(ActionType.MOVE_NUMBER, 0));
                 break;
             case "quit":
                 // TODO : ask if need to save the game
