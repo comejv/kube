@@ -29,7 +29,7 @@ public class SecondPhasePanel extends JPanel {
     private Phase2Controller controller;
     private Kube k3;
     private GUI gui;
-    private JPanel histPanel;
+    private JPanel histPanel, p1Panel, p2Panel, k3Panel;
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
@@ -131,21 +131,21 @@ public class SecondPhasePanel extends JPanel {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        JPanel p1 = pyra(0);
+        p1Panel = pyra(0);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p1, gbc);
-        JPanel p2 = pyra(0);
+        gamePanel.add(p1Panel, gbc);
+        p2Panel = pyra(0);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p2, gbc);
-        JPanel base = pyra(-1);
+        gamePanel.add(p2Panel, gbc);
+        k3Panel = pyra(-1);
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1;
@@ -153,7 +153,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        gamePanel.add(base, gbc);
+        gamePanel.add(k3Panel, gbc);
         return gamePanel;
     }
 

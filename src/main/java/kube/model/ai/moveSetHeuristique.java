@@ -9,6 +9,7 @@ import java.util.Random;
 
 import kube.model.ModelColor;
 import kube.model.Player;
+import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 

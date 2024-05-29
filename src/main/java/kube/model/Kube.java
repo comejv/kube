@@ -33,7 +33,7 @@ public class Kube implements Serializable {
     public static final int PREPARATION_PHASE = 1;
     public static final int GAME_PHASE = 2;
     public static final int ID_PLAYER_1 = 1;
-    public static final int ID_PLAYER_2 = 1;
+    public static final int ID_PLAYER_2 = 2;
 
     /**********
      * ATTRIBUTES

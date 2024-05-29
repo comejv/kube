@@ -271,23 +271,19 @@ public class Game implements Runnable {
         if (getGameType() != LOCAL) {
             eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
         }
-        p.validateBuilding();
         modeleToView.add(new Action(ActionType.VALIDATE, true));
         k3.updatePhase();
     }
 
     public void constructionPhaseAIsuggestion(Player p) {
-        System.out.println(p);
         for (int i = 0; i < p.getMountain().getBaseSize(); i++){
             for (int j = 0; j < i+1; j++){
                 p.removeFromMountainToAvailableToBuild(i, j);
             }
         }
-        System.out.println(p);
         p.setAI(new moveSetHeuristique());
         p.getAI().setPlayerId(p.getId());
         p.getAI().constructionPhase(k3);
-        System.out.println(p);
     }
 
     public void waitConstruction(Player p) {
@@ -309,7 +305,10 @@ public class Game implements Runnable {
 
     public void constructionPhasePlayer(Player p) {
         if (p.isAI()) {
+            Config.debug("Start construction for " + p.getId());
             constructionPhaseAI(p);
+            Config.debug("End construction for " + p.getId());
+            k3.updatePhase();
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModel.remove();

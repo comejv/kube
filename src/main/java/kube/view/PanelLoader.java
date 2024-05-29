@@ -2,6 +2,7 @@ package kube.view;
 
 import javax.swing.JPanel;
 
+import kube.configuration.Config;
 import kube.controller.graphical.GUIControllers;
 import kube.model.Game;
 import kube.model.Kube;

@@ -112,12 +112,14 @@ public class GUI extends Thread {
     }
 
     public void updatePanel() {
-        Config.debug(k3.getCurrentPlayer());
+        Config.debug(k3.getPhase() + " " + k3.getP1() +" "+ k3.getP2());
         switch (k3.getPhase()) {
             case Kube.PREPARATION_PHASE:
                 waitPanel(PHASE1);
-                mF.showPanel(PHASE1);
-                firstPhasePanel.updateAll();
+                if (!k3.getCurrentPlayer().isAI()){
+                    mF.showPanel(PHASE1);
+                    firstPhasePanel.updateAll();
+                }
                 loadPanel(PHASE2);
                 break;
             case Kube.GAME_PHASE:

@@ -20,6 +20,7 @@ public class AI extends Player {
     public AI(int id, MiniMaxAI ai) {
         super(id);
         ai.setPlayerId(id);
+        setAI(ai);
         setName("AI" + id);
     }
 
