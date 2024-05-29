@@ -34,10 +34,6 @@ public class MenuController implements ActionListener, MouseListener {
             case "play":
                 toView.add(new Action(ActionType.START));
                 break;
-
-            // TODO Handle online game
-
-            // TODO Handle game settings (AI, nb of players)
             case "rules":
                 toView.add(new Action(ActionType.RULES));
                 break;
@@ -53,8 +49,8 @@ public class MenuController implements ActionListener, MouseListener {
             case "volume":
                 toView.add(new Action(ActionType.VOLUME));
                 break;
-            case "parameters":
-                toView.add(new Action(ActionType.PARAMETERS));
+            case "SETTINGS":
+                toView.add(new Action(ActionType.SETTINGS));
                 break;
             default:
                 break;

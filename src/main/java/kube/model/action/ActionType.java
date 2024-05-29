@@ -76,7 +76,6 @@ public enum ActionType {
     RULES,
     QUIT,
     VOLUME,
-    PARAMETERS,
     NEXT_RULE,
     END_RULE,
 

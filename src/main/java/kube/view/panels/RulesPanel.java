@@ -43,7 +43,7 @@ public class RulesPanel extends JPanel {
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
-        setBackground(new Color(0, 0, 0, 150));
+        setOpaque(true);
 
         gridPanel = new JPanel(new GridBagLayout());
         gridPanel.setSize(new Dimension(width, height));
@@ -105,7 +105,7 @@ public class RulesPanel extends JPanel {
             textArea.setEditable(false);
             textArea.setWrapStyleWord(true);
             textArea.setLineWrap(true);
-            textArea.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 14)));
+            textArea.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 14)));
             textArea.setBackground(background);
             textArea.setForeground(foreground);
             textArea.setOpaque(false);

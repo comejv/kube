@@ -6,7 +6,9 @@ import kube.controller.graphical.MenuController;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
+import kube.view.panels.SettingsPanel;
 
 public class GUIEventsHandler implements Runnable {
 
@@ -47,9 +49,6 @@ public class GUIEventsHandler implements Runnable {
                     System.exit(0);
                     gui.showPanel(GUI.PHASE1);
                     break;
-                case SETTINGS:
-                    // TODO : show settings overlay
-                    break;
                 case PRINT_FORBIDDEN_ACTION:
                     Config.debug("Forbidden action : " + action.getData());
                     String message = (String) action.getData() == null ? "You can't do that now."
@@ -79,8 +78,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.addToOverlay(new RulesPanel(gui, new MenuController(eventsToView, null)));
                     break;
                 case NEXT_RULE:
-                    RulesPanel rulePanel = (RulesPanel) gui.getOverlay().getComponent(0);
-                    rulePanel.nextRule();
+                    RulesPanel rulesPanel = (RulesPanel) gui.getOverlay().getComponent(0);
+                    rulesPanel.nextRule();
                     break;
                 case END_RULE:
                     gui.removeAllFromOverlay();
@@ -97,10 +96,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(true);
                     gui.showPanel(GUI.PHASE2);
                     break;
-                case BUILD:
-                case REMOVE:
-                case SWAP:
-                    gui.updateFirstPanel(action);
+                case SETTINGS:
+                    
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);
