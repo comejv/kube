@@ -7,6 +7,7 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
+import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.model.ModelColor;
 import kube.view.GUIColors;
@@ -42,15 +43,15 @@ public class HexIcon extends Icon {
     }
 
     public HexIcon(ModelColor color, int width, int height) {
-        super(ResourceLoader.getBufferedImage(getImageName(color)));
+        this(color, false);
         this.color = color;
-        resizeIcon(width, height);
+        // resizeIcon(width, height);
     }
 
     public HexIcon(ModelColor color, boolean actionable, double scale) {
-        super(ResourceLoader.getBufferedImage(getImageName(color)));
-        this.color = color;
-        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+        this(color, actionable);
+        this.scale = scale;
+        // resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
     }
 
     @Override
@@ -61,6 +62,7 @@ public class HexIcon extends Icon {
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor }; // Multiply all bands of each pixel by factor
             float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
+            Config.debug("scale in paint: " + scale);
             RescaleOp rop = new RescaleOp(scales, offsets, null);
             BufferedImage scaledImage = new BufferedImage((int) (WIDTH * scale), (int) (HEIGHT * scale),
                     BufferedImage.TYPE_INT_ARGB);
