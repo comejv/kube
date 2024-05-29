@@ -43,15 +43,18 @@ public class HexIcon extends Icon {
     }
 
     public HexIcon(ModelColor color, int width, int height) {
-        this(color, false);
+        super(ResourceLoader.getBufferedImage(getImageName(color)));
+        this.isActionable = false;
         this.color = color;
-        // resizeIcon(width, height);
+        resizeIcon(width, height);
     }
 
     public HexIcon(ModelColor color, boolean actionable, double scale) {
-        this(color, actionable);
+        super(ResourceLoader.getBufferedImage(getImageName(color)));
+        this.isActionable = actionable;
+        this.color = color;
         this.scale = scale;
-        // resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
     }
 
     @Override
@@ -64,13 +67,7 @@ public class HexIcon extends Icon {
             float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
             Config.debug("scale in paint: " + scale);
             RescaleOp rop = new RescaleOp(scales, offsets, null);
-            BufferedImage scaledImage = new BufferedImage((int) (WIDTH * scale), (int) (HEIGHT * scale),
-                    BufferedImage.TYPE_INT_ARGB);
-            Graphics2D g2dScaled = scaledImage.createGraphics();
-            g2dScaled.drawImage(getImage(), rop, 0, 0);
-            g2d.drawImage(scaledImage, (int) offsetX, (int) offsetY, null);
-            g2dScaled.dispose();
-            // g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
+            g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
         } else { // Draw the original image
             g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
         }
