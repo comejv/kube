@@ -40,7 +40,8 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridy = 0;
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.NORTHEAST;
-        gbc.insets = new Insets(0, 10, 0, 10);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(20, 5, 20, 5);
         add(eastPane, gbc);
         JPanel gamePanel = gamePanel();
         gamePanel.setBackground(GUIColors.TEXT.toColor());
@@ -52,56 +53,71 @@ public class SecondPhasePanel extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1;
         gbc.weighty = 1;
-        gbc.insets = new Insets(20, 20, 20, 20);
+        gbc.insets = new Insets(20, 15, 20, 15);
         add(gamePanel, gbc);
     }
 
     private JPanel createEastPanel(ActionListener a) {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(6, 1)); // TODO : change to flow or box layout
-        buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
-        buttons.setOpaque(false);
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+       // gbc.insets = new Insets(10, 0, 0, 0);
+
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addActionListener(a);
-        buttons.add(quitButton);
+        gbc.gridy=0;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(quitButton,gbc);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addActionListener(a);
-        buttons.add(optButton);
+        gbc.gridy=1;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(optButton,gbc);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
         sugIaButton.addActionListener(a);
-        buttons.add(sugIaButton);
+        gbc.gridy=2;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(sugIaButton,gbc);
+
+        JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
+        histoButton.setActionCommand("updateHist");
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        histoButton.addActionListener(a);
+        gbc.gridy=6;
+        panel.add(histoButton,gbc);
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
         annulerButton.setActionCommand("undo");
         annulerButton.addActionListener(a);
-        buttons.add(annulerButton);
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.gridy=7;
+        panel.add(annulerButton,gbc);
 
         JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
         refaireButton.setActionCommand("redo");
         refaireButton.addActionListener(a);
-        buttons.add(refaireButton);
-
-        JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
-        histoButton.setActionCommand("updateHist");
-        histoButton.addActionListener(a);
-        buttons.add(histoButton);
-
-        panel.add(buttons);
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.gridy=8;
+        panel.add(refaireButton,gbc);
 
         JLabel histoText = new JLabel("HISTO");
         histoText.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         histoText.setForeground(GUIColors.TEXT.toColor());
-        panel.add(histoText);
+        histoText.setPreferredSize(new Dimension(Config.getInitWidth()/5,(int)(Config.getInitHeight()/2)));
+        //panel.add(histoText);
         JScrollPane histo = getHisto();
-        panel.add(histo, BorderLayout.CENTER);
+        //histo.setMinimumSize(new Dimension(Config.getInitWidth()/7,Config.getInitHeight()));
+        gbc.gridy=3;
+        gbc.gridheight=3;
+        gbc.weighty=1;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(histo,gbc);
 
         return panel;
     }
