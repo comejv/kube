@@ -75,7 +75,7 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
         for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
-            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false));
+            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false, 1.5));
         }
 
         gamePanel.add(topPanel, BorderLayout.NORTH);
@@ -124,14 +124,12 @@ public class FirstPhasePanel extends JPanel {
         constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
-        constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
         GridBagConstraints gbc = new GridBagConstraints();
 
         for (int i = 1; i <= 6; i++) {
             JPanel lineHexa = new JPanel();
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
-            lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
             for (int j = 0; j < i; j++) {
                 JPanel hexPanel = new JPanel();
                 HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i - 1, j), false, 2);
@@ -161,7 +159,7 @@ public class FirstPhasePanel extends JPanel {
             JLabel numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             boolean actionable = numberOfPieces > 0;
-            mini.add(new HexIcon(c, actionable));
+            mini.add(new HexIcon(c, actionable, 1.5));
             mini.add(numOfPieces);
             piecesPanel.add(mini);
             sidePanels.put(c, mini);
@@ -182,7 +180,6 @@ public class FirstPhasePanel extends JPanel {
         panel.revalidate();
         panel.repaint();
         Config.debug("End update");
-
     }
 
     public void updateSide(ModelColor c) {
@@ -193,12 +190,11 @@ public class FirstPhasePanel extends JPanel {
         int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
         JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-        mini.add(new HexIcon(c, numberOfPieces > 0));
+        mini.add(new HexIcon(c, numberOfPieces > 0, 1.5));
         mini.add(numOfPieces);
         mini.revalidate();
         mini.repaint();
         Config.debug("End update");
-
     }
 
     public void update(Action a) {

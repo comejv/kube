@@ -7,10 +7,8 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
-import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.model.ModelColor;
-import kube.view.GUIColors;
 
 public class HexIcon extends Icon {
     private boolean isActionable;
@@ -22,8 +20,8 @@ public class HexIcon extends Icon {
 
     private ModelColor color;
 
-    private static final int WIDTH = 50;
-    private static final int HEIGHT = 50;
+    private static final int WIDTH = 40;
+    private static final int HEIGHT = 40;
 
     private double scale = 1;
 
@@ -65,7 +63,6 @@ public class HexIcon extends Icon {
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor }; // Multiply all bands of each pixel by factor
             float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
-            Config.debug("scale in paint: " + scale);
             RescaleOp rop = new RescaleOp(scales, offsets, null);
             g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
         } else { // Draw the original image
@@ -98,19 +95,30 @@ public class HexIcon extends Icon {
     }
 
     public HexIcon clone() {
-        return new HexIcon(getColor(), isActionable());
+        HexIcon clone = new HexIcon(color, isActionable, scale);
+        clone.setPosition(position);
+        return clone;
     }
 
-    public void setActionable(boolean b) {
+    public final void setScale(double scale) {
+        this.scale = scale;
+        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+    }
+
+    public final double getScale() {
+        return scale;
+    }
+
+    public final void setActionable(boolean b) {
         isActionable = b;
     }
 
-    public void setPressed(boolean b) {
+    public final void setPressed(boolean b) {
         isPressed = b;
         repaint();
     }
 
-    public void setHovered(boolean b) {
+    public final void setHovered(boolean b) {
         isHovered = b;
         repaint();
     }
@@ -123,7 +131,7 @@ public class HexIcon extends Icon {
         return isActionable;
     }
 
-    public void setOffset(double x, double y) {
+    public final void setOffset(double x, double y) {
         offsetX = x - getImage().getWidth() / 2;
         offsetY = y - getImage().getHeight() / 2;
         repaint();
@@ -145,7 +153,7 @@ public class HexIcon extends Icon {
         return color;
     }
 
-    public void setPosition(Point p) {
+    public final void setPosition(Point p) {
         position = p;
     }
 

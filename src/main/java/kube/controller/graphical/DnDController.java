@@ -45,10 +45,13 @@ public class DnDController implements MouseListener, MouseMotionListener {
             // Set cursor to drag
             g.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             HexIcon icon = (HexIcon) component;
-            g.setHexIcon(icon);
+            HexIcon newIcon = icon.clone();
+            double scale = icon.getScale() < 2 ? 1.2 : 0.8;
+            newIcon.setScale(scale * icon.getScale());
+            g.setHexIcon(newIcon);
             g.setPoint(e.getPoint());
-            g.setColor(icon.getColor());
-            Config.debug(icon);
+            g.setColor(newIcon.getColor());
+            Config.debug(newIcon);
             g.repaint();
         }
     }
