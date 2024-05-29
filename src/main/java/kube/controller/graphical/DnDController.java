@@ -130,8 +130,10 @@ public class DnDController implements MouseListener, MouseMotionListener {
             if (e.getID() == MouseEvent.MOUSE_CLICKED && newComponent instanceof JButton) {
                 JButton b = (JButton) newComponent;
                 b.doClick();
+            } else {
+                MouseEvent newEvent = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
+                newComponent.dispatchEvent(newEvent);
             }
-            // newComponent.dispatchEvent(newEvent);
         }
         component = newComponent;
     }

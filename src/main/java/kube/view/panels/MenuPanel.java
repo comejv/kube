@@ -32,7 +32,8 @@ public class MenuPanel extends JPanel {
             @Override
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.drawImage(backgroundCow, 0, 0, this); // Draw the background image
+                Image scaledBackground = backgroundCow.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+                g.drawImage(scaledBackground, 0, 0, this);
             }
         };
         modal.setLayout(new GridBagLayout());

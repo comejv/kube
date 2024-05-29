@@ -45,9 +45,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.showPanel(GUI.MENU);
                     break;
                 case QUIT:
-                    // TODO : Something wrong here
                     System.exit(0);
-                    gui.showPanel(GUI.PHASE1);
                     break;
                 case PRINT_FORBIDDEN_ACTION:
                     Config.debug("Forbidden action : " + action.getData());
