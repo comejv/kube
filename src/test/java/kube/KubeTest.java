@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import kube.model.ModelColor;
+import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.action.move.*;
@@ -28,7 +29,7 @@ public class KubeTest {
         Kube k1 = null;
         Kube k2 = null;
 
-        File ser_test = new File("kube.ser");
+        File ser_test = new File(Config.SAVING_PATH_DIRECTORY + "kube.ser");
 
         try (FileOutputStream fos = new FileOutputStream(ser_test);
                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
@@ -48,38 +49,32 @@ public class KubeTest {
 
         ser_test.delete();
 
-        assertEquals(k1, k2);
+        assertEquals(k1.getP1().getName(), k2.getP1().getName());
+        assertEquals(k1.getP1().getId(), k2.getP1().getId());
+        assertEquals(k1.getP1().getHasValidateBuilding(),
+                k2.getP1().getHasValidateBuilding());
+        assertTrue(areSameMountain(k1.getP1().getMountain(),
+                k2.getP1().getMountain()));
 
-        // assertEquals(k1.getP1().getName(), k2.getP1().getName());
-        // assertEquals(k1.getP1().getId(), k2.getP1().getId());
-        // assertEquals(k1.getP1().getHasValidateBuilding(),
-        // k2.getP1().getHasValidateBuilding());
-        // assertTrue(areSameMountain(k1.getP1().getInitialMountain(),
-        // k2.getP1().getInitialMountain()));
-        // assertTrue(areSameMountain(k1.getP1().getMountain(),
-        // k2.getP1().getMountain()));
+        assertEquals(k1.getP2().getName(), k2.getP2().getName());
+        assertEquals(k1.getP2().getId(), k2.getP2().getId());
+        assertEquals(k1.getP2().getHasValidateBuilding(),
+                k2.getP2().getHasValidateBuilding());
+        assertTrue(areSameMountain(k1.getP2().getMountain(),
+                k2.getP2().getMountain()));
 
-        // assertEquals(k1.getP2().getName(), k2.getP2().getName());
-        // assertEquals(k1.getP2().getId(), k2.getP2().getId());
-        // assertEquals(k1.getP2().getHasValidateBuilding(),
-        // k2.getP2().getHasValidateBuilding());
-        // assertTrue(areSameMountain(k1.getP2().getInitialMountain(),
-        // k2.getP2().getInitialMountain()));
-        // assertTrue(areSameMountain(k1.getP2().getMountain(),
-        // k2.getP2().getMountain()));
+        assertEquals(k1.getHistory().getFirstPlayer(),
+                k2.getHistory().getFirstPlayer());
 
-        // assertEquals(k1.getHistory().getFirstPlayer(),
-        // k2.getHistory().getFirstPlayer());
+        for (int i = 0; i < k1.getHistory().getDone().size(); i++) {
+            assertEquals(k1.getHistory().getDone().get(i),
+                    k2.getHistory().getDone().get(i));
+        }
 
-        // for (int i = 0; i < k1.getHistory().getDone().size(); i++) {
-        // assertEquals(k1.getHistory().getDone().get(i),
-        // k2.getHistory().getDone().get(i));
-        // }
-
-        // for (int i = 0; i < k1.getHistory().getUndone().size(); i++) {
-        // assertEquals(k1.getHistory().getUndone().get(i),
-        // k2.getHistory().getUndone().get(i));
-        // }
+        for (int i = 0; i < k1.getHistory().getUndone().size(); i++) {
+            assertEquals(k1.getHistory().getUndone().get(i),
+                    k2.getHistory().getUndone().get(i));
+        }
     }
 
     @Test

@@ -20,7 +20,7 @@ public class Player implements Serializable {
      */
     private String name;
     private int id;
-    private Mountain initialMountain, mountain;
+    private Mountain mountain;
     private boolean hasValidateBuilding;
     private ArrayList<ModelColor> initialAdditionals, additionals;
     private HashMap<ModelColor, Integer> avalaibleToBuild;
@@ -55,10 +55,6 @@ public class Player implements Serializable {
      */
     public void setId(int id) {
         this.id = id;
-    }
-
-    public void setInitialMountain(Mountain initialMountain) {
-        this.initialMountain = initialMountain;
     }
 
     public void setMountain(Mountain mountain) {
@@ -99,10 +95,6 @@ public class Player implements Serializable {
 
     public int getWhiteUsed() {
         return this.usedPiece.get(ModelColor.WHITE);
-    }
-
-    public Mountain getInitialMountain() {
-        return this.initialMountain;
     }
 
     public Mountain getMountain() {
@@ -280,7 +272,6 @@ public class Player implements Serializable {
 
         if (getMountain().isFull()) {
             setHasValidateBuilding(true);
-            setInitialMountain(getMountain().clone());
         }
 
         // return getHasValidateBuilding();
