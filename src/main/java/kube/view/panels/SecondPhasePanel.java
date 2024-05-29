@@ -41,6 +41,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.insets = new Insets(0, 10, 0, 10);
         add(eastPane, gbc);
         JPanel gamePanel = gamePanel();
+        gamePanel.setBackground(GUIColors.TEXT.toColor());
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 0;
@@ -61,7 +62,7 @@ public class SecondPhasePanel extends JPanel {
         panel.setOpaque(false);
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1));
-        buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
+        //buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setOpaque(false);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Menu");
@@ -102,33 +103,39 @@ public class SecondPhasePanel extends JPanel {
 
     private JPanel gamePanel() {
         JPanel gamePanel = new JPanel();
-        gamePanel.setLayout(null);
-        JPanel p1 = pyra(1, 0);
-        JPanel p2 = pyra(2, 3);
-        JPanel base = base();
-        int w1 = width_p1_mountain + 20;
-        int w2 = width_p2_mountain + 20;
-        int w3 = width_base_mountain + 20;
+        gamePanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        JPanel p1 = pyra(0);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gamePanel.add(p1, gbc);
+        JPanel p2 = pyra(0);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gamePanel.add(p2, gbc);
+        JPanel base = pyra(-1);
+        gbc.gridx=0;
+        gbc.gridy=1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.gridwidth = 2;
+        gbc.anchor= GridBagConstraints.CENTER;
 
-        p1.setBounds(0, 0, 320, w1);
-        gamePanel.add(p1);
-        p2.setBounds(325, 0, 320, w2);
-        gamePanel.add(p2);
-        base.setBounds(100, 400, 500, w3);
-        gamePanel.add(base);
-
+        gamePanel.add(base,gbc);
         return gamePanel;
     }
 
-    int width_p1_mountain;
-    int width_p2_mountain;
-    int width_base_mountain = 450;// if icon size changes: fucked! so don't forget to modify it
-
-    private JPanel pyra(int player, int rowMissing) {
+    private JPanel pyra(int rowMissing) {
         JPanel constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
-        constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
+        //constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
 
         GridBagConstraints gbc = new GridBagConstraints();
         int i;
@@ -139,31 +146,22 @@ public class SecondPhasePanel extends JPanel {
             JPanel lineHexa = new JPanel();
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
-            lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+            //lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
             for (int j = 0; j < i; j++) {
-                lineHexa.add(newHexa(GUIColors.BLUE_HEX, true));
+                if(rowMissing==-1){
+                    lineHexa.add(newHexa(null, true));
+                }
+                else{
+                    lineHexa.add(newHexa(GUIColors.BLUE_HEX, true));
+                }
             }
             gbc.gridx = 0;
             gbc.gridy = i;
             // gbc.anchor = GridBagConstraints.CENTER;
             constructPanel.add(lineHexa, gbc);
         }
-        if (player == 1) {
-            width_p1_mountain = (i - 1) * 50;
-        } else if (player == 2) {
-            width_p2_mountain = (i - 1 - rowMissing) * 50;
-        }
         return constructPanel;
-    }
-
-    private JPanel base() {
-        JPanel topPanel = new JPanel();
-        topPanel.setOpaque(false);
-        for (int i = 0; i < 9; i++) {
-            topPanel.add(newHexa(GUIColors.GREEN_HEX, false));
-        }
-        return topPanel;
     }
 
     public static HexIcon newHexa(HSL c, boolean isActionable) {
