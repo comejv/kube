@@ -96,6 +96,7 @@ public class GUIEventsHandler implements Runnable {
                 case SETTINGS:
                     gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController()
                                                       , action.getType()));
+                    gui.setGlassPanelVisible(true);
                     break;
                 // FIRST PHASE
                 case VALIDATE:

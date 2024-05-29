@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -46,20 +47,24 @@ public class SettingsPanel extends JPanel{
         add(tabbedPanel, elemGBC);
 
         JPanel graphismePanel = createTab("Graphisme");
-        graphismePanel.setBackground(new Color(150, 0 , 0));
 
         JPanel audioPanel = createTab("Audio");
 
     }
 
     private JPanel createTab(String name){
-        JButton saveChanges = new JButton("Save changes");
-        saveChanges.setSize(new Dimension(200, 50));
-
         JPanel newPanel = new JPanel(new GridBagLayout());
         newPanel.setPreferredSize(getSize());
         newPanel.setOpaque(true);
-        newPanel.add(saveChanges);
+
+        JButton saveChanges = new JButton("Save changes");
+        saveChanges.setSize(new Dimension(200, 50));
+        GridBagConstraints elemGBC = new GridBagConstraints();
+        elemGBC.gridx = 0;
+        elemGBC.gridy = 1;
+        elemGBC.anchor = GridBagConstraints.LAST_LINE_END;
+        elemGBC.insets = new Insets(0, 0, 30, 30);
+        newPanel.add(saveChanges, elemGBC);
 
         JLabel newLabel = new JLabel(name, SwingConstants.CENTER);
         newLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 12)));
