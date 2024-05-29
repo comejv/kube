@@ -96,7 +96,7 @@ public class FirstPhasePanel extends JPanel {
         buttons.setLayout(new GridLayout(4, 1));
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
-        
+
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addActionListener(controller);
@@ -174,17 +174,17 @@ public class FirstPhasePanel extends JPanel {
         piecesPanel.repaint();
     }
 
-    public void updateButton(){
+    public void updateButton() {
         JButton validateButton = buttonsMap.get("Validate");
-        if (k3.getCurrentPlayer().isMountainFull()){
+        if (k3.getCurrentPlayer().isMountainFull()) {
             validateButton.setEnabled(true);
         } else {
             validateButton.setEnabled(false);
         }
     }
 
-    public void updateGrid(int i, int j){
-        updateGrid(new Point(i,j));
+    public void updateGrid(int i, int j) {
+        updateGrid(new Point(i, j));
     }
 
     public void updateGrid(Point pos) {
@@ -199,7 +199,6 @@ public class FirstPhasePanel extends JPanel {
         panel.repaint();
     }
 
-
     public void updateSide(ModelColor c) {
         JPanel mini = sidePanels.get(c);
         mini.removeAll();
@@ -211,6 +210,17 @@ public class FirstPhasePanel extends JPanel {
         mini.revalidate();
         mini.repaint();
     }
+    public void updateAll(){
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+            updateSide(c);
+        }
+        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                updateGrid(i, j);
+            }
+        }
+        updateButton();
+    }
 
     public void update(Action a) {
         Config.debug("Update the view with the action ", a);
@@ -219,7 +229,7 @@ public class FirstPhasePanel extends JPanel {
                 Build b = (Build) a.getData();
                 updateGrid(b.getPos());
                 updateSide(b.getModelColor());
-                if (b.getOldColor() != null && b.getOldColor() != ModelColor.EMPTY){
+                if (b.getOldColor() != null && b.getOldColor() != ModelColor.EMPTY) {
                     updateSide(b.getOldColor());
                 }
                 updateButton();
@@ -237,18 +247,9 @@ public class FirstPhasePanel extends JPanel {
                 break;
             default:
             case AI_MOVE:
-                for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++){
-                    for (int j = 0; j < i+1; j++){
-                        updateGrid(i,j);
-                    }
-                }
-                for (ModelColor c : ModelColor.getAllColoredAndJokers()){
-                    updateSide(c);
-                }
-                updateButton();
+                updateAll();
                 break;
         }
     }
-
 
 }

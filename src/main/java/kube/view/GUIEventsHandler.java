@@ -66,10 +66,9 @@ public class GUIEventsHandler implements Runnable {
                 // MENU
                 case START:
                     eventsToModel.add(new Action(ActionType.START, new Start()));
-                    gui.showPanel(GUI.PHASE1);
                     gui.setGlassPaneController(new DnDController(eventsToView, eventsToModel));
                     gui.setGlassPanelVisible(true);
-                    gui.loadPanel(GUI.PHASE2);
+                    gui.updatePanel();
                     break;
                 case RULES:
                     // toModel is null because we don't interract with the model in the rules
@@ -93,7 +92,7 @@ public class GUIEventsHandler implements Runnable {
                 // FIRST PHASE
                 case VALIDATE:
                     gui.setGlassPanelVisible(true);
-                    gui.showPanel(GUI.PHASE2);
+                    gui.updatePanel();
                     break;
                 case BUILD:
                 case REMOVE:
