@@ -51,7 +51,6 @@ public class DnDController implements MouseListener, MouseMotionListener {
             g.setHexIcon(newIcon);
             g.setPoint(e.getPoint());
             g.setColor(newIcon.getColor());
-            Config.debug(newIcon);
             g.repaint();
         }
     }
@@ -63,15 +62,16 @@ public class DnDController implements MouseListener, MouseMotionListener {
         Container container = ((JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource())).getContentPane();
         Component component = SwingUtilities.getDeepestComponentAt(container, e.getX(), e.getY());
         if (g.getHexIcon() != null) {
+            HexIcon hex = null;
             Point to = null;
             if (component instanceof HexIcon) {
-                HexIcon hex = (HexIcon) component;
+                hex = (HexIcon) component;
                 to = hex.getPosition();
             }
             Point from = g.getHexIcon().getPosition();
             Config.debug("From: " + from + " To: " + to);
             if (from == null && to != null) {
-                toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), to)));
+                toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getColor(), to)));
             } else if (from != null && to != null) {
                 toModel.add(new Action(ActionType.SWAP, new Swap(from, to)));
             } else if (from != null && to == null) {

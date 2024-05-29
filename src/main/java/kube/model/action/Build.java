@@ -8,14 +8,16 @@ public class Build {
 
     private Point pos;
     private ModelColor c;
+    private ModelColor oldColor;
 
-    public Build(ModelColor c, Point pos) {
+    public Build(ModelColor c, ModelColor oldColor, Point pos) {
         this.c = c;
         this.pos = pos;
+        this.oldColor = oldColor;
     }
 
-    public Build(ModelColor c, int x, int y) {
-        this(c, new Point(x, y));
+    public Build(ModelColor c, ModelColor oldColor, int x, int y) {
+        this(c, oldColor, new Point(x, y));
     }
 
     public Point getPos() {
@@ -26,6 +28,10 @@ public class Build {
         return c;
     }
 
+    public ModelColor getOldColor() {
+        return oldColor;
+    }
+
     public void setPos(Point pos) {
         this.pos = pos;
     }
@@ -34,8 +40,12 @@ public class Build {
         this.c = c;
     }
 
+    public void setOldColor(ModelColor oldColor) {
+        this.oldColor = oldColor;
+    }
+
     @Override
     public String toString() {
-        return "Placer sur la montagne " + c + " à la position (" + pos.x + "," + pos.y + ")";
+        return "Placer sur la montagne " + c + " à la position (" + pos.x + "," + pos.y + "), ce qui remplace " + oldColor;
     }
 }

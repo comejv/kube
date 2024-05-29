@@ -29,6 +29,7 @@ public class FirstPhasePanel extends JPanel {
     private JPanel constructPanel, piecesPanel, gamePanel;
     private HashMap<ModelColor, JPanel> sidePanels;
     private JPanel[][] moutainPanels;
+    private HashMap<String, JButton> buttonsMap;
 
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
@@ -39,7 +40,7 @@ public class FirstPhasePanel extends JPanel {
         setBackground(GUIColors.GAME_BG.toColor());
 
         /* Buttons panel construction */
-        JPanel buttonsPanel = createButtons();
+        JPanel buttonsPanel = initButtons();
         buttonsPanel.setBackground(GUIColors.GAME_BG.toColor());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -89,33 +90,39 @@ public class FirstPhasePanel extends JPanel {
         return gamePanel;
     }
 
-    private JPanel createButtons() {
+    private JPanel initButtons() {
+        buttonsMap = new HashMap<>();
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1));
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
-
+        
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
         quitButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         quitButton.setActionCommand("quit");
         quitButton.addActionListener(controller);
         buttons.add(quitButton);
+        buttonsMap.put("Quit", quitButton);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
         optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("settings");
         optButton.addActionListener(controller);
         buttons.add(optButton);
+        buttonsMap.put("Option", optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
         sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        buttons.add(sugIaButton);
+        buttonsMap.put("AI", sugIaButton);
 
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
         validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
+        validerButton.setEnabled(false);
         validerButton.setActionCommand("phase2");
         validerButton.addActionListener(controller);
         buttons.add(validerButton);
+        buttonsMap.put("Validate", validerButton);
+
         return buttons;
     }
 
@@ -168,8 +175,16 @@ public class FirstPhasePanel extends JPanel {
         piecesPanel.repaint();
     }
 
+    public void updateButton(){
+        JButton validateButton = buttonsMap.get("Validate");
+        if (k3.getCurrentPlayer().isMountainFull()){
+            validateButton.setEnabled(true);
+        } else {
+            validateButton.setEnabled(false);
+        }
+    }
+
     public void updateGrid(Point pos) {
-        Config.debug("Update the Point ", pos, "of the grid");
         ModelColor c = k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y);
         boolean actionable = c != ModelColor.EMPTY;
         HexIcon hex = new HexIcon(c, actionable, 2);
@@ -179,12 +194,10 @@ public class FirstPhasePanel extends JPanel {
         panel.add(hex);
         panel.revalidate();
         panel.repaint();
-        Config.debug("End update");
     }
 
-    public void updateSide(ModelColor c) {
-        Config.debug("Update the color ", c, "of the side");
 
+    public void updateSide(ModelColor c) {
         JPanel mini = sidePanels.get(c);
         mini.removeAll();
         int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
@@ -194,7 +207,6 @@ public class FirstPhasePanel extends JPanel {
         mini.add(numOfPieces);
         mini.revalidate();
         mini.repaint();
-        Config.debug("End update");
     }
 
     public void update(Action a) {
@@ -204,11 +216,16 @@ public class FirstPhasePanel extends JPanel {
                 Build b = (Build) a.getData();
                 updateGrid(b.getPos());
                 updateSide(b.getModelColor());
+                if (b.getOldColor() != null && b.getOldColor() != ModelColor.EMPTY){
+                    updateSide(b.getOldColor());
+                }
+                updateButton();
                 break;
             case REMOVE:
                 Remove r = (Remove) a.getData();
                 updateGrid(r.getPos());
                 updateSide(r.getModelColor());
+                updateButton();
                 break;
             case SWAP:
                 Swap s = (Swap) a.getData();
@@ -218,6 +235,7 @@ public class FirstPhasePanel extends JPanel {
             default:
                 break;
         }
-
     }
+
+
 }
