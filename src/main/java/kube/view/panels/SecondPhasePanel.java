@@ -32,6 +32,10 @@ public class SecondPhasePanel extends JPanel {
     private JPanel histPanel;
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
+        this.gui = gui;
+        this.k3 = k3;
+        this.controller = controller;
+        Config.debug("SecondPhasePanel k3 : " + k3);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         setBackground(GUIColors.GAME_BG.toColor());
@@ -184,7 +188,6 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateHisto() {
-        Config.debug("update histo");
         histPanel.removeAll();
         JTextArea text = new JTextArea(k3.getHistory().forDisplay());
         Config.debug(text);

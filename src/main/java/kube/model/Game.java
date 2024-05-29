@@ -353,6 +353,7 @@ public class Game implements Runnable {
                     }
                     break;
                 default:
+                    Config.debug("Construction phase forbidden action");
                     modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     break;
             }
