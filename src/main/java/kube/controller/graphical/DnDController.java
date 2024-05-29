@@ -45,9 +45,12 @@ public class DnDController implements MouseListener, MouseMotionListener {
             // Set cursor to drag
             g.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             HexIcon icon = (HexIcon) component;
-            g.setHexIcon(icon);
+            HexIcon newIcon = icon.clone();
+            double scale = icon.getScale() < 2 ? 1.2 : 0.8;
+            newIcon.setScale(scale * icon.getScale());
+            g.setHexIcon(newIcon);
             g.setPoint(e.getPoint());
-            g.setColor(icon.getColor());
+            g.setColor(newIcon.getColor());
             g.repaint();
         }
     }
@@ -130,8 +133,10 @@ public class DnDController implements MouseListener, MouseMotionListener {
             if (e.getID() == MouseEvent.MOUSE_CLICKED && newComponent instanceof JButton) {
                 JButton b = (JButton) newComponent;
                 b.doClick();
+            } else {
+                MouseEvent newEvent = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
+                newComponent.dispatchEvent(newEvent);
             }
-            // newComponent.dispatchEvent(newEvent);
         }
         component = newComponent;
     }

@@ -100,6 +100,9 @@ public class GUIEventsHandler implements Runnable {
                 case AI_MOVE:
                     gui.updateFirstPanel(action);
                     break;
+                case MOVE:
+                    gui.updateSecondPanel(action);
+                    break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;

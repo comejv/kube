@@ -6,6 +6,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 import kube.configuration.Config;
 import kube.view.GUI;
@@ -19,6 +20,7 @@ import java.awt.event.ActionListener;
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
+import kube.model.action.Action;
 
 /*
  * This class extends JPanel and creates the GUI for the second phase of the game.
@@ -27,6 +29,7 @@ public class SecondPhasePanel extends JPanel {
     private Phase2Controller controller;
     private Kube k3;
     private GUI gui;
+    private JPanel histPanel;
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         setLayout(new GridBagLayout());
@@ -53,63 +56,71 @@ public class SecondPhasePanel extends JPanel {
         add(gamePanel, gbc);
     }
 
-
-
     private JPanel createEastPanel(ActionListener a) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
         JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(4, 1)); // TODO : change to flow or box layout
+        buttons.setLayout(new GridLayout(6, 1)); // TODO : change to flow or box layout
         buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
         buttons.setOpaque(false);
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
-        quitButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         quitButton.setActionCommand("quit");
         quitButton.addActionListener(a);
         buttons.add(quitButton);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
-        optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("settings");
         optButton.addActionListener(a);
         buttons.add(optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
-        sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
+        sugIaButton.addActionListener(a);
         buttons.add(sugIaButton);
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
-        annulerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         annulerButton.setActionCommand("undo");
+        annulerButton.addActionListener(a);
         buttons.add(annulerButton);
 
         JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
-        refaireButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         refaireButton.setActionCommand("redo");
+        refaireButton.addActionListener(a);
         buttons.add(refaireButton);
 
-        JButton validerButton = new Buttons.GameFirstPhaseButton("Refaire");
-        validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        buttons.add(validerButton);
+        JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
+        histoButton.setActionCommand("updateHist");
+        histoButton.addActionListener(a);
+        buttons.add(histoButton);
 
         panel.add(buttons);
 
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        JPanel histPanel = new JPanel();
-        histPanel.setLayout(new BoxLayout(histPanel, BoxLayout.Y_AXIS));
-        scrollPane.setViewportView(histPanel);
-        scrollPane.setPreferredSize(new Dimension(75, 300));
-        scrollPane.setOpaque(false);
         JLabel histoText = new JLabel("HISTO");
         histoText.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         histoText.setForeground(GUIColors.TEXT.toColor());
         panel.add(histoText);
-        panel.add(scrollPane, BorderLayout.CENTER);
+        JScrollPane histo = getHisto();
+        panel.add(histo, BorderLayout.CENTER);
 
         return panel;
+    }
+
+    public void update(Action a) {
+        // TODO
+        updateHisto();
+    }
+
+    private JScrollPane getHisto() {
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        histPanel = new JPanel();
+        histPanel.setLayout(new BoxLayout(histPanel, BoxLayout.Y_AXIS));
+        scrollPane.setViewportView(histPanel);
+        scrollPane.setPreferredSize(new Dimension(75, 300));
+        scrollPane.setOpaque(false);
+
+        return scrollPane;
     }
 
     private JPanel gamePanel() {
@@ -131,14 +142,14 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p2, gbc);
         JPanel base = pyra(-1);
-        gbc.gridx=0;
-        gbc.gridy=1;
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.gridwidth = 2;
-        gbc.anchor= GridBagConstraints.CENTER;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        gamePanel.add(base,gbc);
+        gamePanel.add(base, gbc);
         return gamePanel;
     }
 
@@ -146,7 +157,6 @@ public class SecondPhasePanel extends JPanel {
         JPanel constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
-        //constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
 
         GridBagConstraints gbc = new GridBagConstraints();
         int i;
@@ -157,13 +167,11 @@ public class SecondPhasePanel extends JPanel {
             JPanel lineHexa = new JPanel();
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
-            //lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
 
             for (int j = 0; j < i; j++) {
-                if(rowMissing==-1){
+                if (rowMissing == -1) {
                     lineHexa.add(new HexIcon(ModelColor.EMPTY, false));
-                }
-                else{
+                } else {
                     lineHexa.add(new HexIcon(ModelColor.BLUE, true));
                 }
             }
@@ -173,5 +181,15 @@ public class SecondPhasePanel extends JPanel {
             constructPanel.add(lineHexa, gbc);
         }
         return constructPanel;
+    }
+
+    public void updateHisto() {
+        Config.debug("update histo");
+        histPanel.removeAll();
+        JTextArea text = new JTextArea(k3.getHistory().forDisplay());
+        Config.debug(text);
+        histPanel.add(text);
+        histPanel.revalidate();
+        histPanel.repaint();
     }
 }

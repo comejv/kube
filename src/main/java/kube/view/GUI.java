@@ -238,4 +238,7 @@ public class GUI extends Thread {
         firstPhasePanel.update(a);
     }
 
+    public void updateSecondPanel(Action a) {
+        secondPhasePanel.update(a);
+    }
 }

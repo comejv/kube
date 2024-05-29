@@ -23,6 +23,9 @@ public class Phase2Controller implements ActionListener, MouseListener {
             case "settings":
                 toView.add(new Action(ActionType.SETTINGS));
                 break;
+            case "updateHist":
+                toView.add(new Action(ActionType.MOVE));
+                break;
             case "quit":
                 // TODO : ask if need to save the game
                 toModel.add(new Action(ActionType.RESET));

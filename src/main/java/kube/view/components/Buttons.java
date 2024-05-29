@@ -103,8 +103,7 @@ public class Buttons {
             setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
-
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 20)));
         }
     }
 
@@ -113,8 +112,8 @@ public class Buttons {
             super(name);
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT.toColor());
-
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setForeground(GUIColors.TEXT.toColor());
+            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 20)));
         }
     }
 

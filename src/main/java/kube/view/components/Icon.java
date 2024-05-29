@@ -55,7 +55,7 @@ public class Icon extends JLabel {
     }
 
     public void resizeIcon(int width, int height) {
-        Image resized = originalImage.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+        Image resized = originalImage.getScaledInstance(width, height, Image.SCALE_AREA_AVERAGING);
         originalImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = originalImage.createGraphics();
         g2d.drawImage(resized, 0, 0, null);

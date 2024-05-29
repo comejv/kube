@@ -76,7 +76,7 @@ public class FirstPhasePanel extends JPanel {
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
         for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
-            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false));
+            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false, 1.5));
         }
 
         gamePanel.add(topPanel, BorderLayout.NORTH);
@@ -98,28 +98,24 @@ public class FirstPhasePanel extends JPanel {
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
-        quitButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         quitButton.setActionCommand("quit");
         quitButton.addActionListener(controller);
         buttons.add(quitButton);
         buttonsMap.put("Quit", quitButton);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
-        optButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         optButton.setActionCommand("settings");
         optButton.addActionListener(controller);
         buttons.add(optButton);
         buttonsMap.put("Option", optButton);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
-        sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         sugIaButton.setActionCommand("AI");
         sugIaButton.addActionListener(controller);
         buttons.add(sugIaButton);
         buttonsMap.put("AI", sugIaButton);
 
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
-        validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         validerButton.setEnabled(false);
         validerButton.setActionCommand("validate");
         validerButton.addActionListener(controller);
@@ -169,7 +165,7 @@ public class FirstPhasePanel extends JPanel {
             JLabel numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             boolean actionable = numberOfPieces > 0;
-            mini.add(new HexIcon(c, actionable));
+            mini.add(new HexIcon(c, actionable, 1.5));
             mini.add(numOfPieces);
             piecesPanel.add(mini);
             sidePanels.put(c, mini);
@@ -209,7 +205,7 @@ public class FirstPhasePanel extends JPanel {
         int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
         JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-        mini.add(new HexIcon(c, numberOfPieces > 0));
+        mini.add(new HexIcon(c, numberOfPieces > 0, 1.5));
         mini.add(numOfPieces);
         mini.revalidate();
         mini.repaint();
