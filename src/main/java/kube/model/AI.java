@@ -8,11 +8,6 @@ import kube.model.ai.MiniMaxAI;
 public class AI extends Player {
 
     /**********
-     * ATTRIBUTES
-     **********/
-    private MiniMaxAI ai;
-
-    /**********
      * CONSTRUCTOR
      **********/
 
@@ -26,23 +21,6 @@ public class AI extends Player {
         super(id);
         ai.setPlayerId(id);
         setName("AI" + id);
-        this.ai = ai;
-    }
-
-    /**********
-     * SETTER
-     **********/
-
-    public void setAI(MiniMaxAI ai) {
-        this.ai = ai;
-    }
-
-    /**********
-     * GETTER
-     **********/
-
-    public MiniMaxAI getAI() {
-        return ai;
     }
 
     /**********

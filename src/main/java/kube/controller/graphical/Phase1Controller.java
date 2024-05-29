@@ -27,7 +27,7 @@ public class Phase1Controller implements ActionListener, MouseListener {
 
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
-            case "phase2":
+            case "validate":
                 toModel.add(new Action(ActionType.VALIDATE));
                 break;
             case "settings": // change to opts.
@@ -37,6 +37,9 @@ public class Phase1Controller implements ActionListener, MouseListener {
                 // TODO : ask if need to save the game
                 toModel.add(new Action(ActionType.RESET));
                 toView.add(new Action(ActionType.RETURN_TO_MENU));
+                break;
+            case "AI":
+                toModel.add(new Action(ActionType.AI_MOVE));
                 break;
             default:
                 break;

@@ -40,7 +40,8 @@ public enum ActionType {
     SAVED_KUBE,
     LOAD_KUBE,
     LOADED_KUBE,
-
+    AI_MOVE,
+    
     // --- NETWORK ---
     PRINT_ASK_HOST_OR_JOIN,
     PRINT_ASK_IP,

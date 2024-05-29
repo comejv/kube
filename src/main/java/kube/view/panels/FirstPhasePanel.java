@@ -19,8 +19,6 @@ import java.awt.*;
 
 import javax.swing.*;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
 /*
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
@@ -115,12 +113,15 @@ public class FirstPhasePanel extends JPanel {
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
         sugIaButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
+        sugIaButton.setActionCommand("AI");
+        sugIaButton.addActionListener(controller);
+        buttons.add(sugIaButton);
         buttonsMap.put("AI", sugIaButton);
 
         JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
         validerButton.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         validerButton.setEnabled(false);
-        validerButton.setActionCommand("phase2");
+        validerButton.setActionCommand("validate");
         validerButton.addActionListener(controller);
         buttons.add(validerButton);
         buttonsMap.put("Validate", validerButton);
@@ -133,14 +134,12 @@ public class FirstPhasePanel extends JPanel {
         constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
-        constructPanel.setBorder(BorderFactory.createLineBorder(Color.RED));
         GridBagConstraints gbc = new GridBagConstraints();
 
         for (int i = 1; i <= 6; i++) {
             JPanel lineHexa = new JPanel();
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
-            lineHexa.setBorder(BorderFactory.createLineBorder(Color.BLUE));
             for (int j = 0; j < i; j++) {
                 JPanel hexPanel = new JPanel();
                 HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i - 1, j), false, 2);
@@ -186,6 +185,10 @@ public class FirstPhasePanel extends JPanel {
         } else {
             validateButton.setEnabled(false);
         }
+    }
+
+    public void updateGrid(int i, int j){
+        updateGrid(new Point(i,j));
     }
 
     public void updateGrid(Point pos) {
@@ -237,6 +240,16 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(s.getPos2());
                 break;
             default:
+            case AI_MOVE:
+                for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++){
+                    for (int j = 0; j < i+1; j++){
+                        updateGrid(i,j);
+                    }
+                }
+                for (ModelColor c : ModelColor.getAllColoredAndJokers()){
+                    updateSide(c);
+                }
+                updateButton();
                 break;
         }
     }

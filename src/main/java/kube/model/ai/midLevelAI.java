@@ -51,7 +51,6 @@ public class midLevelAI extends MiniMaxAI {
                 redistributeProbs(c, k3);
             }
         }
-        getPlayer(k3).validateBuilding();
     }
 
     @Override

@@ -138,9 +138,7 @@ public class MiniMaxAI implements ActionListener, Serializable {
      * @return void
      */
     public void constructionPhase(Kube k3) {
-        while (!getPlayer(k3).validateBuilding()) {
-            utilsAI.randomFillMountain(getPlayer(k3), getR());
-        }
+        utilsAI.randomFillMountain(getPlayer(k3), getR());
     }
 
     /**

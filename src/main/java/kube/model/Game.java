@@ -5,6 +5,7 @@ import java.util.Random;
 
 import kube.model.action.*;
 import kube.model.action.move.Move;
+import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.utilsAI;
 
 public class Game implements Runnable {
@@ -262,7 +263,7 @@ public class Game implements Runnable {
         }
     }
 
-    public void constructionPhaseIA(Player p) {
+    public void constructionPhaseAI(Player p) {
         p.getAI().constructionPhase(k3);
         if (!p.getHasValidateBuilding()) {
             p.validateBuilding();
@@ -270,8 +271,23 @@ public class Game implements Runnable {
         if (getGameType() != LOCAL) {
             eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
         }
+        p.validateBuilding();
         modeleToView.add(new Action(ActionType.VALIDATE, true));
         k3.updatePhase();
+    }
+
+    public void constructionPhaseAIsuggestion(Player p) {
+        System.out.println(p);
+        for (int i = 0; i < p.getMountain().getBaseSize(); i++){
+            for (int j = 0; j < i+1; j++){
+                p.removeFromMountainToAvailableToBuild(i, j);
+            }
+        }
+        System.out.println(p);
+        p.setAI(new moveSetHeuristique());
+        p.getAI().setPlayerId(p.getId());
+        p.getAI().constructionPhase(k3);
+        System.out.println(p);
     }
 
     public void waitConstruction(Player p) {
@@ -293,12 +309,16 @@ public class Game implements Runnable {
 
     public void constructionPhasePlayer(Player p) {
         if (p.isAI()) {
-            constructionPhaseIA(p);
+            constructionPhaseAI(p);
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModel.remove();
             Config.debug(a);
             switch (a.getType()) {
+                case AI_MOVE:
+                    constructionPhaseAIsuggestion(p);
+                    modeleToView.add(a);
+                    break;
                 case REMOVE:
                     remove((Remove) a.getData());
                     modeleToView.add(a);
