@@ -89,7 +89,7 @@ public class GUI extends Thread {
     public void run() {
         // new MainFrame
         mF = new MainFrame();
-
+        loadPanel(PHASE1);
         // add menu pannel
         MenuPanel mP = new MenuPanel(this, controllers.getMenuController());
         mF.addPanel(mP, MENU);
@@ -102,7 +102,6 @@ public class GUI extends Thread {
         mF.setFrameVisible(true);
 
         // After repaint start loading next panel
-        loadPanel(GUI.PHASE1);
         createGlassPane();
     }
 
@@ -112,14 +111,11 @@ public class GUI extends Thread {
     }
 
     public void updatePanel() {
-        Config.debug(k3.getPhase() + " " + k3.getP1() +" "+ k3.getP2());
         switch (k3.getPhase()) {
             case Kube.PREPARATION_PHASE:
                 waitPanel(PHASE1);
-                if (!k3.getCurrentPlayer().isAI()){
-                    mF.showPanel(PHASE1);
-                    firstPhasePanel.updateAll();
-                }
+                mF.showPanel(PHASE1);
+                firstPhasePanel.updateAll();
                 loadPanel(PHASE2);
                 break;
             case Kube.GAME_PHASE:

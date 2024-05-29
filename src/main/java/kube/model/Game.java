@@ -48,7 +48,7 @@ public class Game implements Runnable {
         } else {
             k3.init(s.getAiJ1(), s.getAiJ2());
         }
-        Config.debug("Game is ready");
+        modeleToView.add(new Action(ActionType.VALIDATE, true));
         return;
     }
 
@@ -265,14 +265,9 @@ public class Game implements Runnable {
 
     public void constructionPhaseAI(Player p) {
         p.getAI().constructionPhase(k3);
-        if (!p.getHasValidateBuilding()) {
-            p.validateBuilding();
-        }
         if (getGameType() != LOCAL) {
             eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
         }
-        modeleToView.add(new Action(ActionType.VALIDATE, true));
-        k3.updatePhase();
     }
 
     public void constructionPhaseAIsuggestion(Player p) {
@@ -305,10 +300,7 @@ public class Game implements Runnable {
 
     public void constructionPhasePlayer(Player p) {
         if (p.isAI()) {
-            Config.debug("Start construction for " + p.getId());
             constructionPhaseAI(p);
-            Config.debug("End construction for " + p.getId());
-            k3.updatePhase();
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModel.remove();

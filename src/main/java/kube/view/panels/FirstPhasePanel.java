@@ -220,6 +220,9 @@ public class FirstPhasePanel extends JPanel {
             }
         }
         updateButton();
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+            updateSide(c);
+        }
     }
 
     public void update(Action a) {
