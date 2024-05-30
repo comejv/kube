@@ -1,40 +1,77 @@
 package kube.model.action;
 
+// Import model class
 import kube.model.ai.MiniMaxAI;
 
 public class Start {
 
-    private MiniMaxAI aiJ1;
-    private MiniMaxAI aiJ2;
+    /**********
+     * ATTRIBUTES
+     **********/
 
-    public Start(MiniMaxAI aiJ1, MiniMaxAI aiJ2) {
-        this.aiJ1 = aiJ1;
-        this.aiJ2 = aiJ2;
+    private MiniMaxAI AIJ1, AIJ2;
+
+    /**********
+     * CONSTRUCTORS
+     **********/
+
+    /**
+     * Constructor of the Start class
+     * 
+     * @param AIJ1 AI for the first player
+     * @param AIJ2 AI for the second player
+     */
+    public Start(MiniMaxAI AIJ1, MiniMaxAI AIJ2) {
+        this.AIJ1 = AIJ1;
+        this.AIJ2 = AIJ2;
     }
-    public Start(MiniMaxAI aiJ1) {
-        this(aiJ1, null);
+
+    /**
+     * Constructor of the Start class without AI for the second player
+     * 
+     * @param AIJ1 AI for the first player
+     */
+    public Start(MiniMaxAI AIJ1) {
+        this(AIJ1, null);
     }    
+
+    /**
+     * Constructor of the Start class without AI
+     */
     public Start() {
         this(null ,null);
     }
-    public MiniMaxAI getAiJ1() {
-        return aiJ1;
+
+    /**********
+     * SETTERS
+     **********/
+
+    public final void setAIJ1(MiniMaxAI aiJ1) {
+        this.AIJ1 = aiJ1;
     }
 
-    public MiniMaxAI getAiJ2() {
-        return aiJ2;
+    public final void setAIJ2(MiniMaxAI aiJ2) {
+        this.AIJ2 = aiJ2;
     }
 
-    public void setAiJ1(MiniMaxAI aiJ1) {
-        this.aiJ1 = aiJ1;
+    /**********
+     * GETTERS
+     **********/
+
+    public MiniMaxAI getAIJ1() {
+        return AIJ1;
     }
 
-    public void setAiJ2(MiniMaxAI aiJ2) {
-        this.aiJ2 = aiJ2;
+    public MiniMaxAI getAIJ2() {
+        return AIJ2;
     }
 
+    /**********
+     * METHOD
+     **********/
+    
     @Override
     public String toString() {
-        return "Démarrer avec " + aiJ1 + "," + aiJ2;
+        return "Démarrer avec " + AIJ1 + "," + AIJ2;
     }
 }

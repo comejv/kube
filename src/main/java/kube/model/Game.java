@@ -118,7 +118,7 @@ public class Game implements Runnable {
             if (s == null) {
                 k3.init();
             } else {
-                k3.init(s.getAiJ1(), s.getAiJ2());
+                k3.init(s.getAIJ1(), s.getAIJ2());
             }
             eventsToView.add(new Action(ActionType.VALIDATE, true));
             return CLASSIC_START;
