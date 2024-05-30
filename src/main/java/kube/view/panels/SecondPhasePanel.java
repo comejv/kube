@@ -47,7 +47,6 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] p2Panels;
     private HashMap<String, JButton> buttonsMap;
 
-
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
         this.k3 = k3;
@@ -170,20 +169,21 @@ public class SecondPhasePanel extends JPanel {
     public synchronized void updateHisto() {
         StringBuilder htmlContent = new StringBuilder();
 
-        for(int i =0 ; i < k3.getHistory().getUndone().size(); i++){
-            htmlContent.append("<font color = 'gray'>").append(k3.getHistory().getUndone().get(i).toHTML()).append("</font><br>");
+        for (int i = 0; i < k3.getHistory().getUndone().size(); i++) {
+            htmlContent.append("<font color = 'gray'>").append(k3.getHistory().getUndone().get(i).toHTML())
+                    .append("</font><br>");
         }
 
-        for (int i = k3.getHistory().getDone().size(); i>0; i--){
-            htmlContent.append(k3.getHistory().getDone().get(i-1).toHTML()).append("<br>");
+        for (int i = k3.getHistory().getDone().size(); i > 0; i--) {
+            htmlContent.append(k3.getHistory().getDone().get(i - 1).toHTML()).append("<br>");
         }
         editorPane.setText(htmlContent.toString());
         editorPane.repaint();
     }
 
-    public void updateAll(){
-        Player[] toUpdate = {null, k3.getP1(), k3.getP2()};
-        for (Player p : toUpdate){
+    public void updateAll() {
+        Player[] toUpdate = { null, k3.getP1(), k3.getP2() };
+        for (Player p : toUpdate) {
             for (int i = 0; i < (p == null ? k3.getBaseSize() : p.getMountain().getBaseSize()); i++) {
                 for (int j = 0; j < i + 1; j++) {
                     updateMoutain(p, i, j);
@@ -193,16 +193,16 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateMoutain(Player p, int i, int j) {
-        updateMoutain(p, new Point(i,j));
+        updateMoutain(p, new Point(i, j));
     }
 
     public void updateMoutain(Player p, Point pos) {
         ModelColor c;
         JPanel panel;
-        if (p == null){
+        if (p == null) {
             c = k3.getK3().getCase(pos);
             panel = k3Panels[pos.x][pos.y];
-        } else if (p == k3.getP1()){
+        } else if (p == k3.getP1()) {
             c = p.getMountain().getCase(pos);
             panel = p1Panels[pos.x][pos.y];
         } else {
@@ -221,30 +221,69 @@ public class SecondPhasePanel extends JPanel {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        JPanel p1 = initMountain(0, k3.getP1().getMountain().getBaseSize(), k3.getP1());
+
+        JPanel additionals1 = new JPanel();
+        additionals1.setOpaque(false);
+        additionals1.setLayout(new GridBagLayout());
+        additionals1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                "Additionnel Pieces de Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
+                new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+        addAdditionals(additionals1, 1, ModelColor.GREEN);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p1, gbc);
-        JPanel p2 = initMountain(0, k3.getP2().getMountain().getBaseSize(), k3.getP2());
+        gamePanel.add(additionals1, gbc);
+
+        JPanel additionals2 = new JPanel();
+        additionals2.setOpaque(false);
+        additionals2.setLayout(new GridBagLayout());
+        additionals2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                "Additionnel Pieces de Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
+                new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+        //addAdditionals(additionals2, 0, ModelColor.RED);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p2, gbc);
-        JPanel base = initMountain(-1, k3.getK3().getBaseSize(), null);
+        gamePanel.add(additionals2, gbc);
+
+        JPanel p1 = initMountain(0, k3.getP1().getMountain().getBaseSize(), k3.getP1());
+        p1.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1;
         gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gamePanel.add(p1, gbc);
+
+        JPanel p2 = initMountain(0, k3.getP2().getMountain().getBaseSize(), k3.getP2());
+        p2.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gamePanel.add(p2, gbc);
+
+        JPanel base = initMountain(-1, k3.getK3().getBaseSize(), null);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
-
         gamePanel.add(base, gbc);
+
         return gamePanel;
+    }
+
+    private void addAdditionals(JPanel panel, int n, ModelColor c) {
+        for (int i = 0; i < n; i++) {
+            panel.add(new HexIcon(c, true));
+        }
     }
 
     private JPanel initMountain(int rowMissing, int base, Player p) {
@@ -261,17 +300,16 @@ public class SecondPhasePanel extends JPanel {
             JPanel lineHexa = new JPanel();
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
-
             for (int j = 0; j < i; j++) {
                 JPanel hexa = new JPanel();
-                hexa.setOpaque(true);
+                hexa.setOpaque(false);
                 hexa.add(new HexIcon(ModelColor.EMPTY, false));
-                if (p == null){
-                    k3Panels[i-1][j] = hexa;
-                } else if (p == k3.getP1()){
-                    p1Panels[i-1][j] = hexa;
+                if (p == null) {
+                    k3Panels[i - 1][j] = hexa;
+                } else if (p == k3.getP1()) {
+                    p1Panels[i - 1][j] = hexa;
                 } else {
-                    p2Panels[i-1][j] = hexa;
+                    p2Panels[i - 1][j] = hexa;
                 }
                 lineHexa.add(hexa);
             }
