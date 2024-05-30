@@ -113,13 +113,25 @@ public class Kube implements Serializable {
 
     public void init (Kube k) {
 
-        p1 = new Player(ID_PLAYER_1);
+        if (k.getP1() instanceof AI) {
+            p1 = new AI(ID_PLAYER_1, ((AI) k.getP1()).getAI());
+        } else {
+            p1 = new Player(ID_PLAYER_1);
+        }
+
+        // p1 = new Player(ID_PLAYER_1);
         p1.setName(new String(k.getP1().getName()));
         p1.setMountain(k.getP1().getMountain().clone());
         p1.setHasValidateBuilding(k.getP1().getHasValidateBuilding());
         p1.setAdditionals(new ArrayList<>(k.getP1().getAdditionals()));
         p1.setAvailableToBuild(new HashMap<>(k.getP1().getAvailableToBuild()));
         p1.setUsedPiece(new HashMap<>(k.getP1().getUsedPiece()));
+
+        if (k.getP2() instanceof AI) {
+            p2 = new AI(ID_PLAYER_2, ((AI) k.getP1()).getAI());
+        } else {
+            p2 = new Player(ID_PLAYER_2);
+        }
 
         p2 = new Player(ID_PLAYER_2);
         p2.setName(new String(k.getP2().getName()));

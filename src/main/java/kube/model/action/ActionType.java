@@ -42,6 +42,7 @@ public enum ActionType {
     PRINT_SAVED,
     LOAD,
     PRINT_LOADED,
+    PRINT_WRONG_FILE_NAME,
 
     // --- NETWORK ---
     PRINT_ASK_HOST_OR_JOIN,

@@ -6,6 +6,7 @@ import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.utilsAI;
 
+import java.util.Calendar;
 // Import java class
 import java.util.Random;
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
 
 public class Game implements Runnable {
 
@@ -100,12 +102,11 @@ public class Game implements Runnable {
             File file = new File(Config.SAVING_PATH_DIRECTORY + a.getData().toString() + Config.SAVING_FILE_EXTENSION);
             try (FileInputStream fis = new FileInputStream(file);
                     ObjectInputStream ois = new ObjectInputStream(fis)) {
-                Config.debug(k3.getP1().getHasValidateBuilding());
                 k3.init((Kube) ois.readObject());
-                Config.debug(k3.getPhase());
-                Config.debug(k3.getP1().getHasValidateBuilding());
+                Config.debug("joueur 1 IA ?:", k3.getP1().isAI());
+                Config.debug("joueur 2 IA ?:", k3.getP2().isAI());
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                modelToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
             }
             return LOAD_START;
         } else {
@@ -123,8 +124,8 @@ public class Game implements Runnable {
         if (startType == CLASSIC_START) {
             initPhase();
         }
-        if (startType == CLASSIC_START || 
-            (startType == LOAD_START && k3.getPhase() == Kube.PREPARATION_PHASE)) {
+        if (startType == CLASSIC_START ||
+                (startType == LOAD_START && k3.getPhase() == Kube.PREPARATION_PHASE)) {
             if (constructionPhase() == RESET_EXIT) {
                 return;
             }
@@ -240,13 +241,8 @@ public class Game implements Runnable {
                     }
                     break;
                 case SAVE:
-                    File file = new File(Config.SAVING_PATH_DIRECTORY + a.getData().toString() + Config.SAVING_FILE_EXTENSION);
-                    try (FileOutputStream fos = new FileOutputStream(file);
-                            ObjectOutputStream oos = new ObjectOutputStream(fos);) {
-                        oos.writeObject(k3);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    save(a.getData().toString());
+                    break;
                 case RESET:
                     return RESET_EXIT;
                 default:
@@ -320,13 +316,7 @@ public class Game implements Runnable {
                         redo();
                         break;
                     case SAVE:
-                        File file = new File(Config.SAVING_PATH_DIRECTORY + a.getData().toString() + Config.SAVING_FILE_EXTENSION);
-                        try (FileOutputStream fos = new FileOutputStream(file);
-                                ObjectOutputStream oos = new ObjectOutputStream(fos);) {
-                            oos.writeObject(k3);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        save(a.getData().toString());
                         break;
                     case RESET:
                         return RESET_EXIT;
@@ -451,5 +441,24 @@ public class Game implements Runnable {
             modelToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
         }
         return (boolean) a.getData();
+    }
+
+    private void save(String fileName) {
+        if (fileName == "") {
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+            fileName = timeStamp;
+        }
+        File directory = new File(Config.SAVING_PATH_DIRECTORY);
+        if (!directory.exists()){
+            directory.mkdirs(); // Create the directory if it doesn't exist
+        }
+        File file = new File(Config.SAVING_PATH_DIRECTORY + fileName + Config.SAVING_FILE_EXTENSION);
+        try (FileOutputStream fos = new FileOutputStream(file);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+            oos.writeObject(k3);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

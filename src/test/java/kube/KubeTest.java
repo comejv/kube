@@ -29,7 +29,10 @@ public class KubeTest {
         Kube k1 = null;
         Kube k2 = null;
 
-        
+        File directory = new File(Config.SAVING_PATH_DIRECTORY);
+        if (!directory.exists()){
+            directory.mkdirs(); // Create the directory if it doesn't exist
+        }
 
         File ser_test = new File(Config.SAVING_PATH_DIRECTORY + "kube.ser");
 
