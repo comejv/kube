@@ -101,8 +101,6 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateFirstPanel(action);
                     break;
                 case MOVE:
-                    gui.updateSecondPanel(action);
-                    break;
                 case UNDO:
                 case REDO:
 
