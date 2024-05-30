@@ -33,13 +33,13 @@ public class Start {
      */
     public Start(MiniMaxAI AIJ1) {
         this(AIJ1, null);
-    }    
+    }
 
     /**
      * Constructor of the Start class without AI
      */
     public Start() {
-        this(null ,null);
+        this(null, null);
     }
 
     /**********
@@ -69,7 +69,7 @@ public class Start {
     /**********
      * METHOD
      **********/
-    
+
     @Override
     public String toString() {
         return "Démarrer avec " + AIJ1 + "," + AIJ2;

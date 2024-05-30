@@ -8,6 +8,8 @@ import kube.model.Player;
 
 public class utilsAI {
 
+    // TODO: refactor
+
     /**
      * Fill the mountain of the player with random colors
      * 
