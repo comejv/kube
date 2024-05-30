@@ -18,7 +18,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
-import kube.controller.graphical.DnDController;
+import kube.controller.graphical.Phase1DnD;
 import kube.controller.graphical.GUIControllers;
 import kube.model.Kube;
 import kube.model.action.Action;
@@ -115,6 +115,7 @@ public class GUI extends Thread {
                 break;
             case Kube.GAME_PHASE:
                 waitPanel(PHASE2);
+                secondPhasePanel.updateAll();
                 mF.showPanel(PHASE2);
                 break;
         }
@@ -195,7 +196,7 @@ public class GUI extends Thread {
         mF.createGlassPane();
     }
 
-    public void setGlassPaneController(DnDController ma) {
+    public void setGlassPaneController(Phase1DnD ma) {
         mF.setGlassPaneController(ma);
     }
 

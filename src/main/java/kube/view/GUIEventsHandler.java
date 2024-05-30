@@ -1,8 +1,9 @@
 package kube.view;
 
 import kube.configuration.Config;
-import kube.controller.graphical.DnDController;
+import kube.controller.graphical.Phase1DnD;
 import kube.controller.graphical.MenuController;
+import kube.controller.graphical.Phase1DnD;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.moveSetHeuristique;
@@ -69,7 +70,7 @@ public class GUIEventsHandler implements Runnable {
                 // MENU
                 case START:
                     eventsToModel.add(new Action(ActionType.START, new Start()));
-                    gui.setGlassPaneController(new DnDController(eventsToView, eventsToModel));
+                    gui.setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
                     gui.setGlassPanelVisible(true);
                     break;
                 case RULES:

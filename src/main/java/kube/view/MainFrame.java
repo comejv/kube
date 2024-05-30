@@ -3,7 +3,7 @@ package kube.view;
 import javax.swing.*;
 
 import kube.configuration.Config;
-import kube.controller.graphical.DnDController;
+import kube.controller.graphical.Phase1DnD;
 import kube.view.panels.GlassPanel;
 
 import java.awt.*;
@@ -65,7 +65,7 @@ public class MainFrame extends JFrame {
         super.setGlassPane(g);
     }
 
-    public void setGlassPaneController(DnDController ma) {
+    public void setGlassPaneController(Phase1DnD ma) {
         glassPane.addMouseMotionListener(ma);
         glassPane.addMouseListener(ma);
     }
