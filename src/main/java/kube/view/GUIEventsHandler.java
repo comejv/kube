@@ -104,8 +104,11 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateFirstPanel(action);
                     break;
                 case MOVE:
+                case UNDO:
+                case REDO:
+
                     gui.updateSecondPanel(action);
-                    break;
+                break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;

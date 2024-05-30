@@ -31,6 +31,12 @@ public class Phase2Controller implements ActionListener, MouseListener {
                 toModel.add(new Action(ActionType.MOVE_NUMBER, 0));
                 toModel.add(new Action(ActionType.MOVE_NUMBER, 0));
                 break;
+            case "undo":
+                toModel.add(new Action(ActionType.UNDO));
+                break;
+            case "redo":
+                toModel.add(new Action(ActionType.REDO));
+                break;
             case "quit":
                 // TODO : ask if need to save the game
                 toModel.add(new Action(ActionType.RESET));
