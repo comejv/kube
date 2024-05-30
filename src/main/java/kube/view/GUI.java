@@ -111,15 +111,17 @@ public class GUI extends Thread {
             case Kube.PREPARATION_PHASE:
                 setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE1);
-                mF.showPanel(PHASE1);
                 firstPhasePanel.updateAll();
+                mF.showPanel(PHASE1);
                 loadPanel(PHASE2);
                 break;
             case Kube.GAME_PHASE:
+                firstPhasePanel.setWaitingButton();
                 setGlassPaneController(new Phase2DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE2);
                 secondPhasePanel.updateAll();
                 mF.showPanel(PHASE2);
+                firstPhasePanel.resetButtonValue();
                 break;
         }
     }

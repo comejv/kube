@@ -259,4 +259,22 @@ public class FirstPhasePanel extends JPanel {
         }
     }
 
+    public void setWaitingButton() {
+        for (JButton b : buttonsMap.values()) {
+            b.setEnabled(false);
+            b.setText("Validation en cours");
+        }
+    }
+
+    public void resetButtonValue(){
+        buttonsMap.get("Quit").setText("Quitter la partie");
+        buttonsMap.get("Quit").setEnabled(true);
+        buttonsMap.get("Option").setText("Paramètres");
+        buttonsMap.get("Option").setEnabled(true);
+        buttonsMap.get("AI").setText("Suggestion IA");
+        buttonsMap.get("AI").setEnabled(true);
+        buttonsMap.get("Validate").setText("Valider");
+        buttonsMap.get("Validate").setEnabled(false);
+    }
+
 }

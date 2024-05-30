@@ -92,7 +92,6 @@ public class GUIEventsHandler implements Runnable {
 
                 // FIRST PHASE
                 case VALIDATE:
-                    gui.setGlassPanelVisible(true);
                     gui.updatePanel();
                     break;
                 case BUILD:
