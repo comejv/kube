@@ -252,7 +252,6 @@ public class Game implements Runnable {
                 case RESET:
                     return RESET_EXIT;
                 default:
-                    Config.debug(a, " is forbidden");
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     break;
             }
@@ -317,7 +316,6 @@ public class Game implements Runnable {
                     case RESET:
                         return RESET_EXIT;
                     default:
-                        Config.debug(a, " is forbidden");
                         eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION, a.getData()));
                         break;
                 }
@@ -345,7 +343,7 @@ public class Game implements Runnable {
     public void playMove(Action a) {
         Move move;
         switch (a.getType()) {
-            case ActionType.MOVE_NUMBER:
+            case MOVE_NUMBER:
                 try {
                     move = k3.moveSet().get((int) a.getData());
                 } catch (Exception e) {
@@ -355,19 +353,24 @@ public class Game implements Runnable {
                 break;
             case CREATE_MOVE:
                 CreateMove cM = (CreateMove) a.getData();
-                move = k3.createMove(cM.getPosFrom(), cM.getPlayerFrom(), cM.getPosTo(), cM.getPlayerTo());
+                move = k3.createMove(cM.getPosFrom(), cM.getPlayerFrom(), cM.getPosTo(), cM.getPlayerTo(), cM.getModelColor());
+                Config.debug("Move généré :", move);
                 break;
             case MOVE:
             default:
                 move = (Move) a.getData();
                 break;
         }
+        if (move == null){
+            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+            return;
+        }
         switch (getGameType()) {
             case LOCAL:
                 if (k3.playMove(move)) {
                     eventsToView.add(new Action(ActionType.MOVE, move));
                 } else {
-                    eventsToView.add(new Action(ActionType.MOVE, move));
+                    eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 break;
             case HOST:
@@ -381,6 +384,8 @@ public class Game implements Runnable {
                     if (validMove) {
                         eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
                         eventsToView.add(new Action(ActionType.MOVE, move));
+                    } else {
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
                 } else {
                     // Local move
@@ -391,7 +396,7 @@ public class Game implements Runnable {
                             eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                         }
                     } else {
-
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
                 }
                 break;

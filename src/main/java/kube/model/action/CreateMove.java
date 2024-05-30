@@ -11,12 +11,14 @@ public class CreateMove {
     Player playerFrom;
     Point posTo;
     Player playerTo;
+    ModelColor color;
 
-    public CreateMove(Point posFrom, Player playerFrom, Point posTo, Player playerTo) {
+    public CreateMove(Point posFrom, Player playerFrom, Point posTo, Player playerTo, ModelColor color) {
         this.posFrom = posFrom;
         this.playerFrom = playerFrom;
         this.posTo = posTo;
         this.playerTo = playerTo;
+        this.color = color;
     }
 
     public Point getPosFrom() {
@@ -34,6 +36,11 @@ public class CreateMove {
     public Player getPlayerTo() {
         return playerTo;
     }
+
+    public ModelColor getModelColor() {
+        return color;
+    }
+
 
     @Override
     public String toString() {

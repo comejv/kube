@@ -32,6 +32,8 @@ public class Phase2DnD extends Phase1DnD {
 
     public Phase2DnD(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         super(eventsToView, eventsToModel);
+        toView = eventsToView;
+        toModel = eventsToModel;
     }
 
     @Override
@@ -47,7 +49,8 @@ public class Phase2DnD extends Phase1DnD {
             Player playerFrom = g.getHexIcon().getPlayer();
             Point posTo = hex.getPosition();
             Player playerTo = hex.getPlayer();
-            toModel.add(new Action(ActionType.CREATE_MOVE, new CreateMove(posFrom, playerFrom, posTo, playerTo)));
+            Config.debug(posFrom, playerFrom, posTo, playerTo, g.getColor());
+            toModel.add(new Action(ActionType.CREATE_MOVE, new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
         }
         g.setCursor(Cursor.getDefaultCursor());
         g.clear();

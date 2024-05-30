@@ -929,13 +929,31 @@ public class Kube implements Serializable {
         return getPhase();
     }
 
-    public Move createMove(Point posFrom, Player playerFrom, Point posTo, Player playerTo){
+    public Move createMove(Point posFrom, Player playerFrom, Point posTo, Player playerTo, ModelColor color){
+        // Penality 
         if (playerFrom != null && playerTo != null){
-            // Penality 
             if (posFrom == null){
-                return new MoveAA(null);
+                return new MoveAA(color);
+            } else {
+                return new MoveMA(posFrom, color);
             }
-            
+        }
+        // Classic moves
+        if (playerFrom != null && playerTo == null){
+            if (posFrom == null){
+                // Move from additionnals
+                if (color == ModelColor.WHITE){
+                    return new MoveAW();
+                } else {
+                    return new MoveAM(posTo, color);
+                }
+            } else {
+                if (color == ModelColor.WHITE){
+                    return new MoveMW(posFrom);
+                } else {
+                    return new MoveMM(posFrom, posTo, color);
+                }
+            }
         }
         return null;
     }

@@ -37,8 +37,8 @@ public class HexIcon extends Icon {
         resizeIcon((int) (width * scale), (int) (height * scale));
     }
 
-    public HexIcon(ModelColor color, boolean actionable, Player p) {
-        this(color, actionable, p, WIDTH, HEIGHT, SCALE);
+    public HexIcon(ModelColor color, boolean actionable, Player player) {
+        this(color, actionable, player, WIDTH, HEIGHT, SCALE);
 
     }
     public HexIcon(ModelColor color, boolean actionable) {
@@ -103,6 +103,7 @@ public class HexIcon extends Icon {
     public HexIcon clone() {
         HexIcon clone = new HexIcon(color, isActionable, scale);
         clone.setPosition(position);
+        clone.setPlayer(getPlayer());
         return clone;
     }
 
@@ -169,6 +170,10 @@ public class HexIcon extends Icon {
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void setPlayer(Player p) {
+        player = p;
     }
 
     public String toString() {

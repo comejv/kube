@@ -209,7 +209,7 @@ public class SecondPhasePanel extends JPanel {
             c = p.getMountain().getCase(pos);
             panel = p2Panels[pos.x][pos.y];
         }
-        HexIcon hex = new HexIcon(c, false);
+        HexIcon hex = new HexIcon(c, true, p);
         hex.setPosition(pos);
         panel.removeAll();
         panel.add(hex);
