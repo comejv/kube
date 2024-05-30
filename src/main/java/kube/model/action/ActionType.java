@@ -45,6 +45,7 @@ public enum ActionType {
     SAVE,
     LOAD,
     AI_MOVE,
+    CREATE_MOVE,
 
     /**********
      * SERVICES
@@ -88,7 +89,7 @@ public enum ActionType {
     RETURN_TO_MENU,
 
     // --- Menu ---
-    
+
     PLAY_LOCAL,
     PLAY_ONLINE,
     RULES,
@@ -102,6 +103,7 @@ public enum ActionType {
      * UNUSED
      **********/
 
+    // TODO : remove unused actions
     GRAB_HEX,
     ADD_GLASS,
     REMOVE_GLASS,

@@ -13,6 +13,9 @@ import kube.model.Player;
 import kube.model.action.move.Move;
 
 public class midLevelAI extends MiniMaxAI {
+
+    // TODO: refactor
+
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;
@@ -62,7 +65,7 @@ public class midLevelAI extends MiniMaxAI {
     public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
         if (movesMap == null || movesMap.size() == 0) {
             ArrayList<Move> moves = k3.moveSet();
-            return moves.get(getR().nextInt(moves.size()));
+            return moves.get(getRandom().nextInt(moves.size()));
         }
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
@@ -96,7 +99,7 @@ public class midLevelAI extends MiniMaxAI {
     private ModelColor getColorBasedOnProbabilities() {
         List<Map.Entry<ModelColor, Float>> entryList = new ArrayList<>(probabilities.entrySet());
         entryList.sort(Map.Entry.comparingByValue());
-        float f = getR().nextFloat();
+        float f = getRandom().nextFloat();
         for (Map.Entry<ModelColor, Float> entry : entryList) {
             f -= entry.getValue();
             if (f < 0) {

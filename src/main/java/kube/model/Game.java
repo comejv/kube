@@ -103,7 +103,7 @@ public class Game implements Runnable {
         if (a.getType() == ActionType.LOAD) {
             // Load the game
             String filePath;
-            filePath = Config.SAVING_PATH_DIRECTORY+ (String) a.getData() + Config.SAVING_FILE_EXTENSION;
+            filePath = Config.SAVING_PATH_DIRECTORY + (String) a.getData() + Config.SAVING_FILE_EXTENSION;
             File file = new File(filePath);
             try (FileInputStream fis = new FileInputStream(file);
                     ObjectInputStream ois = new ObjectInputStream(fis)) {
@@ -118,7 +118,7 @@ public class Game implements Runnable {
             if (s == null) {
                 k3.init();
             } else {
-                k3.init(s.getAiJ1(), s.getAiJ2());
+                k3.init(s.getAIJ1(), s.getAIJ2());
             }
             eventsToView.add(new Action(ActionType.VALIDATE, true));
             return CLASSIC_START;
@@ -252,7 +252,6 @@ public class Game implements Runnable {
                 case RESET:
                     return RESET_EXIT;
                 default:
-                    Config.debug(a, " is forbidden");
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     break;
             }
@@ -302,6 +301,7 @@ public class Game implements Runnable {
                 switch (a.getType()) {
                     case MOVE:
                     case MOVE_NUMBER:
+                    case CREATE_MOVE:
                         playMove(a);
                         break;
                     case UNDO:
@@ -316,7 +316,6 @@ public class Game implements Runnable {
                     case RESET:
                         return RESET_EXIT;
                     default:
-                        Config.debug(a, " is forbidden");
                         eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION, a.getData()));
                         break;
                 }
@@ -327,38 +326,51 @@ public class Game implements Runnable {
 
     synchronized public void swap(Swap s) {
 
-        ModelColor c = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos1().x, s.getPos1().y);
-        ModelColor c2 = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getPos2().x, s.getPos2().y);
-        k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos1(), c2);
-        k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getPos2(), c);
+        ModelColor c = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getFrom().x, s.getFrom().y);
+        ModelColor c2 = k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(s.getTo().x, s.getTo().y);
+        k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getFrom(), c2);
+        k3.getCurrentPlayer().addToMountainFromAvailableToBuild(s.getTo(), c);
     }
 
     synchronized public boolean build(Build b) {
-        return k3.getCurrentPlayer().addToMountainFromAvailableToBuild(b.getPos(), b.getModelColor());
+        return k3.getCurrentPlayer().addToMountainFromAvailableToBuild(b.getPosition(), b.getModelColor());
     }
 
     synchronized public ModelColor remove(Remove r) {
-        return k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(r.getPos());
+        return k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(r.getPosition());
     }
 
     public void playMove(Action a) {
         Move move;
-        if (a.getType() == ActionType.MOVE_NUMBER) {
-            try {
-                move = k3.moveSet().get((int) a.getData());
-            } catch (Exception e) {
-                eventsToView.add(new Action(ActionType.MOVE, null));
-                return;
-            }
-        } else {
-            move = (Move) a.getData();
+        switch (a.getType()) {
+            case MOVE_NUMBER:
+                try {
+                    move = k3.moveSet().get((int) a.getData());
+                } catch (Exception e) {
+                    eventsToView.add(new Action(ActionType.MOVE, null));
+                    return;
+                }
+                break;
+            case CREATE_MOVE:
+                CreateMove cM = (CreateMove) a.getData();
+                move = k3.createMove(cM.getPosFrom(), cM.getPlayerFrom(), cM.getPosTo(), cM.getPlayerTo(), cM.getModelColor());
+                Config.debug("Move généré :", move);
+                break;
+            case MOVE:
+            default:
+                move = (Move) a.getData();
+                break;
+        }
+        if (move == null){
+            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+            return;
         }
         switch (getGameType()) {
             case LOCAL:
                 if (k3.playMove(move)) {
                     eventsToView.add(new Action(ActionType.MOVE, move));
                 } else {
-                    eventsToView.add(new Action(ActionType.MOVE, move));
+                    eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 break;
             case HOST:
@@ -372,6 +384,8 @@ public class Game implements Runnable {
                     if (validMove) {
                         eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
                         eventsToView.add(new Action(ActionType.MOVE, move));
+                    } else {
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
                 } else {
                     // Local move
@@ -382,7 +396,7 @@ public class Game implements Runnable {
                             eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                         }
                     } else {
-
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
                 }
                 break;

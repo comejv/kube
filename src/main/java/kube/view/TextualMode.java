@@ -106,7 +106,7 @@ public class TextualMode implements Runnable {
                         printHelp();
                     } else {
                         Swap s = (Swap) action.getData();
-                        printSwapSuccess(s.getPos1(), s.getPos2());
+                        printSwapSuccess(s.getFrom(), s.getTo());
                         printHelp();
                     }
                     break;

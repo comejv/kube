@@ -10,6 +10,8 @@ import kube.model.action.move.Move;
 
 public class randomAI extends MiniMaxAI {
 
+    // TODO: refactor
+
     public randomAI(int time, Random r) {
         super(time, r);
     }
@@ -41,7 +43,7 @@ public class randomAI extends MiniMaxAI {
     @Override
     public void constructionPhase(Kube k3) {
         while (getPlayer(k3).getPlayableColors().isEmpty()) {
-            utilsAI.randomFillMountain(getPlayer(k3), getR());
+            utilsAI.randomFillMountain(getPlayer(k3), getRandom());
         }
     }
 }

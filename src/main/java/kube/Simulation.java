@@ -170,8 +170,8 @@ public class Simulation implements Runnable {
         int seed = 180;
         Kube k = new Kube(true);
         Kube k2 = new Kube(true);
-        k.init(new MiniMaxAI(0, 1), new MiniMaxAI(0, 1), seed);
-        k2.init(new MiniMaxAI(0, 1), new MiniMaxAI(0, 1), seed);
+        k.init(new randomAI(0, 1), new randomAI(0, 1), seed);
+        k2.init(new randomAI(0, 1), new randomAI(0, 1), seed);
 
         k.getCurrentPlayer().getAI().constructionPhase(k);
         k.updatePhase();

@@ -49,11 +49,11 @@ public class MenuListener implements Runnable {
             Start s = new Start();
             switch (nb) {
                 case 0:
-                    s.setAiJ1(new moveSetHeuristique());
-                    s.setAiJ2(new moveSetHeuristique());
+                    s.setAIJ1(new moveSetHeuristique());
+                    s.setAIJ2(new moveSetHeuristique());
                     break;
                 case 1:
-                    s.setAiJ1(new moveSetHeuristique());
+                    s.setAIJ1(new moveSetHeuristique());
                     break;
                 case 2:
                     break;
