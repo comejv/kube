@@ -1,41 +1,64 @@
 package kube.model.action;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import java class
+import java.awt.Point;
 
 public class Remove {
 
-    private Point pos;
-    private ModelColor c;
+    /**********
+     * ATTRIBUTES
+     **********/
 
-    public Remove(ModelColor c, Point pos) {
-        this.c = c;
-        this.pos = pos;
+    private Point position;
+    private ModelColor color;
+
+    /**********
+     * CONSTRUCTORS
+     **********/
+
+    /**
+     * Constructor of the class Remove
+     * 
+     * @param color    the color of the piece
+     * @param position the position of the piece
+     */
+    public Remove(ModelColor color, Point position) {
+        this.color = color;
+        this.position = position;
     }
 
-    public Remove(ModelColor c, int x, int y) {
-        this(c, new Point(x, y));
+    /**
+     * Constructor of the class Remove
+     * 
+     * @param color the color of the piece
+     * @param x     the x position of the piece
+     * @param y     the y position of the piece
+     */
+    public Remove(ModelColor color, int x, int y) {
+        this(color, new Point(x, y));
     }
 
-    public Point getPos() {
-        return pos;
+    /**********
+     * GETTERS
+     **********/
+
+    public Point getPosition() {
+        return position;
     }
 
     public ModelColor getModelColor() {
-        return c;
+        return color;
     }
 
-    public void setPos(Point pos) {
-        this.pos = pos;
-    }
-
-    public void setModelColor(ModelColor c) {
-        this.c = c;
-    }
+    /**********
+     * METHODS
+     **********/
 
     @Override
     public String toString() {
-        return "Retirer de la montagne " + c + " à la position (" + pos.x + "," + pos.y + ")";
+        return "Retirer de la montagne " + color + " à la position (" + position.x + "," + position.y + ")";
     }
 }

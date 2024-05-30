@@ -233,7 +233,7 @@ public class FirstPhasePanel extends JPanel {
         switch (a.getType()) {
             case BUILD:
                 Build b = (Build) a.getData();
-                updateGrid(b.getPos());
+                updateGrid(b.getPosition());
                 updateSide(b.getModelColor());
                 if (b.getOldColor() != null && b.getOldColor() != ModelColor.EMPTY) {
                     updateSide(b.getOldColor());
@@ -242,14 +242,14 @@ public class FirstPhasePanel extends JPanel {
                 break;
             case REMOVE:
                 Remove r = (Remove) a.getData();
-                updateGrid(r.getPos());
+                updateGrid(r.getPosition());
                 updateSide(r.getModelColor());
                 updateButton();
                 break;
             case SWAP:
                 Swap s = (Swap) a.getData();
-                updateGrid(s.getPos1());
-                updateGrid(s.getPos2());
+                updateGrid(s.getFrom());
+                updateGrid(s.getTo());
                 break;
             case AI_MOVE:
                 updateAll();

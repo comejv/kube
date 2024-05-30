@@ -20,8 +20,8 @@ public class Action implements Serializable {
     /**
      * Constructor of the class Action
      * 
-     * @param type the type of the action
-     * @param data the data of the action
+     * @param type     the type of the action
+     * @param data     the data of the action
      * @param playerId the id of the player
      */
     public Action(ActionType type, Object data, int playerId) {
@@ -48,7 +48,7 @@ public class Action implements Serializable {
     public Action(ActionType type) {
         this(type, null);
     }
-    
+
     /**********
      * SETTER
      **********/
