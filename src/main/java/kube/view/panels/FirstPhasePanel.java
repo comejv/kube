@@ -248,8 +248,8 @@ public class FirstPhasePanel extends JPanel {
                 break;
             case SWAP:
                 Swap s = (Swap) a.getData();
-                updateGrid(s.getPos1());
-                updateGrid(s.getPos2());
+                updateGrid(s.getFrom());
+                updateGrid(s.getTo());
                 break;
             case AI_MOVE:
                 updateAll();

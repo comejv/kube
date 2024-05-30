@@ -1,39 +1,61 @@
 package kube.model.action;
 
+// Import java class
 import java.awt.Point;
 
 public class Swap {
 
-    private Point pos1;
-    private Point pos2;
+    /**********
+     * ATTRIBUTES
+     **********/
 
-    public Swap(Point pos1, Point pos2) {
-        this.pos1 = pos1;
-        this.pos2 = pos2;
+    private Point from, to;
+
+    /**********
+     * CONSTRUCTORS
+     **********/
+
+    /**
+     * Constructor of the class Swap
+     * 
+     * @param from the first position
+     * @param to the second position
+     */
+    public Swap(Point from, Point to) {
+        this.from = from;
+        this.to = to;
     }
 
-    public Swap(int x1, int y1, int x2, int y2) {
-        this(new Point(x1, y1), new Point(x2, y2));
+    /**
+     * Constructor of the class Swap
+     * 
+     * @param fromX the x coordinate of the first position
+     * @param fromY the y coordinate of the first position
+     * @param toX the x coordinate of the second position
+     * @param toY the y coordinate of the second position
+     */
+    public Swap(int fromX, int fromY, int toX, int toY) {
+        this(new Point(fromX, fromY), new Point(toX, toY));
     }
 
-    public Point getPos1() {
-        return pos1;
+    /**********
+     * GETTERS
+     **********/
+
+    public Point getFrom() {
+        return from;
     }
 
-    public Point getPos2() {
-        return pos2;
+    public Point getTo() {
+        return to;
     }
 
-    public void setPos1(Point pos1) {
-        this.pos1 = pos1;
-    }
-
-    public void setPos2(Point pos2) {
-        this.pos2 = pos2;
-    }
-
+    /**********
+     * METHOD
+     **********/
+    
     @Override
     public String toString() {
-        return "Echange de la position (" + pos1.x + "," + pos1.y + ") avec la position (" + pos2.x + "," + pos2.y + ")";
+        return "Echange de la position (" + from.x + "," + from.y + ") avec la position (" + to.x + "," + to.y + ")";
     }
 }
