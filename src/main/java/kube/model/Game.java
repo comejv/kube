@@ -463,7 +463,7 @@ public class Game implements Runnable {
 
     private void save(String fileName) {
         if (fileName == "") {
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+            String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(Calendar.getInstance().getTime());
             fileName = timeStamp;
         }
         File directory = new File(Config.SAVING_PATH_DIRECTORY);
