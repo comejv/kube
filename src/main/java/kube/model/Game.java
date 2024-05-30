@@ -1,63 +1,148 @@
 package kube.model;
 
+// Import model classes
 import kube.configuration.Config;
-import java.util.Random;
-
 import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.utilsAI;
 
+import java.util.Calendar;
+// Import java class
+import java.util.Random;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.SimpleDateFormat;
+
 public class Game implements Runnable {
+
+    /**********
+     * CONSTANTS
+     **********/
 
     public static final int LOCAL = 0;
     public static final int HOST = 1;
     public static final int JOIN = 2;
 
+    public static final int RESET_EXIT = 0;
+    public static final int NORMAL_EXIT = 1;
+
+    public static final int CLASSIC_START = 0;
+    public static final int LOAD_START = 1;
+
     public static final int PORT = 1234;
 
+    /**********
+     * ATTRIBUTES
+     **********/
+
     Queue<Action> eventsToModel;
-    Queue<Action> modeleToView;
+    Queue<Action> eventsToView;
     Queue<Action> eventsToNetwork;
     private int gameType;
     private final Kube k3;
 
-    public Game(int gameType, Kube k3, Queue<Action> eventsToModel, Queue<Action> modeleToView,
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    public Game(int gameType, Kube k3, Queue<Action> eventsToModel, Queue<Action> eventsToView,
             Queue<Action> eventsToNetwork) {
+
         this.gameType = gameType;
         this.k3 = k3;
         this.eventsToModel = eventsToModel;
         this.eventsToNetwork = eventsToNetwork;
-        this.modeleToView = modeleToView;
+        this.eventsToView = eventsToView;
     }
 
-    @Override
-    public void run() {
-        waitStartGame();
-        localGame(gameType);
-    }
-
-    public void waitStartGame() {
-        Action a;
-        while ((a = eventsToModel.remove()).getType() != ActionType.START) {
-            modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
-        }
-        Start s = (Start) a.getData();
-        if (s == null) {
-            k3.init();
-        } else {
-            k3.init(s.getAiJ1(), s.getAiJ2());
-        }
-        modeleToView.add(new Action(ActionType.VALIDATE, true));
-        return;
-    }
+    /**********
+     * SETTERS
+     **********/
 
     public final void setGameType(int gameType) {
         this.gameType = gameType;
     }
 
+    /**********
+     * GETTERS
+     **********/
+
     public int getGameType() {
         return gameType;
+    }
+
+    /**********
+     * RUN METHOD
+     **********/
+
+    @Override
+    public void run() {
+        while (true) {
+            int startType = waitStartGame();
+            localGame(gameType, startType);
+        }
+    }
+
+    public int waitStartGame() {
+
+        Action a;
+
+        a = eventsToModel.remove();
+        while (a.getType() != ActionType.START && a.getType() != ActionType.LOAD) {
+            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+            a = eventsToModel.remove();
+        }
+
+        if (a.getType() == ActionType.LOAD) {
+            // Load the game
+            File file = new File(Config.SAVING_PATH_DIRECTORY + a.getData().toString() + Config.SAVING_FILE_EXTENSION);
+            try (FileInputStream fis = new FileInputStream(file);
+                    ObjectInputStream ois = new ObjectInputStream(fis)) {
+                k3.init((Kube) ois.readObject());
+                Config.debug("joueur 1 IA ?:", k3.getP1().isAI());
+                Config.debug("joueur 2 IA ?:", k3.getP2().isAI());
+            } catch (IOException | ClassNotFoundException e) {
+                eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
+            }
+            return LOAD_START;
+        } else {
+            Start s = (Start) a.getData();
+            if (s == null) {
+                k3.init();
+            } else {
+                k3.init(s.getAiJ1(), s.getAiJ2());
+            }
+            eventsToView.add(new Action(ActionType.VALIDATE, true));
+            return CLASSIC_START;
+        }
+    }
+
+    public void localGame(int type, int startType) {
+        if (startType == CLASSIC_START) {
+            initPhase();
+        }
+        if (startType == CLASSIC_START ||
+                (startType == LOAD_START && k3.getPhase() == Kube.PREPARATION_PHASE)) {
+            if (constructionPhase() == RESET_EXIT) {
+                return;
+            }
+            setFirstPlayer();
+            eventsToView.add(new Action(ActionType.PRINT_STATE));
+        }
+        if (gamePhase() == RESET_EXIT) {
+            return;
+        }
+        eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
+        if (k3.getCurrentPlayer() == k3.getP1()) {
+            eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
+        } else {
+            eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
+        }
     }
 
     public void initPhase() {
@@ -71,15 +156,15 @@ public class Game implements Runnable {
             case JOIN:
                 Action a;
                 while ((a = eventsToModel.remove()).getType() != ActionType.INIT_K3) {
-                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                    eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setK3((Mountain) a.getData());
                 while ((a = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
-                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                    eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setP1((Player) a.getData());
                 while ((a = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
-                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                    eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setP2((Player) a.getData());
                 k3.setCurrentPlayer(k3.getP2());
@@ -90,7 +175,7 @@ public class Game implements Runnable {
         }
     }
 
-    public void constructionPhase() {
+    public int constructionPhase() {
         switch (getGameType()) {
             case HOST:
                 constructionPhasePlayer(k3.getP1());
@@ -101,9 +186,81 @@ public class Game implements Runnable {
                 waitConstruction(k3.getP1());
                 break;
             case LOCAL:
-                constructionPhasePlayer(k3.getP1());
-                constructionPhasePlayer(k3.getP2());
+                if (constructionPhasePlayer(k3.getP1()) == RESET_EXIT) {
+                    return RESET_EXIT;
+                }
+                ;
+                if (constructionPhasePlayer(k3.getP2()) == RESET_EXIT) {
+                    return RESET_EXIT;
+                }
+                ;
                 break;
+        }
+        return NORMAL_EXIT;
+    }
+
+    public int constructionPhasePlayer(Player p) {
+        if (p.isAI()) {
+            constructionPhaseIA(p);
+        }
+        while (!p.getHasValidateBuilding()) {
+            Action a = eventsToModel.remove();
+            Config.debug(a);
+            switch (a.getType()) {
+                case AI_MOVE:
+                    constructionPhaseAIsuggestion(p);
+                    eventsToView.add(a);
+                    break;
+                case REMOVE:
+                    remove((Remove) a.getData());
+                    eventsToView.add(a);
+                    break;
+                case BUILD:
+                    build((Build) a.getData());
+                    eventsToView.add(a);
+                    break;
+                case SWAP:
+                    swap((Swap) a.getData());
+                    eventsToView.add(a);
+                    break;
+                case SHUFFLE:
+                    utilsAI.randomFillMountain(k3.getCurrentPlayer(), new Random());
+                    eventsToView.add(new Action(ActionType.SHUFFLE));
+                    break;
+                case VALIDATE:
+                    // Reception of the other player mountain
+                    if (getGameType() != LOCAL && a.getPlayer() != getGameType()) {
+                        if (getGameType() == JOIN) {
+                            k3.setP1((Player) a.getData());
+                        } else {
+                            k3.setP2((Player) a.getData());
+                        }
+                    } else {
+                        boolean isValidated = k3.getCurrentPlayer().validateBuilding();
+                        if (isValidated && getGameType() != LOCAL) {
+                            eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
+                        }
+                        k3.updatePhase();
+                        eventsToView.add(new Action(ActionType.VALIDATE, isValidated));
+                    }
+                    break;
+                case SAVE:
+                    save(a.getData().toString());
+                    break;
+                case RESET:
+                    return RESET_EXIT;
+                default:
+                    eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                    break;
+            }
+        }
+        return NORMAL_EXIT;
+    }
+
+    public void constructionPhaseIA(Player p) {
+        p.getAI().constructionPhase(k3);
+        if (getGameType() != LOCAL) {
+            eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
         }
     }
 
@@ -113,23 +270,23 @@ public class Game implements Runnable {
                 k3.setCurrentPlayer(k3.getRandomPlayer());
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getCurrentPlayer()));
                 if (k3.getCurrentPlayer().getId() == HOST) {
-                    modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                    eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
                 } else {
-                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                    eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 }
                 waitAcknowledge();
                 break;
             case JOIN:
                 Action a;
                 while ((a = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
-                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                    eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 Player starter = (Player) a.getData();
                 k3.setCurrentPlayer(k3.getPlayerById(starter.getId()));
                 if (k3.getCurrentPlayer().getId() == JOIN) {
-                    modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                    eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
                 } else {
-                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                    eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 }
                 acknowledge(true);
                 break;
@@ -139,7 +296,7 @@ public class Game implements Runnable {
         }
     }
 
-    public void gamePhase() {
+    public int gamePhase() {
         while (k3.canCurrentPlayerPlay()) {
             if (k3.getCurrentPlayer().isAI()) {
                 Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
@@ -157,26 +314,18 @@ public class Game implements Runnable {
                     case REDO:
                         redo();
                         break;
+                    case SAVE:
+                        save(a.getData().toString());
+                        break;
+                    case RESET:
+                        return RESET_EXIT;
                     default:
-                        modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                         break;
                 }
             }
         }
-    }
-
-    public void localGame(int type) {
-        initPhase();
-        constructionPhase();
-        setFirstPlayer();
-        modeleToView.add(new Action(ActionType.PRINT_STATE));
-        gamePhase();
-        modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
-        if (k3.getCurrentPlayer() == k3.getP1()) {
-            modeleToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
-        } else {
-            modeleToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
-        }
+        return NORMAL_EXIT;
     }
 
     synchronized public void swap(Swap s) {
@@ -201,7 +350,7 @@ public class Game implements Runnable {
             try {
                 move = k3.moveSet().get((int) a.getData());
             } catch (Exception e) {
-                modeleToView.add(new Action(ActionType.MOVE, null));
+                eventsToView.add(new Action(ActionType.MOVE, null));
                 return;
             }
         } else {
@@ -210,30 +359,30 @@ public class Game implements Runnable {
         switch (getGameType()) {
             case LOCAL:
                 if (k3.playMove(move)) {
-                    modeleToView.add(new Action(ActionType.MOVE, move));
+                    eventsToView.add(new Action(ActionType.MOVE, move));
                 } else {
-                    modeleToView.add(new Action(ActionType.MOVE, move));
+                    eventsToView.add(new Action(ActionType.MOVE, move));
                 }
                 break;
             case HOST:
             case JOIN:
                 if (a.getPlayer() == getGameType() && a.getPlayer() != k3.getCurrentPlayer().getId()) {
-                    modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                    eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                 } else if (a.getPlayer() != getGameType()) {
                     // Move from the outside
                     boolean validMove = k3.playMove(move);
                     acknowledge(validMove);
                     if (validMove) {
-                        modeleToView.add(new Action(ActionType.ITS_YOUR_TURN));
-                        modeleToView.add(new Action(ActionType.MOVE, move));
+                        eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                        eventsToView.add(new Action(ActionType.MOVE, move));
                     }
                 } else {
                     // Local move
                     eventsToNetwork.add(new Action(ActionType.MOVE, move));
                     if (waitAcknowledge() && k3.playMove(move)) {
-                        modeleToView.add(new Action(ActionType.MOVE, move));
+                        eventsToView.add(new Action(ActionType.MOVE, move));
                         if (k3.getCurrentPlayer().getId() != getGameType()) {
-                            modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                            eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
                         }
                     } else {
 
@@ -249,17 +398,17 @@ public class Game implements Runnable {
             while (k3.getCurrentPlayer().isAI() && k3.getHistory().canUndo()) {
                 k3.unPlay();
             }
-            modeleToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
+            eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
         } else {
-            modeleToView.add(new Action(ActionType.UNDO, null));
+            eventsToView.add(new Action(ActionType.UNDO, null));
         }
     }
 
     public void redo() {
         if (k3.getHistory().canRedo() && k3.rePlay()) {
-            modeleToView.add(new Action(ActionType.REDO, k3.getLastMovePlayed()));
+            eventsToView.add(new Action(ActionType.REDO, k3.getLastMovePlayed()));
         } else {
-            modeleToView.add(new Action(ActionType.REDO, null));
+            eventsToView.add(new Action(ActionType.REDO, null));
         }
     }
 
@@ -283,7 +432,7 @@ public class Game implements Runnable {
 
     public void waitConstruction(Player p) {
         while (k3.getPhase() == Kube.PREPARATION_PHASE) {
-            modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+            eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
             Action a = eventsToModel.remove();
             if (a.getType() == ActionType.VALIDATE && a.getPlayer() == p.getId()) {
                 if (getGameType() == HOST) {
@@ -293,74 +442,41 @@ public class Game implements Runnable {
                 }
                 k3.updatePhase();
             } else {
-                modeleToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
+                eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
             }
         }
     }
 
-    public void constructionPhasePlayer(Player p) {
-        if (p.isAI()) {
-            constructionPhaseAI(p);
-        }
-        while (!p.getHasValidateBuilding()) {
-            Action a = eventsToModel.remove();
-            Config.debug(a);
-            switch (a.getType()) {
-                case AI_MOVE:
-                    constructionPhaseAIsuggestion(p);
-                    modeleToView.add(a);
-                    break;
-                case REMOVE:
-                    remove((Remove) a.getData());
-                    modeleToView.add(a);
-                    break;
-                case BUILD:
-                    build((Build) a.getData());
-                    modeleToView.add(a);
-                    break;
-                case SWAP:
-                    swap((Swap) a.getData());
-                    modeleToView.add(a);
-                    break;
-                case SHUFFLE:
-                    utilsAI.randomFillMountain(k3.getCurrentPlayer(), new Random());
-                    modeleToView.add(new Action(ActionType.SHUFFLE));
-                    break;
-                case VALIDATE:
-                    // Reception of the other player mountain
-                    if (getGameType() != LOCAL && a.getPlayer() != getGameType()) {
-                        if (getGameType() == JOIN) {
-                            k3.setP1((Player) a.getData());
-                        } else {
-                            k3.setP2((Player) a.getData());
-                        }
-                    } else {
-                        boolean isValidated = k3.getCurrentPlayer().validateBuilding();
-                        if (isValidated && getGameType() != LOCAL) {
-                            eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
-                        }
-                        k3.updatePhase();
-                        modeleToView.add(new Action(ActionType.VALIDATE, isValidated));
-                    }
-                    break;
-                default:
-                    Config.debug("Construction phase forbidden action");
-                    modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
-                    break;
-            }
-        }
-    }
 
     public void acknowledge(boolean ack) {
         eventsToNetwork.add(new Action(ActionType.ACKNOWLEDGEMENT, ack));
     }
 
     public boolean waitAcknowledge() {
-        modeleToView.add(new Action(ActionType.PRINT_WAITING_RESPONSE));
+        eventsToView.add(new Action(ActionType.PRINT_WAITING_RESPONSE));
         Action a;
         while ((a = eventsToModel.remove()).getType() != ActionType.ACKNOWLEDGEMENT) {
-            modeleToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
         }
         return (boolean) a.getData();
+    }
+
+    private void save(String fileName) {
+        if (fileName == "") {
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+            fileName = timeStamp;
+        }
+        File directory = new File(Config.SAVING_PATH_DIRECTORY);
+        if (!directory.exists()){
+            directory.mkdirs(); // Create the directory if it doesn't exist
+        }
+        File file = new File(Config.SAVING_PATH_DIRECTORY + fileName + Config.SAVING_FILE_EXTENSION);
+        try (FileOutputStream fos = new FileOutputStream(file);
+                ObjectOutputStream oos = new ObjectOutputStream(fos);) {
+            oos.writeObject(k3);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

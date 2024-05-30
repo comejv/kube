@@ -4,6 +4,13 @@ import java.awt.Point;
 
 // Import model classes
 import kube.model.ai.MiniMaxAI;
+import kube.model.action.move.Move;
+import kube.model.action.move.MoveAA;
+import kube.model.action.move.MoveAM;
+import kube.model.action.move.MoveAW;
+import kube.model.action.move.MoveMA;
+import kube.model.action.move.MoveMM;
+import kube.model.action.move.MoveMW;
 
 // Import java classes
 import java.io.Serializable;
@@ -13,14 +20,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import kube.model.action.move.Move;
-import kube.model.action.move.MoveAA;
-import kube.model.action.move.MoveAM;
-import kube.model.action.move.MoveAW;
-import kube.model.action.move.MoveMA;
-import kube.model.action.move.MoveMM;
-import kube.model.action.move.MoveMW;
 
 public class Kube implements Serializable {
 
@@ -61,22 +62,6 @@ public class Kube implements Serializable {
     public Kube(boolean empty) {
         if (!empty) {
             init();
-        }
-    }
-
-    /**********
-     * EXCEPTION
-     **********/
-
-    public class KubeReadException extends Exception {
-
-        /**
-         * Constructor of the KubeReadException
-         * 
-         * @param message the message of the exception
-         */
-        public KubeReadException(String message) {
-            super(message);
         }
     }
 
@@ -125,6 +110,59 @@ public class Kube implements Serializable {
 
         setCurrentPlayer(getP1());
         distributeCubesToPlayers();
+    }
+
+    public void init (Kube k) {
+
+        if (k.getP1() instanceof AI) {
+            p1 = new AI(ID_PLAYER_1, ((AI) k.getP1()).getAI());
+        } else {
+            p1 = new Player(ID_PLAYER_1);
+        }
+
+        // p1 = new Player(ID_PLAYER_1);
+        p1.setName(new String(k.getP1().getName()));
+        p1.setMountain(k.getP1().getMountain().clone());
+        p1.setHasValidateBuilding(k.getP1().getHasValidateBuilding());
+        p1.setAdditionals(new ArrayList<>(k.getP1().getAdditionals()));
+        p1.setAvailableToBuild(new HashMap<>(k.getP1().getAvailableToBuild()));
+        p1.setUsedPiece(new HashMap<>(k.getP1().getUsedPiece()));
+
+        if (k.getP2() instanceof AI) {
+            p2 = new AI(ID_PLAYER_2, ((AI) k.getP1()).getAI());
+        } else {
+            p2 = new Player(ID_PLAYER_2);
+        }
+
+        p2 = new Player(ID_PLAYER_2);
+        p2.setName(new String(k.getP2().getName()));
+        p2.setMountain(k.getP2().getMountain().clone());
+        p2.setHasValidateBuilding(k.getP2().getHasValidateBuilding());
+        p2.setAdditionals(new ArrayList<>(k.getP2().getAdditionals()));
+        p2.setAvailableToBuild(new HashMap<>(k.getP2().getAvailableToBuild()));
+        p2.setUsedPiece(new HashMap<>(k.getP2().getUsedPiece()));
+
+        if (k.getCurrentPlayer() == k.getP1()) {
+            currentPlayer = p1;
+        } else {
+            currentPlayer = p2;
+        }
+
+        bag = new ArrayList<>(k.getBag());
+
+        penality = k.getPenality();
+
+        history = new History();
+        history.setDone(new CopyOnWriteArrayList<>(k.getHistory().getDone()));
+        history.setUndone(new CopyOnWriteArrayList<>(k.getHistory().getUndone()));
+
+        baseSize = k.getBaseSize();
+
+        k3 = k.getK3().clone();
+
+        phase = k.getPhase();
+
+        lastMovePlayed = k.getLastMovePlayed();
     }
 
     /**********

@@ -177,36 +177,6 @@ public class History implements Serializable {
     }
 
     /**
-     * Return a string representing the history for saving it
-     * 
-     * @return a string representing the history
-     */
-    public String forSave() {
-
-        String save;
-        // Saving the first player
-        save = getFirstPlayer() + "\n[";
-        // Saving the done moves
-        for (Move move : getDone()) {
-            save += move.forSave() + " ";
-        }
-        if (canUndo()) {
-            save = save.substring(0, save.length() - 1);
-        }
-        // Saving the undone moves
-        save += "]\n[";
-        for (Move move : getUndone()) {
-            save += move.forSave() + " ";
-        }
-        if (canRedo()) {
-            save = save.substring(0, save.length() - 1);
-        }
-
-        save += "]";
-        return save;
-    }
-
-    /**
      * Return a string representing the history for displaying it
      * 
      * @param IA true if the history is displayed for the IA, false otherwise

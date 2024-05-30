@@ -68,18 +68,23 @@ public class CommandListener implements Runnable {
                     break;
                 case "sauvegarder":
                 case "save":
-                    // TODO
+                case "enregistrer":
+                case "serialize":
+                    save(sc);
                     break;
                 case "restaurer":
                 case "charger":
                 case "restore":
                 case "load":
-                    // TODO
+                    load(sc);
                     break;
                 case "aide":
                 case "help":
                 case "":
                     eventsToView.add(new Action(ActionType.PRINT_HELP));
+                    break;
+                case "start":
+                    eventsToModel(new Action(ActionType.START));
                     break;
                 default:
                     eventsToView.add(new Action(ActionType.PRINT_COMMAND_ERROR));
@@ -121,6 +126,21 @@ public class CommandListener implements Runnable {
             eventsToView.add(new Action(ActionType.MOVE));
             return false;
         }
+    }
+
+    private void save(Scanner sc) {
+        eventsToView.add(new Action(ActionType.PRINT_ASK_SAVE_FILE_NAME));
+        String s = sc.nextLine();
+        eventsToModel(new Action(ActionType.SAVE, s));
+        eventsToView.add(new Action(ActionType.PRINT_SAVED));
+    }
+
+    private void load(Scanner sc) {
+        eventsToModel(new Action(ActionType.RESET));
+        eventsToView.add(new Action(ActionType.PRINT_ASK_LOAD_FILE_NAME));
+        String s = sc.nextLine();
+        eventsToModel(new Action(ActionType.LOAD, s));
+        eventsToView.add(new Action(ActionType.PRINT_LOADED));
     }
 
     private void eventsToModel(Action action) {

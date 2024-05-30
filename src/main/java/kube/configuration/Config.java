@@ -5,6 +5,7 @@ public class Config {
     private static final boolean debug = true;
     private static final boolean showBorders = false;
     public static final String SAVING_PATH_DIRECTORY = "saves/";
+    public static final String SAVING_FILE_EXTENSION = ".ser";
 
     private static String language = "fr_FR";
     private static final int initWidth = 1600;
