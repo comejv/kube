@@ -46,6 +46,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
     private HashMap<String, JButton> buttonsMap;
+    // TODO : set hex in middle of pyra not actionable
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
