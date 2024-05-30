@@ -33,6 +33,7 @@ public class Game implements Runnable {
 
     public static final int CLASSIC_START = 0;
     public static final int LOAD_START = 1;
+    public static final int LOAD_ERROR = 2;
 
     public static final int PORT = 1234;
 
@@ -84,6 +85,9 @@ public class Game implements Runnable {
     public void run() {
         while (true) {
             int startType = waitStartGame();
+            if (startType == LOAD_ERROR) {
+                continue;
+            }
             localGame(gameType, startType);
         }
     }
@@ -98,14 +102,15 @@ public class Game implements Runnable {
 
         if (a.getType() == ActionType.LOAD) {
             // Load the game
-            File file = new File(Config.SAVING_PATH_DIRECTORY + a.getData().toString() + Config.SAVING_FILE_EXTENSION);
+            String filePath;
+            filePath = Config.SAVING_PATH_DIRECTORY+ (String) a.getData() + Config.SAVING_FILE_EXTENSION;
+            File file = new File(filePath);
             try (FileInputStream fis = new FileInputStream(file);
                     ObjectInputStream ois = new ObjectInputStream(fis)) {
                 k3.init((Kube) ois.readObject());
-                Config.debug("joueur 1 IA ?:", k3.getP1().isAI());
-                Config.debug("joueur 2 IA ?:", k3.getP2().isAI());
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (Exception e) {
                 eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
+                return LOAD_ERROR;
             }
             return LOAD_START;
         } else {
@@ -203,7 +208,6 @@ public class Game implements Runnable {
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModel.remove();
-            Config.debug(a);
             switch (a.getType()) {
                 case AI_MOVE:
                     constructionPhaseAIsuggestion(p);
@@ -447,19 +451,21 @@ public class Game implements Runnable {
     }
 
     private void save(String fileName) {
+        String filePath;
         if (fileName == "") {
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+            String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(Calendar.getInstance().getTime());
             fileName = timeStamp;
         }
         File directory = new File(Config.SAVING_PATH_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs(); // Create the directory if it doesn't exist
         }
+        filePath = Config.SAVING_PATH_DIRECTORY + fileName + Config.SAVING_FILE_EXTENSION;
         File file = new File(Config.SAVING_PATH_DIRECTORY + fileName + Config.SAVING_FILE_EXTENSION);
         try (FileOutputStream fos = new FileOutputStream(file);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);) {
             oos.writeObject(k3);
-
+            eventsToView.add(new Action(ActionType.PRINT_SAVED, filePath));
         } catch (IOException e) {
             e.printStackTrace();
         }

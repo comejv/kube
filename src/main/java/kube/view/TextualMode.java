@@ -165,13 +165,16 @@ public class TextualMode implements Runnable {
                     System.out.println("Entrez le nom du fichier de sauvegarde");
                     break;
                 case PRINT_SAVED:
-                    System.out.println("Partie sauvegardée");
+                    System.out.println("Partie sauvegardée à l'emplacement suivant : " + (String) action.getData());
                     break;
                 case PRINT_ASK_LOAD_FILE_NAME:
                     System.out.println("Entrez le nom du fichier de chargement");
                     break;
                 case PRINT_LOADED:
                     System.out.println("Partie chargée");
+                    break;
+                case PRINT_WRONG_FILE_NAME:
+                    System.out.println("Fichier invalide");
                     break;
                 default:
                     break;

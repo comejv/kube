@@ -132,7 +132,6 @@ public class CommandListener implements Runnable {
         eventsToView.add(new Action(ActionType.PRINT_ASK_SAVE_FILE_NAME));
         String s = sc.nextLine();
         eventsToModel(new Action(ActionType.SAVE, s));
-        eventsToView.add(new Action(ActionType.PRINT_SAVED));
     }
 
     private void load(Scanner sc) {
