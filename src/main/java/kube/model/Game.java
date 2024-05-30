@@ -231,7 +231,7 @@ public class Game implements Runnable {
                     break;
                 case VALIDATE:
                     // Reception of the other player mountain
-                    if (getGameType() != LOCAL && a.getPlayer() != getGameType()) {
+                    if (getGameType() != LOCAL && a.getPlayerId() != getGameType()) {
                         if (getGameType() == JOIN) {
                             k3.setP1((Player) a.getData());
                         } else {
@@ -363,9 +363,9 @@ public class Game implements Runnable {
                 break;
             case HOST:
             case JOIN:
-                if (a.getPlayer() == getGameType() && a.getPlayer() != k3.getCurrentPlayer().getId()) {
+                if (a.getPlayerId() == getGameType() && a.getPlayerId() != k3.getCurrentPlayer().getId()) {
                     eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                } else if (a.getPlayer() != getGameType()) {
+                } else if (a.getPlayerId() != getGameType()) {
                     // Move from the outside
                     boolean validMove = k3.playMove(move);
                     acknowledge(validMove);
@@ -424,7 +424,7 @@ public class Game implements Runnable {
         while (k3.getPhase() == Kube.PREPARATION_PHASE) {
             eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
             Action a = eventsToModel.remove();
-            if (a.getType() == ActionType.VALIDATE && a.getPlayer() == p.getId()) {
+            if (a.getType() == ActionType.VALIDATE && a.getPlayerId() == p.getId()) {
                 if (getGameType() == HOST) {
                     k3.setP2((Player) a.getData());
                 } else {
