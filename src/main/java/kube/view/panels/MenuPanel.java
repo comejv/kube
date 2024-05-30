@@ -9,6 +9,7 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
 import kube.view.components.Buttons.*;
+import kube.view.components.Entryfields.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
 
@@ -106,11 +107,25 @@ public class MenuPanel extends JPanel {
             cl.show(buttonsPanel, "players");
         });
 
-        // Online button
-        JButton online = new MenuButton("ONLINE");
-        online.addActionListener(buttonListener);
-        online.setActionCommand("online");
-        // TODO : add online panel
+        // Join button
+        JButton join = new MenuButton("REJOINDRE");
+        join.addActionListener(buttonListener);
+        join.setActionCommand("join");
+        join.addActionListener(e -> {
+            // Switch to the enterIp panel
+            CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
+            cl.show(buttonsPanel, "enterIp");
+        });
+
+        // Host button
+        JButton host = new MenuButton("HÉBERGER");
+        host.addActionListener(buttonListener);
+        host.setActionCommand("host");
+        host.addActionListener(e -> {
+            // Switch to the setPort panel
+            CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
+            cl.show(buttonsPanel, "setPort");
+        });
 
         // Rules button
         JButton rules = new MenuButton("RULES");
@@ -123,7 +138,8 @@ public class MenuPanel extends JPanel {
         quit.setActionCommand("quit");
 
         startButtons.add(local, buttonsGBC);
-        startButtons.add(online, buttonsGBC);
+        startButtons.add(join, buttonsGBC);
+        startButtons.add(host, buttonsGBC);
         startButtons.add(rules, buttonsGBC);
         startButtons.add(quit, buttonsGBC);
 
@@ -164,6 +180,38 @@ public class MenuPanel extends JPanel {
         play.setActionCommand("play");
 
         buttonsPanel.add("players", playersButtons);
+
+
+        // ***************************************************************************************//
+        // JOIN //
+        // ***************************************************************************************//
+        JPanel joinButtons = new JPanel();
+        joinButtons.setOpaque(false);
+        joinButtons.setLayout(new GridBagLayout());
+        buttonsGBC = new GridBagConstraints();
+        insets = new Insets(10, 0, 10, 0);
+        buttonsGBC.gridx = 0;
+        buttonsGBC.gridy = GridBagConstraints.RELATIVE;
+        buttonsGBC.fill = GridBagConstraints.BOTH;
+        buttonsGBC.insets = insets;
+
+        JTextField enterIp = new askIP("askIP");
+        JTextField enterPort = new askPort("askPort");
+
+        JButton joinGame = new MenuButton("REJOINDRE");
+        joinGame.addActionListener(e -> {
+            Config.setIp(enterIp.getText());
+            Config.setPort(Integer.parseInt(enterPort.getText()));
+        });
+        joinGame.addActionListener(buttonListener);
+        joinGame.setActionCommand("joinGame");
+
+        joinButtons.add(enterIp, buttonsGBC);
+        joinButtons.add(enterPort, buttonsGBC);
+        joinButtons.add(joinGame, buttonsGBC);
+        joinButtons.add(returnButton, buttonsGBC);
+
+        buttonsPanel.add("enterIp", joinButtons);
 
         // ***************************************************************************************//
         // RULES //

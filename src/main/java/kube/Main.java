@@ -16,13 +16,7 @@ public class Main {
         Queue<Action> eventsToView = new Queue<>();
         Queue<Action> eventsToNetwork = new Queue<>();
 
-        Game model = new Game(Game.LOCAL, kube, eventsToModel, eventsToView, eventsToNetwork);
-
-        Thread modelThread = new Thread(model);
-
-        modelThread.start();
-
-        GUIControllers controllers = new GUIControllers(eventsToView, eventsToModel);
+        GUIControllers controllers = new GUIControllers(kube,eventsToView, eventsToModel, eventsToNetwork);
         new GUI(kube, controllers, eventsToView, eventsToModel);
     }
 }

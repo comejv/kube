@@ -11,6 +11,9 @@ public class Config {
     private static final int initWidth = 1600;
     private static final int initHeight = 900;
 
+    private static String ip;
+    private static int port;
+
     public static boolean isJar() {
         return System.getProperty("java.class.path").contains(".jar");
     }
@@ -45,6 +48,22 @@ public class Config {
 
     public static void setLanguage(String lang) {
         language = lang;
+    }
+
+    public static void setIp(String ip) {
+        Config.ip = ip;
+    }
+
+    public static void setPort(int port) {
+        Config.port = port;
+    }
+
+    public static String getIp() {
+        return ip;
+    }
+
+    public static int getPort() {
+        return port;
     }
 
     public static void debug(Object... args) {

@@ -1,7 +1,9 @@
 package kube.controller.graphical;
 
+import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
+import kube.view.GUI;
 
 public class GUIControllers {
     MenuController menuController;
@@ -9,8 +11,8 @@ public class GUIControllers {
     Phase2Controller phase2Controller;
     Phase1DnD hexPhase1DnD;
 
-    public GUIControllers(Queue<Action> toView, Queue<Action> toModel) {
-        menuController = new MenuController(toView, toModel);
+    public GUIControllers(Kube kube, Queue<Action> toView, Queue<Action> toModel, Queue<Action> toNetwork) {
+        menuController = new MenuController(kube,toView, toModel, toNetwork);
         phase1Controller = new Phase1Controller(toView, toModel);
         phase2Controller = new Phase2Controller(toView, toModel);
     }

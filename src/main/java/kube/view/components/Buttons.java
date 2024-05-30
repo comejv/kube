@@ -190,6 +190,18 @@ public class Buttons {
 
         }
 
+        public static class ButtonJoin extends JButton {
+            public ButtonJoin(String name) {
+                super(name);
+                setPreferredSize(new Dimension(Config.getInitWidth() / 3,
+                        Config.getInitWidth() / 15));
+                setBackground(GUIColors.ACCENT.toColor());
+                setForeground(GUIColors.TEXT.toColor());
+
+                setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
+            }
+        }
+
         public void setHovered(boolean b) {
             isHovered = b;
             repaint();

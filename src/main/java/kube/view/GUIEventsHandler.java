@@ -76,7 +76,7 @@ public class GUIEventsHandler implements Runnable {
                 case RULES:
                     // toModel is null because we don't interract with the model in the rules
                     // TODO : maybe reuse old controller ?
-                    gui.addToOverlay(new RulesPanel(gui, new MenuController(eventsToView, null)));
+                    gui.addToOverlay(new RulesPanel(gui, new MenuController(kube,eventsToView, null,null)));
                     break;
                 case NEXT_RULE:
                     RulesPanel rulePanel = (RulesPanel) gui.getOverlay().getComponent(0);

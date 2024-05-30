@@ -9,34 +9,69 @@ import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
+import kube.controller.network.NetworkListener;
+import kube.controller.network.NetworkSender;
+import kube.model.Game;
+import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
 
+import kube.services.Network;
+import kube.services.Client;
+import kube.services.Server;
+
 public class MenuController implements ActionListener, MouseListener {
+    Kube kube;
     Queue<Action> toView;
     Queue<Action> toModel;
+    Queue<Action> toNetwork;
+    Network network;
+    NetworkListener networkListener;
+    NetworkSender networkSender;
+    Thread networkSenderThread;
+    Thread networkListenerThread;
 
-    public MenuController(Queue<Action> toView, Queue<Action> toModel) {
+    public MenuController(Kube kube, Queue<Action> toView, Queue<Action> toModel, Queue<Action> toNetwork) {
+        this.kube = kube;
         this.toView = toView;
         this.toModel = toModel;
+        this.toNetwork = toNetwork;
     }
 
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
             case "local":
                 toView.add(new Action(ActionType.PLAY_LOCAL));
-                break;
-            case "online":
-                toView.add(new Action(ActionType.PLAY_ONLINE));
+                Thread modelThread = new Thread(new Game(Game.LOCAL, kube, toModel, toView, null));
+                modelThread.start();
                 break;
             case "play":
                 toView.add(new Action(ActionType.START));
                 break;
+            case "joinGame":
+                toView.add(new Action(ActionType.PLAY_ONLINE));
+                network = new Client();
+                network.connect(Config.getIp(), Config.getPort());
+                networkListener = new NetworkListener(network, toModel);
+                networkSender = new NetworkSender(network, toNetwork, 2);
+                Thread networkThread = new Thread(networkListener);
+                networkThread.start();
+                Thread networkSenderThread = new Thread(networkSender);
+                networkSenderThread.start();
 
-            // TODO Handle online game
-
+                break;
+            case "hostGame":
+                toView.add(new Action(ActionType.PLAY_ONLINE));
+                network = new Server(Config.getPort());
+                networkListener = new NetworkListener(network, toModel);
+                networkSender = new NetworkSender(network, toNetwork, 1);
+                networkThread = new Thread(networkListener);
+                networkThread.start();
+                networkSenderThread = new Thread(networkSender);
+                networkSenderThread.start();
+                break;
             // TODO Handle game settings (AI, nb of players)
             case "rules":
                 toView.add(new Action(ActionType.RULES));
