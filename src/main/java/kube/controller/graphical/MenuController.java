@@ -53,7 +53,11 @@ public class MenuController implements ActionListener, MouseListener {
             case "joinGame":
                 toView.add(new Action(ActionType.PLAY_ONLINE));
                 network = new Client();
-                network.connect(Config.getIp(), Config.getPort());
+                try {
+                    network.connect(Config.getIp(), Config.getPort());
+                } catch (Exception e) {
+                    toView.add(new Action(ActionType.ERROR, "Connection failed"));
+                }
                 networkListener = new NetworkListener(network, toModel);
                 networkSender = new NetworkSender(network, toNetwork, 2);
                 Thread networkThread = new Thread(networkListener);

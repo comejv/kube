@@ -92,6 +92,7 @@ public enum ActionType {
     PARAMETERS,
     NEXT_RULE,
     END_RULE,
+    ERROR,
 
     /**********
      * UNUSED
