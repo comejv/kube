@@ -164,23 +164,54 @@ public class SecondPhasePanel extends JPanel {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        JPanel p1 = pyra(0,6,false);
+
+        JPanel additionals1 = new JPanel();
+        additionals1.setOpaque(false);
+        additionals1.setLayout(new GridBagLayout());
+        additionals1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                "Additionnel Pieces de Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP, new Font("Jomhuria", Font.PLAIN, 25),GUIColors.ACCENT.toColor()));
+        addAdditionals(additionals1,4,ModelColor.GREEN);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p1, gbc);
-        JPanel p2 = pyra(0,6,false);
+        gamePanel.add(additionals1, gbc);
+
+        JPanel additionals2 = new JPanel();
+        additionals2.setOpaque(false);
+        additionals2.setLayout(new GridBagLayout());
+        additionals2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                "Additionnel Pieces de Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP, new Font("Jomhuria", Font.PLAIN, 25),GUIColors.ACCENT.toColor()));
+        addAdditionals(additionals2,12,ModelColor.RED);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p2, gbc);
-        JPanel base = pyra(-1,9,true);
+        gamePanel.add(additionals2, gbc);
+
+        JPanel p1 = pyra(0,6,false);
+        p1.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(),5));
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gamePanel.add(p1, gbc);
+
+        JPanel p2 = pyra(0,6,false);
+        p2.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(),5));
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gamePanel.add(p2, gbc);
+
+        JPanel base = pyra(-1,9,true);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.gridwidth = 2;
@@ -188,6 +219,12 @@ public class SecondPhasePanel extends JPanel {
 
         gamePanel.add(base, gbc);
         return gamePanel;
+    }
+
+    private void addAdditionals (JPanel panel, int n, ModelColor c){
+        for (int i=0;i<n;i++){
+            panel.add(new HexIcon(c, true));
+        }
     }
 
     private JPanel pyra(int rowMissing,int base,boolean empty) {
