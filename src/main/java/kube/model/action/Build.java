@@ -1,51 +1,72 @@
 package kube.model.action;
 
-import java.awt.Point;
-
+// Import model class
 import kube.model.ModelColor;
+
+// Import java class
+import java.awt.Point;
 
 public class Build {
 
+    /**********
+     * ATTRIBUTES
+     **********/
+
     private Point pos;
-    private ModelColor c;
+    private ModelColor color;
     private ModelColor oldColor;
 
-    public Build(ModelColor c, ModelColor oldColor, Point pos) {
-        this.c = c;
+    /**********
+     * CONSTRCUTORS
+     **********/
+
+    /**
+     * Constructor of the class Build
+     * 
+     * @param color the color of cube to place
+     * @param oldColor the old color in the position
+     * @param pos the position of the cube
+     */
+    public Build(ModelColor color, ModelColor oldColor, Point pos) {
         this.pos = pos;
+        this.color = color;
         this.oldColor = oldColor;
     }
 
-    public Build(ModelColor c, ModelColor oldColor, int x, int y) {
-        this(c, oldColor, new Point(x, y));
+    /**
+     * Constructor of the class Build
+     * 
+     * @param color the color of cube to place
+     * @param oldColor the old color in the position
+     * @param x the x position of the cube
+     * @param y the y position of the cube
+     */
+    public Build(ModelColor color, ModelColor oldColor, int x, int y) {
+        this(color, oldColor, new Point(x, y));
     }
+
+    /**********
+     * GETTERS
+     **********/
 
     public Point getPos() {
         return pos;
     }
 
     public ModelColor getModelColor() {
-        return c;
+        return color;
     }
 
     public ModelColor getOldColor() {
         return oldColor;
     }
 
-    public void setPos(Point pos) {
-        this.pos = pos;
-    }
-
-    public void setModelColor(ModelColor c) {
-        this.c = c;
-    }
-
-    public void setOldColor(ModelColor oldColor) {
-        this.oldColor = oldColor;
-    }
-
+    /**********
+     * METHOD 
+     **********/
+    
     @Override
     public String toString() {
-        return "Placer sur la montagne " + c + " à la position (" + pos.x + "," + pos.y + "), ce qui remplace " + oldColor;
+        return "Placer sur la montagne " + color + " à la position (" + pos.x + "," + pos.y + "), ce qui remplace " + oldColor;
     }
 }
