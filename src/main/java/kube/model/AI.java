@@ -1,9 +1,11 @@
 package kube.model;
 
+// Import model class
+import kube.model.ai.MiniMaxAI;
+
+// Import java classes
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import kube.model.ai.MiniMaxAI;
 
 public class AI extends Player {
 
@@ -25,7 +27,7 @@ public class AI extends Player {
     }
 
     /**********
-     * METHOD
+     * METHODS
      **********/
 
     /**
@@ -38,6 +40,7 @@ public class AI extends Player {
         return true;
     }
 
+    @Override
     public AI clone() {
         AI copy = new AI(getId(), getAI().clone());
         copy.setAdditionals(new ArrayList<>(getAdditionals()));
