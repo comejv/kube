@@ -89,9 +89,7 @@ public class Game implements Runnable {
     }
 
     public int waitStartGame() {
-
         Action a;
-
         a = eventsToModel.remove();
         while (a.getType() != ActionType.START && a.getType() != ActionType.LOAD) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -201,7 +199,7 @@ public class Game implements Runnable {
 
     public int constructionPhasePlayer(Player p) {
         if (p.isAI()) {
-            constructionPhaseIA(p);
+            p.getAI().constructionPhase(k3);
         }
         while (!p.getHasValidateBuilding()) {
             Action a = eventsToModel.remove();
@@ -250,18 +248,12 @@ public class Game implements Runnable {
                 case RESET:
                     return RESET_EXIT;
                 default:
+                    Config.debug(a, " is forbidden");
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     break;
             }
         }
         return NORMAL_EXIT;
-    }
-
-    public void constructionPhaseIA(Player p) {
-        p.getAI().constructionPhase(k3);
-        if (getGameType() != LOCAL) {
-            eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
-        }
     }
 
     public void setFirstPlayer() {
@@ -320,7 +312,8 @@ public class Game implements Runnable {
                     case RESET:
                         return RESET_EXIT;
                     default:
-                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                        Config.debug(a, " is forbidden");
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION, a.getData()));
                         break;
                 }
             }
@@ -412,16 +405,9 @@ public class Game implements Runnable {
         }
     }
 
-    public void constructionPhaseAI(Player p) {
-        p.getAI().constructionPhase(k3);
-        if (getGameType() != LOCAL) {
-            eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
-        }
-    }
-
     public void constructionPhaseAIsuggestion(Player p) {
-        for (int i = 0; i < p.getMountain().getBaseSize(); i++){
-            for (int j = 0; j < i+1; j++){
+        for (int i = 0; i < p.getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
                 p.removeFromMountainToAvailableToBuild(i, j);
             }
         }
@@ -447,7 +433,6 @@ public class Game implements Runnable {
         }
     }
 
-
     public void acknowledge(boolean ack) {
         eventsToNetwork.add(new Action(ActionType.ACKNOWLEDGEMENT, ack));
     }
@@ -467,7 +452,7 @@ public class Game implements Runnable {
             fileName = timeStamp;
         }
         File directory = new File(Config.SAVING_PATH_DIRECTORY);
-        if (!directory.exists()){
+        if (!directory.exists()) {
             directory.mkdirs(); // Create the directory if it doesn't exist
         }
         File file = new File(Config.SAVING_PATH_DIRECTORY + fileName + Config.SAVING_FILE_EXTENSION);

@@ -230,7 +230,6 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void update(Action a) {
-        Config.debug("Update the view with the action ", a);
         switch (a.getType()) {
             case BUILD:
                 Build b = (Build) a.getData();

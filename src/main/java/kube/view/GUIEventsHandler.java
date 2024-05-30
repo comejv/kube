@@ -26,7 +26,6 @@ public class GUIEventsHandler implements Runnable {
     @Override
     public void run() {
         while (true) {
-            Config.debug("View is waiting ");
             Action action = eventsToView.remove();
             Config.debug("View receive ", action);
             switch (action.getType()) {
@@ -70,7 +69,6 @@ public class GUIEventsHandler implements Runnable {
                 // MENU
                 case START:
                     eventsToModel.add(new Action(ActionType.START, new Start()));
-                    gui.setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
                     gui.setGlassPanelVisible(true);
                     break;
                 case RULES:
@@ -106,7 +104,6 @@ public class GUIEventsHandler implements Runnable {
                 case MOVE:
                 case UNDO:
                 case REDO:
-
                     gui.updateSecondPanel(action);
                 break;
                 default:

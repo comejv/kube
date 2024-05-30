@@ -7,6 +7,7 @@ import kube.controller.graphical.Phase1DnD;
 import kube.view.panels.GlassPanel;
 
 import java.awt.*;
+import java.awt.event.ActionListener;
 
 /*
  * This class initializes the game frame and its layout manager : an overlay layout that contains a card layout and potential overlay elements.
@@ -18,6 +19,7 @@ public class MainFrame extends JFrame {
     private JPanel framePanel;
     private JPanel overlayPanel;
     private Component overlay;
+    private Phase1DnD currentListener;
 
     public MainFrame() {
         setTitle("KUBE");
@@ -66,8 +68,13 @@ public class MainFrame extends JFrame {
     }
 
     public void setGlassPaneController(Phase1DnD ma) {
+        if (currentListener != null){
+            glassPane.removeMouseMotionListener(currentListener);
+            glassPane.removeMouseListener(currentListener);
+        }
         glassPane.addMouseMotionListener(ma);
         glassPane.addMouseListener(ma);
+        currentListener = ma;
     }
 
     public void removeGlassPane() {

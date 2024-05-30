@@ -20,7 +20,6 @@ public class Phase2Controller implements ActionListener, MouseListener {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        Config.debug("Phase2Controller.actionPerformed : " + evt.getActionCommand());
         switch (evt.getActionCommand()) {
             case "settings":
                 toView.add(new Action(ActionType.SETTINGS));

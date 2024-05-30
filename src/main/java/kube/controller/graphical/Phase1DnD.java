@@ -14,12 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
-import kube.model.action.Action;
-import kube.model.action.ActionType;
-import kube.model.action.Build;
-import kube.model.action.Queue;
-import kube.model.action.Remove;
-import kube.model.action.Swap;
+import kube.model.action.*;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
@@ -69,7 +64,6 @@ public class Phase1DnD implements MouseListener, MouseMotionListener {
                 to = hex.getPosition();
             }
             Point from = g.getHexIcon().getPosition();
-            Config.debug("From: " + from + " To: " + to);
             if (from == null && to != null) {
                 toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getColor(), to)));
             } else if (from != null && to != null) {
@@ -94,6 +88,7 @@ public class Phase1DnD implements MouseListener, MouseMotionListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+        Config.debug("mouse clicked");
         redispatchMouseEvent(e);
     }
 
@@ -132,6 +127,7 @@ public class Phase1DnD implements MouseListener, MouseMotionListener {
             }
             if (e.getID() == MouseEvent.MOUSE_CLICKED && newComponent instanceof JButton) {
                 JButton b = (JButton) newComponent;
+                Config.debug("Simulate a click");
                 b.doClick();
             } else {
                 MouseEvent newEvent = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);

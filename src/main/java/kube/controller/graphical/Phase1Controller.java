@@ -7,6 +7,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.SwingUtilities;
 
+import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
@@ -24,6 +25,7 @@ public class Phase1Controller implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
             case "validate":
+                Config.debug("Generate a validate");
                 toModel.add(new Action(ActionType.VALIDATE));
                 break;
             case "settings": // change to opts.

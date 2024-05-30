@@ -264,7 +264,7 @@ public class SecondPhasePanel extends JPanel {
 
             for (int j = 0; j < i; j++) {
                 JPanel hexa = new JPanel();
-                hexa.setOpaque(false);
+                hexa.setOpaque(true);
                 hexa.add(new HexIcon(ModelColor.EMPTY, false));
                 if (p == null){
                     k3Panels[i-1][j] = hexa;
