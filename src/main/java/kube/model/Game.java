@@ -103,7 +103,7 @@ public class Game implements Runnable {
         if (a.getType() == ActionType.LOAD) {
             // Load the game
             String filePath;
-            filePath = Config.SAVING_PATH_DIRECTORY+ (String) a.getData() + Config.SAVING_FILE_EXTENSION;
+            filePath = Config.SAVING_PATH_DIRECTORY + (String) a.getData() + Config.SAVING_FILE_EXTENSION;
             File file = new File(filePath);
             try (FileInputStream fis = new FileInputStream(file);
                     ObjectInputStream ois = new ObjectInputStream(fis)) {
@@ -302,6 +302,7 @@ public class Game implements Runnable {
                 switch (a.getType()) {
                     case MOVE:
                     case MOVE_NUMBER:
+                    case CREATE_MOVE:
                         playMove(a);
                         break;
                     case UNDO:
@@ -343,15 +344,23 @@ public class Game implements Runnable {
 
     public void playMove(Action a) {
         Move move;
-        if (a.getType() == ActionType.MOVE_NUMBER) {
-            try {
-                move = k3.moveSet().get((int) a.getData());
-            } catch (Exception e) {
-                eventsToView.add(new Action(ActionType.MOVE, null));
-                return;
-            }
-        } else {
-            move = (Move) a.getData();
+        switch (a.getType()) {
+            case ActionType.MOVE_NUMBER:
+                try {
+                    move = k3.moveSet().get((int) a.getData());
+                } catch (Exception e) {
+                    eventsToView.add(new Action(ActionType.MOVE, null));
+                    return;
+                }
+                break;
+            case CREATE_MOVE:
+                CreateMove cM = (CreateMove) a.getData();
+                move = k3.createMove(cM.getPosFrom(), cM.getPlayerFrom(), cM.getPosTo(), cM.getPlayerTo());
+                break;
+            case MOVE:
+            default:
+                move = (Move) a.getData();
+                break;
         }
         switch (getGameType()) {
             case LOCAL:

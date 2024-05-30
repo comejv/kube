@@ -929,6 +929,17 @@ public class Kube implements Serializable {
         return getPhase();
     }
 
+    public Move createMove(Point posFrom, Player playerFrom, Point posTo, Player playerTo){
+        if (playerFrom != null && playerTo != null){
+            // Penality 
+            if (posFrom == null){
+                return new MoveAA(null);
+            }
+            
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
 
