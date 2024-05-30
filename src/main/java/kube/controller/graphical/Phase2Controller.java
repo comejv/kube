@@ -5,9 +5,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JButton;
+import javax.swing.SwingUtilities;
+
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.view.components.HexIcon;
+import kube.view.components.Buttons.ButtonIcon;
 import kube.configuration.Config;
 
 public class Phase2Controller implements ActionListener, MouseListener {
@@ -48,17 +53,43 @@ public class Phase2Controller implements ActionListener, MouseListener {
     }
 
     public void mouseClicked(MouseEvent e) {
+        Object source = e.getSource();
+        if (source instanceof JButton) {
+            ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
+                    ((JButton) source).getActionCommand());
+            actionPerformed(evt);
+        }
     }
 
     public void mousePressed(MouseEvent e) {
+        Object source = e.getSource();
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (source instanceof ButtonIcon) {
+                toView.add(new Action(ActionType.SET_BUTTON_PRESSED, source));
+            } 
+        }
     }
 
     public void mouseReleased(MouseEvent e) {
+        Object source = e.getSource();
+        if (SwingUtilities.isLeftMouseButton(e)) {
+            if (source instanceof ButtonIcon) {
+                toView.add(new Action(ActionType.SET_BUTTON_RELEASED, source));
+            } 
+        }
     }
 
     public void mouseEntered(MouseEvent e) {
+        Object source = e.getSource();
+        if (source instanceof ButtonIcon) {
+            toView.add(new Action(ActionType.SET_BUTTON_HOVERED, source));
+        } 
     }
 
     public void mouseExited(MouseEvent e) {
+        Object source = e.getSource();
+        if (source instanceof ButtonIcon) {
+            toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
+        } 
     }
 }

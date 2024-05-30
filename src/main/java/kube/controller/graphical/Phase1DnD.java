@@ -7,6 +7,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,10 +20,11 @@ import kube.model.action.*;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
-public class Phase1DnD implements MouseListener, MouseMotionListener {
+public class Phase1DnD implements MouseListener, MouseMotionListener, MouseWheelListener {
     private Queue<Action> toView;
     private Queue<Action> toModel;
     private Component component;
+    private Phase1Controller controller;
 
     public Phase1DnD(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.toView = eventsToView;
@@ -80,60 +83,76 @@ public class Phase1DnD implements MouseListener, MouseMotionListener {
         redispatchMouseEvent(e);
     }
 
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        redispatchMouseWheelEvent(e);
+    }
+
     public void mouseEntered(MouseEvent e) {
     }
 
     public void mouseExited(MouseEvent e) {
     }
 
-    @Override
     public void mouseClicked(MouseEvent e) {
-        Config.debug("mouse clicked");
         redispatchMouseEvent(e);
     }
 
     public void mouseDragged(MouseEvent e) {
         GlassPanel g = (GlassPanel) e.getSource();
         if (g.getImage() == null) {
+            redispatchMouseEvent(e);
             return;
         }
         g.setPoint(e.getPoint());
     }
 
-    private void redispatchMouseEvent(MouseEvent e) {
-        JPanel glassPane = (JPanel) e.getSource();
-        Container container = ((JFrame) SwingUtilities.getWindowAncestor(glassPane)).getContentPane();
-        Component newComponent = SwingUtilities.getDeepestComponentAt(container, e.getX(), e.getY());
+    public void redispatchMouseEvent(MouseEvent e) {
+        Point glassPanePoint = e.getPoint();
+        Container glassPane = (Container) e.getSource();
+        Container contentPane = ((JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource())).getContentPane();
+        Container container = contentPane;
+        Point containerPoint = SwingUtilities.convertPoint(glassPane, glassPanePoint, contentPane);
+        Component newComponent = SwingUtilities.getDeepestComponentAt(container, containerPoint.x, containerPoint.y);
 
-        if (newComponent != null) {
-            if (component != newComponent) {
+        if (newComponent != null && newComponent != glassPane) {
+            MouseEvent event = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
+            if (newComponent != component) {
                 if (newComponent instanceof HexIcon) {
-                    HexIcon icon = (HexIcon) newComponent;
-                    if (icon.isActionable()) {
-                        icon.setHovered(true);
-                    }
+                    ((HexIcon) newComponent).setHovered(true);
                 } else {
-                    if (component != null) {
-                        component.dispatchEvent(new MouseEvent(component, MouseEvent.MOUSE_EXITED, e.getWhen(),
-                                e.getModifiersEx(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger()));
+                newComponent.dispatchEvent(
+                        new MouseEvent(newComponent, MouseEvent.MOUSE_ENTERED, e.getWhen(), e.getModifiersEx(),
+                                e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+                }
+                if (component != null) {
+                    if (component instanceof HexIcon) {
+                        ((HexIcon) component).setHovered(false);
+                    } else {
+                    component.dispatchEvent(
+                            new MouseEvent(component, MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
+                                    e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
                     }
                 }
-                if (component instanceof HexIcon) {
-                    ((HexIcon) component).setHovered(false);
-                } else {
-                    newComponent.dispatchEvent(new MouseEvent(newComponent, MouseEvent.MOUSE_ENTERED, e.getWhen(),
-                            e.getModifiersEx(), e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger()));
-                }
             }
-            if (e.getID() == MouseEvent.MOUSE_CLICKED && newComponent instanceof JButton) {
-                JButton b = (JButton) newComponent;
-                Config.debug("Simulate a click");
-                b.doClick();
-            } else {
-                MouseEvent newEvent = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
-                newComponent.dispatchEvent(newEvent);
-            }
+            newComponent.dispatchEvent(event);
+            component = newComponent;
         }
-        component = newComponent;
+    }
+
+    // Does not work
+    public void redispatchMouseWheelEvent(MouseWheelEvent e) {
+        Point glassPanePoint = e.getPoint();
+        Container glassPane = (Container) e.getSource();
+        Container contentPane = ((JFrame) SwingUtilities.getWindowAncestor((Component) e.getSource())).getContentPane();
+        Container container = contentPane;
+        Point containerPoint = SwingUtilities.convertPoint(glassPane, glassPanePoint, contentPane);
+        Component newComponent = SwingUtilities.getDeepestComponentAt(container, containerPoint.x, containerPoint.y);
+
+        if (newComponent != null && newComponent != glassPane) {
+            MouseWheelEvent event = new MouseWheelEvent(newComponent, e.getID(), e.getWhen(), e.getModifiersEx(),
+                    containerPoint.x, containerPoint.y, e.getClickCount(), e.isPopupTrigger(), e.getScrollType(),
+                    e.getScrollAmount(), e.getWheelRotation());
+            newComponent.dispatchEvent(event);
+        }
     }
 }

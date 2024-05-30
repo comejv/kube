@@ -82,7 +82,7 @@ public class SecondPhasePanel extends JPanel {
         add(gamePanel, gbc);
     }
 
-    private JPanel createEastPanel(ActionListener a) {
+    private JPanel createEastPanel(Phase2Controller a) {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new GridBagLayout());
@@ -91,20 +91,20 @@ public class SecondPhasePanel extends JPanel {
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
-        quitButton.addActionListener(a);
+        quitButton.addMouseListener(a);
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(quitButton, gbc);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
         optButton.setActionCommand("settings");
-        optButton.addActionListener(a);
+        optButton.addMouseListener(a);
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(optButton, gbc);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
-        sugIaButton.addActionListener(a);
+        sugIaButton.addMouseListener(a);
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugIaButton, gbc);
@@ -112,20 +112,20 @@ public class SecondPhasePanel extends JPanel {
         JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
         histoButton.setActionCommand("updateHist");
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        histoButton.addActionListener(a);
+        histoButton.addMouseListener(a);
         gbc.gridy = 6;
         panel.add(histoButton, gbc);
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
         annulerButton.setActionCommand("undo");
-        annulerButton.addActionListener(a);
+        annulerButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 7;
         panel.add(annulerButton, gbc);
 
         JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
         refaireButton.setActionCommand("redo");
-        refaireButton.addActionListener(a);
+        refaireButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 8;
         panel.add(refaireButton, gbc);

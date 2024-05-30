@@ -253,4 +253,8 @@ public class GUI extends Thread {
                 return null;
         }
     }
+
+    public GUIControllers getControllers() {
+        return controllers;
+    }
 }

@@ -3,10 +3,9 @@ package kube.view;
 import kube.configuration.Config;
 import kube.controller.graphical.Phase1DnD;
 import kube.controller.graphical.MenuController;
-import kube.controller.graphical.Phase1DnD;
 import kube.model.Kube;
 import kube.model.action.*;
-import kube.model.ai.moveSetHeuristique;
+import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.panels.RulesPanel;
 
@@ -41,6 +40,18 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case SET_BUTTON_RELEASED:
                     ((ButtonIcon) action.getData()).setPressed(false);
+                    break;
+                case SET_HEX_DEFAULT:
+                    ((HexIcon) action.getData()).setDefault();
+                    break;
+                case SET_HEX_HOVERED:
+                    ((HexIcon) action.getData()).setHovered(true);
+                    break;
+                case SET_HEX_PRESSED:
+                    ((HexIcon) action.getData()).setPressed(true);
+                    break;
+                case SET_HEX_RELEASED:
+                    ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
                     gui.showPanel(GUI.MENU);

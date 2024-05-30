@@ -129,6 +129,12 @@ public class HexIcon extends Icon {
         repaint();
     }
 
+    public final void setDefault() {
+        isPressed = false;
+        isHovered = false;
+        repaint();
+    }
+
     public boolean isPressed() {
         return isPressed;
     }
