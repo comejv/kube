@@ -39,16 +39,6 @@ public class MoveAW extends Move {
         return true;
     }
 
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{AW}";
-    }
-
     @Override
     public String toString() {
         return "Passer son tour depuis les additionels " +

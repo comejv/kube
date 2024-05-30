@@ -40,26 +40,6 @@ public class MoveAM extends Move {
         this(new Point(toX, toY), color);
     }
 
-    /**
-     * Constructor of the class MoveAM from a save string
-     * 
-     * @param save the string to load
-     */
-    public MoveAM(String save) {
-
-        String toString, color;
-        String[] parts, coords;
-
-        parts = save.split(";");
-        color = parts[1];
-        toString = parts[2].substring(1, parts[2].length() - 1);
-
-        setColor(ModelColor.getColor(Integer.parseInt(color)));
-
-        coords = toString.split(",");
-        this.to = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-    }
-
     /**********
      * SETTERS
      **********/
@@ -68,7 +48,7 @@ public class MoveAM extends Move {
         this.to = to;
     }
 
-    public void setTo(int toX, int toY) {
+    public final void setTo(int toX, int toY) {
         setTo(new Point(toX, toY));
     }
 
@@ -92,17 +72,6 @@ public class MoveAM extends Move {
     @Override
     public boolean isFromAdditionals() {
         return true;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{AM;" + super.forSave() + ";" +
-                "(" + to.x + "," + to.y + ")}";
     }
 
     @Override

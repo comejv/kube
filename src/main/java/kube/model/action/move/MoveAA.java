@@ -5,7 +5,7 @@ import kube.model.ModelColor;
 public class MoveAA extends Move {
 
     /**********
-     * CONSTRUCTORS
+     * CONSTRUCTOR
      **********/
 
     /**
@@ -15,22 +15,6 @@ public class MoveAA extends Move {
      */
     public MoveAA(ModelColor color) {
         super(color);
-    }
-
-    /**
-     * Constructor of the class MoveAM from a save string
-     * 
-     * @param save the string to load
-     */
-    public MoveAA(String save) {
-
-        String color;
-        String[] parts;
-
-        parts = save.split(";");
-        color = parts[1];
-
-        setColor(ModelColor.getColor(Integer.parseInt(color)));
     }
 
     /**********
@@ -55,16 +39,6 @@ public class MoveAA extends Move {
     @Override
     public boolean isToAdditionals() {
         return true;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{AA;" + super.forSave() + "}";
     }
 
     @Override

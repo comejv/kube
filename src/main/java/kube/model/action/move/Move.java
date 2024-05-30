@@ -38,7 +38,7 @@ public abstract class Move implements Serializable {
      * SETTERS
      **********/
 
-    public void setPlayer(Player player) {
+    public final void setPlayer(Player player) {
         this.player = player;
     }
 
@@ -115,10 +115,8 @@ public abstract class Move implements Serializable {
         return getColor().forSave();
     }
 
-    public String toHTML() {
-        return "";
-    }
-
+    abstract public String toHTML();
+    
     @Override
     public boolean equals(Object o) {
 
@@ -141,32 +139,5 @@ public abstract class Move implements Serializable {
             return false;
 
         return getColor() == that.getColor();
-    }
-
-    public static Move fromSave(String save) throws IllegalArgumentException {
-
-        String moveType;
-        String[] parts;
-
-        save = save.substring(1, save.length() - 1);
-        parts = save.split(";");
-        moveType = parts[0];
-
-        switch (moveType) {
-            case "MW":
-                return new MoveMW(save);
-            case "MM":
-                return new MoveMM(save);
-            case "AM":
-                return new MoveAM(save);
-            case "AW":
-                return new MoveAW();
-            case "MA":
-                return new MoveMA(save);
-            case "AA":
-                return new MoveAA(save);
-            default:
-                throw new IllegalArgumentException("Unknown move type");
-        }
     }
 }
