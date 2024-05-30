@@ -154,8 +154,13 @@ public class SecondPhasePanel extends JPanel {
 
     public synchronized void updateHisto() {
         StringBuilder htmlContent = new StringBuilder();
-        for (Move m : k3.getHistory().getDone()) {
-            htmlContent.append(m.toHTML()).append("<br>");
+
+        for(int i = k3.getHistory().getUndone().size(); i>0; i--){
+            htmlContent.append("<font color = 'gray'>").append(k3.getHistory().getUndone().get(i-1).toHTML()).append("</font><br>");
+        }
+
+        for (int i = k3.getHistory().getDone().size(); i>0; i--){
+            htmlContent.append(k3.getHistory().getDone().get(i-1).toHTML()).append("<br>");
         }
         editorPane.setText(htmlContent.toString());
     }
