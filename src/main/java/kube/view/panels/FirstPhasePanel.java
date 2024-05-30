@@ -92,7 +92,7 @@ public class FirstPhasePanel extends JPanel {
     private JPanel createButtons() {
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1));
-        buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
+        buttons.setPreferredSize(new Dimension(Config.getWidth() / 5, Config.getHeight() / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");

@@ -35,15 +35,15 @@ public class RulesPanel extends JPanel {
 
         this.gui = gui;
         this.buttonListener = buttonListener;
-        width = Math.round(Config.getInitWidth() / 1.75f);
-        height = Math.round(Config.getInitHeight() / 1.5f);
+        width = Math.round(Config.getWidth() / 1.75f);
+        height = Math.round(Config.getHeight() / 1.5f);
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(width, height));
         setBackground(GUIColors.ACCENT.toColor());
 
         JLabel ruleTitle = new JLabel("RULES", SwingConstants.CENTER);
-        ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 6)));
+        ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getHeight() / 6)));
         ruleTitle.setForeground(GUIColors.TEXT.toColor());
         GridBagConstraints elemGBC = new GridBagConstraints();
         elemGBC.gridx = 0;
@@ -95,7 +95,7 @@ public class RulesPanel extends JPanel {
             textArea.setEditable(false);
             textArea.setWrapStyleWord(true);
             textArea.setLineWrap(true);
-            textArea.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 14)));
+            textArea.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getHeight() / 14)));
             textArea.setBackground(background);
             textArea.setForeground(foreground);
             textArea.setOpaque(false);

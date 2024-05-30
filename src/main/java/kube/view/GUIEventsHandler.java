@@ -98,6 +98,10 @@ public class GUIEventsHandler implements Runnable {
                                                       , action.getType()));
                     gui.setGlassPanelVisible(true);
                     break;
+                case CONFIRMED_SETTINGS:
+                    gui.removeAllFromOverlay();
+                    gui.setGlassPanelVisible(false);
+                    break;
                 // FIRST PHASE
                 case VALIDATE:
                     gui.setGlassPanelVisible(true);

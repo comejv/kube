@@ -229,4 +229,8 @@ public class GUI extends Thread {
         firstPhasePanel.update(a);
     }
 
+    public MainFrame getMainFrame(){
+        return mF;
+    }
+
 }

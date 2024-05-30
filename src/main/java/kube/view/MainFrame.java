@@ -24,8 +24,8 @@ public class MainFrame extends JFrame {
         // setIconImage(); for later
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
-        setMinimumSize(new Dimension((int) (Config.getInitWidth() / 1.5), Config.getInitHeight()));
+        setSize(new Dimension(Config.getWidth(), Config.getHeight()));
+        setMinimumSize(new Dimension((int) (Config.getWidth() / 1.5), Config.getHeight()));
         setLocationRelativeTo(null);
         framePanel = (JPanel) getContentPane();
         OverlayLayout overlay = new OverlayLayout(framePanel);
@@ -34,12 +34,18 @@ public class MainFrame extends JFrame {
         overlayPanel = new JPanel();
         overlayPanel.setVisible(false);
         overlayPanel.setOpaque(false);
-        overlayPanel.setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
+        overlayPanel.setSize(new Dimension(Config.getWidth(), Config.getHeight()));
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
         pack();
+    }
+
+    public void resize(){
+        setSize(Config.getWidth(), Config.getHeight());
+        revalidate();
+        repaint();
     }
 
     public void addPanel(JPanel panel, String name) {

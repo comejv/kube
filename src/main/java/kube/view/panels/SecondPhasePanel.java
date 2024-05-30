@@ -61,7 +61,7 @@ public class SecondPhasePanel extends JPanel {
         panel.setOpaque(false);
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1)); // TODO : change to flow or box layout
-        buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
+        buttons.setPreferredSize(new Dimension(Config.getWidth() / 5, Config.getHeight() / 5));
         buttons.setOpaque(false);
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");

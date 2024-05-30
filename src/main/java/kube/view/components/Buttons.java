@@ -17,12 +17,12 @@ public class Buttons {
         public MenuButton(String name) {
             super(name);
 
-            setPreferredSize(new Dimension(Config.getInitWidth() / 3,
-                    Config.getInitWidth() / 15));
+            setPreferredSize(new Dimension(Config.getWidth() / 3,
+                    Config.getWidth() / 15));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getHeight() / 10)));
         }
     }
 
@@ -30,12 +30,12 @@ public class Buttons {
     public static class SelectPlayerButton extends JPanel {
         public SelectPlayerButton(String name) {
             setLayout(new GridBagLayout());
-            setPreferredSize(new Dimension(Config.getInitWidth() / 2,
-                    Config.getInitWidth() / 12));
+            setPreferredSize(new Dimension(Config.getWidth() / 2,
+                    Config.getWidth() / 12));
             setBackground(GUIColors.ACCENT.toColor());
             GridBagConstraints gbc = new GridBagConstraints();
-            int size = Config.getInitHeight() / 10;
-            int sizeDisplay = Config.getInitHeight() / 20;
+            int size = Config.getHeight() / 10;
+            int sizeDisplay = Config.getHeight() / 20;
 
             JLabel nameLabel = new JLabel();
             nameLabel.setText(name);
@@ -104,7 +104,7 @@ public class Buttons {
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getHeight() / 15)));
         }
     }
 
@@ -114,7 +114,7 @@ public class Buttons {
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getHeight() / 15)));
         }
     }
 
@@ -122,15 +122,15 @@ public class Buttons {
         public ParameterButton(Image image) {
             super();
             Image scaledImg = image.getScaledInstance(
-                    (int) (0.15 * Config.getInitHeight()),
-                    (int) (0.15 * Config.getInitHeight()),
+                    (int) (0.15 * Config.getHeight()),
+                    (int) (0.15 * Config.getHeight()),
                     Image.SCALE_SMOOTH);
 
             ImageIcon icon = new ImageIcon(scaledImg);
             setIcon(icon);
 
-            setPreferredSize(new Dimension((int) (0.20 * Config.getInitHeight()),
-                    (int) (0.20 * Config.getInitHeight())));
+            setPreferredSize(new Dimension((int) (0.20 * Config.getHeight()),
+                    (int) (0.20 * Config.getHeight())));
 
             setOpaque(false);
             setContentAreaFilled(false);
@@ -144,17 +144,17 @@ public class Buttons {
             setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getHeight() / 15)));
         }
     }
 
     public static class InGameMenuButton extends JButton {
         public InGameMenuButton(String name) {
             super(name);
-            setPreferredSize(new Dimension(Config.getInitWidth() / 4, Config.getInitHeight() / 8));
+            setPreferredSize(new Dimension(Config.getWidth() / 4, Config.getHeight() / 8));
             setBackground(GUIColors.ACCENT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getHeight() / 15)));
         }
     }
 

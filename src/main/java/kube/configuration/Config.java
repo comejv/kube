@@ -7,8 +7,8 @@ public class Config {
     public static final String SAVING_PATH_DIRECTORY = "saves/";
 
     private static String language = "fr_FR";
-    private static final int initWidth = 1600;
-    private static final int initHeight = 900;
+    private static int width = 1600;
+    private static int height = 900;
 
     public static boolean isJar() {
         return System.getProperty("java.class.path").contains(".jar");
@@ -30,12 +30,12 @@ public class Config {
         mute = !mute;
     }
 
-    public static int getInitWidth() {
-        return initWidth;
+    public static int getWidth() {
+        return width;
     }
 
-    public static int getInitHeight() {
-        return initHeight;
+    public static int getHeight() {
+        return height;
     }
 
     public static String getLanguage() {
@@ -44,6 +44,19 @@ public class Config {
 
     public static void setLanguage(String lang) {
         language = lang;
+    }
+
+    public static void setResolution(int width, int height){
+        setWidth(width);
+        setHeight(height);
+    }
+
+    public static void setWidth(int newWidth){
+        width = newWidth;
+    }
+
+    public static void setHeight(int newHeight){
+        height = newHeight;
     }
 
     public static void debug(Object... args) {
