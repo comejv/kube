@@ -1,15 +1,38 @@
 package kube.model.action;
 
 public enum ActionType {
+
     /**********
-     * MODEL
+     * GAME
      **********/
 
-    // --- GAME ---
+    // --- PRINT ---
+
+    PRINT_AI,
+    PRINT_COMMAND_ERROR,
+    PRINT_WAIT_COORDINATES,
+    PRINT_GOODBYE,
+    PRINT_HELP,
+    PRINT_LIST_MOVES,
+    PRINT_NEXT_PLAYER,
+    PRINT_PLAYER,
+    PRINT_START,
+    PRINT_STATE,
+    PRINT_WELCOME,
+    PRINT_WIN_MESSAGE,
+    PRINT_FORBIDDEN_ACTION,
+    PRINT_ASK_NB_PLAYERS,
+    PRINT_ASK_GAME_MODE,
+    PRINT_ASK_SAVE_FILE_NAME,
+    PRINT_ASK_LOAD_FILE_NAME,
+    PRINT_LOADED,
+    PRINT_SAVED,
+    PRINT_WRONG_FILE_NAME,
+
+    // --- MODEL ---
+
     START,
     RESET,
-    SHOW_ALL,
-    SHOW_MOUNTAIN,
     SWAP,
     BUILD,
     SHUFFLE,
@@ -19,43 +42,27 @@ public enum ActionType {
     UNDO,
     REDO,
     REMOVE,
-    PRINT_AI,
-    PRINT_COMMAND_ERROR,
-    PRINT_WAIT_COORDINATES,
-    PRINT_GOODBYE,
-    PRINT_HELP,
-    PRINT_LIST_MOVES,
-    PRINT_NEXT_PLAYER,
-    PRINT_PLAYER,
-    PRINT_PLAYER_NAME,
-    PRINT_START,
-    PRINT_STATE,
-    PRINT_WELCOME,
-    PRINT_WIN_MESSAGE,
-    PRINT_FORBIDDEN_ACTION,
-    PRINT_ASK_NB_PLAYERS,
-    PRINT_ASK_PLAYER_NAME,
-    PRINT_ASK_GAME_MODE,
-    PRINT_ASK_SAVE_FILE_NAME,
-    PRINT_ASK_LOAD_FILE_NAME,
     SAVE,
-    PRINT_SAVED,
     LOAD,
-    PRINT_LOADED,
-    PRINT_WRONG_FILE_NAME,
     AI_MOVE,
-    
-    // --- NETWORK ---
-    PRINT_ASK_HOST_OR_JOIN,
-    PRINT_ASK_IP,
-    INIT_K3,
-    OTHER_PLAYER,
+
+    /**********
+     * SERVICES
+     **********/
+
+    // --- PRINT ---
+
     PRINT_WAITING_FOR_CONNECTION,
+    PRINT_ASK_HOST_OR_JOIN,
     PRINT_CONNECTION_ETABLISHED,
     PRINT_CONNECTION_ERROR,
     PRINT_NOT_YOUR_TURN,
+
+    // --- MODEL ---
+
+    PRINT_ASK_IP,
+    INIT_K3,
     ITS_YOUR_TURN,
-    MOVE_FROM_NETWORK,
     PLAYER_DATA,
     ACKNOWLEDGEMENT,
     PRINT_WAITING_RESPONSE,
@@ -66,6 +73,7 @@ public enum ActionType {
      **********/
 
     // --- GLOBAL ---
+
     SET_BUTTON_PRESSED,
     SET_BUTTON_HOVERED,
     SET_BUTTON_RELEASED,
@@ -74,7 +82,8 @@ public enum ActionType {
     SETTINGS,
     RETURN_TO_MENU,
 
-    // Menu
+    // --- Menu ---
+    
     PLAY_LOCAL,
     PLAY_ONLINE,
     RULES,
@@ -84,12 +93,17 @@ public enum ActionType {
     NEXT_RULE,
     END_RULE,
 
-    // Phase 1
+    /**********
+     * UNUSED
+     **********/
+
     GRAB_HEX,
-
-    // --- PHASE 2 ---
-
-    // --- Overlay ---
     ADD_GLASS,
     REMOVE_GLASS,
+    MOVE_FROM_NETWORK,
+    OTHER_PLAYER,
+    PRINT_PLAYER_NAME,
+    PRINT_ASK_PLAYER_NAME,
+    SHOW_ALL,
+    SHOW_MOUNTAIN,
 }
