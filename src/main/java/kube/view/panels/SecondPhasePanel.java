@@ -228,7 +228,6 @@ public class SecondPhasePanel extends JPanel {
         additionals1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 "Additionnel Pieces de Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
                 new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
-        addAdditionals(additionals1, 1, ModelColor.GREEN);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
@@ -242,7 +241,6 @@ public class SecondPhasePanel extends JPanel {
         additionals2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 "Additionnel Pieces de Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
                 new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
-        //addAdditionals(additionals2, 0, ModelColor.RED);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
@@ -303,7 +301,7 @@ public class SecondPhasePanel extends JPanel {
             for (int j = 0; j < i; j++) {
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
-                hexa.add(new HexIcon(ModelColor.EMPTY, false));
+                hexa.add(new HexIcon(ModelColor.EMPTY, false, p));
                 if (p == null) {
                     k3Panels[i - 1][j] = hexa;
                 } else if (p == k3.getP1()) {

@@ -9,6 +9,7 @@ import java.awt.image.RescaleOp;
 
 import kube.configuration.ResourceLoader;
 import kube.model.ModelColor;
+import kube.model.Player;
 
 public class HexIcon extends Icon {
     private boolean isActionable;
@@ -19,40 +20,45 @@ public class HexIcon extends Icon {
     private double offsetY;
 
     private ModelColor color;
+    private Player player;
 
     private static final int WIDTH = 40;
     private static final int HEIGHT = 40;
+    private static final int SCALE = 1;
 
-    private double scale = 1;
+    private double scale;
 
-    public HexIcon(ModelColor color, boolean actionable) {
-        super(ResourceLoader.getBufferedImage(getImageName(color)));
-        resizeIcon(WIDTH, HEIGHT);
-        this.isActionable = actionable;
-        this.color = color;
-    }
-
-    public HexIcon(ModelColor color) {
-        this(color, false);
-    }
-
-    public HexIcon() {
-        this(ModelColor.EMPTY);
-    }
-
-    public HexIcon(ModelColor color, int width, int height) {
-        super(ResourceLoader.getBufferedImage(getImageName(color)));
-        this.isActionable = false;
-        this.color = color;
-        resizeIcon(width, height);
-    }
-
-    public HexIcon(ModelColor color, boolean actionable, double scale) {
+    public HexIcon(ModelColor color, boolean actionable, Player player, int width, int height, double scale) {
         super(ResourceLoader.getBufferedImage(getImageName(color)));
         this.isActionable = actionable;
         this.color = color;
         this.scale = scale;
-        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+        this.player = player;
+        resizeIcon((int) (width * scale), (int) (height * scale));
+    }
+
+    public HexIcon(ModelColor color, boolean actionable, Player p) {
+        this(color, actionable, p, WIDTH, HEIGHT, SCALE);
+
+    }
+    public HexIcon(ModelColor color, boolean actionable) {
+        this(color, actionable, null, WIDTH, HEIGHT, SCALE);
+    }
+
+    public HexIcon(ModelColor color) {
+        this(color, false, null, WIDTH, HEIGHT, SCALE);
+    }
+
+    public HexIcon() {
+        this(ModelColor.EMPTY, false, null, WIDTH, HEIGHT, SCALE);
+    }
+
+    public HexIcon(ModelColor color, int width, int height) {
+        this(ModelColor.EMPTY, false, null, width, height, SCALE);
+    }
+
+    public HexIcon(ModelColor color, boolean actionable, double scale) {
+        this(color, actionable, null, WIDTH, HEIGHT, scale);
     }
 
     @Override
@@ -159,6 +165,10 @@ public class HexIcon extends Icon {
 
     public Point getPosition() {
         return position;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public String toString() {
