@@ -19,7 +19,7 @@ public class Swap {
      * Constructor of the class Swap
      * 
      * @param from the first position
-     * @param to the second position
+     * @param to   the second position
      */
     public Swap(Point from, Point to) {
         this.from = from;
@@ -31,8 +31,8 @@ public class Swap {
      * 
      * @param fromX the x coordinate of the first position
      * @param fromY the y coordinate of the first position
-     * @param toX the x coordinate of the second position
-     * @param toY the y coordinate of the second position
+     * @param toX   the x coordinate of the second position
+     * @param toY   the y coordinate of the second position
      */
     public Swap(int fromX, int fromY, int toX, int toY) {
         this(new Point(fromX, fromY), new Point(toX, toY));
@@ -53,7 +53,7 @@ public class Swap {
     /**********
      * METHOD
      **********/
-    
+
     @Override
     public String toString() {
         return "Echange de la position (" + from.x + "," + from.y + ") avec la position (" + to.x + "," + to.y + ")";

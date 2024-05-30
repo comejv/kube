@@ -1,5 +1,11 @@
 package kube.model.ai;
 
+// Import model classes
+import kube.model.Kube;
+import kube.model.Player;
+import kube.model.action.move.Move;
+
+// Import java classes
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
@@ -7,49 +13,60 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
-
 import javax.swing.Timer;
 
-import kube.model.Kube;
-import kube.model.Player;
-import kube.model.action.move.Move;
-
-public class MiniMaxAI implements ActionListener, Serializable {
+public abstract class MiniMaxAI implements ActionListener, Serializable {
 
     /**********
      * ATTRIBUTES
      **********/
 
-    private int iaPlayerId;
-    private Random r;
-    private int time; // in ms
+    private int iaPlayerId, nbMoves, horizonMax, time;
     private boolean noMoreTime;
+    private Random random;
     private Timer timer;
-    private int nbMoves;
-    private int horizonMax;
-    private Kube k3;
 
     /**********
      * CONSTRUCTORS
      **********/
 
-    public MiniMaxAI(int time, Random r) {
-        this.r = r;
+    /**
+     * Constructor of the MiniMaxAI class
+     * 
+     * @param time   the time of the timer
+     * @param random the random object
+     */
+    public MiniMaxAI(int time, Random random) {
+        this.random = random;
         this.time = time;
     }
 
+    /**
+     * Constructor of the MiniMaxAI class
+     * 
+     * @param time the time of the timer
+     * @param seed the seed of the random object
+     */
     public MiniMaxAI(int time, int seed) {
-        this.r = new Random(seed);
+        this.random = new Random(seed);
         this.time = time;
     }
 
+    /**
+     * Constructor of the MiniMaxAI class totally random
+     * 
+     * @param time the time of the timer
+     */
     public MiniMaxAI(int time) {
-        this.r = new Random();
+        this.random = new Random();
         this.time = time;
     }
 
+    /**
+     * Constructor of the MiniMaxAI class with default time (1s) and random object
+     */
     public MiniMaxAI() {
-        this.r = new Random();
+        this.random = new Random();
         this.time = 1000;
     }
 
@@ -57,55 +74,32 @@ public class MiniMaxAI implements ActionListener, Serializable {
      * SETTERS
      **********/
 
-    public final void setK3(Kube k) {
-        k3 = k;
-    }
-
     public final void setPlayerId(int id) {
         iaPlayerId = id;
     }
 
-    public void setR(Random r) {
-        this.r = r;
-    }
-
-    public void setTime(int t) {
-        time = t;
-    }
-
-    public void setNoMoreTime(boolean b) {
+    public final void setNoMoreTime(boolean b) {
         noMoreTime = b;
     }
 
-    public void setTimer(Timer t) {
+    public final void setHorizonMax(int horizon) {
+        horizonMax = horizon;
+    }
+
+    public final void setNbMoves(int nb) {
+        nbMoves = nb;
+    }
+
+    public final void setTimer(Timer t) {
         timer = t;
-    }
-
-    public void incrNbMoves() {
-        nbMoves++;
-    }
-
-    public final void setHorizonMax(int h) {
-        horizonMax = h;
     }
 
     /**********
      * GETTERS
      **********/
 
-    public Player getOtherPlayer(Kube k) {
-        if (k.getP1().getId() == iaPlayerId) {
-            return k.getP2();
-        }
-        return k.getP1();
-    }
-
-    public Player getPlayer(Kube k) {
-        return k.getPlayerById(iaPlayerId);
-    }
-
-    public Random getR() {
-        return r;
+    public Random getRandom() {
+        return random;
     }
 
     public int getTime() {
@@ -120,6 +114,10 @@ public class MiniMaxAI implements ActionListener, Serializable {
         return timer;
     }
 
+    public int getPlayerId() {
+        return iaPlayerId;
+    }
+
     public int getNbMoves() {
         return nbMoves;
     }
@@ -128,83 +126,140 @@ public class MiniMaxAI implements ActionListener, Serializable {
         return horizonMax;
     }
 
+    /**
+     * Getting the player
+     * 
+     * @param kube the kube
+     * @return the player
+     */
+    public Player getPlayer(Kube kube) {
+        return kube.getPlayerById(getPlayerId());
+    }
+
+    /**
+     * Getting the other player
+     * 
+     * @param kube the kube
+     * @return the other player
+     */
+    public Player getOtherPlayer(Kube kube) {
+        if (kube.getP1().getId() == getPlayerId()) {
+            return kube.getP2();
+        }
+        return kube.getP1();
+    }
+
     /**********
      * METHODS
      **********/
 
     /**
-     * Fill the mountain with random mountains until the mountain is valid
+     * Increment the number of moves
+     * 
+     * @return void
+     */
+    public void incrNbMoves() {
+        setNbMoves(getNbMoves() + 1);
+    }
+
+    /**
+     * Fill the mountain with random cubes
      * 
      * @return void
      */
     public void constructionPhase(Kube k3) {
-        utilsAI.randomFillMountain(getPlayer(k3), getR());
+        utilsAI.randomFillMountain(getPlayer(k3), getRandom());
     }
 
     /**
      * MinMax algorithm
      * 
-     * @param k       the current state of the game
+     * @param kube    the current state of the game
      * @param horizon the depth of the tree
      * @return an hashmap of each move doable and it score
      */
-    public HashMap<Move, Integer> miniMax(Kube k, int horizon) {
-        HashMap<Move, Integer> map = new HashMap<>();
-        ArrayList<Move> moves = k.moveSet();
+    public HashMap<Move, Integer> miniMax(Kube kube, int horizon) {
+
+        HashMap<Move, Integer> map;
+        ArrayList<Move> moves;
+        Integer minValue, maxValue;
+
+        map = new HashMap<>();
+        moves = kube.moveSet();
+
+        // Loop until timers end
         for (Move m : moves) {
+
             if (getNoMoreTime()) {
                 return null;
             }
-            k.playMove(m);
-            map.put(m, miniMaxRec(k.clone(), horizon, Integer.MIN_VALUE, Integer.MAX_VALUE));
-            k.unPlay();
 
+            kube.playMove(m);
+            minValue = Integer.MIN_VALUE;
+            maxValue = Integer.MAX_VALUE;
+            map.put(m, miniMaxRec(kube.clone(), horizon, minValue, maxValue));
+            kube.unPlay();
         }
         return map;
     }
 
     /**
-     * MinMax algorithm
+     * MinMax recursive algorithm
      * 
-     * @param k       the current state of the game
+     * @param kube    the current state of the game
      * @param horizon the depth of the tree
+     * @param alpha   the best value for a max node
+     * @param beta    the worst value for a min node
      * @return the best value for a max node or the worst value for a min node
      */
-    public int miniMaxRec(Kube k, int horizon, int alpha, int beta) {
+    public int miniMaxRec(Kube kube, int horizon, int alpha, int beta) {
 
-        // Timer's end
+        ArrayList<Move> moves;
+        int bestScore, score, evalValue, evalOtherPlayerValue;
+        Player player;
+        boolean hasNotPenlaity, hasNotMoves;
+
+        // Check if the timer is ended
         if (getNoMoreTime()) {
             return -1;
         }
 
-        ArrayList<Move> moves;
-        int bestScore, score;
-        Player p = k.getCurrentPlayer();
+        player = kube.getCurrentPlayer();
+
         // Avoid evaluation of penality moves, because that false the game state
-        if (!k.getPenality() && horizon <= 0 || (moves = k.moveSet()).size() == 0) {
-            return evaluation(k, getPlayer(k)) - evaluation(k, getOtherPlayer(k));
+        hasNotPenlaity = !kube.getPenality() && horizon <= 0;
+        hasNotMoves = (moves = kube.moveSet()).size() == 0;
+        if (hasNotPenlaity || hasNotMoves) {
+            evalValue = evaluation(kube, getPlayer(kube));
+            evalOtherPlayerValue = evaluation(kube, getOtherPlayer(kube));
+            return evalValue - evalOtherPlayerValue;
         } else {
-            if (p == getPlayer(k)) {
+            if (player == getPlayer(kube)) {
                 bestScore = Integer.MIN_VALUE;
             } else {
                 bestScore = Integer.MAX_VALUE;
             }
             for (Move m : moves) {
-                k.playMove(m);
-                score = miniMaxRec(k, horizon - 1, alpha, beta);
-                if (getNoMoreTime()) { // Timer's end
+
+                kube.playMove(m);
+                score = miniMaxRec(kube, horizon - 1, alpha, beta);
+
+                // Check if the timer is ended
+                if (getNoMoreTime()) {
                     return -1;
                 }
-                k.unPlay();
-                // Noeud max
-                if (p == getPlayer(k)) {
+                kube.unPlay();
+
+                // Max node
+                if (player == getPlayer(kube)) {
                     bestScore = Math.max(score, bestScore);
                     alpha = Math.max(score, alpha);
                     if (beta <= alpha) {
                         break;
                     }
-                    // Noeud min
-                } else {
+                }
+                // Min node
+                else {
                     bestScore = Math.min(score, bestScore);
                     beta = Math.min(score, beta);
                     if (beta <= alpha) {
@@ -219,49 +274,62 @@ public class MiniMaxAI implements ActionListener, Serializable {
     /**
      * Kube's evaluation method
      * 
-     * @param k the current state of the game
+     * @param kube   the kube
+     * @param player the player
      * @return the value of the state
      */
-    public int evaluation(Kube k, Player p) {
-        return 0;
-    }
+    abstract public int evaluation(Kube kube, Player player);
 
     /**
      * Action performed when the timer ends
      * 
-     * @param arg0 the action event
+     * @param action the action event
      * @return void
      */
     @Override
-    public void actionPerformed(ActionEvent arg0) {
+    public void actionPerformed(ActionEvent action) {
         setNoMoreTime(true);
         getTimer().stop();
     }
 
-    public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
+    /**
+     * Select the best move
+     * 
+     * @param movesMap the moves map
+     * @param kube     the kube
+     * @return the best move
+     */
+    public Move selectMove(HashMap<Move, Integer> movesMap, Kube kube) {
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
 
     /**
      * Give the next move
      * 
+     * @param kube the kube
      * @return the next move
      */
-    public Move nextMove(Kube k3) {
-        incrNbMoves();
+    public Move nextMove(Kube kube) {
+
         int horizon;
+        HashMap<Move, Integer> solution, moveMap;
+
+        incrNbMoves();
         setNoMoreTime(false);
         setTimer(new Timer(time, this));
         getTimer().start();
+
         horizon = 2;
-        HashMap<Move, Integer> solution = null, moveMap = null;
+        solution = null;
+        moveMap = null;
+
         while (true) {
-            moveMap = miniMax(k3.clone(), horizon);
+            moveMap = miniMax(kube.clone(), horizon);
             if (getNoMoreTime()) {
                 if (solution == null) {
-                    return selectMove(moveMap, k3);
+                    return selectMove(moveMap, kube);
                 } else {
-                    return selectMove(moveMap, k3);
+                    return selectMove(moveMap, kube);
                 }
             } else {
                 solution = moveMap;
@@ -271,7 +339,13 @@ public class MiniMaxAI implements ActionListener, Serializable {
         }
     }
 
+    /**
+     * Clone the MiniMaxAI object
+     * 
+     * @return the cloned object
+     */
     public MiniMaxAI clone() {
+        // TODO: export in each AI classes
         if (this instanceof moveSetHeuristique) {
             return new moveSetHeuristique(getTime());
         } else if (this instanceof randomAI) {
@@ -279,6 +353,5 @@ public class MiniMaxAI implements ActionListener, Serializable {
         } else {
             throw new UnsupportedOperationException("Unsupported type for cloning.");
         }
-
     }
 }

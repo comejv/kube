@@ -97,6 +97,7 @@ public enum ActionType {
      * UNUSED
      **********/
 
+    // TODO : remove unused actions
     GRAB_HEX,
     ADD_GLASS,
     REMOVE_GLASS,
