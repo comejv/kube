@@ -1,26 +1,69 @@
 package kube.model.action;
 
 public class Queue<E> {
-    Maillon<E> head, queue;
 
+    /**********
+     * INNER CLASS MAILLON
+     **********/
+
+    private class Maillon {
+        E element;
+        Maillon next;
+    }
+
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    private Maillon head, queue;
+
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the class Queue 
+     */
     public Queue() {
         head = queue = null;
     }
 
-    public synchronized void add(E e) {
-        Maillon<E> m = new Maillon<>();
-        m.e = e;
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Add an element to the queue
+     * 
+     * @param element the element to add
+     */
+    public synchronized void add(E element) {
+
+        Maillon m;
+        
+        m = new Maillon();
+        m.element = element;
         m.next = null;
+
         if (head == null)
             head = queue = m;
         else {
             queue.next = m;
             queue = m;
         }
+
         notifyAll();
     }
 
+    /**
+     * Remove the first element of the queue
+     * 
+     * @return the first element of the queue
+     */
     public synchronized E remove() {
+
+        Maillon m;
+
         while (head == null) {
             try {
                 wait();
@@ -28,15 +71,13 @@ public class Queue<E> {
             }
 
         }
-        Maillon<E> m = head;
+
+        m = head;
         head = head.next;
+        
         if (head == null)
             queue = null;
-        return m.e;
-    }
-}
 
-class Maillon<E> {
-    E e;
-    Maillon<E> next;
+        return m.element;
+    }
 }
