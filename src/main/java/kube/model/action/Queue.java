@@ -22,7 +22,7 @@ public class Queue<E> {
      **********/
 
     /**
-     * Constructor of the class Queue 
+     * Constructor of the class Queue
      */
     public Queue() {
         head = queue = null;
@@ -40,7 +40,7 @@ public class Queue<E> {
     public synchronized void add(E element) {
 
         Maillon m;
-        
+
         m = new Maillon();
         m.element = element;
         m.next = null;
@@ -74,7 +74,7 @@ public class Queue<E> {
 
         m = head;
         head = head.next;
-        
+
         if (head == null)
             queue = null;
 

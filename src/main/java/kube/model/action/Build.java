@@ -12,7 +12,7 @@ public class Build {
      * ATTRIBUTES
      **********/
 
-    private Point pos;
+    private Point position;
     private ModelColor color;
     private ModelColor oldColor;
 
@@ -23,12 +23,12 @@ public class Build {
     /**
      * Constructor of the class Build
      * 
-     * @param color the color of cube to place
+     * @param color    the color of cube to place
      * @param oldColor the old color in the position
-     * @param pos the position of the cube
+     * @param pos      the position of the cube
      */
     public Build(ModelColor color, ModelColor oldColor, Point pos) {
-        this.pos = pos;
+        this.position = pos;
         this.color = color;
         this.oldColor = oldColor;
     }
@@ -36,10 +36,10 @@ public class Build {
     /**
      * Constructor of the class Build
      * 
-     * @param color the color of cube to place
+     * @param color    the color of cube to place
      * @param oldColor the old color in the position
-     * @param x the x position of the cube
-     * @param y the y position of the cube
+     * @param x        the x position of the cube
+     * @param y        the y position of the cube
      */
     public Build(ModelColor color, ModelColor oldColor, int x, int y) {
         this(color, oldColor, new Point(x, y));
@@ -49,8 +49,8 @@ public class Build {
      * GETTERS
      **********/
 
-    public Point getPos() {
-        return pos;
+    public Point getPosition() {
+        return position;
     }
 
     public ModelColor getModelColor() {
@@ -62,11 +62,12 @@ public class Build {
     }
 
     /**********
-     * METHOD 
+     * METHOD
      **********/
-    
+
     @Override
     public String toString() {
-        return "Placer sur la montagne " + color + " à la position (" + pos.x + "," + pos.y + "), ce qui remplace " + oldColor;
+        return "Placer sur la montagne " + color + " à la position (" + position.x + "," + position.y
+                + "), ce qui remplace " + oldColor;
     }
 }

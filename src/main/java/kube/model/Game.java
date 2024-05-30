@@ -334,11 +334,11 @@ public class Game implements Runnable {
     }
 
     synchronized public boolean build(Build b) {
-        return k3.getCurrentPlayer().addToMountainFromAvailableToBuild(b.getPos(), b.getModelColor());
+        return k3.getCurrentPlayer().addToMountainFromAvailableToBuild(b.getPosition(), b.getModelColor());
     }
 
     synchronized public ModelColor remove(Remove r) {
-        return k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(r.getPos());
+        return k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(r.getPosition());
     }
 
     public void playMove(Action a) {

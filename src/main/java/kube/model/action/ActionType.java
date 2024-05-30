@@ -83,7 +83,7 @@ public enum ActionType {
     RETURN_TO_MENU,
 
     // --- Menu ---
-    
+
     PLAY_LOCAL,
     PLAY_ONLINE,
     RULES,

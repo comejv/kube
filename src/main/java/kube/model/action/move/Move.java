@@ -116,7 +116,7 @@ public abstract class Move implements Serializable {
     }
 
     abstract public String toHTML();
-    
+
     @Override
     public boolean equals(Object o) {
 
