@@ -210,7 +210,10 @@ public class FirstPhasePanel extends JPanel {
         mini.revalidate();
         mini.repaint();
     }
-    public void updateAll(){
+
+    public void updateAll() {
+        buttonsMap.get("AI").setEnabled(false);
+        buttonsMap.get("Validate").setEnabled(false);
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             updateSide(c);
         }
@@ -219,6 +222,10 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(i, j);
             }
         }
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+            updateSide(c);
+        }
+        buttonsMap.get("AI").setEnabled(true);
         updateButton();
     }
 
@@ -245,9 +252,10 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(s.getPos1());
                 updateGrid(s.getPos2());
                 break;
-            default:
             case AI_MOVE:
                 updateAll();
+                break;
+            default:
                 break;
         }
     }

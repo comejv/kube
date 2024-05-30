@@ -161,6 +161,18 @@ public class TextualMode implements Runnable {
                 case PRINT_WAITING_RESPONSE:
                     printWaitingOtherPlayer();
                     break;
+                case PRINT_ASK_SAVE_FILE_NAME:
+                    System.out.println("Entrez le nom du fichier de sauvegarde");
+                    break;
+                case PRINT_SAVED:
+                    System.out.println("Partie sauvegardée");
+                    break;
+                case PRINT_ASK_LOAD_FILE_NAME:
+                    System.out.println("Entrez le nom du fichier de chargement");
+                    break;
+                case PRINT_LOADED:
+                    System.out.println("Partie chargée");
+                    break;
                 default:
                     break;
             }
@@ -173,6 +185,9 @@ public class TextualMode implements Runnable {
                 "-echanger : permet d'échanger la position de 2 pièces de son choix\n" +
                 "-valider : valider que sa montagne est prête\n" +
                 "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
+                "-sauvegarder : sauvegarde la partie\n" +
+                "-charger : charge une partie\n" +
+                "-aide : affiche cette liste\n" +
                 "Tour de " + kube.getCurrentPlayer().getName() + "\n" +
                 "Vous devez consruire votre montagne. \n");
     }
@@ -183,6 +198,8 @@ public class TextualMode implements Runnable {
                 "-annuler : annuler le dernier coup\n" +
                 "-rejouer : rejouer le dernier coup\n" +
                 "-afficher : affiche l'état de la base centrale et de sa montagne\n" +
+                "-sauvegarder : sauvegarde la partie\n" +
+                "-charger : charge une partie\n" +
                 "-aide : affiche cette liste\n" +
                 "Tour de " + kube.getCurrentPlayer().getName() + "\n" +
                 "Vous devez choisir une de vos pièces pour la mettre sur la montagne centrale.";

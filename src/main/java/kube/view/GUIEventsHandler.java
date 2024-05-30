@@ -1,10 +1,12 @@
 package kube.view;
 
 import kube.configuration.Config;
-import kube.controller.graphical.DnDController;
+import kube.controller.graphical.Phase1DnD;
 import kube.controller.graphical.MenuController;
+import kube.controller.graphical.Phase1DnD;
 import kube.model.Kube;
 import kube.model.action.*;
+import kube.model.ai.moveSetHeuristique;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.panels.RulesPanel;
 
@@ -24,7 +26,9 @@ public class GUIEventsHandler implements Runnable {
     @Override
     public void run() {
         while (true) {
+            Config.debug("View is waiting ");
             Action action = eventsToView.remove();
+            Config.debug("View receive ", action);
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -66,9 +70,8 @@ public class GUIEventsHandler implements Runnable {
                 // MENU
                 case START:
                     eventsToModel.add(new Action(ActionType.START, new Start()));
-                    gui.setGlassPaneController(new DnDController(eventsToView, eventsToModel));
+                    gui.setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
                     gui.setGlassPanelVisible(true);
-                    gui.updatePanel();
                     break;
                 case RULES:
                     // toModel is null because we don't interract with the model in the rules
@@ -103,7 +106,6 @@ public class GUIEventsHandler implements Runnable {
                 case MOVE:
                 case UNDO:
                 case REDO:
-
                     gui.updateSecondPanel(action);
                 break;
                 default:

@@ -9,6 +9,7 @@ import java.util.Random;
 
 import kube.model.ModelColor;
 import kube.model.Player;
+import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
@@ -43,12 +44,14 @@ public class moveSetHeuristique extends MiniMaxAI {
      **********/
     @Override
     public void constructionPhase(Kube k3) {
-        getBaseRepartiton(k3);
-        for (int i = 0; i < getPlayer(k3).getMountain().getBaseSize(); i++) {
-            for (int j = 0; j < i + 1; j++) {
-                ModelColor c = getColorBasedOnProbabilities();
-                getPlayer(k3).addToMountainFromAvailableToBuild(i, j, c);
-                redistributeProbs(c, k3);
+        if (!getPlayer(k3).getHasValidateBuilding()) {
+            getBaseRepartiton(k3);
+            for (int i = 0; i < getPlayer(k3).getMountain().getBaseSize(); i++) {
+                for (int j = 0; j < i + 1; j++) {
+                    ModelColor c = getColorBasedOnProbabilities();
+                    getPlayer(k3).addToMountainFromAvailableToBuild(i, j, c);
+                    redistributeProbs(c, k3);
+                }
             }
         }
     }

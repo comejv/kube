@@ -7,13 +7,12 @@ public class GUIControllers {
     MenuController menuController;
     Phase1Controller phase1Controller;
     Phase2Controller phase2Controller;
-    DnDController hexDnDController;
+    Phase1DnD hexPhase1DnD;
 
     public GUIControllers(Queue<Action> toView, Queue<Action> toModel) {
         menuController = new MenuController(toView, toModel);
         phase1Controller = new Phase1Controller(toView, toModel);
         phase2Controller = new Phase2Controller(toView, toModel);
-        hexDnDController = new DnDController(toView, toModel);
     }
 
     public MenuController getMenuController() {
@@ -28,7 +27,7 @@ public class GUIControllers {
         return phase2Controller;
     }
 
-    public DnDController getHexDnDController() {
-        return hexDnDController;
+    public Phase1DnD getHexPhase1DnD() {
+        return hexPhase1DnD;
     }
 }

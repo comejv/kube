@@ -23,12 +23,12 @@ import kube.model.action.Swap;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
-public class DnDController implements MouseListener, MouseMotionListener {
+public class Phase1DnD implements MouseListener, MouseMotionListener {
     private Queue<Action> toView;
     private Queue<Action> toModel;
     private Component component;
 
-    public DnDController(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
+    public Phase1DnD(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.toView = eventsToView;
         this.toModel = eventsToModel;
     }
