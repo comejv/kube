@@ -40,25 +40,6 @@ public class MoveMW extends Move {
         this(new Point(fromX, fromY));
     }
 
-    /**
-     * Constructor of the class MoveMW from a save string
-     * 
-     * @param save the string to load
-     */
-    public MoveMW(String save) {
-
-        super(ModelColor.WHITE);
-
-        String fromString;
-        String[] parts, coords;
-
-        parts = save.split(";");
-        fromString = parts[2].substring(1, parts[2].length() - 1);
-
-        coords = fromString.split(",");
-        this.from = new Point(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]));
-    }
-
     /**********
      * SETTERS
      **********/
@@ -67,7 +48,7 @@ public class MoveMW extends Move {
         this.from = from;
     }
 
-    public void setFrom(int x, int y) {
+    public final void setFrom(int x, int y) {
         setFrom(new Point(x, y));
     }
 
@@ -91,17 +72,6 @@ public class MoveMW extends Move {
     @Override
     public boolean isWhite() {
         return true;
-    }
-
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    @Override
-    public String forSave() {
-        return "{MW;" + super.forSave() + ";" +
-                "(" + getFrom().x + "," + getFrom().y + ")}";
     }
 
     @Override

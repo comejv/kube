@@ -31,36 +31,6 @@ public class History implements Serializable {
         this.undone = new CopyOnWriteArrayList<>();
     }
 
-    /**
-     * Constructor of the class History from a save string
-     * 
-     * @param save the string to load
-     */
-    public History(String save) {
-
-        String player, doneString, undoneString;
-        String[] parts, doneStringTab, undoneStringTab;
-
-        parts = save.split("\n");
-
-        player = parts[0];
-        this.firstPlayer = Integer.parseInt(player);
-
-        doneString = parts[1].substring(1, parts[1].length() - 1);
-        doneStringTab = doneString.split(" ");
-        this.done = new CopyOnWriteArrayList<>();
-        for (String move : doneStringTab) {
-            this.done.add(Move.fromSave(move));
-        }
-
-        undoneString = parts[2].substring(1, parts[2].length() - 1);
-        undoneStringTab = undoneString.split(" ");
-        this.undone = new CopyOnWriteArrayList<>();
-        for (String move : undoneStringTab) {
-            this.undone.add(Move.fromSave(move));
-        }
-    }
-
     /**********
      * SETTERS
      **********/
