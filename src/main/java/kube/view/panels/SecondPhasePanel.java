@@ -142,21 +142,21 @@ public class SecondPhasePanel extends JPanel {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        JPanel p1 = pyra(0);
+        JPanel p1 = pyra(0,6,false);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p1, gbc);
-        JPanel p2 = pyra(0);
+        JPanel p2 = pyra(0,6,false);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p2, gbc);
-        JPanel base = pyra(-1);
+        JPanel base = pyra(-1,9,true);
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1;
@@ -168,14 +168,14 @@ public class SecondPhasePanel extends JPanel {
         return gamePanel;
     }
 
-    private JPanel pyra(int rowMissing) {
+    private JPanel pyra(int rowMissing,int base,boolean empty) {
         JPanel constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         int i;
-        for (i = 1; i <= 6; i++) {
+        for (i = 1; i <= base; i++) {
             if (i <= rowMissing) {
                 continue;
             }
@@ -184,7 +184,7 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setOpaque(false);
 
             for (int j = 0; j < i; j++) {
-                if (rowMissing == -1) {
+                if (empty) {
                     lineHexa.add(new HexIcon(ModelColor.EMPTY, false));
                 } else {
                     lineHexa.add(new HexIcon(ModelColor.BLUE, true));
