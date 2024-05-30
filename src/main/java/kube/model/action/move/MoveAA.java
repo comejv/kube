@@ -72,4 +72,10 @@ public class MoveAA extends Move {
         return "Prendre dans les additionels " +
                 getColor().forDisplay();
     }
+
+    @Override
+    public String toHTML() {
+        return "Prendre dans les additionels " +
+                getColor().forDisplayHTML();
+    }
 }

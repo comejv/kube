@@ -68,7 +68,7 @@ public class GUIEventsHandler implements Runnable {
 
                 // MENU
                 case START:
-                    eventsToModel.add(new Action(ActionType.START, new Start(new moveSetHeuristique(), new moveSetHeuristique())));
+                    eventsToModel.add(new Action(ActionType.START, new Start()));
                     gui.setGlassPaneController(new DnDController(eventsToView, eventsToModel));
                     gui.setGlassPanelVisible(true);
                     break;

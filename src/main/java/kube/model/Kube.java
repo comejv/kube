@@ -3,7 +3,6 @@ package kube.model;
 import java.awt.Point;
 
 // Import model classes
-import kube.model.action.move.*;
 import kube.model.ai.MiniMaxAI;
 
 // Import java classes

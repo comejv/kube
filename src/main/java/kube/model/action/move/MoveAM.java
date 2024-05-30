@@ -111,4 +111,11 @@ public class MoveAM extends Move {
                 getColor().forDisplay() +
                 ", en (" + to.x + ", " + to.y + ")";
     }
+
+    @Override
+    public String toHTML() {
+        return "Poser depuis les additionels " +
+                getColor().forDisplayHTML() +
+                ", en (" + to.x + ", " + to.y + ")";
+    }
 }

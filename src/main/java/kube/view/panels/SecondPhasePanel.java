@@ -1,26 +1,34 @@
 package kube.view.panels;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.event.ActionListener;
+
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 import kube.configuration.Config;
-import kube.view.GUI;
-import kube.view.GUIColors;
-import kube.view.components.Buttons;
-import kube.view.components.HexIcon;
-
-import java.awt.*;
-import java.awt.event.ActionListener;
-
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.action.Action;
+import kube.model.action.move.Move;
+import kube.view.GUI;
+import kube.view.GUIColors;
+import kube.view.components.Buttons;
+import kube.view.components.HexIcon;
 
 /*
  * This class extends JPanel and creates the GUI for the second phase of the game.
@@ -29,13 +37,12 @@ public class SecondPhasePanel extends JPanel {
     private Phase2Controller controller;
     private Kube k3;
     private GUI gui;
-    private JPanel histPanel, p1Panel, p2Panel, k3Panel;
+    private JTextPane editorPane;
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
-        Config.debug("SecondPhasePanel k3 : " + k3);
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         setBackground(GUIColors.GAME_BG.toColor());
@@ -44,7 +51,8 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridy = 0;
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.NORTHEAST;
-        gbc.insets = new Insets(0, 10, 0, 10);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(20, 5, 20, 5);
         add(eastPane, gbc);
         JPanel gamePanel = gamePanel();
         gamePanel.setBackground(GUIColors.TEXT.toColor());
@@ -56,57 +64,71 @@ public class SecondPhasePanel extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1;
         gbc.weighty = 1;
-        gbc.insets = new Insets(20, 20, 20, 20);
+        gbc.insets = new Insets(20, 15, 20, 15);
         add(gamePanel, gbc);
     }
 
     private JPanel createEastPanel(ActionListener a) {
         JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(6, 1)); // TODO : change to flow or box layout
-        buttons.setPreferredSize(new Dimension(Config.getInitWidth() / 5, Config.getInitHeight() / 5));
-        buttons.setOpaque(false);
+        panel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+       // gbc.insets = new Insets(10, 0, 0, 0);
+
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addActionListener(a);
-        buttons.add(quitButton);
+        gbc.gridy=0;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(quitButton,gbc);
 
         JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addActionListener(a);
-        buttons.add(optButton);
+        gbc.gridy=1;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(optButton,gbc);
 
         JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
         sugIaButton.addActionListener(a);
-        buttons.add(sugIaButton);
+        gbc.gridy=2;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(sugIaButton,gbc);
+
+        JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
+        histoButton.setActionCommand("updateHist");
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        histoButton.addActionListener(a);
+        gbc.gridy=6;
+        panel.add(histoButton,gbc);
 
         JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
         annulerButton.setActionCommand("undo");
         annulerButton.addActionListener(a);
-        buttons.add(annulerButton);
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.gridy=7;
+        panel.add(annulerButton,gbc);
 
         JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
         refaireButton.setActionCommand("redo");
         refaireButton.addActionListener(a);
-        buttons.add(refaireButton);
-
-        JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
-        histoButton.setActionCommand("updateHist");
-        histoButton.addActionListener(a);
-        buttons.add(histoButton);
-
-        panel.add(buttons);
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        gbc.gridy=8;
+        panel.add(refaireButton,gbc);
 
         JLabel histoText = new JLabel("HISTO");
         histoText.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         histoText.setForeground(GUIColors.TEXT.toColor());
-        panel.add(histoText);
+        histoText.setPreferredSize(new Dimension(Config.getInitWidth()/5,(int)(Config.getInitHeight()/2)));
+        //panel.add(histoText);
         JScrollPane histo = getHisto();
-        panel.add(histo, BorderLayout.CENTER);
-
+        //histo.setMinimumSize(new Dimension(Config.getInitWidth()/7,Config.getInitHeight()));
+        gbc.gridy=3;
+        gbc.gridheight=3;
+        gbc.weighty=1;
+        gbc.fill=GridBagConstraints.HORIZONTAL;
+        panel.add(histo,gbc);
         return panel;
     }
 
@@ -117,35 +139,47 @@ public class SecondPhasePanel extends JPanel {
 
     private JScrollPane getHisto() {
         JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                "Historique", TitledBorder.CENTER, TitledBorder.TOP));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        histPanel = new JPanel();
-        histPanel.setLayout(new BoxLayout(histPanel, BoxLayout.Y_AXIS));
-        scrollPane.setViewportView(histPanel);
+        editorPane = new JTextPane(); // Assign the editorPane to the reference
+        editorPane.setContentType("text/html");
+        editorPane.setEditable(false);
+        scrollPane.setViewportView(editorPane);
         scrollPane.setPreferredSize(new Dimension(75, 300));
         scrollPane.setOpaque(false);
 
         return scrollPane;
     }
 
+    public synchronized void updateHisto() {
+        Config.debug("Update historic");
+        StringBuilder htmlContent = new StringBuilder();
+        for (Move m : k3.getHistory().getDone()) {
+            htmlContent.append(m.toHTML()).append("<br>");
+        }
+        editorPane.setText(htmlContent.toString());
+    }
+
     private JPanel gamePanel() {
         JPanel gamePanel = new JPanel();
         gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        p1Panel = pyra(0);
+        JPanel p1 = pyra(0,6,false);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p1Panel, gbc);
-        p2Panel = pyra(0);
+        gamePanel.add(p1, gbc);
+        JPanel p2 = pyra(0,6,false);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p2Panel, gbc);
-        k3Panel = pyra(-1);
+        gamePanel.add(p2, gbc);
+        JPanel base = pyra(-1,9,true);
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1;
@@ -153,18 +187,18 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        gamePanel.add(k3Panel, gbc);
+        gamePanel.add(base, gbc);
         return gamePanel;
     }
 
-    private JPanel pyra(int rowMissing) {
+    private JPanel pyra(int rowMissing,int base,boolean empty) {
         JPanel constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         int i;
-        for (i = 1; i <= 6; i++) {
+        for (i = 1; i <= base; i++) {
             if (i <= rowMissing) {
                 continue;
             }
@@ -173,7 +207,7 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setOpaque(false);
 
             for (int j = 0; j < i; j++) {
-                if (rowMissing == -1) {
+                if (empty) {
                     lineHexa.add(new HexIcon(ModelColor.EMPTY, false));
                 } else {
                     lineHexa.add(new HexIcon(ModelColor.BLUE, true));
@@ -185,14 +219,5 @@ public class SecondPhasePanel extends JPanel {
             constructPanel.add(lineHexa, gbc);
         }
         return constructPanel;
-    }
-
-    public void updateHisto() {
-        histPanel.removeAll();
-        JTextArea text = new JTextArea(k3.getHistory().forDisplay());
-        Config.debug(text);
-        histPanel.add(text);
-        histPanel.revalidate();
-        histPanel.repaint();
     }
 }

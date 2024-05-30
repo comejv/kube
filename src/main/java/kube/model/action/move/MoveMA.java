@@ -113,4 +113,10 @@ public class MoveMA extends Move {
                 " depuis (" + getFrom().x + ", " + getFrom().y + ")";
     }
 
+    @Override
+    public String toHTML() {
+        return "Recuperer dans ses additionels " +
+                getColor().forDisplayHTML() +
+                " depuis (" + getFrom().x + ", " + getFrom().y + ")";
+    }
 }

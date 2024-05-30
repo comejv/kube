@@ -54,4 +54,10 @@ public class MoveAW extends Move {
         return "Passer son tour depuis les additionels " +
                 getColor().forDisplay();
     }
+
+    @Override
+    public String toHTML() {
+        return "Passer son tour depuis les additionels " +
+                getColor().forDisplayHTML();
+    }
 }

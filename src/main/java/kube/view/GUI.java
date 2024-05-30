@@ -1,8 +1,6 @@
 package kube.view;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -22,11 +20,8 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.DnDController;
 import kube.controller.graphical.GUIControllers;
-import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
-import kube.model.action.ActionType;
-import kube.model.action.Build;
 import kube.model.action.Queue;
 import kube.view.panels.*;
 
@@ -126,6 +121,17 @@ public class GUI extends Thread {
     }
 
     public void loadPanel(String panelName) {
+        switch (panelName) {
+            case GUI.PHASE1:
+            case GUI.PHASE2:
+                if (getPanel(panelName) != null) {
+                    Config.debug("Panel ", panelName, " already loaded");
+                    return;
+                }
+                break;
+            default:
+                break;
+        }
         PanelLoader loader = new PanelLoader(this, panelName, k3, controllers, eventsToView, eventsToModel);
         loaderThread = new Thread(loader);
         loaderThread.start();
@@ -134,18 +140,9 @@ public class GUI extends Thread {
     public synchronized void waitPanel(String panelName) {
         switch (panelName) {
             case GUI.PHASE1:
-                try {
-                    while (firstPhasePanel == null) {
-                        wait();
-                    }
-                } catch (InterruptedException e) {
-                    System.err.println("Interrupted loading");
-                }
-                break;
-
             case GUI.PHASE2:
                 try {
-                    while (secondPhasePanel == null) {
+                    while (getPanel(panelName) == null) {
                         wait();
                     }
                 } catch (InterruptedException e) {
@@ -238,5 +235,16 @@ public class GUI extends Thread {
 
     public void updateSecondPanel(Action a) {
         secondPhasePanel.update(a);
+    }
+
+    public JPanel getPanel(String panelName) {
+        switch (panelName) {
+            case GUI.PHASE1:
+                return firstPhasePanel;
+            case GUI.PHASE2:
+                return secondPhasePanel;
+            default:
+                return null;
+        }
     }
 }
