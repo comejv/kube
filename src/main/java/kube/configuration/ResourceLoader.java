@@ -66,17 +66,17 @@ public class ResourceLoader {
 
         resourceStream = null;
 
-        if (Configuration.isJar()) {
+        if (Config.isJar()) {
             resourceStream = ResourceLoader.class.getClassLoader().getResourceAsStream(relativePath);
             if (resourceStream == null) {
-                Configuration.error("Resource " + relativePath + " not found.");
+                Config.error("Resource " + relativePath + " not found.");
                 return null;
             }
         } else {
             try {
                 resourceStream = new FileInputStream(relativePath);
             } catch (FileNotFoundException e1) {
-                Configuration.error("File " + relativePath + " not found.");
+                Config.error("File " + relativePath + " not found.");
                 return null;
             }
         }
@@ -96,7 +96,7 @@ public class ResourceLoader {
             // Return a new ByteArrayInputStream from the buffered byte array
             return new ByteArrayInputStream(byteArray);
         } catch (IOException e) {
-            Configuration.error("copying resource");
+            Config.error("copying resource");
             return null;
         }
     }
@@ -119,18 +119,18 @@ public class ResourceLoader {
             if (in != null) {
                 return ImageIO.read(in);
             }
-            Configuration.debug("Attempting to use placeholder for image...");
+            Config.debug("Attempting to use placeholder for image...");
             in = ResourceLoader.class.getClassLoader().getResourceAsStream(IMAGE_FOLDER + NOT_FIND_FILE + IMAGE_EXTENSION);
             if (in != null) {
                 return ImageIO.read(in);
             }
         } catch (Exception e) {
-            Configuration.error("could not load image " + fileName);
+            Config.error("could not load image " + fileName);
             System.exit(1);
         }
 
-        Configuration.error("While handling missing resource " + imgPath + " new error occured :");
-        Configuration.error("Missing required resource images/notFound.png");
+        Config.error("While handling missing resource " + imgPath + " new error occured :");
+        Config.error("Missing required resource images/notFound.png");
         System.exit(1);
         return null; // should never happen
     }
@@ -147,7 +147,7 @@ public class ResourceLoader {
         BufferedReader buf;
         InputStream resource;
 
-        folder = fileName.equals("credits") ? "" : TEXT_FOLDER + Configuration.getLanguage();
+        folder = fileName.equals("credits") ? "" : TEXT_FOLDER + Config.getLanguage();
         relativePath = folder + "/" + fileName + TEXT_EXTENSION;
         resource = getResourceAsStream(relativePath);
 

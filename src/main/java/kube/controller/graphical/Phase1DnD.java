@@ -15,7 +15,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Configuration;
+import kube.configuration.Config;
 import kube.model.action.*;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;

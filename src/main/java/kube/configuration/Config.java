@@ -1,6 +1,6 @@
 package kube.configuration;
 
-public class Configuration {
+public class Config {
 
     /**********
      * CONFIGURATION CONSTANTS

@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Configuration;
+import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
@@ -25,7 +25,7 @@ public class Phase1Controller implements ActionListener, MouseListener {
     }
 
     public void actionPerformed(ActionEvent evt) {
-        Configuration.debug("Action performed in FirstPhaseController");
+        Config.debug("Action performed in FirstPhaseController");
         switch (evt.getActionCommand()) {
             case "validate":
                 toModel.add(new Action(ActionType.VALIDATE));
@@ -74,7 +74,7 @@ public class Phase1Controller implements ActionListener, MouseListener {
 
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
-        Configuration.debug("Mouse entered" );
+        Config.debug("Mouse entered" );
         if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_HOVERED, source));
         } 

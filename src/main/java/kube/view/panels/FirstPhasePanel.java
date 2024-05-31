@@ -1,6 +1,6 @@
 package kube.view.panels;
 
-import kube.configuration.Configuration;
+import kube.configuration.Config;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
@@ -95,7 +95,7 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap = new HashMap<>();
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridLayout(4, 1));
-        buttons.setPreferredSize(new Dimension(Configuration.INIT_WIDTH / 5, Configuration.INIT_HEIGHT / 5));
+        buttons.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, Config.INIT_HEIGHT / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
         JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");

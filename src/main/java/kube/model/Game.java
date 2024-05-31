@@ -1,7 +1,7 @@
 package kube.model;
 
 // Import model classes
-import kube.configuration.Configuration;
+import kube.configuration.Config;
 import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.moveSetHeuristique;
@@ -105,7 +105,7 @@ public class Game implements Runnable {
         if (a.getType() == ActionType.LOAD) {
             // Load the game
             String filePath;
-            filePath = Configuration.SAVING_PATH_DIRECTORY + (String) a.getData() + Configuration.SAVING_FILE_EXTENSION;
+            filePath = Config.SAVING_PATH_DIRECTORY + (String) a.getData() + Config.SAVING_FILE_EXTENSION;
             File file = new File(filePath);
             try (FileInputStream fis = new FileInputStream(file);
                     ObjectInputStream ois = new ObjectInputStream(fis)) {
@@ -356,7 +356,7 @@ public class Game implements Runnable {
             case CREATE_MOVE:
                 CreateMove cM = (CreateMove) a.getData();
                 move = k3.createMove(cM.getPosFrom(), cM.getPlayerFrom(), cM.getPosTo(), cM.getPlayerTo(), cM.getModelColor());
-                Configuration.debug("Move généré :", move);
+                Config.debug("Move généré :", move);
                 break;
             case MOVE:
             default:
@@ -472,12 +472,12 @@ public class Game implements Runnable {
             String timeStamp = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss").format(Calendar.getInstance().getTime());
             fileName = timeStamp;
         }
-        File directory = new File(Configuration.SAVING_PATH_DIRECTORY);
+        File directory = new File(Config.SAVING_PATH_DIRECTORY);
         if (!directory.exists()) {
             directory.mkdirs(); // Create the directory if it doesn't exist
         }
-        filePath = Configuration.SAVING_PATH_DIRECTORY + fileName + Configuration.SAVING_FILE_EXTENSION;
-        File file = new File(Configuration.SAVING_PATH_DIRECTORY + fileName + Configuration.SAVING_FILE_EXTENSION);
+        filePath = Config.SAVING_PATH_DIRECTORY + fileName + Config.SAVING_FILE_EXTENSION;
+        File file = new File(Config.SAVING_PATH_DIRECTORY + fileName + Config.SAVING_FILE_EXTENSION);
         try (FileOutputStream fos = new FileOutputStream(file);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);) {
             oos.writeObject(k3);

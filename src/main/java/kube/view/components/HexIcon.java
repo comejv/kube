@@ -10,7 +10,7 @@ import java.awt.image.RescaleOp;
 import kube.configuration.ResourceLoader;
 import kube.model.ModelColor;
 import kube.model.Player;
-import kube.configuration.Configuration;
+import kube.configuration.Config;
 
 public class HexIcon extends Icon {
 
@@ -99,7 +99,7 @@ public class HexIcon extends Icon {
             case EMPTY:
                 return "hexaWire";
             default:
-                Configuration.error("Color not found: " + color);
+                Config.error("Color not found: " + color);
                 return null;
         }
     }

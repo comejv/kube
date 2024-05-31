@@ -21,7 +21,7 @@ import javax.swing.JTextPane;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-import kube.configuration.Configuration;
+import kube.configuration.Config;
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
@@ -135,7 +135,7 @@ public class SecondPhasePanel extends JPanel {
         JLabel histoText = new JLabel("HISTO");
         histoText.setFont(new Font("Jomhuria", Font.PLAIN, 25));
         histoText.setForeground(GUIColors.TEXT.toColor());
-        histoText.setPreferredSize(new Dimension(Configuration.INIT_WIDTH / 5, (int) (Configuration.INIT_HEIGHT / 2)));
+        histoText.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, (int) (Config.INIT_HEIGHT / 2)));
         // panel.add(histoText);
         JScrollPane histo = getHisto();
         // histo.setMinimumSize(new
@@ -175,7 +175,7 @@ public class SecondPhasePanel extends JPanel {
                 HexIcon hexRight = (HexIcon) k3Panels[i-1][j].getComponent(0);
                 HexIcon hexLeft = (HexIcon) k3Panels[i-1][j+1].getComponent(0);
                 if (hexRight.getColor() != ModelColor.EMPTY && hexLeft.getColor() != ModelColor.EMPTY){
-                    
+
                 }
             }
         }

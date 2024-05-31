@@ -14,7 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Configuration;
+import kube.configuration.Config;
 import kube.model.Player;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
@@ -51,7 +51,7 @@ public class Phase2DnD extends Phase1DnD {
             Player playerFrom = g.getHexIcon().getPlayer();
             Point posTo = hex.getPosition();
             Player playerTo = hex.getPlayer();
-            Configuration.debug(posFrom, playerFrom, posTo, playerTo, g.getColor());
+            Config.debug(posFrom, playerFrom, posTo, playerTo, g.getColor());
             toModel.add(new Action(ActionType.CREATE_MOVE, new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
         }
         g.setCursor(Cursor.getDefaultCursor());
