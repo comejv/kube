@@ -152,6 +152,12 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateActionnable() {
+        for (int i = 0; i < k3Panels.length; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                HexIcon hex = (HexIcon) k3Panels[i][j].getComponent(0);
+                hex.setActionable(false);
+            }
+        }
         for (int i = 0; i < p1Panels.length; i++) {
             for (int j = 0; j < i + 1; j++) {
                 HexIcon hex = (HexIcon) p1Panels[i][j].getComponent(0);
@@ -163,7 +169,8 @@ public class SecondPhasePanel extends JPanel {
         JPanel[][] moutainPan = null;
         JPanel additionnals;
         Player player;
-        if ((k3.getCurrentPlayer() == k3.getP1() && !k3.getPenality()) || (k3.getCurrentPlayer() == k3.getP2() && k3.getPenality())) {
+        if ((k3.getCurrentPlayer() == k3.getP1() && !k3.getPenality())
+                || (k3.getCurrentPlayer() == k3.getP2() && k3.getPenality())) {
             player = k3.getP1();
             moutainPan = p1Panels;
             additionnals = p1Additionnals;
@@ -172,14 +179,14 @@ public class SecondPhasePanel extends JPanel {
             moutainPan = p2Panels;
             additionnals = p2Additionnals;
         }
-        
+
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
             hex.setActionable(true);
         }
-        for (Component c : additionnals.getComponents()){
+        for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
-            if (hex.getColor() != ModelColor.EMPTY){
+            if (hex.getColor() != ModelColor.EMPTY) {
                 hex.setActionable(true);
             }
         }
@@ -199,7 +206,7 @@ public class SecondPhasePanel extends JPanel {
 
     public void updateAdditionnals(Player p) {
         JPanel additionnalsPanel = null;
-        if (p == k3.getP1()){
+        if (p == k3.getP1()) {
             additionnalsPanel = p1Additionnals;
         } else {
             additionnalsPanel = p2Additionnals;
@@ -208,16 +215,17 @@ public class SecondPhasePanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
 
         int n = 0;
-        for (ModelColor c : p.getAdditionals()){
+        for (ModelColor c : p.getAdditionals()) {
             if (n > 5) {
                 gbc.gridy = 1;
             } else {
                 gbc.gridy = 0;
             }
-            additionnalsPanel.add(new HexIcon(c, false), gbc);
+            additionnalsPanel.add(new HexIcon(c, false, p), gbc);
             n++;
         }
-        additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false), gbc);
+        additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
+        additionnalsPanel.repaint();
     }
 
     public void update(Action a) {
@@ -225,6 +233,8 @@ public class SecondPhasePanel extends JPanel {
         if (move instanceof MoveAA) {
             updateAdditionnals(k3.getP1());
             updateAdditionnals(k3.getP2());
+            updateMoutain(k3.getP1(), new Point(0,0));
+            updateMoutain(k3.getP2(), new Point(0,0));
         } else if (move instanceof MoveAM) {
             MoveAM am = (MoveAM) move;
             updateAdditionnals(am.getPlayer());
@@ -381,10 +391,9 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gamePanel.add(base, gbc);
-    
+
         return gamePanel;
     }
-
 
     private JPanel initMountain(int rowMissing, int base, Player p) {
         JPanel constructPanel = new JPanel();
