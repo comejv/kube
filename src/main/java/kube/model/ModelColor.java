@@ -5,6 +5,7 @@ import java.util.Comparator;
 
 public enum ModelColor {
 
+    // TODO : refactor this class to make it more readable
     /**********
      * ENUMERATION
      **********/

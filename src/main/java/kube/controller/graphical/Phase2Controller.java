@@ -16,6 +16,7 @@ import kube.view.components.Buttons.ButtonIcon;
 import kube.configuration.Config;
 
 public class Phase2Controller implements ActionListener, MouseListener {
+    // TODO : refactor this class to make it more readable
     private Queue<Action> toView;
     private Queue<Action> toModel;
 

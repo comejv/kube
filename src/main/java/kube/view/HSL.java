@@ -3,6 +3,7 @@ package kube.view;
 import java.awt.Color;
 
 public class HSL {
+    // TODO : refactor this class to make it more readable
     private double hue;
     private double saturation;
     private double luminance;

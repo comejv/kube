@@ -17,6 +17,7 @@ import kube.view.GUIColors;
  */
 public class MenuPanel extends JPanel {
 
+    // TODO : refactor this class to make it more readable
     private GUI gui;
 
     public MenuPanel(GUI gui, MenuController buttonListener) {

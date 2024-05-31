@@ -1,6 +1,7 @@
 package kube.configuration;
 
 public class Config {
+    // TODO : refactor this class to make it more readable
     private static boolean mute = true;
     private static final boolean debug = true;
     private static final boolean showBorders = false;

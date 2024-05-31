@@ -13,6 +13,7 @@ import java.util.Objects;
 
 public class Player implements Serializable {
 
+    // TODO : refactor this class to make it more readable
     /**********
      * ATTRIBUTES
      **********/

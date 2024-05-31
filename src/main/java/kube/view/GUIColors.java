@@ -1,6 +1,7 @@
 package kube.view;
 
 public class GUIColors {
+    // TODO : refactor this class to make it more readable
     public static final HSL ACCENT_LIGHT = new HSL(0x145591);
     public static final HSL ACCENT = new HSL(0x003049);
     public static final HSL ACCENT_HOVER = new HSL(0x002437);

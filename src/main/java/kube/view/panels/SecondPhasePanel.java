@@ -38,6 +38,7 @@ import kube.view.components.HexIcon;
  * This class extends JPanel and creates the GUI for the second phase of the game.
  */
 public class SecondPhasePanel extends JPanel {
+    // TODO : refactor this class to make it more readable
     private Phase2Controller controller;
     private Kube k3;
     private GUI gui;

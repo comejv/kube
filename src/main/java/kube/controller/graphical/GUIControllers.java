@@ -5,6 +5,7 @@ import kube.model.action.Action;
 import kube.model.action.Queue;
 
 public class GUIControllers {
+    // TODO : refactor this class to make it more readable
     MenuController menuController;
     Phase1Controller phase1Controller;
     Phase2Controller phase2Controller;

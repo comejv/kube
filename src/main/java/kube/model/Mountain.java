@@ -8,6 +8,7 @@ import java.util.Objects;
 
 public class Mountain implements Serializable {
 
+    // TODO : refactor this class to make it more readable
     /**********
      * ATTRIBUTES
      **********/

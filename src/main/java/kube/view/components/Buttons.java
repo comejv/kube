@@ -13,6 +13,7 @@ import java.awt.image.RescaleOp;
  */
 public class Buttons {
 
+    // TODO : refactor this class to make it more readable
     public static class MenuButton extends JButton {
         public MenuButton(String name) {
             super(name);

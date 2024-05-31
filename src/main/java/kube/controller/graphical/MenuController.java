@@ -15,6 +15,7 @@ import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
 
 public class MenuController implements ActionListener, MouseListener {
+    // TODO : refactor this class to make it more readable
     Queue<Action> toView;
     Queue<Action> toModel;
 

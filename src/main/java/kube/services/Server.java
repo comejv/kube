@@ -8,6 +8,7 @@ import java.net.Socket;
 
 public class Server extends Network {
 
+    // TODO : refactor this class to make it more readable
     private ServerSocket serverSocket;
     private Socket clientSocket;
 

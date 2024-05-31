@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 
 public class Game implements Runnable {
 
+    // TODO : refactor this class to make it more readable
+
     /**********
      * CONSTANTS
      **********/
