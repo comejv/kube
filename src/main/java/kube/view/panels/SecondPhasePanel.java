@@ -270,7 +270,6 @@ public class SecondPhasePanel extends JPanel {
                     TitledBorder.CENTER, TitledBorder.TOP,
                     new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
         }
-        ;
     }
 
     private JScrollPane getHisto() {
@@ -315,7 +314,7 @@ public class SecondPhasePanel extends JPanel {
         updateAdditionnals(k3.getP1());
         updateAdditionnals(k3.getP2());
         updateActionnable();
-
+        updateText();
     }
 
     public void updateMoutain(Player p, int i, int j) {
