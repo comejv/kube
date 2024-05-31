@@ -1,7 +1,6 @@
 package kube;
 
-import java.util.Scanner;
-
+// Import kube classes
 import kube.controller.textual.CommandListener;
 import kube.model.Game;
 import kube.model.Kube;
@@ -9,12 +8,21 @@ import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.TextualMode;
 
-public class QuickGame {
-    // TODO : refactor this class to make it more readable
+// Import java class
+import java.util.Scanner;
 
+public class QuickGame {
+
+    /**
+     * Main method of the program (quick game mode)
+     * 
+     * @param args the arguments
+     */
     public static void main(String[] args) {
+
         Scanner scanner = new Scanner(System.in);
         Kube kube = new Kube();
+
         Queue<Action> eventsToModel = new Queue<>();
         Queue<Action> eventsToView = new Queue<>();
         Queue<Action> eventsToNetwork = new Queue<>();
