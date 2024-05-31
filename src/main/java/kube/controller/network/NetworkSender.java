@@ -5,7 +5,7 @@ import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.services.Network;
 
-public class NetworkSender implements Runnable{
+public class NetworkSender implements Runnable {
 
     /**********
      * ATTRIBUTES
@@ -22,11 +22,11 @@ public class NetworkSender implements Runnable{
     /**
      * Constructor of the class
      * 
-     * @param network the network object
+     * @param network        the network object
      * @param modelToNetwork the queue of actions to send to the network
-     * @param player the player number
+     * @param player         the player number
      */
-    public NetworkSender(Network network, Queue<Action> modelToNetwork, int player){
+    public NetworkSender(Network network, Queue<Action> modelToNetwork, int player) {
         this.network = network;
         this.modelToNetwork = modelToNetwork;
         this.player = player;
@@ -35,16 +35,16 @@ public class NetworkSender implements Runnable{
     /**********
      * METHOD
      **********/
-    
+
     @Override
     public void run() {
-        while(true){
+        while (true) {
             Action action = modelToNetwork.remove();
-            if(action != null){
+            if (action != null) {
                 action.setPlayer(player);
                 network.send(action);
             }
         }
     }
-    
+
 }
