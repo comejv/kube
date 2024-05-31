@@ -37,7 +37,7 @@ public class NetworkListener implements Runnable {
      * METHOD
      **********/
 
-     @Override
+    @Override
     public void run() {
         while (true) {
             try {
