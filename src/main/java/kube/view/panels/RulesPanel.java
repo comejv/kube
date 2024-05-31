@@ -16,7 +16,7 @@ import javax.swing.SwingConstants;
 
 import kube.view.GUI;
 import kube.view.GUIColors;
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
 import kube.view.components.Buttons.RulesButton;
@@ -37,13 +37,13 @@ public class RulesPanel extends JPanel {
 
         this.gui = gui;
         this.buttonListener = buttonListener;
-        width = Config.getInitWidth() / 2;
-        height = Config.getInitHeight() / 2;
+        width = Configuration.INIT_WIDTH / 2;
+        height = Configuration.INIT_HEIGHT / 2;
 
         gui.setGlassPanelVisible(true);
 
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
+        setPreferredSize(new Dimension(Configuration.INIT_WIDTH, Configuration.INIT_HEIGHT));
         setBackground(new Color(0, 0, 0, 150));
 
         gridPanel = new JPanel(new GridBagLayout());
@@ -54,7 +54,7 @@ public class RulesPanel extends JPanel {
         add(gridPanel, elemGBC);
 
         JLabel ruleTitle = new JLabel("RULES", SwingConstants.CENTER);
-        ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 6)));
+        ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Configuration.INIT_HEIGHT / 6)));
         ruleTitle.setForeground(GUIColors.TEXT.toColor());
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 0;
@@ -106,7 +106,7 @@ public class RulesPanel extends JPanel {
             textArea.setEditable(false);
             textArea.setWrapStyleWord(true);
             textArea.setLineWrap(true);
-            textArea.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 14)));
+            textArea.setFont(new Font("Jomhuria", Font.BOLD, (int) (Configuration.INIT_HEIGHT / 14)));
             textArea.setBackground(background);
             textArea.setForeground(foreground);
             textArea.setOpaque(false);
@@ -156,7 +156,7 @@ public class RulesPanel extends JPanel {
             if (i > 0 && i < totalRuleNb + 1) {
                 ruleNb = i;
             } else {
-                System.err.println("Can't assign invalid rule number. Valid range of rule number is 1 to " + totalRuleNb
+                Configuration.error("Can't assign invalid rule number. Valid range of rule number is 1 to " + totalRuleNb
                         + " included");
             }
         }

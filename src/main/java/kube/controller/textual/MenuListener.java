@@ -68,7 +68,12 @@ public class MenuListener implements Runnable {
             Network network;
             if (mode == 1) {
                 eventsToView.add(new Action(ActionType.PRINT_WAITING_FOR_CONNECTION, (Integer) PORT));
-                network = new Server(PORT);
+                try {
+                    network = new Server(PORT);
+                } catch (Exception e) {
+                    eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                    return;
+                }
                 eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ETABLISHED));
                 type = Game.HOST;
             } else {
