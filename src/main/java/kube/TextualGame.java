@@ -1,17 +1,24 @@
 package kube;
 
-import java.util.Scanner;
-
+// Import kube classes
 import kube.controller.textual.MenuListener;
 import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.TextualMode;
 
-public class TextualGame {
-    // TODO : refactor this class to make it more readable
+// Import Java class
+import java.util.Scanner;
 
-    public static void main(String[] args) {
+public class TextualGame {
+
+    /**
+     * Main method of the program (textual mode)
+     * 
+     * @param args the arguments
+     */
+     public static void main(String[] args) {
+        
         Scanner scanner = new Scanner(System.in);
         Kube kube = new Kube();
 

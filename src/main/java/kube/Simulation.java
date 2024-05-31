@@ -1,45 +1,87 @@
 package kube;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Random;
-
+// Import kube classes
 import kube.model.AI;
 import kube.model.History;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
-import kube.model.ai.MiniMaxAI;
 import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 
-public class Simulation implements Runnable {
-    // TODO : refactor this class to make it more readable
-    int winJ1;
-    int winJ2;
-    int nbMoveJ1;
-    int nbMoveJ2;
-    int nbGames;
-    int nGamesFinished;
-    int sumHorizonJ1;
-    int sumHorizonJ2;
+// Import java classes
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
 
+public class Simulation implements Runnable {
+
+    // TODO : refactor the code to remove the unused methods and variables
+
+    /**********
+     * ATTRIBUTES
+     **********/
+    private int winJ1, winJ2, nbMoveJ1, nbMoveJ2, nbGames, nGamesFinished, sumHorizonJ1, sumHorizonJ2;
+
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the class Simulation
+     * 
+     * @param nbGames the number of games to simulate
+     */
+    public Simulation(int nbGames) {
+        this.nbGames = nbGames;
+    }
+
+    /**********
+     * GETTERS
+     **********/
+
+    public int getnGamesFinished() {
+        return nGamesFinished;
+    }
+
+    public int getNbGames() {
+        return nbGames;
+    }
+
+    /**********
+     * METHODS
+     **********/
+
+    /** 
+     * Main method of the program (simulation of games between two AI)
+     * 
+     * @param args the arguments
+     */
     public static void main(String[] args) throws Exception {
-        int nbGames = 100;
+
+        int nbGames, nbThreads;
+        Simulation s;
+        Thread[] threads;
+
+        nbGames = 100;
+
         try {
             nbGames = Integer.parseInt(args[0]);
         } catch (Exception e) {
             System.out.println("Nombre de parties par défaut: 100");
         }
-        int nbThreads = 8;
-        Simulation s = new Simulation(nbGames);
+
+        nbThreads = 8;
+        s = new Simulation(nbGames);
+
         s.winJ1 = 0;
         s.winJ2 = 0;
         s.nbMoveJ1 = 0;
         s.nbMoveJ2 = 0;
-        Thread[] threads = new Thread[nbThreads];
+
+        threads = new Thread[nbThreads];
         for (int i = 0; i < nbThreads; i++) {
             threads[i] = new Thread(s);
         }
@@ -60,11 +102,6 @@ public class Simulation implements Runnable {
         System.out.println("Nombre de coup moyen du J2: " + (double) s.nbMoveJ2 / s.nbGames);
         System.out.println("Horizon moyen J1: " + (double) s.sumHorizonJ1 / s.nbMoveJ1);
         System.out.println("Horizon moyen J2: " + (double) s.sumHorizonJ1 / s.nbMoveJ2);
-
-    }
-
-    public Simulation(int nbGames) {
-        this.nbGames = nbGames;
     }
 
     @Override
@@ -76,50 +113,73 @@ public class Simulation implements Runnable {
         }
     }
 
-    synchronized void upWinJ1() {
+    /**
+     * Method to increment the number of wins of the first player
+     *
+     * @return void
+     */
+    synchronized void incrementWinJ1() {
         winJ1++;
     }
 
-    synchronized void upWinJ2() {
+    /**
+     * Method to increment the number of wins of the second player
+     * 
+     * @return void
+     */
+    synchronized void incrementWinJ2() {
         winJ2++;
     }
 
+    /**
+     * Method to add a number of moves to the first player
+     * 
+     * @param n the number of moves to add
+     * @return void
+     */
     synchronized void addNbMovesJ1(int n) {
         nbMoveJ1 += n;
     }
 
+    /**
+     * Method to add a number of moves to the second player
+     * 
+     * @param n the number of moves to add
+     * @return void
+     */
     synchronized void addNbMovesJ2(int n) {
         nbMoveJ2 += n;
     }
 
-    synchronized void addToSumHorizonJ1(int h) {
-        sumHorizonJ1 += h;
+    /**
+     * Method to add a number to the sum of horizon of the first player
+     * 
+     * @param n the number to add
+     * @return void
+     */
+    synchronized void addToSumHorizonJ1(int n) {
+        sumHorizonJ1 += n;
     }
 
+    /**
+     * Method to add a number to the sum of horizon of the second player
+     * 
+     * @param h the number to add
+     * @return void
+     */
     synchronized void addToSumHorizonJ2(int h) {
         sumHorizonJ2 += h;
     }
 
-    public int getnGamesFinished() {
-        return nGamesFinished;
-    }
-
+    /**
+     * Method to increment the number of games finished
+     * 
+     * @return void
+     */
     synchronized void incrnGamesFinished() {
         nGamesFinished++;
     }
-
-    public int getNbGames() {
-        return nbGames;
-    }
-
-    public int getSumHorizonJ1() {
-        return sumHorizonJ1;
-    }
-
-    public int getSumHorizonJ2() {
-        return sumHorizonJ2;
-    }
-
+    
     private void aiTrainingGames() throws Exception {
         Kube k = new Kube(true);
         while (getnGamesFinished() < getNbGames()) {
@@ -146,9 +206,9 @@ public class Simulation implements Runnable {
                 return;
             }
             if (k.getCurrentPlayer() == k.getP1()) {
-                upWinJ2();
+                incrementWinJ2();
             } else {
-                upWinJ1();
+                incrementWinJ1();
             }
             addNbMovesJ1(k.getP1().getAI().getNbMoves());
             addNbMovesJ2(k.getP2().getAI().getNbMoves());
@@ -167,6 +227,9 @@ public class Simulation implements Runnable {
         }
     }
 
+    /**
+     * Method to test the seeded random
+     */
     private void testSeededRandom() {
         int seed = 180;
         Kube k = new Kube(true);
@@ -371,9 +434,9 @@ public class Simulation implements Runnable {
                 return;
             }
             if (k.getCurrentPlayer() == k.getP1()) {
-                upWinJ2();
+                incrementWinJ2();
             } else {
-                upWinJ1();
+                incrementWinJ1();
             }
             addNbMovesJ1(k.getP1().getAI().getNbMoves());
             addNbMovesJ2(k.getP2().getAI().getNbMoves());
