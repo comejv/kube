@@ -349,8 +349,6 @@ public class SecondPhasePanel extends JPanel {
         addAdditionals(k3.getP1(), ModelColor.RED, 3);
         addAdditionals(k3.getP1(), ModelColor.RED, 4);
         addAdditionals(k3.getP1(), ModelColor.RED, 5);
-        addAdditionals(k3.getP1(), ModelColor.RED, 6);
-        addAdditionals(k3.getP1(), ModelColor.RED, 7);
     
         return gamePanel;
     }
