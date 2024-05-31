@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import kube.view.HSL;
 
 public class Icon extends JLabel {
+
+    // TODO : refactor this class to make it more readable
     private BufferedImage originalImage;
 
     public Icon(BufferedImage bufferedImage) {

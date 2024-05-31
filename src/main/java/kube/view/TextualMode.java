@@ -14,6 +14,7 @@ import kube.model.action.Swap;
 import kube.model.action.move.Move;
 
 public class TextualMode implements Runnable {
+    // TODO : refactor this class to make it more readable
 
     Kube kube;
     Queue<Action> events;

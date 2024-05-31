@@ -27,6 +27,7 @@ import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
 public class Phase2DnD extends Phase1DnD {
+    // TODO : refactor this class to make it more readable
     private Queue<Action> toView;
     private Queue<Action> toModel;
     private Component component;

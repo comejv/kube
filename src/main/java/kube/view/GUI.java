@@ -27,6 +27,7 @@ import kube.model.action.Queue;
 import kube.view.panels.*;
 
 public class GUI extends Thread {
+    // TODO : refactor this class to make it more readable
     public final static String MENU = "MENU";
     public final static String PHASE1 = "PHASE1";
     public final static String PHASE2 = "PHASE2";

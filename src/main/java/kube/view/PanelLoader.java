@@ -11,6 +11,7 @@ import kube.view.panels.FirstPhasePanel;
 import kube.view.panels.SecondPhasePanel;
 
 public class PanelLoader implements Runnable {
+    // TODO : refactor this class to make it more readable
     GUI gui;
     String panelName;
     GUIControllers controllers;

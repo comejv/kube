@@ -20,6 +20,8 @@ import java.text.SimpleDateFormat;
 
 public class Game implements Runnable {
 
+    // TODO : refactor this class to make it more readable
+
     /**********
      * CONSTANTS
      **********/
@@ -206,7 +208,7 @@ public class Game implements Runnable {
         if (p.isAI()) {
             p.getAI().constructionPhase(k3);
         }
-        while (!p.getHasValidateBuilding()) {
+        while (!p.getIsMountainValidated()) {
             Action a = eventsToModel.remove();
             switch (a.getType()) {
                 case AI_MOVE:

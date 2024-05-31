@@ -25,6 +25,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Kube implements Serializable {
 
+    // TODO : refactor this class to make it more readable
     /**********
      * CONSTANTS
      **********/
@@ -123,7 +124,7 @@ public class Kube implements Serializable {
         // p1 = new Player(ID_PLAYER_1);
         p1.setName(new String(k.getP1().getName()));
         p1.setMountain(k.getP1().getMountain().clone());
-        p1.setHasValidateBuilding(k.getP1().getHasValidateBuilding());
+        p1.setIsMountainValidated(k.getP1().getIsMountainValidated());
         p1.setAdditionals(new ArrayList<>(k.getP1().getAdditionals()));
         p1.setAvailableToBuild(new HashMap<>(k.getP1().getAvailableToBuild()));
         p1.setUsedPiece(new HashMap<>(k.getP1().getUsedPiece()));
@@ -137,7 +138,7 @@ public class Kube implements Serializable {
         p2 = new Player(ID_PLAYER_2);
         p2.setName(new String(k.getP2().getName()));
         p2.setMountain(k.getP2().getMountain().clone());
-        p2.setHasValidateBuilding(k.getP2().getHasValidateBuilding());
+        p2.setIsMountainValidated(k.getP2().getIsMountainValidated());
         p2.setAdditionals(new ArrayList<>(k.getP2().getAdditionals()));
         p2.setAvailableToBuild(new HashMap<>(k.getP2().getAvailableToBuild()));
         p2.setUsedPiece(new HashMap<>(k.getP2().getUsedPiece()));
@@ -915,8 +916,8 @@ public class Kube implements Serializable {
 
         boolean p1ValidateBuilding, p2ValidateBuilding, isPreparationPhase;
 
-        p1ValidateBuilding = getP1() != null && getP1().getHasValidateBuilding();
-        p2ValidateBuilding = getP2() != null && getP2().getHasValidateBuilding();
+        p1ValidateBuilding = getP1() != null && getP1().getIsMountainValidated();
+        p2ValidateBuilding = getP2() != null && getP2().getIsMountainValidated();
         isPreparationPhase = getPhase() == PREPARATION_PHASE;
         if (isPreparationPhase && p1ValidateBuilding && p2ValidateBuilding) {
             setPhase(2);

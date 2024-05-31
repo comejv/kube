@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
  * This class initializes the game frame and its layout manager : an overlay layout that contains a card layout and potential overlay elements.
  */
 public class MainFrame extends JFrame {
+    // TODO : refactor this class to make it more readable
     private JPanel cardPanel;
     private CardLayout cardLayout;
     private JComponent glassPane;

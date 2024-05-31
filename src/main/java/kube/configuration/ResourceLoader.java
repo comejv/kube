@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 
 public class ResourceLoader {
+    // TODO : refactor this class to make it more readable
     private static volatile HashMap<String, byte[]> resources;
 
     public ResourceLoader() {

@@ -10,6 +10,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class History implements Serializable {
 
+    // TODO : refactor this class to make it more readable
+    
     /**********
      * ATTRIBUTES
      **********/

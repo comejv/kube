@@ -34,14 +34,6 @@ public enum ModelColor {
      * @param colorCode
      */
     ModelColor(int colorCode) {
-        setColorCode(colorCode);
-    }
-
-    /**********
-     * SETTER
-     **********/
-
-    public void setColorCode(int colorCode) {
         this.colorCode = colorCode;
     }
 
@@ -81,6 +73,11 @@ public enum ModelColor {
         return new ModelColor[] { RED, GREEN, BLUE, YELLOW, BLACK };
     }
 
+    /**
+     * Give all the colored colors and the jokers
+     * 
+     * @return all the colored colors and the jokers
+     */
     public static ModelColor[] getAllColoredAndJokers() {
         return new ModelColor[] { RED, GREEN, BLUE, YELLOW, BLACK, WHITE, NATURAL };
     }
@@ -103,20 +100,20 @@ public enum ModelColor {
         /**
          * Compare the colors by their color code
          * 
-         * @param c1 first color
-         * @param c2 second color
+         * @param color1 first color
+         * @param color2 second color
          * @return the difference between the color codes
          */
         @Override
-        public int compare(ModelColor c1, ModelColor c2) {
-            return c1.getColorCode() - c2.getColorCode();
+        public int compare(ModelColor color1, ModelColor color2) {
+            return color1.getColorCode() - color2.getColorCode();
         }
     };
 
     /**
-     * Display the color
+     * Give a string representation of the color for display in console
      * 
-     * @return the String that represents the color
+     * @return the String that represents the color in console format
      */
     public String forDisplay() {
 
@@ -142,6 +139,11 @@ public enum ModelColor {
         }
     }
 
+    /**
+     * Give a string representation of the color for display in HTML
+     * 
+     * @return the String that represents the color in HTML format
+     */
     public String forDisplayHTML() {
 
         switch (this) {
@@ -164,18 +166,5 @@ public enum ModelColor {
             default:
                 return " ";
         }
-    }
-
-    /**
-     * Give a string representation of the color for saving
-     * 
-     * @return a string representation of the color for saving
-     */
-    public String forSave() {
-        return getColorCode() + "";
-    }
-
-    public static ModelColor fromSave(String save) {
-        return getColor(Integer.parseInt(save));
     }
 }

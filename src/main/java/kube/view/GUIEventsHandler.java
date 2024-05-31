@@ -10,6 +10,7 @@ import kube.view.components.Buttons.ButtonIcon;
 import kube.view.panels.RulesPanel;
 
 public class GUIEventsHandler implements Runnable {
+    // TODO : refactor this class to make it more readable
 
     Kube kube;
     Queue<Action> eventsToView;

@@ -23,6 +23,7 @@ import javax.swing.*;
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
 public class FirstPhasePanel extends JPanel {
+    // TODO : refactor this class to make it more readable
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;

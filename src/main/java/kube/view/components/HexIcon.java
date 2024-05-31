@@ -12,6 +12,9 @@ import kube.model.ModelColor;
 import kube.model.Player;
 
 public class HexIcon extends Icon {
+
+
+    // TODO : refactor this class to make it more readable
     private boolean isActionable;
     private boolean isHovered;
     private boolean isPressed;

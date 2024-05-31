@@ -9,6 +9,7 @@ import kube.model.action.Queue;
 import kube.view.GUI;
 
 public class Main {
+    // TODO : refactor this class to make it more readable
     public static void main(String[] args) {
         new ResourceLoader();
         Kube kube = new Kube();

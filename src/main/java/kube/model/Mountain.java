@@ -16,7 +16,7 @@ public class Mountain implements Serializable {
     private int baseSize;
 
     /**********
-     * CONSTUCTORS
+     * CONSTUCTOR
      **********/
 
     /**
@@ -30,15 +30,15 @@ public class Mountain implements Serializable {
         clear();
     }
 
-    public final void setBaseSize(int size) {
-        baseSize = size;
-    }
+    /**********
+     * SETTERS
+     **********/
 
     public final void setMountain(ModelColor[][] mountain) {
         content = mountain;
     }
 
-    public void setCase(Point p, ModelColor c) {
+    public final void setCase(Point p, ModelColor c) {
         setCase(p.x, p.y, c);
     }
 
@@ -120,7 +120,14 @@ public class Mountain implements Serializable {
 
     }
 
-    public boolean isCompatible(int i, int j, ModelColor c) {
+    /**
+     * Check if the given color is compatible with the given position
+     * 
+     * @param color the color to check compatibility
+     * @return true if the color is compatible, false otherwise
+     */
+    public boolean isCompatible(int i, int j, ModelColor color) {
+
         ModelColor natural, empty, bottomLeft, bottomRight;
         boolean isBottomLeftEmpty, isBottomRightEmpty, isBottomEmpty, isNatural, isBottomLeftCompatible,
                 isBottomRightCompatible, isCompatible;
@@ -138,9 +145,9 @@ public class Mountain implements Serializable {
             isBottomRightEmpty = bottomRight == empty;
             isBottomEmpty = isBottomLeftEmpty || isBottomRightEmpty;
 
-            isNatural = c == natural;
-            isBottomLeftCompatible = bottomLeft == c || bottomLeft == natural;
-            isBottomRightCompatible = bottomRight == c || bottomRight == natural;
+            isNatural = color == natural;
+            isBottomLeftCompatible = bottomLeft == color || bottomLeft == natural;
+            isBottomRightCompatible = bottomRight == color || bottomRight == natural;
             isCompatible = isNatural || isBottomLeftCompatible || isBottomRightCompatible;
 
             if (!isBottomEmpty && isCompatible) {
@@ -153,34 +160,34 @@ public class Mountain implements Serializable {
     /**
      * Give the list of compatible positions corresponding to the given color
      * 
-     * @param c the color to check compatibility
+     * @param color the color to check compatibility
      * @return the list of compatible positions
      */
-    public ArrayList<Point> compatible(ModelColor c) {
+    public ArrayList<Point> compatible(ModelColor color) {
 
-        ArrayList<Point> comp;
-        comp = new ArrayList<>();
+        ArrayList<Point> compatible;
+        compatible = new ArrayList<>();
 
         // Loop through the mountain to add compatible positions
         for (int i = 0; i < getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                if (isCompatible(i, j, c)) {
-                    comp.add(new Point(i, j));
+                if (isCompatible(i, j, color)) {
+                    compatible.add(new Point(i, j));
                 }
             }
         }
 
-        return comp;
+        return compatible;
     }
 
     /**
      * Return if the given position creates a penality on the mountain
      * 
-     * @param p the position to check
+     * @param position the position to check
      * @return true if the position creates a penality, false otherwise
      */
-    public boolean isPenality(Point p) {
-        return isPenality(p.x, p.y);
+    public boolean isPenality(Point position) {
+        return isPenality(position.x, position.y);
     }
 
     /**
@@ -241,32 +248,10 @@ public class Mountain implements Serializable {
     }
 
     /**
-     * Give a String representation of the mountain for saving
+     * Give a string representation of the mountain (for display)
      * 
-     * @return the String representation of the mountain for saving
+     * @return the string representation of the mountain
      */
-    public String forSave() {
-
-        String save;
-        int i, j;
-
-        save = "{" + getBaseSize() + ";";
-
-        for (i = 0; i < getBaseSize(); i++) {
-            for (j = 0; j < i + 1; j++) {
-                save += getCase(i, j).forSave() + ",";
-            }
-        }
-
-        if (getBaseSize() > 0) {
-            save = save.substring(0, save.length() - 1);
-        }
-
-        save += "}";
-
-        return save;
-    }
-
     @Override
     public String toString() {
 

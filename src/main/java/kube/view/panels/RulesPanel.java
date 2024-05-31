@@ -22,6 +22,7 @@ import kube.controller.graphical.MenuController;
 import kube.view.components.Buttons.RulesButton;
 
 public class RulesPanel extends JPanel {
+    // TODO : refactor this class to make it more readables
 
     private GUI gui;
     private int width;

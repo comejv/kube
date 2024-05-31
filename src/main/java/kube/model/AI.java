@@ -42,15 +42,16 @@ public class AI extends Player {
 
     @Override
     public AI clone() {
-        AI copy = new AI(getId(), getAI().clone());
+        AI copy;
+        copy = new AI(getId(), getAI().clone());
         copy.setAdditionals(new ArrayList<>(getAdditionals()));
-        if (!getHasValidateBuilding()) {
+        if (!getIsMountainValidated()) {
             copy.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
         }
         copy.setName(getName());
         copy.setUsedPiece(new HashMap<>(getUsedPiece()));
         copy.setMountain(getMountain().clone());
-        copy.setHasValidateBuilding(getHasValidateBuilding());
+        copy.setIsMountainValidated(getIsMountainValidated());
         return copy;
     }
 }

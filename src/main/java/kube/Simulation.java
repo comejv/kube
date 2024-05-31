@@ -16,6 +16,7 @@ import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 
 public class Simulation implements Runnable {
+    // TODO : refactor this class to make it more readable
     int winJ1;
     int winJ2;
     int nbMoveJ1;

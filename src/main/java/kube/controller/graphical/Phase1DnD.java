@@ -21,6 +21,7 @@ import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
 public class Phase1DnD implements MouseListener, MouseMotionListener, MouseWheelListener {
+    // TODO : refactor this class to make it more readable
     private Queue<Action> toView;
     private Queue<Action> toModel;
     private Component component;

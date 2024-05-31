@@ -8,6 +8,7 @@ import kube.model.action.Action;
 
 public abstract class Network {
 
+    // TODO : refactor this class to make it more readable
     private String ip;
     private int port;
     private ObjectOutputStream out;

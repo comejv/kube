@@ -9,6 +9,7 @@ import kube.model.action.Queue;
 import kube.view.TextualMode;
 
 public class TextualGame {
+    // TODO : refactor this class to make it more readable
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);

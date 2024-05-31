@@ -9,6 +9,7 @@ import java.net.Socket;
 
 public class Client extends Network {
 
+    // TODO : refactor this class to make it more readable
     private Socket socket;
     
     public Client() {
