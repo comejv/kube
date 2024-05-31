@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -46,6 +47,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] k3Panels;
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
+    private JPanel p1Additionnals, p2Additionnals;
     private HashMap<String, JButton> buttonsMap;
     // TODO : set hex in middle of pyra not actionable
 
@@ -149,8 +151,8 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateActionnable() {
-        for (int i = 0; i < p1Panels.length; i++){
-            for (int j = 0; j < i + 1; j++){
+        for (int i = 0; i < p1Panels.length; i++) {
+            for (int j = 0; j < i + 1; j++) {
                 HexIcon hex = (HexIcon) p1Panels[i][j].getComponent(0);
                 hex.setActionable(false);
                 hex = (HexIcon) p2Panels[i][j].getComponent(0);
@@ -158,23 +160,23 @@ public class SecondPhasePanel extends JPanel {
             }
         }
         JPanel[][] pan = null;
-        if (k3.getCurrentPlayer() == k3.getP1()){
+        if (k3.getCurrentPlayer() == k3.getP1()) {
             pan = p1Panels;
         } else {
             pan = p2Panels;
         }
-        for (Point p : k3.getCurrentPlayer().getMountain().removable()){
+        for (Point p : k3.getCurrentPlayer().getMountain().removable()) {
             HexIcon hex = (HexIcon) pan[p.x][p.y].getComponent(0);
             hex.setActionable(true);
         }
     }
 
     public void updateVisible() {
-        for (int i = 1; i < k3Panels.length; i++){
-            for (int j = 0; j < i + 1; j++){
-                HexIcon hexRight = (HexIcon) k3Panels[i-1][j].getComponent(0);
-                HexIcon hexLeft = (HexIcon) k3Panels[i-1][j+1].getComponent(0);
-                if (hexRight.getColor() != ModelColor.EMPTY && hexLeft.getColor() != ModelColor.EMPTY){
+        for (int i = 1; i < k3Panels.length; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                HexIcon hexRight = (HexIcon) k3Panels[i - 1][j].getComponent(0);
+                HexIcon hexLeft = (HexIcon) k3Panels[i - 1][j + 1].getComponent(0);
+                if (hexRight.getColor() != ModelColor.EMPTY && hexLeft.getColor() != ModelColor.EMPTY) {
 
                 }
             }
@@ -286,31 +288,33 @@ public class SecondPhasePanel extends JPanel {
         gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        JPanel additionals1 = new JPanel();
-        additionals1.setOpaque(false);
-        additionals1.setLayout(new GridBagLayout());
-        additionals1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                "Additionnel Pieces de Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
-                new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+        p1Additionnals = new JPanel();
+        p1Additionnals.setOpaque(false);
+        p1Additionnals.setLayout(new GridBagLayout());
+        p1Additionnals
+                .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                        "Additionnel Pieces de Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
+                        new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(additionals1, gbc);
+        gamePanel.add(p1Additionnals, gbc);
 
-        JPanel additionals2 = new JPanel();
-        additionals2.setOpaque(false);
-        additionals2.setLayout(new GridBagLayout());
-        additionals2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                "Additionnel Pieces de Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
-                new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+        p2Additionnals = new JPanel();
+        p2Additionnals.setOpaque(false);
+        p2Additionnals.setLayout(new GridBagLayout());
+        p2Additionnals
+                .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                        "Additionnel Pieces de Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
+                        new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(additionals2, gbc);
+        gamePanel.add(p2Additionnals, gbc);
 
         JPanel p1 = initMountain(0, k3.getP1().getMountain().getBaseSize(), k3.getP1());
         p1.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
@@ -338,13 +342,34 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gamePanel.add(base, gbc);
+        ;
+        addAdditionals(k3.getP1(), ModelColor.RED, 0);
+        addAdditionals(k3.getP1(), ModelColor.RED, 1);
+        addAdditionals(k3.getP1(), ModelColor.RED, 2);
+        addAdditionals(k3.getP1(), ModelColor.RED, 3);
+        addAdditionals(k3.getP1(), ModelColor.RED, 4);
+        addAdditionals(k3.getP1(), ModelColor.RED, 5);
+        addAdditionals(k3.getP1(), ModelColor.RED, 6);
+        addAdditionals(k3.getP1(), ModelColor.RED, 7);
+    
         return gamePanel;
     }
 
-    private void addAdditionals(JPanel panel, int n, ModelColor c) {
-        for (int i = 0; i < n; i++) {
-            panel.add(new HexIcon(c, true));
+    private void addAdditionals(Player player, ModelColor c, int n) {
+        JPanel panel;
+        GridBagConstraints gbc = new GridBagConstraints();
+        if (player == k3.getP1()) {
+            panel = p1Additionnals;
+        } else {
+            panel = p2Additionnals;
         }
+        if (n > 5) {
+            gbc.gridy = 1;
+        } else {
+            gbc.gridy = 0;
+        }
+        panel.add(new HexIcon(c, true), gbc);
+
     }
 
     private JPanel initMountain(int rowMissing, int base, Player p) {

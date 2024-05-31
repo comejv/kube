@@ -355,7 +355,7 @@ public class Game implements Runnable {
                 break;
             case CREATE_MOVE:
                 CreateMove cM = (CreateMove) a.getData();
-                move = k3.createMove(cM.getPosFrom(), cM.getPlayerFrom(), cM.getPosTo(), cM.getPlayerTo(), cM.getModelColor());
+                move = k3.createMove(cM.getFrom(), cM.getPlayerFrom(), cM.getTo(), cM.getPlayerTo(), cM.getModelColor());
                 Config.debug("Move généré :", move);
                 break;
             case MOVE:
