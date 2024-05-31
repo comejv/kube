@@ -86,6 +86,7 @@ public enum ActionType {
     SET_HEX_CLICKED,
     SET_HEX_DEFAULT,
     SETTINGS,
+    CONFIRMED_SETTINGS,
     RETURN_TO_MENU,
 
     // --- Menu ---
@@ -95,7 +96,6 @@ public enum ActionType {
     RULES,
     QUIT,
     VOLUME,
-    PARAMETERS,
     NEXT_RULE,
     END_RULE,
 

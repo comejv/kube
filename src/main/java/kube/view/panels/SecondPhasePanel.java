@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -9,12 +8,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,7 +23,6 @@ import kube.configuration.Config;
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
-import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.Action;
 import kube.model.action.move.*;
@@ -94,41 +89,41 @@ public class SecondPhasePanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         // gbc.insets = new Insets(10, 0, 0, 0);
 
-        JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
+        JButton quitButton = new Buttons.GamePhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addMouseListener(a);
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(quitButton, gbc);
 
-        JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
+        JButton optButton = new Buttons.GamePhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addMouseListener(a);
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(optButton, gbc);
 
-        JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
+        JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
         sugIaButton.addMouseListener(a);
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugIaButton, gbc);
 
-        JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
+        JButton histoButton = new Buttons.GamePhaseButton("Historique");
         histoButton.setActionCommand("updateHist");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         histoButton.addMouseListener(a);
         gbc.gridy = 6;
         panel.add(histoButton, gbc);
 
-        JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
+        JButton annulerButton = new Buttons.GamePhaseButton("Annuler");
         annulerButton.setActionCommand("undo");
         annulerButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 7;
         panel.add(annulerButton, gbc);
 
-        JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
+        JButton refaireButton = new Buttons.GamePhaseButton("Refaire");
         refaireButton.setActionCommand("redo");
         refaireButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -152,6 +147,12 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateActionnable() {
+        for (int i = 0; i < k3Panels.length; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                HexIcon hex = (HexIcon) k3Panels[i][j].getComponent(0);
+                hex.setActionable(false);
+            }
+        }
         for (int i = 0; i < p1Panels.length; i++) {
             for (int j = 0; j < i + 1; j++) {
                 HexIcon hex = (HexIcon) p1Panels[i][j].getComponent(0);
@@ -163,7 +164,8 @@ public class SecondPhasePanel extends JPanel {
         JPanel[][] moutainPan = null;
         JPanel additionnals;
         Player player;
-        if ((k3.getCurrentPlayer() == k3.getP1() && !k3.getPenality()) || (k3.getCurrentPlayer() == k3.getP2() && k3.getPenality())) {
+        if ((k3.getCurrentPlayer() == k3.getP1() && !k3.getPenality())
+                || (k3.getCurrentPlayer() == k3.getP2() && k3.getPenality())) {
             player = k3.getP1();
             moutainPan = p1Panels;
             additionnals = p1Additionnals;
@@ -172,14 +174,14 @@ public class SecondPhasePanel extends JPanel {
             moutainPan = p2Panels;
             additionnals = p2Additionnals;
         }
-        
+
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
             hex.setActionable(true);
         }
-        for (Component c : additionnals.getComponents()){
+        for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
-            if (hex.getColor() != ModelColor.EMPTY){
+            if (hex.getColor() != ModelColor.EMPTY) {
                 hex.setActionable(true);
             }
         }
@@ -199,7 +201,7 @@ public class SecondPhasePanel extends JPanel {
 
     public void updateAdditionnals(Player p) {
         JPanel additionnalsPanel = null;
-        if (p == k3.getP1()){
+        if (p == k3.getP1()) {
             additionnalsPanel = p1Additionnals;
         } else {
             additionnalsPanel = p2Additionnals;
@@ -208,16 +210,17 @@ public class SecondPhasePanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
 
         int n = 0;
-        for (ModelColor c : p.getAdditionals()){
+        for (ModelColor c : p.getAdditionals()) {
             if (n > 5) {
                 gbc.gridy = 1;
             } else {
                 gbc.gridy = 0;
             }
-            additionnalsPanel.add(new HexIcon(c, false), gbc);
+            additionnalsPanel.add(new HexIcon(c, false, p), gbc);
             n++;
         }
-        additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false), gbc);
+        additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
+        additionnalsPanel.repaint();
     }
 
     public void update(Action a) {
@@ -225,6 +228,8 @@ public class SecondPhasePanel extends JPanel {
         if (move instanceof MoveAA) {
             updateAdditionnals(k3.getP1());
             updateAdditionnals(k3.getP2());
+            updateMoutain(k3.getP1(), new Point(0,0));
+            updateMoutain(k3.getP2(), new Point(0,0));
         } else if (move instanceof MoveAM) {
             MoveAM am = (MoveAM) move;
             updateAdditionnals(am.getPlayer());
@@ -381,10 +386,9 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gamePanel.add(base, gbc);
-    
+
         return gamePanel;
     }
-
 
     private JPanel initMountain(int rowMissing, int base, Player p) {
         JPanel constructPanel = new JPanel();

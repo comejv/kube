@@ -98,25 +98,25 @@ public class FirstPhasePanel extends JPanel {
         buttons.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, Config.INIT_HEIGHT / 5));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
-        JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
+        JButton quitButton = new Buttons.GamePhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addMouseListener(controller);
         buttons.add(quitButton);
         buttonsMap.put("Quit", quitButton);
 
-        JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
+        JButton optButton = new Buttons.GamePhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addMouseListener(controller);
         buttons.add(optButton);
         buttonsMap.put("Option", optButton);
 
-        JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
+        JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
         sugIaButton.setActionCommand("AI");
         sugIaButton.addMouseListener(controller);
         buttons.add(sugIaButton);
         buttonsMap.put("AI", sugIaButton);
 
-        JButton validerButton = new Buttons.GameFirstPhaseButton("Valider");
+        JButton validerButton = new Buttons.GamePhaseButton("Valider");
         validerButton.setEnabled(false);
         validerButton.setActionCommand("validate");
         validerButton.addMouseListener(controller);

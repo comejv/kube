@@ -5,24 +5,16 @@ import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelListener;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
+import kube.model.ModelColor;
 import kube.model.Player;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
-import kube.model.action.Build;
 import kube.model.action.CreateMove;
 import kube.model.action.Queue;
-import kube.model.action.Remove;
-import kube.model.action.Swap;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
@@ -51,8 +43,11 @@ public class Phase2DnD extends Phase1DnD {
             Player playerFrom = g.getHexIcon().getPlayer();
             Point posTo = hex.getPosition();
             Player playerTo = hex.getPlayer();
-            Config.debug(posFrom, playerFrom, posTo, playerTo, g.getColor());
-            toModel.add(new Action(ActionType.CREATE_MOVE, new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
+            if (hex.getColor() == ModelColor.EMPTY && playerFrom != playerTo) {
+                Config.debug(posFrom, playerFrom, posTo, playerTo, g.getColor());
+                toModel.add(new Action(ActionType.CREATE_MOVE,
+                        new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
+            }
         }
         g.setCursor(Cursor.getDefaultCursor());
         g.clear();
