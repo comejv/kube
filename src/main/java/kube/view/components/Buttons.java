@@ -1,5 +1,5 @@
 package kube.view.components;
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.view.GUIColors;
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +18,12 @@ public class Buttons {
         public MenuButton(String name) {
             super(name);
 
-            setPreferredSize(new Dimension(Config.getInitWidth() / 3,
-                    Config.getInitWidth() / 15));
+            setPreferredSize(new Dimension(Configuration.INIT_WIDTH / 3,
+                    Configuration.INIT_WIDTH / 15));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 10)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Configuration.INIT_HEIGHT / 10)));
         }
     }
 
@@ -31,12 +31,12 @@ public class Buttons {
     public static class SelectPlayerButton extends JPanel {
         public SelectPlayerButton(String name) {
             setLayout(new GridBagLayout());
-            setPreferredSize(new Dimension(Config.getInitWidth() / 2,
-                    Config.getInitWidth() / 12));
+            setPreferredSize(new Dimension(Configuration.INIT_WIDTH / 2,
+                    Configuration.INIT_WIDTH / 12));
             setBackground(GUIColors.ACCENT.toColor());
             GridBagConstraints gbc = new GridBagConstraints();
-            int size = Config.getInitHeight() / 10;
-            int sizeDisplay = Config.getInitHeight() / 20;
+            int size = Configuration.INIT_HEIGHT / 10;
+            int sizeDisplay = Configuration.INIT_HEIGHT / 20;
 
             JLabel nameLabel = new JLabel();
             nameLabel.setText(name);
@@ -104,7 +104,7 @@ public class Buttons {
             setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
-            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 20)));
+            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Configuration.INIT_HEIGHT / 20)));
         }
     }
 
@@ -114,7 +114,7 @@ public class Buttons {
             setPreferredSize(new Dimension(300, 100));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
-            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getInitHeight() / 20)));
+            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Configuration.INIT_HEIGHT / 20)));
         }
     }
 
@@ -122,15 +122,15 @@ public class Buttons {
         public ParameterButton(Image image) {
             super();
             Image scaledImg = image.getScaledInstance(
-                    (int) (0.15 * Config.getInitHeight()),
-                    (int) (0.15 * Config.getInitHeight()),
+                    (int) (0.15 * Configuration.INIT_HEIGHT),
+                    (int) (0.15 * Configuration.INIT_HEIGHT),
                     Image.SCALE_SMOOTH);
 
             ImageIcon icon = new ImageIcon(scaledImg);
             setIcon(icon);
 
-            setPreferredSize(new Dimension((int) (0.20 * Config.getInitHeight()),
-                    (int) (0.20 * Config.getInitHeight())));
+            setPreferredSize(new Dimension((int) (0.20 * Configuration.INIT_HEIGHT),
+                    (int) (0.20 * Configuration.INIT_HEIGHT)));
 
             setOpaque(false);
             setContentAreaFilled(false);
@@ -144,17 +144,17 @@ public class Buttons {
             setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Configuration.INIT_HEIGHT / 15)));
         }
     }
 
     public static class InGameMenuButton extends JButton {
         public InGameMenuButton(String name) {
             super(name);
-            setPreferredSize(new Dimension(Config.getInitWidth() / 4, Config.getInitHeight() / 8));
+            setPreferredSize(new Dimension(Configuration.INIT_WIDTH / 4, Configuration.INIT_HEIGHT / 8));
             setBackground(GUIColors.ACCENT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.getInitHeight() / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Configuration.INIT_HEIGHT / 15)));
         }
     }
 

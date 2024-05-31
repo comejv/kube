@@ -2,7 +2,7 @@ package kube.view;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.controller.graphical.GUIControllers;
 import kube.model.Kube;
 import kube.model.action.Action;

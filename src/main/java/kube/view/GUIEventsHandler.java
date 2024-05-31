@@ -1,6 +1,6 @@
 package kube.view;
 
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.controller.graphical.Phase1DnD;
 import kube.controller.graphical.MenuController;
 import kube.model.Kube;
@@ -27,7 +27,7 @@ public class GUIEventsHandler implements Runnable {
     public void run() {
         while (true) {
             Action action = eventsToView.remove();
-            Config.debug("View receive ", action.getType());
+            Configuration.debug("View receive ", action.getType());
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -64,17 +64,17 @@ public class GUIEventsHandler implements Runnable {
                     // TODO : show settings overlay
                     break;
                 case PRINT_FORBIDDEN_ACTION:
-                    Config.debug("Forbidden action : " + action.getData());
+                    Configuration.debug("Forbidden action : " + action.getData());
                     String message = (String) action.getData() == null ? "You can't do that now."
                             : (String) action.getData();
                     gui.showError("Forbidden action", message);
                     break;
                 case PRINT_NOT_YOUR_TURN:
-                    Config.debug("Not your turn");
+                    Configuration.debug("Not your turn");
                     gui.showWarning("Not your turn", "It's not your turn yet.");
                     break;
                 case PRINT_WIN_MESSAGE:
-                    Config.debug("Win message");
+                    Configuration.debug("Win message");
                     gui.showInfo("You won !", "Congratulations, you won the game !");
                     break;
 
@@ -118,7 +118,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateSecondPanel(action);
                     break;
                 default:
-                    Config.debug("Unrecognized action : " + action);
+                    Configuration.debug("Unrecognized action : " + action);
                     break;
             }
         }
