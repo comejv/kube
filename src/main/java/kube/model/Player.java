@@ -327,7 +327,7 @@ public class Player implements Serializable {
      * @return the color removed
      */
     public ModelColor removeFromMountain(int x, int y) throws UnsupportedOperationException {
-        
+
         ModelColor color;
 
         if (!getIsMountainValidated()) {
