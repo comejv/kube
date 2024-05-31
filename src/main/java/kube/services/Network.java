@@ -8,23 +8,42 @@ import kube.model.action.Action;
 
 public abstract class Network {
 
-    // TODO : refactor this class to make it more readable
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    @SuppressWarnings("unused")
     private String ip;
+
+    @SuppressWarnings("unused")
     private int port;
+
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-    public abstract boolean connect(String ip, int port);
+    /**********
+     * SETTERS
+     **********/
 
-    public abstract boolean disconnect();
-
-    public String getIp() {
-        return ip;
+    public final void setIp(String ip) {
+        this.ip = ip;
     }
 
-    public int getPort() {
-        return port;
+    public final void setPort(int port) {
+        this.port = port;
     }
+
+    public final void setOut(ObjectOutputStream out) {
+        this.out = out;
+    }
+
+    public final void setIn(ObjectInputStream in) {
+        this.in = in;
+    }
+
+    /**********
+     * GETTERS
+     **********/
 
     public ObjectOutputStream getOut() {
         return out;
@@ -34,36 +53,55 @@ public abstract class Network {
         return in;
     }
 
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
+    /**********
+     * ABSTRACT METHODS
+     **********/
 
-    public void setPort(int port) {
-        this.port = port;
-    }
+    /**
+     * Connect to the server
+     * 
+     * @param ip the IP address
+     * @param port the port
+     * @return true if the connection is successful, false otherwise
+     */
+    public abstract boolean connect(String ip, int port);
 
-    public void setOut(ObjectOutputStream out) {
-        this.out = out;
-    }
+    /**
+     * Disconnect from the server
+     * 
+     * @return true if the disconnection is successful, false otherwise
+     */
+    public abstract boolean disconnect();
 
-    public void setIn(ObjectInputStream in) {
-        this.in = in;
-    }
+    /**********
+     * OTHER METHODS
+     **********/
 
+    /**
+     * Check if the current instance is a server
+     * 
+     * @return false
+     */
     public boolean isServer() {
         return false;
     }
 
-    public boolean send(Action data) {
+    /**
+     * Send an action to the server
+     * 
+     * @param action the action to send
+     * @return true if the data is sent, false otherwise
+     */
+    public boolean send(Action action) {
+
         try {
             if (getOut() != null) {
-                getOut().writeObject(data);
+                getOut().writeObject(action);
                 getOut().flush();
             } else {
                 return false;
             }
         } catch (IOException e) {
-            System.err.println(e);
             return false;
         }
 
@@ -72,11 +110,11 @@ public abstract class Network {
 
     public Action receive() throws IOException {
         try {
-            Action o = (Action) getIn().readObject();
-            return o;
+            Action action;
+            action = (Action) getIn().readObject();
+            return action;
         } catch (ClassNotFoundException e) {
             return null;
         }
     }
-
 }
