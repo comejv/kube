@@ -3,7 +3,7 @@ package kube.view;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.Player;

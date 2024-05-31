@@ -13,7 +13,7 @@ import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 
 public class Phase2Controller implements ActionListener, MouseListener {
     // TODO : refactor this class to make it more readable

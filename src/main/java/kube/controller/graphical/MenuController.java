@@ -8,7 +8,7 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
@@ -68,12 +68,12 @@ public class MenuController implements ActionListener, MouseListener {
             ButtonIcon b = (ButtonIcon) source;
             switch (b.getName()) {
                 case "settings":
-                    Config.debug("Settings clicked");
+                    Configuration.debug("Settings clicked");
                     toView.add(new Action(ActionType.SETTINGS));
                     break;
 
                 case "volume":
-                    Config.debug("Volume clicked");
+                    Configuration.debug("Volume clicked");
                     toView.add(new Action(ActionType.VOLUME));
                     break;
 

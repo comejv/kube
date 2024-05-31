@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 import javax.swing.UIManager.*;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.Phase1DnD;
 import kube.controller.graphical.Phase2DnD;
@@ -52,14 +52,14 @@ public class GUI extends Thread {
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
-                    Config.debug("Set Look and Feel to Nimbus.");
+                    Configuration.debug("Set Look and Feel to Nimbus.");
                     nimbusFound = true;
                     break;
                 }
             }
             if (!nimbusFound) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                Config.debug("Set Look and Feel to system.");
+                Configuration.debug("Set Look and Feel to system.");
             }
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
 
@@ -74,7 +74,7 @@ public class GUI extends Thread {
             ge.registerFont(font);
             ge.getAvailableFontFamilyNames();
         } catch (IOException | FontFormatException e) {
-            Config.debug("Error : ");
+            Configuration.debug("Error : ");
             System.err.println("Could not load buttons font, using default.");
         }
 
@@ -91,7 +91,7 @@ public class GUI extends Thread {
         MenuPanel mP = new MenuPanel(this, controllers.getMenuController());
         mF.addPanel(mP, MENU);
 
-        if (Config.showBorders()) {
+        if (Configuration.SHOW_BORDERS) {
             showAllBorders(mF);
         }
 
@@ -132,7 +132,7 @@ public class GUI extends Thread {
             case GUI.PHASE1:
             case GUI.PHASE2:
                 if (getPanel(panelName) != null) {
-                    Config.debug("Panel ", panelName, " already loaded");
+                    Configuration.debug("Panel ", panelName, " already loaded");
                     return;
                 }
                 break;
@@ -163,7 +163,7 @@ public class GUI extends Thread {
                 System.err.println("Waiting for non existent panel " + panelName);
                 break;
         }
-        Config.debug("Panel ", panelName, " finished loading");
+        Configuration.debug("Panel ", panelName, " finished loading");
     }
 
     public JPanel getOverlay() {

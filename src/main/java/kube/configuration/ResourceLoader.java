@@ -28,7 +28,7 @@ public class ResourceLoader {
             return new ByteArrayInputStream(resources.get(relativePath));
         }
         InputStream resourceStream = null;
-        if (Config.isJar()) {
+        if (Configuration.isJar()) {
             resourceStream = ResourceLoader.class.getClassLoader().getResourceAsStream(relativePath);
             if (resourceStream == null) {
                 System.err.println("Resource " + relativePath + " not found.");
@@ -71,7 +71,7 @@ public class ResourceLoader {
             if (in != null) {
                 return ImageIO.read(in);
             }
-            Config.debug("Attempting to use placeholder for image...");
+            Configuration.debug("Attempting to use placeholder for image...");
             in = ResourceLoader.class.getClassLoader().getResourceAsStream("images/notFound.png");
             if (in != null) {
                 return ImageIO.read(in);
@@ -88,7 +88,7 @@ public class ResourceLoader {
 
     public static String getText(String name) {
         String result;
-        String folder = name.equals("credits") ? "" : "texts/" + Config.getLanguage();
+        String folder = name.equals("credits") ? "" : "texts/" + Configuration.getLanguage();
         String relativePath = folder + "/" + name + ".txt";
         InputStream resource = getResourceAsStream(relativePath);
         if (resource == null) {

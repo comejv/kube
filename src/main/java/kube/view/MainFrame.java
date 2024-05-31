@@ -2,7 +2,7 @@ package kube.view;
 
 import javax.swing.*;
 
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.controller.graphical.Phase1DnD;
 import kube.view.panels.GlassPanel;
 
@@ -27,8 +27,8 @@ public class MainFrame extends JFrame {
         // setIconImage(); for later
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
-        setMinimumSize(new Dimension((int) (Config.getInitWidth() / 1.5), Config.getInitHeight()));
+        setSize(new Dimension(Configuration.INIT_WIDTH, Configuration.INIT_HEIGHT));
+        setMinimumSize(new Dimension((int) (Configuration.INIT_WIDTH / 1.5), Configuration.INIT_HEIGHT));
         setLocationRelativeTo(null);
         framePanel = (JPanel) getContentPane();
         OverlayLayout overlay = new OverlayLayout(framePanel);
@@ -37,7 +37,7 @@ public class MainFrame extends JFrame {
         overlayPanel = new JPanel();
         overlayPanel.setVisible(false);
         overlayPanel.setOpaque(false);
-        overlayPanel.setSize(new Dimension(Config.getInitWidth(), Config.getInitHeight()));
+        overlayPanel.setSize(new Dimension(Configuration.INIT_WIDTH, Configuration.INIT_HEIGHT));
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
         framePanel.add(overlayPanel);
@@ -54,7 +54,7 @@ public class MainFrame extends JFrame {
     }
 
     public void showPanel(String name) {
-        Config.debug("Showing panel ", name);
+        Configuration.debug("Showing panel ", name);
         cardLayout.show(cardPanel, name);
     }
 

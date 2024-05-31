@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import kube.model.ModelColor;
-import kube.configuration.Config;
+import kube.configuration.Configuration;
 import kube.model.Kube;
 import kube.model.Mountain;
 import kube.model.action.move.*;
@@ -29,12 +29,12 @@ public class KubeTest {
         Kube k1 = null;
         Kube k2 = null;
 
-        File directory = new File(Config.SAVING_PATH_DIRECTORY);
+        File directory = new File(Configuration.SAVING_PATH_DIRECTORY);
         if (!directory.exists()){
             directory.mkdirs(); // Create the directory if it doesn't exist
         }
 
-        File ser_test = new File(Config.SAVING_PATH_DIRECTORY + "kube.ser");
+        File ser_test = new File(Configuration.SAVING_PATH_DIRECTORY + "kube.ser");
 
         try (FileOutputStream fos = new FileOutputStream(ser_test);
                 ObjectOutputStream oos = new ObjectOutputStream(fos)) {
