@@ -44,6 +44,7 @@ public class MainFrame extends JFrame {
 
     public void resize(){
         setSize(Config.getWidth(), Config.getHeight());
+        setLocationRelativeTo(null);
         revalidate();
         repaint();
     }

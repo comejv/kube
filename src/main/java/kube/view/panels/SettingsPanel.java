@@ -33,7 +33,7 @@ public class SettingsPanel extends JPanel{
     private MenuController buttonListener;
     private JTabbedPane tabbedPanel;
     private int tabNb;
-    private String[] res = {"800 x 600", "1280 x 920", "1920 x 1080"};
+    private String[] res = {"800 x 600", "1366 x 768", "1600 x 900", "1920 x 1080"};
 
     public SettingsPanel(GUI gui, MenuController buttonListener){
 
@@ -72,9 +72,14 @@ public class SettingsPanel extends JPanel{
                     case "800 x 600":
                         Config.setResolution(800, 600);
                         break;
-                    case "1280 x 920":
-                        Config.setResolution(1280, 920);
+                    case "1366 x 768":
+                        Config.setResolution(1366, 768);
                         break;
+                    case "1600 x 900":
+                        Config.setResolution(1600, 900);
+                        break;
+                    case "1920 x 1080":
+                        Config.setResolution(1920, 1080);
                     default:
                         break;
                 }
