@@ -87,7 +87,7 @@ public class MenuController implements ActionListener, MouseListener {
     public void mousePressed(MouseEvent e) {
         Object source = e.getSource();
         if (SwingUtilities.isLeftMouseButton(e)) {
-            if (source instanceof JButton || source instanceof ButtonIcon) {
+            if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_PRESSED, source));
             }
         }
@@ -96,7 +96,7 @@ public class MenuController implements ActionListener, MouseListener {
     public void mouseReleased(MouseEvent e) {
         Object source = e.getSource();
         if (SwingUtilities.isLeftMouseButton(e)) {
-            if (source instanceof JButton || source instanceof ButtonIcon) {
+            if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_RELEASED, source));
             }
         }
@@ -104,14 +104,14 @@ public class MenuController implements ActionListener, MouseListener {
 
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
-        if (source instanceof JButton || source instanceof ButtonIcon) {
+        if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_HOVERED, source));
         }
     }
 
     public void mouseExited(MouseEvent e) {
         Object source = e.getSource();
-        if (source instanceof JButton || source instanceof ButtonIcon) {
+        if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
         }
     }

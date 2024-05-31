@@ -27,7 +27,7 @@ public class GUIEventsHandler implements Runnable {
     public void run() {
         while (true) {
             Action action = eventsToView.remove();
-            Config.debug("View receive ", action);
+            Config.debug("View receive ", action.getType());
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -116,7 +116,7 @@ public class GUIEventsHandler implements Runnable {
                 case UNDO:
                 case REDO:
                     gui.updateSecondPanel(action);
-                break;
+                    break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;
