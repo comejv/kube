@@ -321,6 +321,7 @@ public class SecondPhasePanel extends JPanel {
                 }
             }
         }
+        updateHisto();
         updateAdditionnals(k3.getP1());
         updateAdditionnals(k3.getP2());
         updateActionnable();
