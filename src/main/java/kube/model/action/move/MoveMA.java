@@ -31,7 +31,7 @@ public class MoveMA extends Move {
     }
 
     /**
-     * Constructor of the class MoveAM
+     * Constructor of the class MoveMA
      * 
      * @param fromX the x position of the source of the move
      * @param fromY the y position of the source of the move

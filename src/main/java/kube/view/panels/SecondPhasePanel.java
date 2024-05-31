@@ -28,7 +28,7 @@ import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.Action;
-import kube.model.action.move.Move;
+import kube.model.action.move.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.components.Buttons;
@@ -148,8 +148,68 @@ public class SecondPhasePanel extends JPanel {
         return panel;
     }
 
+    public void updateActionnable() {
+        for (int i = 0; i < p1Panels.length; i++){
+            for (int j = 0; j < i + 1; j++){
+                HexIcon hex = (HexIcon) p1Panels[i][j].getComponent(0);
+                hex.setActionable(false);
+                hex = (HexIcon) p2Panels[i][j].getComponent(0);
+                hex.setActionable(false);
+            }
+        }
+        JPanel[][] pan = null;
+        if (k3.getCurrentPlayer() == k3.getP1()){
+            pan = p1Panels;
+        } else {
+            pan = p2Panels;
+        }
+        for (Point p : k3.getCurrentPlayer().getMountain().removable()){
+            HexIcon hex = (HexIcon) pan[p.x][p.y].getComponent(0);
+            hex.setActionable(true);
+        }
+    }
+
+    public void updateVisible() {
+        for (int i = 1; i < k3Panels.length; i++){
+            for (int j = 0; j < i + 1; j++){
+                HexIcon hexRight = (HexIcon) k3Panels[i-1][j].getComponent(0);
+                HexIcon hexLeft = (HexIcon) k3Panels[i-1][j+1].getComponent(0);
+                if (hexRight.getColor() != ModelColor.EMPTY && hexLeft.getColor() != ModelColor.EMPTY){
+                    
+                }
+            }
+        }
+    }
+
     public void update(Action a) {
-        // TODO
+        Move move = (Move) a.getData();
+        if (move instanceof MoveAA) {
+            // TODO update Additionnals
+        } else if (move instanceof MoveAM) {
+            // TODO update Additionnals
+            MoveAM am = (MoveAM) move;
+            updateMoutain(am.getPlayer(), am.getFrom());
+            updateMoutain(null, am.getTo());
+        } else if (move instanceof MoveAW) {
+            // TODO update Additionnals
+        } else if (move instanceof MoveMA) {
+            MoveMA ma = (MoveMA) move;
+            // TODO update Additionnals
+            if (ma.getPlayer() == k3.getP1()) {
+                updateMoutain(k3.getP2(), ma.getFrom());
+            } else {
+                updateMoutain(k3.getP1(), ma.getFrom());
+            }
+        } else if (move instanceof MoveMM) {
+            MoveMM mm = (MoveMM) move;
+            updateMoutain(mm.getPlayer(), mm.getFrom());
+            updateMoutain(null, mm.getTo());
+        } else if (move instanceof MoveMW) {
+            MoveMW mw = (MoveMW) move;
+            updateMoutain(mw.getPlayer(), mw.getFrom());
+        }
+        Config.debug("update phase 2", a.getData());
+        updateActionnable();
         updateHisto();
     }
 
@@ -192,6 +252,8 @@ public class SecondPhasePanel extends JPanel {
                 }
             }
         }
+        updateActionnable();
+
     }
 
     public void updateMoutain(Player p, int i, int j) {
@@ -276,7 +338,6 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gamePanel.add(base, gbc);
-
         return gamePanel;
     }
 

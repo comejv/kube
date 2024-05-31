@@ -55,6 +55,7 @@ public class GUIEventsHandler implements Runnable {
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
+                    gui.setGlassPanelVisible(false);
                     gui.showPanel(GUI.MENU);
                     break;
                 case QUIT:
