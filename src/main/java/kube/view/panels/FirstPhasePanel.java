@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
 
 /*
  * This class extends JPanel and creates the GUI for the first phase of the game.
@@ -81,7 +83,6 @@ public class FirstPhasePanel extends JPanel {
         }
 
         gamePanel.add(topPanel, BorderLayout.NORTH);
-
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
         initGrid();
         gamePanel.add(constructPanel);
@@ -129,6 +130,7 @@ public class FirstPhasePanel extends JPanel {
     public void initGrid() {
         moutainPanels = new JPanel[6][6];
         constructPanel = new JPanel();
+
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -213,6 +215,11 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateAll() {
+        constructPanel
+                .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                        "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne",
+                        TitledBorder.CENTER, TitledBorder.TOP,
+                        new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
         buttonsMap.get("AI").setEnabled(false);
         buttonsMap.get("Validate").setEnabled(false);
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
@@ -263,11 +270,11 @@ public class FirstPhasePanel extends JPanel {
     public void setWaitingButton() {
         for (JButton b : buttonsMap.values()) {
             b.setEnabled(false);
-            b.setText("Validation en cours");
         }
+        buttonsMap.get("Validate").setText("Validation en cours");
     }
 
-    public void resetButtonValue(){
+    public void resetButtonValue() {
         buttonsMap.get("Quit").setText("Quitter la partie");
         buttonsMap.get("Quit").setEnabled(true);
         buttonsMap.get("Option").setText("Paramètres");

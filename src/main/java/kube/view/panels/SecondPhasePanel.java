@@ -43,7 +43,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] k3Panels;
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
-    private JPanel p1Additionnals, p2Additionnals;
+    private JPanel gamePanel, p1Additionnals, p2Additionnals;
     private HashMap<String, JButton> buttonsMap;
     // TODO : set hex in middle of pyra not actionable
 
@@ -68,7 +68,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(20, 5, 20, 5);
         add(eastPane, gbc);
-        JPanel gamePanel = gamePanel();
+        gamePanel = gamePanel();
         gamePanel.setBackground(GUIColors.TEXT.toColor());
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -228,8 +228,8 @@ public class SecondPhasePanel extends JPanel {
         if (move instanceof MoveAA) {
             updateAdditionnals(k3.getP1());
             updateAdditionnals(k3.getP2());
-            updateMoutain(k3.getP1(), new Point(0,0));
-            updateMoutain(k3.getP2(), new Point(0,0));
+            updateMoutain(k3.getP1(), new Point(0, 0));
+            updateMoutain(k3.getP2(), new Point(0, 0));
         } else if (move instanceof MoveAM) {
             MoveAM am = (MoveAM) move;
             updateAdditionnals(am.getPlayer());
@@ -255,6 +255,22 @@ public class SecondPhasePanel extends JPanel {
         }
         updateActionnable();
         updateHisto();
+        updateText();
+    }
+
+    private void updateText() {
+        if (k3.getPenality()) {
+            gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                    "Au tour de " + k3.getCurrentPlayer().getName() + " de résoudre une pénalité",
+                    TitledBorder.CENTER, TitledBorder.TOP,
+                    new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
+        } else {
+            gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                    "Au tour de " + k3.getCurrentPlayer().getName() + " de jouer une de ses pièces",
+                    TitledBorder.CENTER, TitledBorder.TOP,
+                    new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
+        }
+        ;
     }
 
     private JScrollPane getHisto() {
@@ -337,7 +353,7 @@ public class SecondPhasePanel extends JPanel {
         p1Additionnals.setLayout(new GridBagLayout());
         p1Additionnals
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                        "Additionnel Pieces de Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
+                        "Pieces additionnelles du Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -351,7 +367,7 @@ public class SecondPhasePanel extends JPanel {
         p2Additionnals.setLayout(new GridBagLayout());
         p2Additionnals
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                        "Additionnel Pieces de Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
+                        "Pieces additionnelles du Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
         gbc.gridx = 1;
         gbc.gridy = 0;

@@ -23,7 +23,7 @@ public class AI extends Player {
         super(id);
         ai.setPlayerId(id);
         setAI(ai);
-        setName("AI" + id);
+        setName("Kubot" + id);
     }
 
     /**********
