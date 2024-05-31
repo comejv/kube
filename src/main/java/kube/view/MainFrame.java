@@ -72,9 +72,11 @@ public class MainFrame extends JFrame {
         if (currentListener != null){
             glassPane.removeMouseMotionListener(currentListener);
             glassPane.removeMouseListener(currentListener);
+            glassPane.removeMouseWheelListener(currentListener);
         }
         glassPane.addMouseMotionListener(ma);
         glassPane.addMouseListener(ma);
+        glassPane.addMouseWheelListener(ma);
         currentListener = ma;
     }
 
