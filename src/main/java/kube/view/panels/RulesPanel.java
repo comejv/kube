@@ -29,7 +29,6 @@ public class RulesPanel extends JPanel {
     private int height;
     private MenuController buttonListener;
     private JPanel cardPanel;
-    private JPanel gridPanel;
     private RulePanel rulePanel;
     private static int totalRuleNb = 8;
 
@@ -40,29 +39,23 @@ public class RulesPanel extends JPanel {
         width = Config.INIT_WIDTH / 2;
         height = Config.INIT_HEIGHT / 2;
 
-        gui.setGlassPanelVisible(true);
+        width = Math.round(Config.INIT_WIDTH / 1.75f);
+        height = Math.round(Config.INIT_HEIGHT / 1.5f);
 
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
-        setBackground(new Color(0, 0, 0, 150));
-
-        gridPanel = new JPanel(new GridBagLayout());
-        gridPanel.setSize(new Dimension(width, height));
-        gridPanel.setBackground(GUIColors.ACCENT.toColor());
-        GridBagConstraints elemGBC = new GridBagConstraints();
-        elemGBC.anchor = GridBagConstraints.CENTER;
-        add(gridPanel, elemGBC);
+        setPreferredSize(new Dimension(width, height));
+        setBackground(GUIColors.ACCENT.toColor());
 
         JLabel ruleTitle = new JLabel("RULES", SwingConstants.CENTER);
         ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 6)));
         ruleTitle.setForeground(GUIColors.TEXT.toColor());
-        elemGBC = new GridBagConstraints();
+        GridBagConstraints elemGBC = new GridBagConstraints();
         elemGBC.gridx = 0;
         elemGBC.gridy = 0;
         elemGBC.anchor = GridBagConstraints.CENTER;
-        elemGBC.weighty = 0;
-        elemGBC.weightx = .5;
-        gridPanel.add(ruleTitle, elemGBC);
+        elemGBC.weightx = 0.5;
+        elemGBC.weighty = 0.1;
+        add(ruleTitle, elemGBC);
 
         cardPanel = new JPanel(new CardLayout());
         cardPanel.setPreferredSize(new Dimension(width, height));
@@ -70,9 +63,9 @@ public class RulesPanel extends JPanel {
         elemGBC.gridx = 0;
         elemGBC.gridy = 1;
         elemGBC.anchor = GridBagConstraints.CENTER;
-        elemGBC.weighty = .67;
-        elemGBC.weightx = .5;
-        gridPanel.add(cardPanel, elemGBC);
+        elemGBC.weighty = 0.9;
+        elemGBC.fill = GridBagConstraints.BOTH;
+        add(cardPanel, elemGBC);
 
         rulePanel = new RulePanel();
         cardPanel.add(rulePanel, "rule");
@@ -117,8 +110,6 @@ public class RulesPanel extends JPanel {
             elemGBC.gridy = 1;
             elemGBC.anchor = GridBagConstraints.CENTER;
             elemGBC.fill = GridBagConstraints.BOTH;
-            elemGBC.weighty = .5;
-            elemGBC.weightx = .5;
             elemGBC.insets = new Insets(0, 30, 0, 30);
             add(textArea, elemGBC);
         }
@@ -129,8 +120,8 @@ public class RulesPanel extends JPanel {
             elemGBC.gridx = 0;
             elemGBC.gridy = 2;
             elemGBC.anchor = GridBagConstraints.LAST_LINE_END;
-            elemGBC.weighty = .5;
             elemGBC.weightx = .5;
+            elemGBC.weighty = .5;
             elemGBC.insets = new Insets(0, 0, 20, 20);
             suivant.addActionListener(buttonListener);
             if (getRuleNb() == totalRuleNb) {

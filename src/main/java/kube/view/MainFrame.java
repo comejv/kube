@@ -42,7 +42,13 @@ public class MainFrame extends JFrame {
         cardPanel = new JPanel(cardLayout);
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
-        pack();
+    }
+
+    public void resize(){
+        setSize(Config.INIT_WIDTH, Config.INIT_HEIGHT);
+        setLocationRelativeTo(null);
+        revalidate();
+        repaint();
     }
 
     public void addPanel(JPanel panel, String name) {
@@ -92,6 +98,10 @@ public class MainFrame extends JFrame {
     public JPanel getOverlay() {
         return overlayPanel;
     }
+
+    public JPanel getFramePanel(){
+        return framePanel;
+    }
     
     public void addToOverlay(Component p) {
         overlayPanel.add(p);
@@ -103,7 +113,7 @@ public class MainFrame extends JFrame {
 
     public void removeAllFromOverlay() {
         if (overlay != null) {
-            overlayPanel.remove(overlay);
+            overlayPanel.removeAll();
             overlayPanel.setVisible(false);
             framePanel.revalidate();
             framePanel.repaint();

@@ -98,43 +98,13 @@ public class Buttons {
 
     }
 
-    public static class GameFirstPhaseButton extends JButton {
-        public GameFirstPhaseButton(String name) {
+    public static class GamePhaseButton extends JButton {
+        public GamePhaseButton(String name) {
             super(name);
             setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
             setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 20)));
-        }
-    }
-
-    public static class GameSecondPhaseButton extends JButton {
-        public GameSecondPhaseButton(String name) {
-            super(name);
-            setPreferredSize(new Dimension(300, 100));
-            setBackground(GUIColors.ACCENT.toColor());
-            setForeground(GUIColors.TEXT.toColor());
-            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 20)));
-        }
-    }
-
-    public static class ParameterButton extends JButton {
-        public ParameterButton(Image image) {
-            super();
-            Image scaledImg = image.getScaledInstance(
-                    (int) (0.15 * Config.INIT_HEIGHT),
-                    (int) (0.15 * Config.INIT_HEIGHT),
-                    Image.SCALE_SMOOTH);
-
-            ImageIcon icon = new ImageIcon(scaledImg);
-            setIcon(icon);
-
-            setPreferredSize(new Dimension((int) (0.20 * Config.INIT_HEIGHT),
-                    (int) (0.20 * Config.INIT_HEIGHT)));
-
-            setOpaque(false);
-            setContentAreaFilled(false);
-            setBorderPainted(false);
         }
     }
 
@@ -142,16 +112,6 @@ public class Buttons {
         public RulesButton(String name) {
             super(name);
             setPreferredSize(new Dimension(200, 50));
-            setBackground(GUIColors.ACCENT.toColor());
-
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 15)));
-        }
-    }
-
-    public static class InGameMenuButton extends JButton {
-        public InGameMenuButton(String name) {
-            super(name);
-            setPreferredSize(new Dimension(Config.INIT_WIDTH / 4, Config.INIT_HEIGHT / 8));
             setBackground(GUIColors.ACCENT.toColor());
 
             setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 15)));

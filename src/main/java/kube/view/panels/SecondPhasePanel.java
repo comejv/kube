@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -8,12 +7,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,7 +22,6 @@ import kube.configuration.Config;
 import kube.controller.graphical.Phase2Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
-import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.Action;
 import kube.model.action.move.*;
@@ -93,41 +88,41 @@ public class SecondPhasePanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         // gbc.insets = new Insets(10, 0, 0, 0);
 
-        JButton quitButton = new Buttons.GameFirstPhaseButton("Quitter la partie");
+        JButton quitButton = new Buttons.GamePhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addMouseListener(a);
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(quitButton, gbc);
 
-        JButton optButton = new Buttons.GameFirstPhaseButton("Paramètres");
+        JButton optButton = new Buttons.GamePhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addMouseListener(a);
         gbc.gridy = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(optButton, gbc);
 
-        JButton sugIaButton = new Buttons.GameFirstPhaseButton("Suggestion IA");
+        JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
         sugIaButton.addMouseListener(a);
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugIaButton, gbc);
 
-        JButton histoButton = new Buttons.GameFirstPhaseButton("Historique");
+        JButton histoButton = new Buttons.GamePhaseButton("Historique");
         histoButton.setActionCommand("updateHist");
         gbc.fill = GridBagConstraints.HORIZONTAL;
         histoButton.addMouseListener(a);
         gbc.gridy = 6;
         panel.add(histoButton, gbc);
 
-        JButton annulerButton = new Buttons.GameFirstPhaseButton("Annuler");
+        JButton annulerButton = new Buttons.GamePhaseButton("Annuler");
         annulerButton.setActionCommand("undo");
         annulerButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 7;
         panel.add(annulerButton, gbc);
 
-        JButton refaireButton = new Buttons.GameFirstPhaseButton("Refaire");
+        JButton refaireButton = new Buttons.GamePhaseButton("Refaire");
         refaireButton.setActionCommand("redo");
         refaireButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;

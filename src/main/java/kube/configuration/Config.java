@@ -19,6 +19,8 @@ public class Config {
      **********/
 
     private static String language = "fr_FR";
+    private static double UISize = 1;
+
     private static boolean mute = true;
 
     /**********
@@ -29,12 +31,20 @@ public class Config {
         language = lang;
     }
 
+    public static void setUISize(double size) {
+        UISize = size;
+    }
+
     /**********
      * CONFIGURATION GETTER
      **********/
 
     public static String getLanguage() {
         return language;
+    }
+
+    public static double getUISize() {
+        return UISize;
     }
 
     /**********
