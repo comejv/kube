@@ -75,6 +75,7 @@ public class MainFrame extends JFrame {
         }
         glassPane.addMouseMotionListener(ma);
         glassPane.addMouseListener(ma);
+        glassPane.addMouseWheelListener(ma);
         currentListener = ma;
     }
 
