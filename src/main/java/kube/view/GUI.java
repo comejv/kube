@@ -267,4 +267,13 @@ public class GUI extends Thread {
         return mF;
     }
 
+
+    public void updateDnd(Action a){
+        if (k3.getPhase() == Kube.PREPARATION_PHASE){
+            firstPhasePanel.updateDnd(a);
+        } else {
+            secondPhasePanel.updateDnd(a);
+        }
+    }
+
 }

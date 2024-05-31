@@ -49,6 +49,7 @@ public class Phase2DnD extends Phase1DnD {
                         new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
             }
         }
+        toView.add(new Action(ActionType.DND_STOP));
         g.setCursor(Cursor.getDefaultCursor());
         g.clear();
     }

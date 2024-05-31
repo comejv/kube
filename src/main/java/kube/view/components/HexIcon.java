@@ -14,7 +14,6 @@ import kube.configuration.Config;
 
 public class HexIcon extends Icon {
 
-
     // TODO : refactor this class to make it more readable
     private boolean isActionable;
     private boolean isHovered;
@@ -45,6 +44,7 @@ public class HexIcon extends Icon {
         this(color, actionable, player, WIDTH, HEIGHT, SCALE);
 
     }
+
     public HexIcon(ModelColor color, boolean actionable) {
         this(color, actionable, null, WIDTH, HEIGHT, SCALE);
     }
@@ -97,10 +97,8 @@ public class HexIcon extends Icon {
             case BLACK:
                 return "hexaBlackTextured";
             case EMPTY:
-                return "hexaWire";
             default:
-                Config.error("Color not found: " + color);
-                return null;
+                return "hexaWire";
         }
     }
 

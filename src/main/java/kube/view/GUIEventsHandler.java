@@ -112,6 +112,10 @@ public class GUIEventsHandler implements Runnable {
                 case VALIDATE:
                     gui.updatePanel();
                     break;
+                case DND_START:
+                case DND_STOP:
+                    gui.updateDnd(action);
+                    break;
                 case BUILD:
                 case REMOVE:
                 case SWAP:

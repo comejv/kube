@@ -285,4 +285,7 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap.get("Validate").setEnabled(false);
     }
 
+    public void updateDnd(Action a){
+
+    }
 }

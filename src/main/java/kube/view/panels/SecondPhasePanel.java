@@ -188,18 +188,24 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateVisible() {
-        for (int i = 1; i < k3Panels.length; i++) {
-            for (int j = 0; j < i + 1; j++) {
-                HexIcon hexRight = (HexIcon) k3Panels[i - 1][j].getComponent(0);
-                HexIcon hexLeft = (HexIcon) k3Panels[i - 1][j + 1].getComponent(0);
-                if (hexRight.getColor() != ModelColor.EMPTY && hexLeft.getColor() != ModelColor.EMPTY) {
-
+        JPanel[][][] toUpdate = { k3Panels, p1Panels, p2Panels };
+        for (JPanel[][] pan : toUpdate) {
+            for (int i = 0; i < pan.length; i++) {
+                for (int j = 0; j < i + 1; j++) {
+                    HexIcon hex = (HexIcon) pan[i][j].getComponent(0);
+                    if (hex.getColor() == ModelColor.EMPTY) {
+                        hex.setVisible(false);
+                    }
                 }
             }
         }
     }
 
     public void updateAdditionnals(Player p) {
+        updateAdditionnals(p, false);
+    }
+
+    public void updateAdditionnals(Player p, boolean addWire) {
         JPanel additionnalsPanel = null;
         if (p == k3.getP1()) {
             additionnalsPanel = p1Additionnals;
@@ -219,7 +225,10 @@ public class SecondPhasePanel extends JPanel {
             additionnalsPanel.add(new HexIcon(c, false, p), gbc);
             n++;
         }
-        additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
+        if (addWire) {
+            additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
+        }
+        additionnalsPanel.revalidate();
         additionnalsPanel.repaint();
     }
 
@@ -256,6 +265,7 @@ public class SecondPhasePanel extends JPanel {
         updateActionnable();
         updateHisto();
         updateText();
+        updateVisible();
     }
 
     private void updateText() {
@@ -315,6 +325,7 @@ public class SecondPhasePanel extends JPanel {
         updateAdditionnals(k3.getP2());
         updateActionnable();
         updateText();
+        updateVisible();
     }
 
     public void updateMoutain(Player p, int i, int j) {
@@ -400,6 +411,8 @@ public class SecondPhasePanel extends JPanel {
         gbc.weighty = 1;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
+        base.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
+
         gamePanel.add(base, gbc);
 
         return gamePanel;
@@ -438,5 +451,19 @@ public class SecondPhasePanel extends JPanel {
             constructPanel.add(lineHexa, gbc);
         }
         return constructPanel;
+    }
+
+    public void updateDnd(Action a) {
+        HexIcon hex = (HexIcon) a.getData();
+        if (hex == null) {
+            updateVisible();
+        } else if (k3.getPenality()) {
+            updateAdditionnals(k3.getCurrentPlayer(), true);
+        } else {
+            for (Point p : k3.getK3().compatible(hex.getColor())) {
+                HexIcon h = (HexIcon) k3Panels[p.x][p.y].getComponent(0);
+                h.setVisible(true);
+            }
+        }
     }
 }

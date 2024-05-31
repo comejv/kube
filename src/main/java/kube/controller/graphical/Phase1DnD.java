@@ -47,6 +47,7 @@ public class Phase1DnD implements MouseListener, MouseMotionListener, MouseWheel
             g.setHexIcon(newIcon);
             g.setPoint(e.getPoint());
             g.setColor(newIcon.getColor());
+            toView.add(new Action(ActionType.DND_START, newIcon));
             g.repaint();
         }
     }

@@ -88,6 +88,8 @@ public enum ActionType {
     SETTINGS,
     CONFIRMED_SETTINGS,
     RETURN_TO_MENU,
+    DND_START,
+    DND_STOP,
 
     // --- Menu ---
 
