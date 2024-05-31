@@ -1,13 +1,21 @@
 package kube.view;
 
-import javax.swing.*;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Font;
+
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.OverlayLayout;
 
 import kube.configuration.Config;
 import kube.controller.graphical.Phase1DnD;
+import kube.view.components.HexIcon;
+import kube.view.components.Icon;
 import kube.view.panels.GlassPanel;
-
-import java.awt.*;
-import java.awt.event.ActionListener;
 
 /*
  * This class initializes the game frame and its layout manager : an overlay layout that contains a card layout and potential overlay elements.
@@ -44,7 +52,7 @@ public class MainFrame extends JFrame {
         framePanel.add(cardPanel);
     }
 
-    public void resize(){
+    public void resize() {
         setSize(Config.INIT_WIDTH, Config.INIT_HEIGHT);
         setLocationRelativeTo(null);
         revalidate();
@@ -75,7 +83,7 @@ public class MainFrame extends JFrame {
     }
 
     public void setGlassPaneController(Phase1DnD ma) {
-        if (currentListener != null){
+        if (currentListener != null) {
             glassPane.removeMouseMotionListener(currentListener);
             glassPane.removeMouseListener(currentListener);
             glassPane.removeMouseWheelListener(currentListener);
@@ -94,15 +102,15 @@ public class MainFrame extends JFrame {
         remove(getGlassPane());
         glassPane = null;
     }
-    
+
     public JPanel getOverlay() {
         return overlayPanel;
     }
 
-    public JPanel getFramePanel(){
+    public JPanel getFramePanel() {
         return framePanel;
     }
-    
+
     public void addToOverlay(Component p) {
         overlayPanel.add(p);
         overlayPanel.setVisible(true);
@@ -123,5 +131,45 @@ public class MainFrame extends JFrame {
 
     public Component getOverlayComponent() {
         return overlay;
+    }
+
+    public void updateUISize() {
+        Container c = getContentPane();
+        Config.debug("Resizing UI");
+        resizeComponents(c, Config.getUIScale());
+    }
+
+    public static void resizeComponents(Container container, double factor) {
+        for (Component component : container.getComponents()) {
+            // Resize the component
+            Dimension size = component.getSize();
+            Dimension preferredSize = component.getPreferredSize();
+            Dimension minimumSize = component.getMinimumSize();
+            Dimension maximumSize = component.getMaximumSize();
+
+            component.setSize(new Dimension((int) (size.width * factor), (int) (size.height * factor)));
+            component.setPreferredSize(
+                    new Dimension((int) (preferredSize.width * factor), (int) (preferredSize.height * factor)));
+            component.setMinimumSize(
+                    new Dimension((int) (minimumSize.width * factor), (int) (minimumSize.height * factor)));
+            component.setMaximumSize(
+                    new Dimension((int) (maximumSize.width * factor), (int) (maximumSize.height * factor)));
+
+            // Resize font if the component supports it
+            if (component instanceof JComponent) {
+                Font font = component.getFont();
+                if (font != null) {
+                    component.setFont(font.deriveFont((float) (font.getSize2D() * factor)));
+                }
+                if (component instanceof HexIcon) {
+                    ((HexIcon) component).setScale(((HexIcon) component).getScale() * factor);
+                }
+            }
+
+            // If the component is a container, resize its components recursively
+            if (component instanceof Container) {
+                resizeComponents((Container) component, factor);
+            }
+        }
     }
 }

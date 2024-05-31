@@ -114,8 +114,7 @@ public class SettingsPanel extends JPanel{
                     default:
                         break;
                 }
-                gui.getMainFrame().revalidate();
-                gui.getMainFrame().repaint();
+                gui.updateUISize();
             }
         });
 

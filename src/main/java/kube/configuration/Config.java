@@ -43,7 +43,7 @@ public class Config {
         return language;
     }
 
-    public static double getUISize() {
+    public static double getUIScale() {
         return UISize;
     }
 

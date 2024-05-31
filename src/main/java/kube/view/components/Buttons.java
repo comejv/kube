@@ -23,7 +23,7 @@ public class Buttons {
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 10)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT * Config.getUIScale() / 10)));
         }
     }
 
@@ -35,8 +35,8 @@ public class Buttons {
                     Config.INIT_WIDTH / 12));
             setBackground(GUIColors.ACCENT.toColor());
             GridBagConstraints gbc = new GridBagConstraints();
-            int size = Config.INIT_HEIGHT / 10;
-            int sizeDisplay = Config.INIT_HEIGHT / 20;
+            int size = (int) Math.round(Config.INIT_HEIGHT * Config.getUIScale() / 10);
+            int sizeDisplay = (int) Math.round(Config.INIT_HEIGHT * Config.getUIScale() / 20);
 
             JLabel nameLabel = new JLabel();
             nameLabel.setText(name);
@@ -104,7 +104,7 @@ public class Buttons {
             setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
-            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 20)));
+            setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT * Config.getUIScale() / 20)));
         }
     }
 
@@ -114,7 +114,7 @@ public class Buttons {
             setPreferredSize(new Dimension(200, 50));
             setBackground(GUIColors.ACCENT.toColor());
 
-            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 15)));
+            setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT * Config.getUIScale() / 15)));
         }
     }
 

@@ -14,7 +14,6 @@ import kube.configuration.Config;
 
 public class HexIcon extends Icon {
 
-
     // TODO : refactor this class to make it more readable
     private boolean isActionable;
     private boolean isHovered;
@@ -31,12 +30,14 @@ public class HexIcon extends Icon {
     private static final int SCALE = 1;
 
     private double scale;
+    private double oldUIScale;
 
     public HexIcon(ModelColor color, boolean actionable, Player player, int width, int height, double scale) {
         super(ResourceLoader.getBufferedImage(getImageName(color)));
         this.isActionable = actionable;
         this.color = color;
-        this.scale = scale;
+        this.oldUIScale = Config.getUIScale();
+        this.scale = scale * oldUIScale;
         this.player = player;
         resizeIcon((int) (width * scale), (int) (height * scale));
     }
@@ -45,6 +46,7 @@ public class HexIcon extends Icon {
         this(color, actionable, player, WIDTH, HEIGHT, SCALE);
 
     }
+
     public HexIcon(ModelColor color, boolean actionable) {
         this(color, actionable, null, WIDTH, HEIGHT, SCALE);
     }
@@ -67,6 +69,10 @@ public class HexIcon extends Icon {
 
     @Override
     protected void paintComponent(Graphics g) {
+        // if (Config.getUIScale() != oldUIScale) {
+        //     setScale(scale / oldUIScale * Config.getUIScale());
+        //     oldUIScale = Config.getUIScale();
+        // }
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (isActionable() && isHovered) { // Draw darker image
