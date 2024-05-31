@@ -87,4 +87,26 @@ public class Configuration {
             System.out.println();
         }
     }
+
+        /**
+     * Print error message
+     * 
+     * @param args the message to print
+     */
+    public static void error(Object... args) {
+        if (DEBUG) {
+            StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
+            if (stackTraceElements.length > 2) {
+                System.out.print("Error at : " + stackTraceElements[2].getClassName() + " : "
+                        + stackTraceElements[2].getMethodName() + "(" + stackTraceElements[2].getLineNumber() + ")"
+                        + " : ");
+            }
+            // Print args
+            for (Object arg : args) {
+                System.out.print(arg + " ");
+            }
+
+            System.out.println();
+        }
+    }
 }

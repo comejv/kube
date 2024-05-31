@@ -60,7 +60,7 @@ public class MainFrame extends JFrame {
 
     public void createGlassPane() {
         if (glassPane != null) {
-            System.err.println("Glass pane already exists.");
+            Configuration.error("Glass pane already exists.");
             return;
         }
         GlassPanel g = new GlassPanel();
@@ -80,7 +80,7 @@ public class MainFrame extends JFrame {
 
     public void removeGlassPane() {
         if (glassPane == null) {
-            System.err.println("No glass pane exists.");
+            Configuration.error("No glass pane exists.");
             return;
         }
         remove(getGlassPane());

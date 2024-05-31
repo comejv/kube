@@ -64,7 +64,7 @@ public class GUI extends Thread {
         } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
 
                 IllegalAccessException e) {
-            System.err.println("Can't set look and feel : " + e);
+            Configuration.error("Can't set look and feel : " + e);
         }
 
         try {
@@ -75,7 +75,7 @@ public class GUI extends Thread {
             ge.getAvailableFontFamilyNames();
         } catch (IOException | FontFormatException e) {
             Configuration.debug("Error : ");
-            System.err.println("Could not load buttons font, using default.");
+            Configuration.error("Could not load buttons font, using default.");
         }
 
         new Thread(new GUIEventsHandler(this, eventsToView, eventsToModel)).start();
@@ -153,14 +153,14 @@ public class GUI extends Thread {
                         wait();
                     }
                 } catch (InterruptedException e) {
-                    System.err.println("Interrupted loading");
+                    Configuration.error("Interrupted loading");
                 }
                 break;
             case GUI.MENU:
                 // Do nothing, menu always loaded
                 break;
             default:
-                System.err.println("Waiting for non existent panel " + panelName);
+                Configuration.error("Waiting for non existent panel " + panelName);
                 break;
         }
         Configuration.debug("Panel ", panelName, " finished loading");

@@ -78,7 +78,7 @@ public class MenuController implements ActionListener, MouseListener {
                     break;
 
                 default:
-                    System.err.println("Unrecognised buttonIcon action.");
+                    Configuration.error("Unrecognised buttonIcon action.");
                     break;
             }
         }

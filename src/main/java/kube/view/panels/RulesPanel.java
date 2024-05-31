@@ -156,7 +156,7 @@ public class RulesPanel extends JPanel {
             if (i > 0 && i < totalRuleNb + 1) {
                 ruleNb = i;
             } else {
-                System.err.println("Can't assign invalid rule number. Valid range of rule number is 1 to " + totalRuleNb
+                Configuration.error("Can't assign invalid rule number. Valid range of rule number is 1 to " + totalRuleNb
                         + " included");
             }
         }
