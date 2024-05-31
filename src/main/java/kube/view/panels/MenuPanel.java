@@ -23,23 +23,24 @@ public class MenuPanel extends JPanel {
     public MenuPanel(GUI gui, MenuController buttonListener) {
         this.gui = gui;
 
-        setLayout(new CardLayout());
+        setLayout(new BorderLayout());
 
         // ****************************************************************************************//
         // MENU //
         // ****************************************************************************************//
-        BufferedImage backgroundCow = ResourceLoader.getBufferedImage("background");
+        BufferedImage backgroundImage = ResourceLoader.getBufferedImage("background");
         JPanel modal = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
+                Config.debug("painting menu");
                 super.paintComponent(g);
-                Image scaledBackground = backgroundCow.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
+                Image scaledBackground = backgroundImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
                 g.drawImage(scaledBackground, 0, 0, this);
             }
         };
         modal.setLayout(new GridBagLayout());
 
-        add(modal);
+        add(modal, BorderLayout.CENTER);
 
         // Game title
         JLabel title = new JLabel("KUBE", SwingConstants.CENTER);
