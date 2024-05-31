@@ -1,33 +1,67 @@
 package kube.services;
 
+// import java classes
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-
-
 public class Client extends Network {
 
-    // TODO : refactor this class to make it more readable
+    /**********
+     * ATTRIBUTE
+     **********/
+    
     private Socket socket;
     
+    /**********
+     * CONSTRUCTORS
+     **********/
+
+    /**
+     * Constructor of the class Client
+     */
     public Client() {
     }
     
-    public Client(String ip, int port){
-        connect(ip, port);
+    /**
+     * Constructor of the class Client
+     * 
+     * @param IP the IP address
+     * @param port the port
+     */
+    public Client(String IP, int port){
+        connect(IP, port);
     }
 
-
-    public Socket getSocket() {
-        return socket;
-    }
+    /**********
+     * SETTER
+     **********/
 
     public void setSocket(Socket socket) {
         this.socket = socket;
     }
 
+    /**********
+     * GETTER
+     **********/
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Connect to the server
+     * 
+     * @param ip the IP address
+     * @param port the port
+     * @return true if the connection is successful, false otherwise
+     */
     @Override
     public final boolean connect(String ip, int port) {
         try {
@@ -42,6 +76,11 @@ public class Client extends Network {
         return true;
     }
 
+    /**
+     * Disconnect from the server
+     * 
+     * @return true if the disconnection is successful, false otherwise
+     */
     @Override
     public boolean disconnect() {
         try {
