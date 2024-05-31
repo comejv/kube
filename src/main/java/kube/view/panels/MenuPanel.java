@@ -32,7 +32,6 @@ public class MenuPanel extends JPanel {
         JPanel modal = new JPanel() {
             @Override
             public void paintComponent(Graphics g) {
-                Config.debug("painting menu");
                 super.paintComponent(g);
                 Image scaledBackground = backgroundImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
                 g.drawImage(scaledBackground, 0, 0, this);

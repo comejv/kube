@@ -1,7 +1,5 @@
 package kube.model;
 
-import java.awt.Point;
-
 // Import model classes
 import kube.model.ai.MiniMaxAI;
 import kube.model.action.move.Move;
@@ -21,11 +19,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+import java.awt.Point;
 
 public class Kube implements Serializable {
 
-    // TODO : refactor this class to make it more readable
     /**********
      * CONSTANTS
      **********/
@@ -36,6 +33,9 @@ public class Kube implements Serializable {
     public static final int ID_PLAYER_1 = 1;
     public static final int ID_PLAYER_2 = 2;
 
+    public static final String NOT_IN_PREPARATION_PHASE = "Forbidden operation, the Kube isn't in preparation phase";
+    public static final String NOT_IN_GAME_PHASE = "Forbidden operation, the Kube isn't in game phase";
+
     /**********
      * ATTRIBUTES
      **********/
@@ -44,9 +44,8 @@ public class Kube implements Serializable {
     private ArrayList<ModelColor> bag;
     private boolean penality;
     private History history;
-    private int baseSize;
+    private int baseSize, phase;
     private Mountain k3;
-    private int phase;
     private Move lastMovePlayed;
 
     /**********
@@ -60,6 +59,11 @@ public class Kube implements Serializable {
         init();
     }
 
+    /**
+     * Constructor of the Kube (empty or not)
+     * 
+     * @param empty true if the Kube is empty, false otherwise
+     */
     public Kube(boolean empty) {
         if (!empty) {
             init();
@@ -70,29 +74,63 @@ public class Kube implements Serializable {
      * INITIALIZATION
      **********/
 
+    /**
+     * Initialize the Kube with the default values
+     * 
+     * @return void
+     */
     public final void init() {
         init(null, null, new Random());
     }
 
+    /**
+     * Initialize the Kube with the default values and the given type of AI
+     * 
+     * @param typeAI1 the type of AI for the player 1
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1) {
         init(typeAI1, null, new Random());
     }
 
+    /**
+     * Initialize the Kube with the default values and the given type of AI
+     * 
+     * @param typeAI1 the type of AI for the player 1
+     * @param typeAI2 the type of AI for the player 2
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2) {
         init(typeAI1, typeAI2, new Random());
     }
 
+    /**
+     * Initialize the Kube with the default values and the given type of AI
+     * 
+     * @param typeAI1 the type of AI for the player 1
+     * @param typeAI2 the type of AI for the player 2
+     * @param seed    the seed to shuffle the bag
+     * @return void
+     */
     public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, int seed) {
         init(typeAI1, typeAI2, new Random(seed));
     }
 
-    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, Random r) {
+    /**
+     * Initialize the Kube with the default values and the given type of AI
+     * 
+     * @param typeAI1 the type of AI for the player 1
+     * @param typeAI2 the type of AI for the player 2
+     * @param random  the random object to shuffle the bag
+     * @return void
+     */
+    public void init(MiniMaxAI typeAI1, MiniMaxAI typeAI2, Random random) {
 
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
         setK3(new Mountain(getBaseSize()));
         setBag(new ArrayList<>());
-        fillBag(r);
+        fillBag(random);
         fillBase();
         setHistory(new History());
         setPenality(false);
@@ -100,70 +138,70 @@ public class Kube implements Serializable {
         if (typeAI1 != null) {
             setP1(new AI(ID_PLAYER_1, typeAI1));
         } else {
-            setP1(new Player(1));
+            setP1(new Player(ID_PLAYER_1));
         }
 
         if (typeAI2 != null) {
             setP2(new AI(ID_PLAYER_2, typeAI2));
         } else {
-            setP2(new Player(2));
+            setP2(new Player(ID_PLAYER_2));
         }
 
         setCurrentPlayer(getP1());
         distributeCubesToPlayers();
     }
 
-    public void init (Kube k) {
+    /**
+     * Initialize the Kube with the given Kube
+     * 
+     * @param kube the Kube to copy
+     * @return void
+     */
+    public void init(Kube kube) {
 
-        if (k.getP1() instanceof AI) {
-            p1 = new AI(ID_PLAYER_1, ((AI) k.getP1()).getAI());
+        if (kube.getP1() instanceof AI) {
+            setP1(new AI(ID_PLAYER_1, ((AI) kube.getP1()).getAI()));
         } else {
-            p1 = new Player(ID_PLAYER_1);
+            setP1(new Player(ID_PLAYER_1));
         }
 
-        // p1 = new Player(ID_PLAYER_1);
-        p1.setName(new String(k.getP1().getName()));
-        p1.setMountain(k.getP1().getMountain().clone());
-        p1.setIsMountainValidated(k.getP1().getIsMountainValidated());
-        p1.setAdditionals(new ArrayList<>(k.getP1().getAdditionals()));
-        p1.setAvailableToBuild(new HashMap<>(k.getP1().getAvailableToBuild()));
-        p1.setUsedPiece(new HashMap<>(k.getP1().getUsedPiece()));
+        getP1().setName(new String(kube.getP1().getName()));
+        getP1().setMountain(kube.getP1().getMountain().clone());
+        getP1().setIsMountainValidated(kube.getP1().getIsMountainValidated());
+        getP1().setAdditionals(new ArrayList<>(kube.getP1().getAdditionals()));
+        getP1().setAvailableToBuild(new HashMap<>(kube.getP1().getAvailableToBuild()));
+        getP1().setUsedPiece(new HashMap<>(kube.getP1().getUsedPiece()));
 
-        if (k.getP2() instanceof AI) {
-            p2 = new AI(ID_PLAYER_2, ((AI) k.getP1()).getAI());
+        if (kube.getP2() instanceof AI) {
+            setP2(new AI(ID_PLAYER_2, ((AI) kube.getP2()).getAI()));
         } else {
-            p2 = new Player(ID_PLAYER_2);
+            setP2(new Player(ID_PLAYER_2));
         }
 
-        p2 = new Player(ID_PLAYER_2);
-        p2.setName(new String(k.getP2().getName()));
-        p2.setMountain(k.getP2().getMountain().clone());
-        p2.setIsMountainValidated(k.getP2().getIsMountainValidated());
-        p2.setAdditionals(new ArrayList<>(k.getP2().getAdditionals()));
-        p2.setAvailableToBuild(new HashMap<>(k.getP2().getAvailableToBuild()));
-        p2.setUsedPiece(new HashMap<>(k.getP2().getUsedPiece()));
+        getP2().setName(new String(kube.getP2().getName()));
+        getP2().setMountain(kube.getP2().getMountain().clone());
+        getP2().setIsMountainValidated(kube.getP2().getIsMountainValidated());
+        getP2().setAdditionals(new ArrayList<>(kube.getP2().getAdditionals()));
+        getP2().setAvailableToBuild(new HashMap<>(kube.getP2().getAvailableToBuild()));
+        getP2().setUsedPiece(new HashMap<>(kube.getP2().getUsedPiece()));
 
-        if (k.getCurrentPlayer() == k.getP1()) {
-            currentPlayer = p1;
+        if (kube.getCurrentPlayer() == kube.getP1()) {
+            setCurrentPlayer(getP1());
         } else {
-            currentPlayer = p2;
+            setCurrentPlayer(getP2());
         }
 
-        bag = new ArrayList<>(k.getBag());
+        setBag(new ArrayList<>(kube.getBag()));
+        setPenality(kube.getPenality());
 
-        penality = k.getPenality();
+        setHistory(new History());
+        getHistory().setDone(new CopyOnWriteArrayList<>(kube.getHistory().getDone()));
+        getHistory().setUndone(new CopyOnWriteArrayList<>(kube.getHistory().getUndone()));
 
-        history = new History();
-        history.setDone(new CopyOnWriteArrayList<>(k.getHistory().getDone()));
-        history.setUndone(new CopyOnWriteArrayList<>(k.getHistory().getUndone()));
-
-        baseSize = k.getBaseSize();
-
-        k3 = k.getK3().clone();
-
-        phase = k.getPhase();
-
-        lastMovePlayed = k.getLastMovePlayed();
+        setBaseSize(kube.getBaseSize());
+        setK3(kube.getK3().clone());
+        setPhase(kube.getPhase());
+        setLastMovePlayed(kube.getLastMovePlayed());
     }
 
     /**********
@@ -174,36 +212,40 @@ public class Kube implements Serializable {
         bag = b;
     }
 
-    synchronized public void setCurrentPlayer(Player p) {
+    synchronized public final void setCurrentPlayer(Player p) {
         currentPlayer = p;
     }
 
-    public void setHistory(History h) {
+    public final void setHistory(History h) {
         history = h;
     }
 
-    public void setK3(Mountain m) {
+    public final void setK3(Mountain m) {
         k3 = m;
     }
 
-    public void setP1(Player p) {
+    public final void setP1(Player p) {
         p1 = p;
     }
 
-    public void setP2(Player p) {
+    public final void setP2(Player p) {
         p2 = p;
     }
 
-    public void setPhase(int p) {
+    public final void setPhase(int p) {
         phase = p;
     }
 
-    public void setPenality(boolean p) {
+    public final void setPenality(boolean p) {
         penality = p;
     }
 
-    public void setBaseSize(int b) {
+    public final void setBaseSize(int b) {
         baseSize = b;
+    }
+
+    public final void setLastMovePlayed(Move m) {
+        lastMovePlayed = m;
     }
 
     public void setPlayerCase(Player player, Point point, ModelColor color) {
@@ -296,39 +338,6 @@ public class Kube implements Serializable {
      * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
      * 9 first cubes have 4 differents colors
      * 
-     * @param seed the seed to shuffle the bag
-     * @return void
-     * @throws UnsupportedOperationException if the phase is not the preparation
-     *                                       phase
-     */
-    public void fillBag(Random r) throws UnsupportedOperationException {
-
-        // Check if the phase is the preparation phase
-        if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
-        }
-
-        // Fill the bag with nCubePerColor cubes of each color
-        bag = new ArrayList<>();
-        for (ModelColor c : ModelColor.getAllColored()) {
-            for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
-                bag.add(c);
-            }
-        }
-        try {
-            // Shuffle the bag until the 9 first cubes have 4 differents colors
-            while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
-                Collections.shuffle(bag, r);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
-     * 9 first cubes have 4 differents colors
-     * 
      * @return void
      * @throws UnsupportedOperationException if the phase is not the preparation
      *                                       phase
@@ -341,6 +350,40 @@ public class Kube implements Serializable {
      * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
      * 9 first cubes have 4 differents colors
      * 
+     * @param random the random object to shuffle the bag
+     * @return void
+     * @throws UnsupportedOperationException if the phase is not the preparation
+     *                                       phase
+     */
+    public void fillBag(Random random) throws UnsupportedOperationException {
+
+        // Check if the phase is the preparation phase
+        if (getPhase() != PREPARATION_PHASE) {
+            throw new UnsupportedOperationException(NOT_IN_PREPARATION_PHASE);
+        }
+
+        // Fill the bag with nCubePerColor cubes of each color
+        bag = new ArrayList<>();
+        for (ModelColor c : ModelColor.getAllColored()) {
+            for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
+                bag.add(c);
+            }
+        }
+        try {
+            // Shuffle the bag until the 9 first cubes have 4 differents colors
+            while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
+                Collections.shuffle(bag, random);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
+     * 9 first cubes have 4 differents colors
+     * 
+     * @param seed the seed to shuffle the bag
      * @return void
      * @throws UnsupportedOperationException if the phase is not the preparation
      *                                       phase
@@ -360,7 +403,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
+            throw new UnsupportedOperationException(NOT_IN_PREPARATION_PHASE);
         }
 
         // Fill the base with the 9 first cubes of the bag
@@ -384,7 +427,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
+            throw new UnsupportedOperationException(NOT_IN_PREPARATION_PHASE);
         }
 
         // Distribute the cubes to the players
@@ -408,8 +451,8 @@ public class Kube implements Serializable {
             p2Cubes.put(cAvailable, p2Cubes.get(cAvailable) + 1);
         }
 
-        p1.setAvailableToBuild(p1Cubes);
-        p2.setAvailableToBuild(p2Cubes);
+        getP1().setAvailableToBuild(p1Cubes);
+        getP2().setAvailableToBuild(p2Cubes);
     }
 
     /**********
@@ -424,7 +467,6 @@ public class Kube implements Serializable {
      * @throws UnsupportedOperationException if the phase is not the
      *                                       game phase
      * @throws IllegalArgumentException      if the move is not a
-     * @throws UnsupportedOperationException if the move is not a
      *                                       MoveAA, MoveMA,
      *                                       MoveAW, MoveMW, MoveAM
      *                                       or MoveMM
@@ -440,7 +482,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         player = getCurrentPlayer();
@@ -525,7 +567,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         player = getCurrentPlayer();
@@ -615,7 +657,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Play the move
@@ -645,7 +687,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         player = move.getPlayer();
@@ -727,7 +769,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Un play the last move if there is one
@@ -753,7 +795,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Re play the last move that has been unplayed
@@ -781,7 +823,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Get the previousPlayer
@@ -833,7 +875,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // If a penality is in progress, return the penality set
@@ -882,7 +924,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         return (!moveSet().isEmpty());
@@ -929,29 +971,39 @@ public class Kube implements Serializable {
         return getPhase();
     }
 
-    public Move createMove(Point posFrom, Player playerFrom, Point posTo, Player playerTo, ModelColor color){
-        // Penality 
-        if (playerFrom != null && playerTo != null){
-            if (posFrom == null){
+    /**
+     * Create a move from the given parameters
+     * 
+     * @param from       the point from where the cube is taken
+     * @param playerFrom the player from where the cube is taken
+     * @param to         the point where the cube is placed
+     * @param playerTo   the player where the cube is placed
+     * @param color      the color of the cube
+     * @return the move created
+     */
+    public Move createMove(Point from, Player playerFrom, Point to, Player playerTo, ModelColor color) {
+        // Penality
+        if (playerFrom != null && playerTo != null) {
+            if (from == null) {
                 return new MoveAA(color);
             } else {
-                return new MoveMA(posFrom, color);
+                return new MoveMA(from, color);
             }
         }
         // Classic moves
-        if (playerFrom != null && playerTo == null){
-            if (posFrom == null){
+        if (playerFrom != null && playerTo == null) {
+            if (from == null) {
                 // Move from additionnals
-                if (color == ModelColor.WHITE){
+                if (color == ModelColor.WHITE) {
                     return new MoveAW();
                 } else {
-                    return new MoveAM(posTo, color);
+                    return new MoveAM(to, color);
                 }
             } else {
-                if (color == ModelColor.WHITE){
-                    return new MoveMW(posFrom);
+                if (color == ModelColor.WHITE) {
+                    return new MoveMW(from);
                 } else {
-                    return new MoveMM(posFrom, posTo, color);
+                    return new MoveMM(from, to, color);
                 }
             }
         }

@@ -10,12 +10,9 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Config;
 import kube.model.action.*;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
@@ -117,21 +114,21 @@ public class Phase1DnD implements MouseListener, MouseMotionListener, MouseWheel
 
         if (newComponent != null && newComponent != glassPane) {
             MouseEvent event = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
-            if (newComponent != component) {
+            if (newComponent != component) { 
                 if (newComponent instanceof HexIcon) {
                     ((HexIcon) newComponent).setHovered(true);
                 } else {
-                newComponent.dispatchEvent(
-                        new MouseEvent(newComponent, MouseEvent.MOUSE_ENTERED, e.getWhen(), e.getModifiersEx(),
-                                e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+                    newComponent.dispatchEvent(
+                            new MouseEvent(newComponent, MouseEvent.MOUSE_ENTERED, e.getWhen(), e.getModifiersEx(),
+                                    e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
                 }
                 if (component != null) {
                     if (component instanceof HexIcon) {
                         ((HexIcon) component).setHovered(false);
                     } else {
-                    component.dispatchEvent(
-                            new MouseEvent(component, MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
-                                    e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
+                        component.dispatchEvent(
+                                new MouseEvent(component, MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
+                                        e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
                     }
                 }
             }
