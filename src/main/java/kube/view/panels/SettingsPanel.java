@@ -39,8 +39,8 @@ public class SettingsPanel extends JPanel{
         this.gui = gui;
         this.buttonListener = buttonListener;
         tabNb = 0;
-        width = Config.getWidth()/2;
-        height = Math.round(Config.getHeight()/1.33f);
+        width = Math.round(Config.INIT_WIDTH/2f);
+        height = Math.round(Config.INIT_HEIGHT/1.33f);
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(width, height));
@@ -63,31 +63,35 @@ public class SettingsPanel extends JPanel{
 
     private void addGraphismePanel(){
         JPanel graphismePanel = createTab("Graphisme");
-        JComboBox resolutionManager = new JComboBox(res);
+        JComboBox<String> resolutionManager = new JComboBox<>(res);
         resolutionManager.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 switch ((String) resolutionManager.getSelectedItem()) {
+                    // TODO : refactor this switch case : use events and a controller ?
                     case "800 x 600":
-                        Config.setResolution(800, 600);
+                        gui.getMainFrame().setSize(800, 600);
                         break;
                     case "1366 x 768":
-                        Config.setResolution(1366, 768);
+                        gui.getMainFrame().setSize(1366, 768);
                         break;
                     case "1600 x 900":
-                        Config.setResolution(1600, 900);
+                        gui.getMainFrame().setSize(1600, 900);
                         break;
                     case "1920 x 1080":
-                        Config.setResolution(1920, 1080);
+                        gui.getMainFrame().setSize(1920, 1080);
+                        break;
+                    case "2560 x 1440":
+                        gui.getMainFrame().setSize(2560, 1440);
                         break;
                     default:
                         break;
                 }
-                gui.getMainFrame().resize();
+                // gui.getMainFrame().resize();
             }
         });
 
-        JComboBox UISizeManager = new JComboBox(UISizeFactor);
+        JComboBox<String> UISizeManager = new JComboBox<>(UISizeFactor);
         UISizeManager.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
@@ -136,7 +140,7 @@ public class SettingsPanel extends JPanel{
         JPanel newPanel = new JPanel(new GridLayout(4,2));
         
         JLabel newLabel = new JLabel(name, SwingConstants.CENTER);
-        newLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.getHeight() / 12)));
+        newLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 12)));
         newLabel.setForeground(GUIColors.ACCENT.toColor());
         newLabel.setPreferredSize(new Dimension(200,50));
         tabbedPanel.addTab(name, newPanel);

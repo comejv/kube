@@ -17,7 +17,7 @@ public class OverlayPanel extends JPanel{
     public OverlayPanel(GUI gui, MenuController buttonListener, ActionType action){
 
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(Config.getWidth(), Config.getHeight()));
+        setPreferredSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
         setBackground(new Color(0, 0, 0, 150));
 
         GridBagConstraints center = new GridBagConstraints();
