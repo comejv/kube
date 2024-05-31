@@ -23,7 +23,6 @@ import java.awt.Point;
 
 public class Kube implements Serializable {
 
-    // TODO : refactor this class to make it more readable
     /**********
      * CONSTANTS
      **********/
@@ -33,6 +32,9 @@ public class Kube implements Serializable {
     public static final int GAME_PHASE = 2;
     public static final int ID_PLAYER_1 = 1;
     public static final int ID_PLAYER_2 = 2;
+
+    public static final String NOT_IN_PREPARATION_PHASE = "Forbidden operation, the Kube isn't in preparation phase";
+    public static final String NOT_IN_GAME_PHASE = "Forbidden operation, the Kube isn't in game phase";
 
     /**********
      * ATTRIBUTES
@@ -336,39 +338,6 @@ public class Kube implements Serializable {
      * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
      * 9 first cubes have 4 differents colors
      * 
-     * @param seed the seed to shuffle the bag
-     * @return void
-     * @throws UnsupportedOperationException if the phase is not the preparation
-     *                                       phase
-     */
-    public void fillBag(Random r) throws UnsupportedOperationException {
-
-        // Check if the phase is the preparation phase
-        if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
-        }
-
-        // Fill the bag with nCubePerColor cubes of each color
-        bag = new ArrayList<>();
-        for (ModelColor c : ModelColor.getAllColored()) {
-            for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
-                bag.add(c);
-            }
-        }
-        try {
-            // Shuffle the bag until the 9 first cubes have 4 differents colors
-            while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
-                Collections.shuffle(bag, r);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
-     * 9 first cubes have 4 differents colors
-     * 
      * @return void
      * @throws UnsupportedOperationException if the phase is not the preparation
      *                                       phase
@@ -381,6 +350,40 @@ public class Kube implements Serializable {
      * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
      * 9 first cubes have 4 differents colors
      * 
+     * @param random the random object to shuffle the bag
+     * @return void
+     * @throws UnsupportedOperationException if the phase is not the preparation
+     *                                       phase
+     */
+    public void fillBag(Random random) throws UnsupportedOperationException {
+
+        // Check if the phase is the preparation phase
+        if (getPhase() != PREPARATION_PHASE) {
+            throw new UnsupportedOperationException(NOT_IN_PREPARATION_PHASE);
+        }
+
+        // Fill the bag with nCubePerColor cubes of each color
+        bag = new ArrayList<>();
+        for (ModelColor c : ModelColor.getAllColored()) {
+            for (int i = 0; i < NB_CUBE_PER_COLOR; i++) {
+                bag.add(c);
+            }
+        }
+        try {
+            // Shuffle the bag until the 9 first cubes have 4 differents colors
+            while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
+                Collections.shuffle(bag, random);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
+     * 9 first cubes have 4 differents colors
+     * 
+     * @param seed the seed to shuffle the bag
      * @return void
      * @throws UnsupportedOperationException if the phase is not the preparation
      *                                       phase
@@ -400,7 +403,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
+            throw new UnsupportedOperationException(NOT_IN_PREPARATION_PHASE);
         }
 
         // Fill the base with the 9 first cubes of the bag
@@ -424,7 +427,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the preparation phase
         if (getPhase() != PREPARATION_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operaation, the Kube isn't in preparation phase");
+            throw new UnsupportedOperationException(NOT_IN_PREPARATION_PHASE);
         }
 
         // Distribute the cubes to the players
@@ -448,8 +451,8 @@ public class Kube implements Serializable {
             p2Cubes.put(cAvailable, p2Cubes.get(cAvailable) + 1);
         }
 
-        p1.setAvailableToBuild(p1Cubes);
-        p2.setAvailableToBuild(p2Cubes);
+        getP1().setAvailableToBuild(p1Cubes);
+        getP2().setAvailableToBuild(p2Cubes);
     }
 
     /**********
@@ -464,7 +467,6 @@ public class Kube implements Serializable {
      * @throws UnsupportedOperationException if the phase is not the
      *                                       game phase
      * @throws IllegalArgumentException      if the move is not a
-     * @throws UnsupportedOperationException if the move is not a
      *                                       MoveAA, MoveMA,
      *                                       MoveAW, MoveMW, MoveAM
      *                                       or MoveMM
@@ -480,7 +482,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         player = getCurrentPlayer();
@@ -566,7 +568,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         player = getCurrentPlayer();
@@ -656,7 +658,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Play the move
@@ -686,7 +688,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         player = move.getPlayer();
@@ -768,7 +770,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Un play the last move if there is one
@@ -794,7 +796,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Re play the last move that has been unplayed
@@ -822,7 +824,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // Get the previousPlayer
@@ -874,7 +876,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         // If a penality is in progress, return the penality set
@@ -923,7 +925,7 @@ public class Kube implements Serializable {
 
         // Check if the phase is the game phase
         if (getPhase() != GAME_PHASE) {
-            throw new UnsupportedOperationException("Forbidden operation, the Kube isn't in game phase");
+            throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
         return (!moveSet().isEmpty());
