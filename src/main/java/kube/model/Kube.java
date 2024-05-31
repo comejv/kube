@@ -490,8 +490,7 @@ public class Kube implements Serializable {
 
         // Catching if the move is a MoveMW or MoveAW (placing a white cube)
         if (move.isWhite()) {
-            // Allways compatible
-            cubeCompatible = true;
+            cubeCompatible = !getPenality();
         }
         // Catching if the move is a MoveAA or MoveMA (penality)
         else if (move.isToAdditionals()) {
@@ -501,7 +500,7 @@ public class Kube implements Serializable {
         // Catching if the move is a MoveMM or MoveAM (placinf on k3)
         else if (move.isFromAdditionals() || move.isClassicMove()) {
             // Checking if the cube is compatible with the base
-            cubeCompatible = getK3().compatible(move.getColor()).contains(move.getTo());
+            cubeCompatible = getK3().compatible(move.getColor()).contains(move.getTo()) && !getPenality();
         } else {
             // Should never happen cause we are checking all type of the move
             throw new IllegalArgumentException();
