@@ -1,5 +1,6 @@
 package kube.view.panels;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -154,15 +155,28 @@ public class SecondPhasePanel extends JPanel {
                 hex.setActionable(false);
             }
         }
-        JPanel[][] pan = null;
-        if (k3.getCurrentPlayer() == k3.getP1()) {
-            pan = p1Panels;
+        JPanel[][] moutainPan = null;
+        JPanel additionnals;
+        Player player;
+        if ((k3.getCurrentPlayer() == k3.getP1() && !k3.getPenality()) || (k3.getCurrentPlayer() == k3.getP2() && k3.getPenality())) {
+            player = k3.getP1();
+            moutainPan = p1Panels;
+            additionnals = p1Additionnals;
         } else {
-            pan = p2Panels;
+            player = k3.getP2();
+            moutainPan = p2Panels;
+            additionnals = p2Additionnals;
         }
-        for (Point p : k3.getCurrentPlayer().getMountain().removable()) {
-            HexIcon hex = (HexIcon) pan[p.x][p.y].getComponent(0);
+        
+        for (Point p : player.getMountain().removable()) {
+            HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
             hex.setActionable(true);
+        }
+        for (Component c : additionnals.getComponents()){
+            HexIcon hex = (HexIcon) c;
+            if (hex.getColor() != ModelColor.EMPTY){
+                hex.setActionable(true);
+            }
         }
     }
 
@@ -178,20 +192,44 @@ public class SecondPhasePanel extends JPanel {
         }
     }
 
+    public void updateAdditionnals(Player p) {
+        JPanel additionnalsPanel = null;
+        if (p == k3.getP1()){
+            additionnalsPanel = p1Additionnals;
+        } else {
+            additionnalsPanel = p2Additionnals;
+        }
+        additionnalsPanel.removeAll();
+        GridBagConstraints gbc = new GridBagConstraints();
+
+        int n = 0;
+        for (ModelColor c : p.getAdditionals()){
+            if (n > 5) {
+                gbc.gridy = 1;
+            } else {
+                gbc.gridy = 0;
+            }
+            additionnalsPanel.add(new HexIcon(c, false), gbc);
+            n++;
+        }
+        additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false), gbc);
+    }
+
     public void update(Action a) {
         Move move = (Move) a.getData();
         if (move instanceof MoveAA) {
-            // TODO update Additionnals
+            updateAdditionnals(k3.getP1());
+            updateAdditionnals(k3.getP2());
         } else if (move instanceof MoveAM) {
-            // TODO update Additionnals
             MoveAM am = (MoveAM) move;
-            updateMoutain(am.getPlayer(), am.getFrom());
+            updateAdditionnals(am.getPlayer());
             updateMoutain(null, am.getTo());
         } else if (move instanceof MoveAW) {
-            // TODO update Additionnals
+            MoveAW aw = (MoveAW) move;
+            updateAdditionnals(aw.getPlayer());
         } else if (move instanceof MoveMA) {
             MoveMA ma = (MoveMA) move;
-            // TODO update Additionnals
+            updateAdditionnals(ma.getPlayer());
             if (ma.getPlayer() == k3.getP1()) {
                 updateMoutain(k3.getP2(), ma.getFrom());
             } else {
@@ -205,7 +243,6 @@ public class SecondPhasePanel extends JPanel {
             MoveMW mw = (MoveMW) move;
             updateMoutain(mw.getPlayer(), mw.getFrom());
         }
-        Config.debug("update phase 2", a.getData());
         updateActionnable();
         updateHisto();
     }
@@ -249,6 +286,8 @@ public class SecondPhasePanel extends JPanel {
                 }
             }
         }
+        updateAdditionnals(k3.getP1());
+        updateAdditionnals(k3.getP2());
         updateActionnable();
 
     }
@@ -337,35 +376,10 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.CENTER;
         gamePanel.add(base, gbc);
-        ;
-        addAdditionals(k3.getP1(), ModelColor.RED, 0);
-        addAdditionals(k3.getP1(), ModelColor.RED, 1);
-        addAdditionals(k3.getP1(), ModelColor.RED, 2);
-        addAdditionals(k3.getP1(), ModelColor.RED, 3);
-        addAdditionals(k3.getP1(), ModelColor.RED, 4);
-        addAdditionals(k3.getP1(), ModelColor.RED, 5);
-        addAdditionals(k3.getP1(), ModelColor.RED, 6);
-        addAdditionals(k3.getP1(), ModelColor.RED, 7);
     
         return gamePanel;
     }
 
-    private void addAdditionals(Player player, ModelColor c, int n) {
-        JPanel panel;
-        GridBagConstraints gbc = new GridBagConstraints();
-        if (player == k3.getP1()) {
-            panel = p1Additionnals;
-        } else {
-            panel = p2Additionnals;
-        }
-        if (n > 5) {
-            gbc.gridy = 1;
-        } else {
-            gbc.gridy = 0;
-        }
-        panel.add(new HexIcon(c, true), gbc);
-
-    }
 
     private JPanel initMountain(int rowMissing, int base, Player p) {
         JPanel constructPanel = new JPanel();
