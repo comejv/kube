@@ -57,15 +57,15 @@ public class KubeTest {
 
         assertEquals(k1.getP1().getName(), k2.getP1().getName());
         assertEquals(k1.getP1().getId(), k2.getP1().getId());
-        assertEquals(k1.getP1().getHasValidateBuilding(),
-                k2.getP1().getHasValidateBuilding());
+        assertEquals(k1.getP1().getIsMountainValidated(),
+                k2.getP1().getIsMountainValidated());
         assertTrue(areSameMountain(k1.getP1().getMountain(),
                 k2.getP1().getMountain()));
 
         assertEquals(k1.getP2().getName(), k2.getP2().getName());
         assertEquals(k1.getP2().getId(), k2.getP2().getId());
-        assertEquals(k1.getP2().getHasValidateBuilding(),
-                k2.getP2().getHasValidateBuilding());
+        assertEquals(k1.getP2().getIsMountainValidated(),
+                k2.getP2().getIsMountainValidated());
         assertTrue(areSameMountain(k1.getP2().getMountain(),
                 k2.getP2().getMountain()));
 
@@ -1626,7 +1626,7 @@ public class KubeTest {
         };
 
         kube.getP1().getMountain().setMountain(mountainP1);
-        kube.getP1().setHasValidateBuilding(true);
+        kube.getP1().setIsMountainValidated(true);
         kube.getP1().addToAdditionals(ModelColor.NATURAL);
         kube.getP1().addToAdditionals(ModelColor.WHITE);
         kube.getP1().addToAdditionals(ModelColor.YELLOW);
@@ -1711,8 +1711,8 @@ public class KubeTest {
         k.getHistory().clear();
         k.setPhase(2);
         k.setCurrentPlayer(k.getP1());
-        k.getP1().setHasValidateBuilding(true);
-        k.getP2().setHasValidateBuilding(true);
+        k.getP1().setIsMountainValidated(true);
+        k.getP2().setIsMountainValidated(true);
         k.setPenality(false);
     }
 

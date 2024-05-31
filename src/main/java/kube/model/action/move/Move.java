@@ -106,15 +106,6 @@ public abstract class Move implements Serializable {
         return false;
     }
 
-    /**
-     * Give a string representation of the move for saving
-     * 
-     * @return a string representation of the move for saving
-     */
-    public String forSave() {
-        return getColor().forSave();
-    }
-
     abstract public String toHTML();
 
     @Override

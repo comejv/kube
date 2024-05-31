@@ -47,7 +47,7 @@ public class moveSetHeuristique extends MiniMaxAI {
      **********/
     @Override
     public void constructionPhase(Kube k3) {
-        if (!getPlayer(k3).getHasValidateBuilding()) {
+        if (!getPlayer(k3).getIsMountainValidated()) {
             getBaseRepartiton(k3);
             for (int i = 0; i < getPlayer(k3).getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {

@@ -14,7 +14,7 @@ public class PlayerTest {
     public void addToAdditionalsTest() {
 
         Player player = new Player(1);
-        player.setHasValidateBuilding(true);
+        player.setIsMountainValidated(true);
         player.addToAdditionals(ModelColor.RED);
         player.addToAdditionals(ModelColor.BLUE);
         player.addToAdditionals(ModelColor.GREEN);
@@ -30,7 +30,7 @@ public class PlayerTest {
     public void removeFromAdditionalsTest() {
 
         Player player = new Player(1);
-        player.setHasValidateBuilding(true);
+        player.setIsMountainValidated(true);
         player.addToAdditionals(ModelColor.RED);
         player.addToAdditionals(ModelColor.BLUE);
         player.addToAdditionals(ModelColor.GREEN);
@@ -99,7 +99,7 @@ public class PlayerTest {
         player.addToMountainFromAvailableToBuild(1, 1, ModelColor.RED);
         player.addToMountainFromAvailableToBuild(2, 0, ModelColor.RED);
 
-        player.setHasValidateBuilding(true);
+        player.setIsMountainValidated(true);
 
         assertEquals(ModelColor.RED, player.removeFromMountain(0, 0));
         assertEquals(ModelColor.EMPTY, player.getMountain().getCase(0, 0));
