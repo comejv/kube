@@ -1,10 +1,12 @@
 package kube.services;
 
+// Import model class
+import kube.model.action.Action;
+
+// Import java classes
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-
-import kube.model.action.Action;
 
 public abstract class Network {
 
