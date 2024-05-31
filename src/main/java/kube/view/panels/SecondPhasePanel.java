@@ -131,11 +131,6 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridy = 8;
         panel.add(refaireButton, gbc);
 
-        JLabel histoText = new JLabel("HISTO");
-        histoText.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        histoText.setForeground(GUIColors.TEXT.toColor());
-        histoText.setPreferredSize(new Dimension(Config.getInitWidth() / 5, (int) (Config.getInitHeight() / 2)));
-        // panel.add(histoText);
         JScrollPane histo = getHisto();
         // histo.setMinimumSize(new
         // Dimension(Config.getInitWidth()/7,Config.getInitHeight()));
@@ -223,13 +218,12 @@ public class SecondPhasePanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         JPanel p1 = initMountain(0, k3.getP1().getMountain().getBaseSize(), k3.getP1());
 
-
         JPanel additionals1 = new JPanel();
         additionals1.setOpaque(false);
         additionals1.setLayout(new GridBagLayout());
         additionals1.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 "Additionnel Pieces de Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP, new Font("Jomhuria", Font.PLAIN, 25),GUIColors.ACCENT.toColor()));
-        addAdditionals(additionals1,4,ModelColor.GREEN);
+        addAdditionals(1,additionals1,ModelColor.GREEN);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -243,7 +237,7 @@ public class SecondPhasePanel extends JPanel {
         additionals2.setLayout(new GridBagLayout());
         additionals2.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 "Additionnel Pieces de Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP, new Font("Jomhuria", Font.PLAIN, 25),GUIColors.ACCENT.toColor()));
-        addAdditionals(additionals2,8,ModelColor.RED);
+        addAdditionals(2,additionals2,ModelColor.RED);
         gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.weightx = 1;
@@ -252,7 +246,7 @@ public class SecondPhasePanel extends JPanel {
         gamePanel.add(additionals2, gbc);
 
 
-        p1.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(),5));
+        p1.setBorder(BorderFactory.createLineBorder(GUIColors.YELLOW_HEX.toColor(),5));
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1;
@@ -280,9 +274,25 @@ public class SecondPhasePanel extends JPanel {
         gamePanel.add(base, gbc);
         return gamePanel;
     }
-    private void addAdditionals (JPanel panel, int n, ModelColor c){
+    private void addAdditionals (int player, JPanel panel, ModelColor c){
+        GridBagConstraints gbc = new GridBagConstraints();
+        int n;
+        if (player==1){
+            n=k3.getP1().getAdditionals().size();
+            n=6;
+        }
+        else{
+            n=k3.getP2().getAdditionals().size();
+            n=6;
+        }
         for (int i=0;i<n;i++){
-            panel.add(new HexIcon(c, true));
+            if (i> 5){
+                gbc.gridy=1;
+            }
+            else{
+                gbc.gridy=0;
+            }
+            panel.add(new HexIcon(c, true),gbc);
         }
     }
 
