@@ -3,7 +3,10 @@ package kube.view.panels;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-import javax.swing.*;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.JButton;
+import javax.swing.JLabel;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
@@ -19,6 +22,7 @@ public class MenuPanel extends JPanel {
 
     // TODO : refactor this class to make it more readable
     private GUI gui;
+    private JButton rules;
 
     public MenuPanel(GUI gui, MenuController buttonListener) {
         this.gui = gui;
@@ -114,7 +118,7 @@ public class MenuPanel extends JPanel {
         // TODO : add online panel
 
         // Rules button
-        JButton rules = new MenuButton("RULES");
+        rules = new MenuButton("RULES");
         rules.addActionListener(buttonListener);
         rules.setActionCommand("rules");
 
@@ -170,5 +174,9 @@ public class MenuPanel extends JPanel {
         // RULES //
         // ***************************************************************************************//
 
+    }
+
+    public JButton getRulesButton(){
+        return rules;
     }
 }

@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
@@ -35,10 +34,6 @@ public class MenuController implements ActionListener, MouseListener {
             case "play":
                 toView.add(new Action(ActionType.START));
                 break;
-
-            // TODO Handle online game
-
-            // TODO Handle game settings (AI, nb of players)
             case "rules":
                 toView.add(new Action(ActionType.RULES));
                 break;
@@ -54,8 +49,11 @@ public class MenuController implements ActionListener, MouseListener {
             case "volume":
                 toView.add(new Action(ActionType.VOLUME));
                 break;
-            case "parameters":
-                toView.add(new Action(ActionType.PARAMETERS));
+            case "settings":
+                toView.add(new Action(ActionType.SETTINGS));
+                break;
+            case "confirmed_settings":
+                toView.add(new Action(ActionType.CONFIRMED_SETTINGS));
                 break;
             default:
                 break;
