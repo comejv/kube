@@ -1,32 +1,53 @@
 package kube.model.action;
 
-import java.awt.Point;
-
+// Import model classes
 import kube.model.ModelColor;
 import kube.model.Player;
 
+// Import java class
+import java.awt.Point;
+
 public class CreateMove {
 
-    Point posFrom;
-    Player playerFrom;
-    Point posTo;
-    Player playerTo;
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    Point from, to;
+    Player playerFrom, playerTo;
     ModelColor color;
 
-    public CreateMove(Point posFrom, Player playerFrom, Point posTo, Player playerTo, ModelColor color) {
-        this.posFrom = posFrom;
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the class CreateMove
+     * 
+     * @param from       the first position
+     * @param playerFrom the player of the first position
+     * @param to         the second position
+     * @param playerTo   the player of the second position
+     * @param color      the color of the piece
+     */
+    public CreateMove(Point from, Player playerFrom, Point to, Player playerTo, ModelColor color) {
+        this.from = from;
         this.playerFrom = playerFrom;
-        this.posTo = posTo;
+        this.to = to;
         this.playerTo = playerTo;
         this.color = color;
     }
 
-    public Point getPosFrom() {
-        return posFrom;
+    /**********
+     * GETTERS
+     **********/
+
+    public Point getFrom() {
+        return from;
     }
 
-    public Point getPosTo() {
-        return posTo;
+    public Point getTo() {
+        return to;
     }
 
     public Player getPlayerFrom() {
@@ -41,10 +62,13 @@ public class CreateMove {
         return color;
     }
 
+    /**********
+     * METHOD
+     **********/
 
     @Override
     public String toString() {
-        return "Un coup déconstruit de " + getPlayerFrom() + ":" + getPosFrom() + " à " + getPlayerTo() + ":"
-                + getPosTo();
+        return "Un coup déconstruit de " + getPlayerFrom() + ":" + getFrom() + " à " + getPlayerTo() + ":"
+                + getTo();
     }
 }

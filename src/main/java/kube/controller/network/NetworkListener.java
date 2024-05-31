@@ -25,7 +25,7 @@ public class NetworkListener implements Runnable {
     /**
      * Constructor of the class
      * 
-     * @param network the network object
+     * @param network        the network object
      * @param networkToModel the queue of actions to send to the model
      */
     public NetworkListener(Network network, Queue<Action> networkToModel) {
@@ -37,7 +37,7 @@ public class NetworkListener implements Runnable {
      * METHOD
      **********/
 
-     @Override
+    @Override
     public void run() {
         while (true) {
             try {

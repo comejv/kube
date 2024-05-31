@@ -5,7 +5,7 @@ public class Config {
     /**********
      * CONFIGURATION CONSTANTS
      **********/
-    
+
     public static final boolean DEBUG = true;
     public static final boolean SHOW_BORDERS = false;
     public static final String SAVING_PATH_DIRECTORY = "saves/";
@@ -13,7 +13,7 @@ public class Config {
 
     public static final int INIT_WIDTH = 1600;
     public static final int INIT_HEIGHT = 900;
-    
+
     /**********
      * CONFIGURATION ATTRIBUTES
      **********/
@@ -33,7 +33,7 @@ public class Config {
      * CONFIGURATION GETTER
      **********/
 
-     public static String getLanguage() {
+    public static String getLanguage() {
         return language;
     }
 
@@ -88,7 +88,7 @@ public class Config {
         }
     }
 
-        /**
+    /**
      * Print error message
      * 
      * @param args the message to print

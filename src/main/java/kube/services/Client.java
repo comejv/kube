@@ -50,7 +50,6 @@ public class Client extends Network {
         return socket;
     }
 
-
     /**********
      * METHODS
      **********/

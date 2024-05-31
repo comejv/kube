@@ -9,23 +9,44 @@ import kube.model.action.Swap;
 
 public class CommandListener implements Runnable {
 
-    Queue<Action> eventsToModel;
-    Queue<Action> eventsToView;
-    Queue<Action> eventsToNetwork;
-    int whoAmI;
-    Scanner sc;
+    /**********
+     * ATTRIBUTES
+     **********/
 
-    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner sc) {
+    Queue<Action> eventsToModel, eventsToView, eventsToNetwork;
+    int whoAmI;
+    Scanner scanner;
+
+    /**********
+     * CONSTRUCTORS
+     **********/
+
+    /**
+     * Constructor of the class
+     * 
+     * @param eventsToModel the queue of actions to send to the model
+     * @param eventsToView the queue of actions to send to the view
+     * @param scanner the scanner
+     */
+    public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Scanner scanner) {
         this.eventsToModel = eventsToModel;
         this.eventsToView = eventsToView;
-        this.sc = sc;
-
+        this.scanner = scanner;
     }
 
+    /**
+     * Constructor of the class
+     * 
+     * @param eventsToModel the queue of actions to send to the model
+     * @param eventsToView the queue of actions to send to the view
+     * @param eventsToNetwork the queue of actions to send to the network
+     * @param whoAmI the player number
+     * @param scanner the scanner
+     */
     public CommandListener(Queue<Action> eventsToModel, Queue<Action> eventsToView, Queue<Action> eventsToNetwork,
             int whoAmI,
-            Scanner sc) {
-        this(eventsToModel, eventsToView, sc);
+            Scanner scanner) {
+        this(eventsToModel, eventsToView, scanner);
         this.eventsToNetwork = eventsToNetwork;
         this.whoAmI = whoAmI;
 
@@ -33,15 +54,15 @@ public class CommandListener implements Runnable {
 
     @Override
     public void run() {
-        while (sc.hasNextLine()) {
-            switch (sc.nextLine()) {
+        while (scanner.hasNextLine()) {
+            switch (scanner.nextLine()) {
                 case "random":
                 case "shuffle":
                     eventsToModel(new Action(ActionType.SHUFFLE));
                     break;
                 case "echanger":
                 case "swap":
-                    swap(sc);
+                    swap(scanner);
                     break;
                 case "afficher":
                 case "print":
@@ -54,7 +75,7 @@ public class CommandListener implements Runnable {
                     break;
                 case "jouer":
                 case "play":
-                    playMove(sc);
+                    playMove(scanner);
                     break;
                 case "annuler":
                 case "cancel":
@@ -70,13 +91,13 @@ public class CommandListener implements Runnable {
                 case "save":
                 case "enregistrer":
                 case "serialize":
-                    save(sc);
+                    save(scanner);
                     break;
                 case "restaurer":
                 case "charger":
                 case "restore":
                 case "load":
-                    load(sc);
+                    load(scanner);
                     break;
                 case "aide":
                 case "help":
