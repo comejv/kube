@@ -7,6 +7,7 @@ public class Config {
     public static final String SAVING_PATH_DIRECTORY = "saves/";
 
     private static String language = "fr_FR";
+    private static double UISize = 1;
     private static int width = 1600;
     private static int height = 900;
 
@@ -38,6 +39,10 @@ public class Config {
         return height;
     }
 
+    public static double getUISize(){
+        return UISize;
+    }
+
     public static String getLanguage() {
         return language;
     }
@@ -57,6 +62,10 @@ public class Config {
 
     public static void setHeight(int newHeight){
         height = newHeight;
+    }
+
+    public static void setUISize(double newUISize) {
+        UISize = newUISize;
     }
 
     public static void debug(Object... args) {

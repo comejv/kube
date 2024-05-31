@@ -39,7 +39,6 @@ public class MainFrame extends JFrame {
         cardPanel = new JPanel(cardLayout);
         framePanel.add(overlayPanel);
         framePanel.add(cardPanel);
-        pack();
     }
 
     public void resize(){

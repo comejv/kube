@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
@@ -23,7 +22,6 @@ import kube.configuration.Config;
 import kube.controller.graphical.MenuController;
 import kube.view.GUI;
 import kube.view.GUIColors;
-import kube.view.MainFrame;
 
 public class SettingsPanel extends JPanel{
     
@@ -34,6 +32,7 @@ public class SettingsPanel extends JPanel{
     private JTabbedPane tabbedPanel;
     private int tabNb;
     private String[] res = {"800 x 600", "1366 x 768", "1600 x 900", "1920 x 1080"};
+    private String[] UISizeFactor = {"50%", "75%", "100%", "150%", "200%"};
 
     public SettingsPanel(GUI gui, MenuController buttonListener){
 
@@ -64,11 +63,11 @@ public class SettingsPanel extends JPanel{
 
     private void addGraphismePanel(){
         JPanel graphismePanel = createTab("Graphisme");
-        JComboBox resolution = new JComboBox(res);
-        resolution.addItemListener(new ItemListener() {
+        JComboBox resolutionManager = new JComboBox(res);
+        resolutionManager.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
-                switch ((String) resolution.getSelectedItem()) {
+                switch ((String) resolutionManager.getSelectedItem()) {
                     case "800 x 600":
                         Config.setResolution(800, 600);
                         break;
@@ -80,6 +79,7 @@ public class SettingsPanel extends JPanel{
                         break;
                     case "1920 x 1080":
                         Config.setResolution(1920, 1080);
+                        break;
                     default:
                         break;
                 }
@@ -87,8 +87,39 @@ public class SettingsPanel extends JPanel{
             }
         });
 
-        resolution.setPreferredSize(new Dimension(350, 50));
-        wrapInJPanel(resolution, null, graphismePanel);
+        JComboBox UISizeManager = new JComboBox(UISizeFactor);
+        UISizeManager.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                switch ((String) UISizeManager.getSelectedItem()) {
+                    case "50%":
+                        Config.setUISize(0.5);
+                        break;
+                    case "75%":
+                        Config.setUISize(0.75);
+                        break;
+                    case "100%":
+                        Config.setUISize(1);
+                        break;
+                    case "150%":
+                        Config.setUISize(1.5);
+                        break;
+                    case "200%":
+                        Config.setUISize(2);
+                        break;
+                    default:
+                        break;
+                }
+                gui.getMainFrame().revalidate();
+                gui.getMainFrame().repaint();
+            }
+        });
+
+        resolutionManager.setPreferredSize(new Dimension(350, 50));
+        wrapInJPanel(resolutionManager, null, graphismePanel);
+
+        UISizeManager.setPreferredSize(new Dimension(350, 50));
+        wrapInJPanel(UISizeManager, null, graphismePanel);
         
         addFillerPanel(graphismePanel);
 
