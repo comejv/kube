@@ -140,12 +140,6 @@ public class Game implements Runnable {
         if (gamePhase() == RESET_EXIT) {
             return;
         }
-        eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
-        if (k3.getCurrentPlayer() == k3.getP1()) {
-            eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
-        } else {
-            eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
-        }
     }
 
     public void initPhase() {
@@ -292,36 +286,49 @@ public class Game implements Runnable {
     }
 
     public int gamePhase() {
-        while (k3.canCurrentPlayerPlay()) {
-            if (k3.getCurrentPlayer().isAI()) {
-                Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
-                playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
-            } else {
-                Action a = eventsToModel.remove();
-                switch (a.getType()) {
-                    case MOVE:
-                    case MOVE_NUMBER:
-                    case CREATE_MOVE:
-                        playMove(a);
-                        break;
-                    case UNDO:
-                        undo();
-                        break;
-                    case REDO:
-                        redo();
-                        break;
-                    case SAVE:
-                        save(a.getData().toString());
-                        break;
-                    case RESET:
-                        return RESET_EXIT;
-                    default:
-                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION, a.getData()));
-                        break;
+        boolean winDisplayed;
+        winDisplayed = false;
+        while (true) {
+            while (k3.canCurrentPlayerPlay()) {
+                if (k3.getCurrentPlayer().isAI()) {
+                    Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
+                    playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
+                } else {
+                    Action a = eventsToModel.remove();
+                    switch (a.getType()) {
+                        case MOVE:
+                        case MOVE_NUMBER:
+                        case CREATE_MOVE:
+                            playMove(a);
+                            break;
+                        case UNDO:
+                            undo();
+                            winDisplayed = false;
+                            break;
+                        case REDO:
+                            redo();
+                            break;
+                        case SAVE:
+                            save(a.getData().toString());
+                            break;
+                        case RESET:
+                            return RESET_EXIT;
+                        default:
+                            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION, a.getData()));
+                            break;
+                    }
                 }
             }
+            if (!winDisplayed) {
+                eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
+                if (k3.getCurrentPlayer() == k3.getP1()) {
+                    eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
+                } else {
+                    eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
+                }
+                winDisplayed = true;
+            }
         }
-        return NORMAL_EXIT;
     }
 
     synchronized public void swap(Swap s) {
