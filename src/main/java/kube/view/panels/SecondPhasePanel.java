@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.BorderFactory;
@@ -28,6 +29,7 @@ import kube.model.action.Action;
 import kube.model.action.move.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
+import kube.view.animations.hexGlow;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
@@ -45,12 +47,15 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] p2Panels;
     private JPanel gamePanel, p1Additionnals, p2Additionnals;
     private HashMap<String, JButton> buttonsMap;
+    private float brightness;
+    private hexGlow animationGlow;
     // TODO : set hex in middle of pyra not actionable
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
+        this.animationGlow = new hexGlow();
         int k3BaseSize = k3.getK3().getBaseSize();
         int playerBaseSize = k3.getP1().getMountain().getBaseSize();
         k3Panels = new JPanel[k3BaseSize][k3BaseSize];
@@ -147,6 +152,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateActionnable() {
+        ArrayList<HexIcon> toGlow = new ArrayList<>();
         for (int i = 0; i < k3Panels.length; i++) {
             for (int j = 0; j < i + 1; j++) {
                 HexIcon hex = (HexIcon) k3Panels[i][j].getComponent(0);
@@ -178,13 +184,16 @@ public class SecondPhasePanel extends JPanel {
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
             hex.setActionable(true);
+            toGlow.add(hex);
         }
         for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
                 hex.setActionable(true);
+                toGlow.add(hex);
             }
         }
+        animationGlow.setToRedraw(toGlow);
     }
 
     public void updateVisible() {

@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
@@ -30,13 +32,15 @@ public class HexIcon extends Icon {
     private static final int SCALE = 1;
 
     private double scale;
+    private float brightness;
 
     public HexIcon(ModelColor color, boolean actionable, Player player, int width, int height, double scale) {
         super(ResourceLoader.getBufferedImage(getImageName(color)));
-        this.isActionable = actionable;
         this.color = color;
         this.scale = scale;
         this.player = player;
+        this.brightness = 1.0f;
+        setActionable(actionable);
         resizeIcon((int) (width * scale), (int) (height * scale));
     }
 
@@ -72,6 +76,12 @@ public class HexIcon extends Icon {
         if (isActionable() && isHovered) { // Draw darker image
             float factor = isPressed ? 0.75f : 1.25f;
             float[] scales = { factor }; // Multiply all bands of each pixel by factor
+            float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
+            RescaleOp rop = new RescaleOp(scales, offsets, null);
+            g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
+
+        } else if (isActionable()) {
+            float[] scales = { brightness }; // Multiply all bands of each pixel by factor
             float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
             RescaleOp rop = new RescaleOp(scales, offsets, null);
             g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
@@ -136,6 +146,10 @@ public class HexIcon extends Icon {
         isPressed = false;
         isHovered = false;
         repaint();
+    }
+
+    public void setBrightness(float brightness) {
+        this.brightness = brightness;
     }
 
     public boolean isPressed() {

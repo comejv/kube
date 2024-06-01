@@ -4,6 +4,7 @@ import kube.configuration.Config;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
+import kube.model.Player;
 import kube.model.action.Queue;
 import kube.model.action.Remove;
 import kube.model.action.Swap;
@@ -11,11 +12,14 @@ import kube.model.action.Action;
 import kube.model.action.Build;
 import kube.view.GUI;
 import kube.view.GUIColors;
+import kube.view.animations.hexGlow;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.*;
+import java.sql.Array;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -26,6 +30,7 @@ import javax.swing.border.TitledBorder;
  */
 public class FirstPhasePanel extends JPanel {
     // TODO : refactor this class to make it more readable
+    private hexGlow animationGlow;
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
@@ -65,6 +70,8 @@ public class FirstPhasePanel extends JPanel {
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 20, 20, 20);
         add(gamePanel, gbc);
+
+        animationGlow = new hexGlow();
     }
 
     private JPanel gamePanel() {
@@ -208,7 +215,7 @@ public class FirstPhasePanel extends JPanel {
         int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
         JLabel numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-        mini.add(new HexIcon(c, numberOfPieces > 0, 1.5));
+        mini.add(new HexIcon(c, false, 1.5));
         mini.add(numOfPieces);
         mini.revalidate();
         mini.repaint();
@@ -235,6 +242,7 @@ public class FirstPhasePanel extends JPanel {
         }
         buttonsMap.get("AI").setEnabled(true);
         updateButton();
+        updateActionnable();
     }
 
     public void update(Action a) {
@@ -265,6 +273,7 @@ public class FirstPhasePanel extends JPanel {
             default:
                 break;
         }
+        updateActionnable();
     }
 
     public void setWaitingButton() {
@@ -285,7 +294,20 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap.get("Validate").setEnabled(false);
     }
 
-    public void updateDnd(Action a){
+    public void updateDnd(Action a) {
 
+    }
+
+    public void updateActionnable() {
+        ArrayList<HexIcon> toGlow = new ArrayList<>();
+        for (JPanel pan : sidePanels.values()){
+            HexIcon hex = (HexIcon) pan.getComponent(0);
+            int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(hex.getColor());
+            if (numberOfPieces > 0){
+                hex.setActionable(true);
+                toGlow.add(hex);
+            }
+        }
+        animationGlow.setToRedraw(toGlow);
     }
 }
