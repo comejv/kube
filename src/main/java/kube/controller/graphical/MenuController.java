@@ -40,6 +40,9 @@ public class MenuController implements ActionListener, MouseListener {
             case "nextRule":
                 toView.add(new Action(ActionType.NEXT_RULE));
                 break;
+            case "previousRule":
+                toView.add(new Action(ActionType.PREVIOUS_RULE));
+                break;
             case "endRule":
                 toView.add(new Action(ActionType.END_RULE));
                 break;

@@ -99,6 +99,7 @@ public enum ActionType {
     QUIT,
     VOLUME,
     NEXT_RULE,
+    PREVIOUS_RULE,
     END_RULE,
 
     /**********

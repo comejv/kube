@@ -80,6 +80,13 @@ public class RulesPanel extends JPanel {
         rulePanel.repaint();
     }
 
+    public void previousRule() {
+        rulePanel.setRuleNb(rulePanel.getRuleNb() - 1);
+        rulePanel.ruleToShow();
+        rulePanel.revalidate();
+        rulePanel.repaint();
+    }
+
     private class RulePanel extends JPanel {
         private int ruleNb = 1;
         private Color background;
@@ -115,7 +122,7 @@ public class RulesPanel extends JPanel {
         }
 
         private void addNextButton() {
-            JButton suivant = new RulesButton("Suivant");
+            JButton next = new RulesButton("Suivant");
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
             elemGBC.gridy = 2;
@@ -123,20 +130,37 @@ public class RulesPanel extends JPanel {
             elemGBC.weightx = .5;
             elemGBC.weighty = .5;
             elemGBC.insets = new Insets(0, 0, 20, 20);
-            suivant.addActionListener(buttonListener);
+            next.addActionListener(buttonListener);
             if (getRuleNb() == totalRuleNb) {
-                suivant.setText("Terminer");
-                suivant.setActionCommand("endRule");
+                next.setText("Terminer");
+                next.setActionCommand("endRule");
             } else {
-                suivant.setActionCommand("nextRule");
+                next.setActionCommand("nextRule");
             }
-            add(suivant, elemGBC);
+            add(next, elemGBC);
+        }
+
+        private void addPreviousButton() {
+            if (getRuleNb() != 1) {
+                JButton previous = new RulesButton("Précédent");
+                GridBagConstraints elemGBC = new GridBagConstraints();
+                elemGBC.gridx = 0;
+                elemGBC.gridy = 2;
+                elemGBC.anchor = GridBagConstraints.LAST_LINE_START;
+                elemGBC.weightx = .5;
+                elemGBC.weighty = .5;
+                elemGBC.insets = new Insets(0, 20, 20, 0);
+                previous.addActionListener(buttonListener);
+                previous.setActionCommand("previousRule");
+                add(previous, elemGBC);
+            }
         }
 
         private void ruleToShow() {
             removeAll();
             addTextArea("rule" + getRuleNb());
             addNextButton();
+            addPreviousButton();
         }
 
         public int getRuleNb() {

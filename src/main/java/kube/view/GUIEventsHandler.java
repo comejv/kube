@@ -55,6 +55,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case RETURN_TO_MENU:
                     gui.setGlassPanelVisible(false);
+                    gui.setGlassPaneController(null);
                     gui.showPanel(GUI.MENU);
                     break;
                 case QUIT:
@@ -94,6 +95,11 @@ public class GUIEventsHandler implements Runnable {
                     OverlayPanel overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
                     RulesPanel rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.nextRule();
+                    break;
+                case PREVIOUS_RULE:
+                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    rulesPanel = (RulesPanel) overlay.getComponent(0);
+                    rulesPanel.previousRule();
                     break;
                 case END_RULE:
                     gui.removeAllFromOverlay();
