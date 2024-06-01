@@ -34,7 +34,7 @@ public class FirstPhasePanel extends JPanel {
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
-    private JPanel constructPanel, piecesPanel, gamePanel;
+    private JPanel constructPanel, piecesPanel, gamePanel, topPanel;
     private HashMap<ModelColor, JPanel> sidePanels;
     private JPanel[][] moutainPanels;
     private HashMap<String, JButton> buttonsMap;
@@ -79,7 +79,7 @@ public class FirstPhasePanel extends JPanel {
         gamePanel.setLayout(new BorderLayout());
 
         // TOP BAR - GAME BASE
-        JPanel topPanel = new JPanel();
+        topPanel = new JPanel();
         topPanel.setBackground(GUIColors.GAME_BG_DARK.toColor());
         JLabel baseLabel = new JLabel("Base Centrale: ");
         baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
@@ -222,6 +222,10 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateAll() {
+        topPanel.removeAll();
+        for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
+            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false, 1.5));
+        }
         constructPanel
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne",
