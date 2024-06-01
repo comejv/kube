@@ -1,19 +1,28 @@
 package kube.view.panels;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
-import kube.view.components.Buttons.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
+import kube.view.components.Buttons.ButtonIcon;
+import kube.view.components.Buttons.MenuButton;
+import kube.view.components.Buttons.SelectPlayerButton;
 
 /*
  * This class extends JPanel and creates the main menu of the app.
@@ -149,6 +158,18 @@ public class MenuPanel extends JPanel {
         buttonsGBC.fill = GridBagConstraints.BOTH;
         buttonsGBC.insets = insets;
 
+        
+        JPanel player1 = new SelectPlayerButton("PLAYER 1");
+        JPanel player2 = new SelectPlayerButton("PLAYER 2");
+
+        playersButtons.add(player1, buttonsGBC);
+        playersButtons.add(player2, buttonsGBC);
+
+        JButton play = new MenuButton("Jouer");
+        playersButtons.add(play, buttonsGBC);
+        play.addActionListener(buttonListener);
+        play.setActionCommand("play");
+
         JButton returnButton = new MenuButton("Retour");
         playersButtons.add(returnButton, buttonsGBC);
         returnButton.addActionListener(e -> {
@@ -157,16 +178,6 @@ public class MenuPanel extends JPanel {
             cl.show(buttonsPanel, "start");
         });
 
-        JPanel player1 = new SelectPlayerButton("PLAYER 1");
-        JPanel player2 = new SelectPlayerButton("PLAYER 2");
-
-        playersButtons.add(player1, buttonsGBC);
-        playersButtons.add(player2, buttonsGBC);
-
-        JButton play = new MenuButton("PLAY");
-        playersButtons.add(play, buttonsGBC);
-        play.addActionListener(buttonListener);
-        play.setActionCommand("play");
 
         buttonsPanel.add("players", playersButtons);
 
