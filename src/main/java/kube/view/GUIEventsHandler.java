@@ -55,6 +55,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case RETURN_TO_MENU:
                     gui.setGlassPanelVisible(false);
+                    gui.setGlassPaneController(null);
                     gui.showPanel(GUI.MENU);
                     break;
                 case QUIT:
