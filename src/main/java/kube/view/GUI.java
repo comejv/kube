@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -178,7 +179,7 @@ public class GUI extends Thread {
         mF.removeAllFromOverlay();
     }
 
-    public JPanel getContentPane(){
+    public JPanel getContentPane() {
         return mF.getFramePanel();
     }
 
@@ -186,7 +187,7 @@ public class GUI extends Thread {
         return mF.getOverlayComponent();
     }
 
-    public GUIControllers getControllers(){
+    public GUIControllers getControllers() {
         return controllers;
     }
 
@@ -263,17 +264,23 @@ public class GUI extends Thread {
         }
     }
 
-    public MainFrame getMainFrame(){
+    public MainFrame getMainFrame() {
         return mF;
     }
 
-
-    public void updateDnd(Action a){
-        if (k3.getPhase() == Kube.PREPARATION_PHASE){
+    public void updateDnd(Action a) {
+        if (k3.getPhase() == Kube.PREPARATION_PHASE) {
             firstPhasePanel.updateDnd(a);
         } else {
             secondPhasePanel.updateDnd(a);
         }
     }
 
+    public void incrementUIScale(double factor) {
+        mF.incrementUIScale(factor);
+    }
+
+    public void resetUIScale() {
+        mF.resetUIScale();
+    }
 }

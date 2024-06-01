@@ -304,10 +304,10 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateActionnable() {
         ArrayList<HexIcon> toGlow = new ArrayList<>();
-        for (JPanel pan : sidePanels.values()){
+        for (JPanel pan : sidePanels.values()) {
             HexIcon hex = (HexIcon) pan.getComponent(0);
             int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(hex.getColor());
-            if (numberOfPieces > 0){
+            if (numberOfPieces > 0) {
                 hex.setActionable(true);
                 toGlow.add(hex);
             }
