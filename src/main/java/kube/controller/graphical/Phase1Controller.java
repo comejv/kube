@@ -49,8 +49,12 @@ public class Phase1Controller implements ActionListener, MouseListener {
     public void mouseClicked(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof JButton) {
-            ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED, ((JButton) source).getActionCommand());
-            actionPerformed(evt);
+            JButton b = (JButton) source;
+            if (b.isEnabled()) {
+                ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
+                        ((JButton) source).getActionCommand());
+                actionPerformed(evt);
+            }
         }
     }
 
@@ -59,7 +63,7 @@ public class Phase1Controller implements ActionListener, MouseListener {
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_PRESSED, source));
-            } 
+            }
         }
     }
 
@@ -68,22 +72,22 @@ public class Phase1Controller implements ActionListener, MouseListener {
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_RELEASED, source));
-            } 
+            }
         }
     }
 
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
-        Config.debug("Mouse entered" );
+        Config.debug("Mouse entered");
         if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_HOVERED, source));
-        } 
+        }
     }
 
     public void mouseExited(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
-        } 
+        }
     }
 }
