@@ -1,4 +1,5 @@
 package kube.view.components;
+
 import kube.configuration.Config;
 import kube.view.GUIColors;
 import javax.swing.*;
@@ -41,12 +42,12 @@ public class Buttons {
             JLabel nameLabel = new JLabel();
             nameLabel.setText(name);
             nameLabel.setForeground(GUIColors.TEXT.toColor());
-            nameLabel.setFont(new Font("Jomhuria", Font.BOLD,size));
-            gbc.insets= new Insets(5,2,5,25);
-            add( nameLabel,gbc);
+            nameLabel.setFont(new Font("Jomhuria", Font.BOLD, size));
+            gbc.insets = new Insets(5, 2, 5, 25);
+            add(nameLabel, gbc);
 
-            String[] players = {"Humain", "IA Facile", "IA Moyenne","IA Difficile"};
-            final int[] currentIndex = {0};
+            String[] players = { "Humain", "IA Facile", "IA Moyenne", "IA Difficile" };
+            final int[] currentIndex = { 0 };
             JPanel selectComp = new JPanel();
             selectComp.setLayout(new BorderLayout());
 
@@ -55,16 +56,16 @@ public class Buttons {
             leftButton.setFont(new Font("Jomhuria", Font.PLAIN, sizeDisplay));
             leftButton.setForeground(GUIColors.ACCENT.toColor());
 
-            leftButton.setFocusPainted(false);  // Remove focus border
-            leftButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            leftButton.setFocusPainted(false); // Remove focus border
+            leftButton.setBorder(BorderFactory.createEmptyBorder()); // Remove button border
             leftButton.setContentAreaFilled(false);
             leftButton.setFocusPainted(false); // Remove focus border
             JButton rightButton = new JButton(">");
-            rightButton.setFont(new Font("Jomhuria", Font.PLAIN,sizeDisplay));
+            rightButton.setFont(new Font("Jomhuria", Font.PLAIN, sizeDisplay));
             rightButton.setForeground(GUIColors.ACCENT.toColor());
 
-            rightButton.setFocusPainted(false);  // Remove focus border
-            rightButton.setBorder(BorderFactory.createEmptyBorder());  // Remove button border
+            rightButton.setFocusPainted(false); // Remove focus border
+            rightButton.setBorder(BorderFactory.createEmptyBorder()); // Remove button border
             rightButton.setContentAreaFilled(false);
             rightButton.setFocusPainted(false); // Remove focus border
             JLabel displayLabel = new JLabel(players[currentIndex[0]], JLabel.CENTER);
@@ -91,8 +92,8 @@ public class Buttons {
             selectComp.setMaximumSize(new Dimension(150, 40));
             selectComp.setMinimumSize(new Dimension(150, 40));
 
-            gbc.insets= new Insets(5,100,5,2);
-            add(selectComp,gbc);
+            gbc.insets = new Insets(5, 100, 5, 2);
+            add(selectComp, gbc);
 
         }
 
@@ -153,6 +154,11 @@ public class Buttons {
 
         public void setHovered(boolean b) {
             isHovered = b;
+            if (isHovered) {
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            } else {
+                setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+            }
             repaint();
         }
 

@@ -133,36 +133,44 @@ public class MainFrame extends JFrame {
         return overlay;
     }
 
-    public void updateUISize() {
-        Container c = getContentPane();
-        Config.debug("Resizing UI");
-        resizeComponents(c, Config.getUIScale());
+    public void incrementUIScale(double factor) {
+        Config.setUIScale(Config.getUIScale() * factor);
+        resizeComponents(this.getContentPane(), factor);
     }
 
-    public static void resizeComponents(Container container, double factor) {
+    public void resetUIScale() {
+        double currentScale = Config.getUIScale();
+        double inverseScale = 1.0 / currentScale;
+        Config.resetUIScale();
+        resizeComponents(this.getContentPane(), inverseScale);
+    }
+
+    public void resizeComponents(Container container, double factor) {
         for (Component component : container.getComponents()) {
             // Resize the component
             Dimension size = component.getSize();
             Dimension preferredSize = component.getPreferredSize();
-            Dimension minimumSize = component.getMinimumSize();
-            Dimension maximumSize = component.getMaximumSize();
+            // Dimension minimumSize = component.getMinimumSize();
+            // Dimension maximumSize = component.getMaximumSize();
 
             component.setSize(new Dimension((int) (size.width * factor), (int) (size.height * factor)));
             component.setPreferredSize(
                     new Dimension((int) (preferredSize.width * factor), (int) (preferredSize.height * factor)));
-            component.setMinimumSize(
-                    new Dimension((int) (minimumSize.width * factor), (int) (minimumSize.height * factor)));
-            component.setMaximumSize(
-                    new Dimension((int) (maximumSize.width * factor), (int) (maximumSize.height * factor)));
+            // component.setMinimumSize(
+            // new Dimension((int) (minimumSize.width * factor), (int) (minimumSize.height *
+            // factor)));
+            // component.setMaximumSize(
+            // new Dimension((int) (maximumSize.width * factor), (int) (maximumSize.height *
+            // factor)));
 
-            // Resize font if the component supports it
             if (component instanceof JComponent) {
                 Font font = component.getFont();
                 if (font != null) {
                     component.setFont(font.deriveFont((float) (font.getSize2D() * factor)));
                 }
-                if (component instanceof HexIcon) {
-                    ((HexIcon) component).setScale(((HexIcon) component).getScale() * factor);
+                if (component instanceof Icon) {
+                    Icon i = (Icon) component;
+                    i.resizeIcon((int) (i.getImageWidth() * factor), (int) (i.getImageHeight() * factor));
                 }
             }
 
@@ -171,5 +179,7 @@ public class MainFrame extends JFrame {
                 resizeComponents((Container) component, factor);
             }
         }
+        revalidate();
+        repaint();
     }
 }

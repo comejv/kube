@@ -179,7 +179,7 @@ public class GUI extends Thread {
         mF.removeAllFromOverlay();
     }
 
-    public JPanel getContentPane(){
+    public JPanel getContentPane() {
         return mF.getFramePanel();
     }
 
@@ -187,7 +187,7 @@ public class GUI extends Thread {
         return mF.getOverlayComponent();
     }
 
-    public GUIControllers getControllers(){
+    public GUIControllers getControllers() {
         return controllers;
     }
 
@@ -264,11 +264,15 @@ public class GUI extends Thread {
         }
     }
 
-    public MainFrame getMainFrame(){
+    public MainFrame getMainFrame() {
         return mF;
     }
 
-    public void updateUISize() {
-        mF.updateUISize();
+    public void incrementUIScale(double factor) {
+        mF.incrementUIScale(factor);
+    }
+
+    public void resetUIScale() {
+        mF.resetUIScale();
     }
 }

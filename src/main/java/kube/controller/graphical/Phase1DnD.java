@@ -13,6 +13,7 @@ import java.awt.event.MouseWheelListener;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+import kube.configuration.Config;
 import kube.model.action.*;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
@@ -22,7 +23,6 @@ public class Phase1DnD implements MouseListener, MouseMotionListener, MouseWheel
     private Queue<Action> toView;
     private Queue<Action> toModel;
     private Component component;
-    private Phase1Controller controller;
 
     public Phase1DnD(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.toView = eventsToView;
@@ -114,7 +114,7 @@ public class Phase1DnD implements MouseListener, MouseMotionListener, MouseWheel
 
         if (newComponent != null && newComponent != glassPane) {
             MouseEvent event = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
-            if (newComponent != component) { 
+            if (newComponent != component) {
                 if (newComponent instanceof HexIcon) {
                     ((HexIcon) newComponent).setHovered(true);
                 } else {

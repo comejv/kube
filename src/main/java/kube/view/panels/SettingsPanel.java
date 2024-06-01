@@ -23,24 +23,23 @@ import kube.controller.graphical.MenuController;
 import kube.view.GUI;
 import kube.view.GUIColors;
 
-public class SettingsPanel extends JPanel{
-    
+public class SettingsPanel extends JPanel {
+
     private GUI gui;
     private int width;
     private int height;
     private MenuController buttonListener;
     private JTabbedPane tabbedPanel;
     private int tabNb;
-    private String[] res = {"800 x 600", "1366 x 768", "1600 x 900", "1920 x 1080"};
-    private String[] UISizeFactor = {"50%", "75%", "100%", "150%", "200%"};
+    private String[] res = { "800 x 600", "1366 x 768", "1600 x 900", "1920 x 1080" };
 
-    public SettingsPanel(GUI gui, MenuController buttonListener){
+    public SettingsPanel(GUI gui, MenuController buttonListener) {
 
         this.gui = gui;
         this.buttonListener = buttonListener;
         tabNb = 0;
-        width = Math.round(Config.INIT_WIDTH/2f);
-        height = Math.round(Config.INIT_HEIGHT/1.33f);
+        width = Math.round(Config.INIT_WIDTH / 2f);
+        height = Math.round(Config.INIT_HEIGHT / 1.33f);
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(width, height));
@@ -61,7 +60,7 @@ public class SettingsPanel extends JPanel{
         setVisible(true);
     }
 
-    private void addGraphismePanel(){
+    private void addGraphismePanel() {
         JPanel graphismePanel = createTab("Graphisme");
         JComboBox<String> resolutionManager = new JComboBox<>(res);
         resolutionManager.addItemListener(new ItemListener() {
@@ -91,39 +90,30 @@ public class SettingsPanel extends JPanel{
             }
         });
 
-        JComboBox<String> UISizeManager = new JComboBox<>(UISizeFactor);
-        UISizeManager.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                switch ((String) UISizeManager.getSelectedItem()) {
-                    case "50%":
-                        Config.setUISize(0.5);
-                        break;
-                    case "75%":
-                        Config.setUISize(0.75);
-                        break;
-                    case "100%":
-                        Config.setUISize(1);
-                        break;
-                    case "150%":
-                        Config.setUISize(1.5);
-                        break;
-                    case "200%":
-                        Config.setUISize(2);
-                        break;
-                    default:
-                        break;
-                }
-                gui.updateUISize();
-            }
+        JButton enlargeButton = new JButton("+");
+        enlargeButton.setPreferredSize(new Dimension(50, 50));
+        enlargeButton.addActionListener(e -> {
+            gui.incrementUIScale(1.1);
         });
 
+        JButton shrinkButton = new JButton("-");
+        shrinkButton.setPreferredSize(new Dimension(50, 50));
+        shrinkButton.addActionListener(e -> {
+            gui.incrementUIScale(0.9);
+        });
+
+        JButton resetButton = new JButton("Reset");
+        resetButton.setPreferredSize(new Dimension(100, 50));
+        resetButton.addActionListener(e -> {
+            gui.resetUIScale();
+        });
+
+        wrapInJPanel(enlargeButton, null, graphismePanel);
+        wrapInJPanel(shrinkButton, null, graphismePanel);
+        wrapInJPanel(resetButton, null, graphismePanel);
         resolutionManager.setPreferredSize(new Dimension(350, 50));
         wrapInJPanel(resolutionManager, null, graphismePanel);
 
-        UISizeManager.setPreferredSize(new Dimension(350, 50));
-        wrapInJPanel(UISizeManager, null, graphismePanel);
-        
         addFillerPanel(graphismePanel);
 
         JButton saveChanges = new JButton("Save changes");
@@ -134,14 +124,14 @@ public class SettingsPanel extends JPanel{
         elemGBC.anchor = GridBagConstraints.SOUTHEAST;
         wrapInJPanel(saveChanges, elemGBC, graphismePanel);
     }
-    
-    private JPanel createTab(String name){
-        JPanel newPanel = new JPanel(new GridLayout(4,2));
-        
+
+    private JPanel createTab(String name) {
+        JPanel newPanel = new JPanel(new GridLayout(4, 2));
+
         JLabel newLabel = new JLabel(name, SwingConstants.CENTER);
         newLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 12)));
         newLabel.setForeground(GUIColors.ACCENT.toColor());
-        newLabel.setPreferredSize(new Dimension(200,50));
+        newLabel.setPreferredSize(new Dimension(200, 50));
         tabbedPanel.addTab(name, newPanel);
         tabbedPanel.setTabComponentAt(getTabNb(), newLabel);
         setTabNb(getTabNb() + 1);
@@ -149,8 +139,9 @@ public class SettingsPanel extends JPanel{
         return newPanel;
     }
 
-    private void addFillerPanel(JPanel container){
-        //set to 7 because there's 4 x 2 cells minus one reserved for the saveChanges Button
+    private void addFillerPanel(JPanel container) {
+        // set to 7 because there's 4 x 2 cells minus one reserved for the saveChanges
+        // Button
         int nbToFill = 7 - container.getComponentCount();
         for (int i = 0; i < nbToFill; i++) {
             JPanel filler = new JPanel();
@@ -159,19 +150,19 @@ public class SettingsPanel extends JPanel{
         }
     }
 
-    private void wrapInJPanel(Component c, GridBagConstraints elemGBC, 
-                              JPanel container) {
+    private void wrapInJPanel(Component c, GridBagConstraints elemGBC,
+            JPanel container) {
         JPanel wraper = new JPanel(new GridBagLayout());
         container.add(wraper);
         wraper.setBorder(BorderFactory.createLineBorder(Color.red));
         wraper.add(c, elemGBC);
     }
 
-    private int getTabNb(){
+    private int getTabNb() {
         return tabNb;
     }
 
-    private void setTabNb(int newTabNb){
+    private void setTabNb(int newTabNb) {
         tabNb = newTabNb;
     }
 }
