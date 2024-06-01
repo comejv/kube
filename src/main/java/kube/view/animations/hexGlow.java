@@ -22,7 +22,6 @@ public class hexGlow implements ActionListener {
     }
 
     public void setToRedraw(ArrayList<HexIcon> toRedraw) {
-        Config.debug(toRedraw.size());
         this.toRedraw = toRedraw;
     }
 
@@ -37,7 +36,6 @@ public class hexGlow implements ActionListener {
             brightness = 1;
             state = 0;
         }
-        //Config.debug(brightness );
         if (toRedraw != null){
             for (HexIcon hex : toRedraw) {
                 hex.setBrightness(brightness);
