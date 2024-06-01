@@ -64,8 +64,8 @@ public class MenuPanel extends JPanel {
         elemGBC.fill = GridBagConstraints.BOTH;
         elemGBC.gridwidth = GridBagConstraints.REMAINDER;
         elemGBC.anchor = GridBagConstraints.CENTER;
-        elemGBC.weighty = .5;
-        elemGBC.weightx = .5;
+        elemGBC.weighty = 1;
+        elemGBC.weightx = .3;
         modal.add(title, elemGBC);
 
         // Settings
@@ -75,6 +75,8 @@ public class MenuPanel extends JPanel {
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 2;
         elemGBC.gridy = 2;
+        elemGBC.weighty = 1;
+        elemGBC.weightx = .3;
         modal.add(settings, elemGBC);
 
         // Volume
@@ -84,6 +86,8 @@ public class MenuPanel extends JPanel {
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 0;
         elemGBC.gridy = 2;
+        elemGBC.weighty = 1;
+        elemGBC.weightx = .3;
         modal.add(volume, elemGBC);
 
         JPanel buttonsPanel = new JPanel(new CardLayout());
@@ -93,7 +97,7 @@ public class MenuPanel extends JPanel {
         elemGBC.gridy = 1;
         elemGBC.anchor = GridBagConstraints.CENTER;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
-        elemGBC.weighty = .5;
+        elemGBC.weighty = .3;
         elemGBC.weightx = 1;
         modal.add(buttonsPanel, elemGBC);
 
@@ -187,7 +191,7 @@ public class MenuPanel extends JPanel {
 
     }
 
-    public JButton getRulesButton(){
+    public JButton getRulesButton() {
         return rules;
     }
 }

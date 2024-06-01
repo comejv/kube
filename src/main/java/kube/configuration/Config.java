@@ -19,7 +19,7 @@ public class Config {
      **********/
 
     private static String language = "fr_FR";
-    private static double UISize = 1;
+    private static double UIScale = 1;
 
     private static boolean mute = true;
 
@@ -31,8 +31,12 @@ public class Config {
         language = lang;
     }
 
-    public static void setUISize(double size) {
-        UISize = size;
+    public static void setUIScale(double size) {
+        UIScale = size;
+    }
+
+    public static void resetUIScale() {
+        UIScale = 1;
     }
 
     /**********
@@ -43,8 +47,8 @@ public class Config {
         return language;
     }
 
-    public static double getUISize() {
-        return UISize;
+    public static double getUIScale() {
+        return UIScale;
     }
 
     /**********
