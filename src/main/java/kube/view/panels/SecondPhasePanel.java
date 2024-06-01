@@ -30,6 +30,7 @@ import kube.model.action.move.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.animations.hexGlow;
+import kube.view.animations.panelGlow;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
@@ -45,17 +46,19 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] k3Panels;
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
-    private JPanel gamePanel, p1Additionnals, p2Additionnals;
+    private JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private HashMap<String, JButton> buttonsMap;
-    private float brightness;
-    private hexGlow animationGlow;
+
+    private hexGlow animationHexGlow;
+    private panelGlow animationPanelGlow;
     // TODO : set hex in middle of pyra not actionable
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
-        this.animationGlow = new hexGlow();
+        this.animationHexGlow = new hexGlow();
+        this.animationPanelGlow = new panelGlow();
         int k3BaseSize = k3.getK3().getBaseSize();
         int playerBaseSize = k3.getP1().getMountain().getBaseSize();
         k3Panels = new JPanel[k3BaseSize][k3BaseSize];
@@ -152,7 +155,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateActionnable() {
-        ArrayList<HexIcon> toGlow = new ArrayList<>();
+        ArrayList<HexIcon> hexToGlow = new ArrayList<>();
         for (int i = 0; i < k3Panels.length; i++) {
             for (int j = 0; j < i + 1; j++) {
                 HexIcon hex = (HexIcon) k3Panels[i][j].getComponent(0);
@@ -193,16 +196,16 @@ public class SecondPhasePanel extends JPanel {
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
             hex.setActionable(true);
-            toGlow.add(hex);
+            hexToGlow.add(hex);
         }
         for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
                 hex.setActionable(true);
-                toGlow.add(hex);
+                hexToGlow.add(hex);
             }
         }
-        animationGlow.setToRedraw(toGlow);
+        animationHexGlow.setToRedraw(hexToGlow);
     }
 
     public void updateVisible() {
@@ -284,6 +287,7 @@ public class SecondPhasePanel extends JPanel {
         updateHisto();
         updateText();
         updateVisible();
+        updatePanelGlow(false);
     }
 
     private void updateText() {
@@ -345,6 +349,7 @@ public class SecondPhasePanel extends JPanel {
         updateActionnable();
         updateText();
         updateVisible();
+        updatePanelGlow(false);
     }
 
     public void updateMoutain(Player p, int i, int j) {
@@ -405,8 +410,9 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p2Additionnals, gbc);
 
-        JPanel p1 = initMountain(0, k3.getP1().getMountain().getBaseSize(), k3.getP1());
-        p1.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
+        p1 = initMountain(0, k3.getP1().getMountain().getBaseSize(), k3.getP1());
+        // p1.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(),
+        // 5));
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1;
@@ -414,8 +420,9 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p1, gbc);
 
-        JPanel p2 = initMountain(0, k3.getP2().getMountain().getBaseSize(), k3.getP2());
-        p2.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
+        p2 = initMountain(0, k3.getP2().getMountain().getBaseSize(), k3.getP2());
+        // p2.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(),
+        // 5));
         gbc.gridx = 1;
         gbc.gridy = 1;
         gbc.weightx = 1;
@@ -423,7 +430,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p2, gbc);
 
-        JPanel base = initMountain(-1, k3.getK3().getBaseSize(), null);
+        base = initMountain(-1, k3.getK3().getBaseSize(), null);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 1;
@@ -473,21 +480,92 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateDnd(Action a) {
-        HexIcon hex = (HexIcon) a.getData();
-        if (hex == null) {
-            updateVisible();
-        } else if (k3.getPenality()) {
-            updateAdditionnals(k3.getCurrentPlayer(), true);
-        } else {
-            if (hex.getColor() != ModelColor.WHITE) {
-                for (Point p : k3.getK3().compatible(hex.getColor())) {
-                    HexIcon h = (HexIcon) k3Panels[p.x][p.y].getComponent(0);
-                    h.setVisible(true);
+        switch (a.getType()) {
+            case DND_START:
+                HexIcon hex = (HexIcon) a.getData();
+                if (hex == null) {
+                    updateVisible();
+                } else if (k3.getPenality()) {
+                    updateAdditionnals(k3.getCurrentPlayer(), true);
+                } else {
+                    if (hex.getColor() != ModelColor.WHITE) {
+                        for (Point p : k3.getK3().compatible(hex.getColor())) {
+                            HexIcon h = (HexIcon) k3Panels[p.x][p.y].getComponent(0);
+                            h.setVisible(true);
+                        }
+                    } else {
+                        HexIcon h = (HexIcon) k3Panels[0][0].getComponent(0);
+                        h.setVisible(true);
+                    }
+                }
+                updatePanelGlow(true);
+                break;
+            case DND_STOP:
+                updateVisible();
+                updatePanelGlow(false);
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void updatePanelGlow(boolean isDragging) {
+        HashMap<JPanel, Integer> glowPan = new HashMap<>();
+        if (k3.getPenality()) {
+            if (isDragging) {
+                if (k3.getCurrentPlayer() == k3.getP1()) {
+                    glowPan.put(p1Additionnals, 1);
+                } else {
+                    glowPan.put(p2Additionnals, 2);
                 }
             } else {
-                HexIcon h = (HexIcon) k3Panels[0][0].getComponent(0);
-                    h.setVisible(true);
+                if (k3.getCurrentPlayer() == k3.getP1()) {
+                    glowPan.put(p2Additionnals, 2);
+                    glowPan.put(p2, 0);
+                } else {
+                    glowPan.put(p1Additionnals, 1);
+                    glowPan.put(p1, 0);
+                }
+            }
+        } else {
+            if (isDragging) {
+                glowPan.put(base, 0);
+            } else {
+                if (k3.getCurrentPlayer() == k3.getP1()) {
+                    if (k3.getP1().getAdditionals().size() > 0){
+                        glowPan.put(p1Additionnals, 1);
+                    }
+                    glowPan.put(p1, 0);
+                } else {
+                    if (k3.getP2().getAdditionals().size() > 0){
+                        glowPan.put(p2Additionnals, 2);
+                    }
+                    glowPan.put(p2, 0);
+                }
             }
         }
+        JPanel[] pans = new JPanel[] { p1, p2, base };
+        for (JPanel pan : pans) {
+            if (!glowPan.keySet().contains(pan)) {
+                pan.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
+            }
+        }
+        if (!glowPan.keySet().contains(p1Additionnals)) {
+            p1Additionnals
+                    .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                            "Pieces additionnelles du Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
+                            new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+        }
+
+        if (!glowPan.keySet().contains(p2Additionnals)) {
+            p2Additionnals
+                    .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                            "Pieces additionnelles du Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
+                            new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+        }
+
+        animationPanelGlow.setToRedraw(glowPan);
+
     }
 }

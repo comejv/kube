@@ -11,6 +11,7 @@ public class GUIColors {
     public static final HSL TEXT = new HSL(0xFFFFFF);
     public static final HSL GAME_BG = new HSL(0x7D939F);
 
+    
     public static final HSL WHITE_HEX = new HSL(26, 0, 1);
     public static final HSL RED_HEX = new HSL(360, 0.7, 0.65);
     public static final HSL GREEN_HEX = new HSL(95, 0.5, 0.8);
