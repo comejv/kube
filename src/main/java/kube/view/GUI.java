@@ -101,7 +101,6 @@ public class GUI extends Thread {
 
         // After repaint start loading next panel
         createGlassPane();
-        
     }
 
     public void showPanel(String panelName) {
