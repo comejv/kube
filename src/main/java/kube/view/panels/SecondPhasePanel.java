@@ -167,6 +167,15 @@ public class SecondPhasePanel extends JPanel {
                 hex.setActionable(false);
             }
         }
+        for (Component c : p1Additionnals.getComponents()) {
+            HexIcon hex = (HexIcon) c;
+            hex.setActionable(false);
+        }
+        for (Component c : p2Additionnals.getComponents()) {
+            HexIcon hex = (HexIcon) c;
+            hex.setActionable(false);
+        }
+
         JPanel[][] moutainPan = null;
         JPanel additionnals;
         Player player;
