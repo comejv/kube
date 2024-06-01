@@ -87,7 +87,6 @@ public class GUI extends Thread {
     public void run() {
         // new MainFrame
         mF = new MainFrame();
-        loadPanel(PHASE1);
         // add menu pannel
         MenuPanel mP = new MenuPanel(this, controllers.getMenuController());
         mF.addPanel(mP, MENU);
@@ -98,9 +97,11 @@ public class GUI extends Thread {
 
         mF.repaint();
         mF.setFrameVisible(true);
+        loadPanel(PHASE1);
 
         // After repaint start loading next panel
         createGlassPane();
+        
     }
 
     public void showPanel(String panelName) {

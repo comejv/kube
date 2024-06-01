@@ -376,7 +376,8 @@ public class Game implements Runnable {
                 break;
             case CREATE_MOVE:
                 CreateMove cM = (CreateMove) a.getData();
-                move = k3.createMove(cM.getFrom(), cM.getPlayerFrom(), cM.getTo(), cM.getPlayerTo(), cM.getModelColor());
+                move = k3.createMove(cM.getFrom(), cM.getPlayerFrom(), cM.getTo(), cM.getPlayerTo(),
+                        cM.getModelColor());
                 Config.debug("Move généré :", move);
                 break;
             case MOVE:
@@ -384,7 +385,7 @@ public class Game implements Runnable {
                 move = (Move) a.getData();
                 break;
         }
-        if (move == null){
+        if (move == null) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             return;
         }
@@ -429,10 +430,11 @@ public class Game implements Runnable {
 
     public void undo() {
         if (k3.getHistory().canUndo() && k3.unPlay()) {
+            eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
             while (k3.getCurrentPlayer().isAI() && k3.getHistory().canUndo()) {
                 k3.unPlay();
+                eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
             }
-            eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
         } else {
             eventsToView.add(new Action(ActionType.UNDO, null));
         }
