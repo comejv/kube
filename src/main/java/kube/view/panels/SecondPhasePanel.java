@@ -470,9 +470,14 @@ public class SecondPhasePanel extends JPanel {
         } else if (k3.getPenality()) {
             updateAdditionnals(k3.getCurrentPlayer(), true);
         } else {
-            for (Point p : k3.getK3().compatible(hex.getColor())) {
-                HexIcon h = (HexIcon) k3Panels[p.x][p.y].getComponent(0);
-                h.setVisible(true);
+            if (hex.getColor() != ModelColor.WHITE) {
+                for (Point p : k3.getK3().compatible(hex.getColor())) {
+                    HexIcon h = (HexIcon) k3Panels[p.x][p.y].getComponent(0);
+                    h.setVisible(true);
+                }
+            } else {
+                HexIcon h = (HexIcon) k3Panels[0][0].getComponent(0);
+                    h.setVisible(true);
             }
         }
     }
