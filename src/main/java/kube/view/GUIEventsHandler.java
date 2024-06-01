@@ -96,6 +96,11 @@ public class GUIEventsHandler implements Runnable {
                     RulesPanel rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.nextRule();
                     break;
+                case PREVIOUS_RULE:
+                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    rulesPanel = (RulesPanel) overlay.getComponent(0);
+                    rulesPanel.previousRule();
+                    break;
                 case END_RULE:
                     gui.removeAllFromOverlay();
                     gui.setGlassPanelVisible(false);
