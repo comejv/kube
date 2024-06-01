@@ -47,7 +47,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
     private JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
-    private HashMap<String, JButton> buttonsMap;
+    private JButton undoButton, redoButton;
 
     private hexGlow animationHexGlow;
     private panelGlow animationPanelGlow;
@@ -124,19 +124,19 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridy = 6;
         panel.add(histoButton, gbc);
 
-        JButton annulerButton = new Buttons.GamePhaseButton("Annuler");
-        annulerButton.setActionCommand("undo");
-        annulerButton.addMouseListener(a);
+        undoButton = new Buttons.GamePhaseButton("Annuler");
+        undoButton.setActionCommand("undo");
+        undoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 7;
-        panel.add(annulerButton, gbc);
+        panel.add(undoButton, gbc);
 
-        JButton refaireButton = new Buttons.GamePhaseButton("Refaire");
-        refaireButton.setActionCommand("redo");
-        refaireButton.addMouseListener(a);
+        redoButton = new Buttons.GamePhaseButton("Refaire");
+        redoButton.setActionCommand("redo");
+        redoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 8;
-        panel.add(refaireButton, gbc);
+        panel.add(redoButton, gbc);
 
         JLabel histoText = new JLabel("HISTO");
         histoText.setFont(new Font("Jomhuria", Font.PLAIN, 25));
@@ -257,6 +257,8 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void update(Action a) {
+        undoButton.setEnabled(false);
+        redoButton.setEnabled(false);
         Move move = (Move) a.getData();
         if (move instanceof MoveAA) {
             updateAdditionnals(k3.getP1());
@@ -291,6 +293,12 @@ public class SecondPhasePanel extends JPanel {
         updateText();
         updateVisible();
         updatePanelGlow(false);
+        if (k3.getHistory().canUndo() && !k3.getCurrentPlayer().isAI()){
+            undoButton.setEnabled(true);
+        }
+        if (k3.getHistory().canRedo() && !k3.getCurrentPlayer().isAI()){
+            redoButton.setEnabled(true);
+        }
     }
 
     private void updateText() {
@@ -353,6 +361,8 @@ public class SecondPhasePanel extends JPanel {
         updateText();
         updateVisible();
         updatePanelGlow(false);
+        undoButton.setEnabled(false);
+        redoButton.setEnabled(false);
     }
 
     public void updateMoutain(Player p, int i, int j) {
