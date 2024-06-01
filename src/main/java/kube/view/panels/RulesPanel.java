@@ -46,7 +46,7 @@ public class RulesPanel extends JPanel {
         setPreferredSize(new Dimension(width, height));
         setBackground(GUIColors.ACCENT.toColor());
 
-        JLabel ruleTitle = new JLabel("RULES", SwingConstants.CENTER);
+        JLabel ruleTitle = new JLabel("REGLES", SwingConstants.CENTER);
         ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 6)));
         ruleTitle.setForeground(GUIColors.TEXT.toColor());
         GridBagConstraints elemGBC = new GridBagConstraints();

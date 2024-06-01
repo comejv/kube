@@ -125,18 +125,18 @@ public class MenuPanel extends JPanel {
         });
 
         // Online button
-        JButton online = new MenuButton("ONLINE");
+        JButton online = new MenuButton("EN LIGNE");
         online.addActionListener(buttonListener);
         online.setActionCommand("online");
         // TODO : add online panel
 
         // Rules button
-        rules = new MenuButton("RULES");
+        rules = new MenuButton("REGLES");
         rules.addActionListener(buttonListener);
         rules.setActionCommand("rules");
 
         // Quit button
-        JButton quit = new MenuButton("QUIT");
+        JButton quit = new MenuButton("QUITTER");
         quit.addActionListener(buttonListener);
         quit.setActionCommand("quit");
 
@@ -163,18 +163,18 @@ public class MenuPanel extends JPanel {
         buttonsGBC.insets = insets;
 
         
-        JPanel player1 = new SelectPlayerButton("PLAYER 1");
-        JPanel player2 = new SelectPlayerButton("PLAYER 2");
+        JPanel player1 = new SelectPlayerButton("JOUEUR 1");
+        JPanel player2 = new SelectPlayerButton("JOUEUR 2");
 
         playersButtons.add(player1, buttonsGBC);
         playersButtons.add(player2, buttonsGBC);
 
-        JButton play = new MenuButton("Jouer");
+        JButton play = new MenuButton("JOUER");
         playersButtons.add(play, buttonsGBC);
         play.addActionListener(buttonListener);
         play.setActionCommand("play");
 
-        JButton returnButton = new MenuButton("Retour");
+        JButton returnButton = new MenuButton("RETOUR");
         playersButtons.add(returnButton, buttonsGBC);
         returnButton.addActionListener(e -> {
             // Switch to the main panel
