@@ -3,6 +3,7 @@ package kube.view;
 import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.*;
+import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.panels.OverlayPanel;
@@ -77,7 +78,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 // MENU
                 case START:
-                    eventsToModel.add(new Action(ActionType.START, new Start()));
+                    eventsToModel.add(new Action(ActionType.START, new Start(new moveSetHeuristique())));
                     gui.setGlassPanelVisible(true);
                     break;
                 case PLAY_LOCAL:

@@ -155,7 +155,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateActionnable() {
-        ArrayList<HexIcon> hexToGlow = new ArrayList<>();
+        // Reset all actionnable to false
         for (int i = 0; i < k3Panels.length; i++) {
             for (int j = 0; j < i + 1; j++) {
                 HexIcon hex = (HexIcon) k3Panels[i][j].getComponent(0);
@@ -178,6 +178,9 @@ public class SecondPhasePanel extends JPanel {
             HexIcon hex = (HexIcon) c;
             hex.setActionable(false);
         }
+        if (k3.getCurrentPlayer().isAI()){
+            return; // Do not set actionnable to true if it's the ai turn
+        }
 
         JPanel[][] moutainPan = null;
         JPanel additionnals;
@@ -192,7 +195,7 @@ public class SecondPhasePanel extends JPanel {
             moutainPan = p2Panels;
             additionnals = p2Additionnals;
         }
-
+        ArrayList<HexIcon> hexToGlow = new ArrayList<>();
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
             hex.setActionable(true);
@@ -521,10 +524,14 @@ public class SecondPhasePanel extends JPanel {
                 }
             } else {
                 if (k3.getCurrentPlayer() == k3.getP1()) {
-                    glowPan.put(p2Additionnals, 2);
+                    if (k3.getP2().getAdditionals().size() > 0) {
+                        glowPan.put(p2Additionnals, 2);
+                    }
                     glowPan.put(p2, 0);
                 } else {
-                    glowPan.put(p1Additionnals, 1);
+                    if (k3.getP1().getAdditionals().size() > 0) {
+                        glowPan.put(p1Additionnals, 1);
+                    }
                     glowPan.put(p1, 0);
                 }
             }
@@ -533,12 +540,12 @@ public class SecondPhasePanel extends JPanel {
                 glowPan.put(base, 0);
             } else {
                 if (k3.getCurrentPlayer() == k3.getP1()) {
-                    if (k3.getP1().getAdditionals().size() > 0){
+                    if (k3.getP1().getAdditionals().size() > 0) {
                         glowPan.put(p1Additionnals, 1);
                     }
                     glowPan.put(p1, 0);
                 } else {
-                    if (k3.getP2().getAdditionals().size() > 0){
+                    if (k3.getP2().getAdditionals().size() > 0) {
                         glowPan.put(p2Additionnals, 2);
                     }
                     glowPan.put(p2, 0);
@@ -548,7 +555,8 @@ public class SecondPhasePanel extends JPanel {
         JPanel[] pans = new JPanel[] { p1, p2, base };
         for (JPanel pan : pans) {
             if (!glowPan.keySet().contains(pan)) {
-                pan.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 5));
+                pan.setBorder(BorderFactory.createLineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 10));
+                pan.repaint();
             }
         }
         if (!glowPan.keySet().contains(p1Additionnals)) {
@@ -556,6 +564,7 @@ public class SecondPhasePanel extends JPanel {
                     .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                             "Pieces additionnelles du Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
                             new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+            p1Additionnals.repaint();
         }
 
         if (!glowPan.keySet().contains(p2Additionnals)) {
@@ -563,6 +572,7 @@ public class SecondPhasePanel extends JPanel {
                     .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                             "Pieces additionnelles du Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
                             new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
+            p2Additionnals.repaint();
         }
 
         animationPanelGlow.setToRedraw(glowPan);
