@@ -114,7 +114,7 @@ public class Phase1DnD extends MouseAdapter {
             MouseEvent event = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
             if (newComponent != component) {
                 if (newComponent instanceof HexIcon) {
-                    ((HexIcon) newComponent).setHovered(true);
+                    toView.add(new Action(ActionType.SET_HEX_HOVERED, newComponent));
                 } else {
                     newComponent.dispatchEvent(
                             new MouseEvent(newComponent, MouseEvent.MOUSE_ENTERED, e.getWhen(), e.getModifiersEx(),
@@ -122,7 +122,7 @@ public class Phase1DnD extends MouseAdapter {
                 }
                 if (component != null) {
                     if (component instanceof HexIcon) {
-                        ((HexIcon) component).setHovered(false);
+                        toView.add(new Action(ActionType.SET_HEX_DEFAULT, component));
                     } else {
                         component.dispatchEvent(
                                 new MouseEvent(component, MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),

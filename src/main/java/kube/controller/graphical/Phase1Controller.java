@@ -1,6 +1,5 @@
 package kube.controller.graphical;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -53,6 +52,7 @@ public class Phase1Controller implements ActionListener, MouseListener, Componen
         if (source instanceof JButton) {
             JButton b = (JButton) source;
             if (b.isEnabled()) {
+                Config.debug("Click on enabled button");
                 ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
                         ((JButton) source).getActionCommand());
                 actionPerformed(evt);

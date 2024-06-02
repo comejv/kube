@@ -1,10 +1,9 @@
 package kube.view;
 
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 
 import kube.configuration.Config;
-import kube.controller.graphical.Phase1DnD;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.MiniMaxAI;
@@ -49,10 +48,20 @@ public class GUIEventsHandler implements Runnable {
                     ((ButtonIcon) action.getData()).setPressed(false);
                     break;
                 case SET_HEX_DEFAULT:
-                    ((HexIcon) action.getData()).setDefault();
+                    HexIcon h = (HexIcon) action.getData();
+                    if (h.isActionable()) {
+                        h.setDefault();
+                        gui.getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    }
                     break;
                 case SET_HEX_HOVERED:
-                    ((HexIcon) action.getData()).setHovered(true);
+                    h = (HexIcon) action.getData();
+                    Config.debug("Hovering hex");
+                    if (h.isActionable()) {
+                        h.setHovered(true);
+                        gui.getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                        Config.debug("Hex is actionable");
+                    }
                     break;
                 case SET_HEX_PRESSED:
                     ((HexIcon) action.getData()).setPressed(true);

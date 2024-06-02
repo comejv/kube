@@ -8,7 +8,6 @@ import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Config;
 import kube.model.ModelColor;
 import kube.model.Player;
 import kube.model.action.Action;

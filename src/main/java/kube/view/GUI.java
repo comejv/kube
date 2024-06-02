@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
@@ -26,7 +25,6 @@ import kube.controller.graphical.GUIControllers;
 import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
-import kube.view.animations.Message;
 import kube.view.panels.*;
 
 public class GUI extends Thread {
@@ -45,7 +43,7 @@ public class GUI extends Thread {
     private Queue<Action> eventsToView;
     public Queue<Action> eventsToModel;
     public MenuPanel mP;
-    
+
     public GUI(Kube k3, GUIControllers controllers, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
@@ -190,11 +188,11 @@ public class GUI extends Thread {
         return mF.getOverlayComponent();
     }
 
-    public MouseAdapter getCurrentListener(){
+    public MouseAdapter getCurrentListener() {
         return getMainFrame().getCurrentListener();
     }
 
-    public MouseAdapter getDefaultGlassPaneController(){
+    public MouseAdapter getDefaultGlassPaneController() {
         return getMainFrame().getDefaultGlassPaneController();
     }
 
@@ -307,7 +305,7 @@ public class GUI extends Thread {
         mF.resetUIScale();
     }
 
-    public void winMessage(Action a){
+    public void winMessage(Action a) {
         secondPhasePanel.winMessage(a);
     }
 

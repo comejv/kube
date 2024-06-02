@@ -424,8 +424,8 @@ public class FirstPhasePanel extends JPanel {
 
             // Update the old size to the new size
             oldSize = newSize;
-            constructPanel.revalidate();
-            constructPanel.repaint();
+            revalidate();
+            repaint();
         }
     }
 
@@ -437,7 +437,11 @@ public class FirstPhasePanel extends JPanel {
     private int calculateNewHexSize(Dimension newSize) {
         double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;
         int newHexSize = (int) (40 * scaleFactor);
-        return newHexSize;
+        if (newHexSize == 0) {
+            Config.error("Tried resizing hexa to 0 width");
+            return 20;
+        }
+        return Math.max(newHexSize, 20);
     }
 
     public void buildMessage() {

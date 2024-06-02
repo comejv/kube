@@ -6,8 +6,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -15,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
 import kube.configuration.Config;
-import kube.controller.graphical.Phase1DnD;
+import kube.configuration.ResourceLoader;
 import kube.view.components.Icon;
 import kube.view.panels.GlassPanel;
 
@@ -35,7 +33,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setTitle("KUBE");
-        // setIconImage(); for later
+        setIconImage(ResourceLoader.getBufferedImage("hexaBlueTextured"));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
@@ -118,11 +116,11 @@ public class MainFrame extends JFrame {
         return framePanel;
     }
 
-    public MouseAdapter getCurrentListener(){
+    public MouseAdapter getCurrentListener() {
         return currentListener;
     }
 
-    public MouseAdapter getDefaultGlassPaneController(){
+    public MouseAdapter getDefaultGlassPaneController() {
         return defaultGlassPaneController;
     }
 
@@ -149,8 +147,9 @@ public class MainFrame extends JFrame {
     }
 
     public void incrementUIScale(double factor) {
-        Config.setUIScale(Config.getUIScale() * factor);
-        resizeComponents(this.getContentPane(), factor);
+        Config.error("UI scaling has been disabled");
+        // Config.setUIScale(Config.getUIScale() * factor);
+        // resizeComponents(this.getContentPane(), factor);
     }
 
     public void resetUIScale() {

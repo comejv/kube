@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -14,7 +13,6 @@ import java.util.HashMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
@@ -220,8 +218,8 @@ public class SecondPhasePanel extends JPanel {
                         atLeastOneNotEmpty = true;
                     }
                 }
-                if (pan == k3Panels && i > 0){
-                    HexIcon hex = (HexIcon) k3invisibles[i-1].getComponent(0);
+                if (pan == k3Panels && i > 0) {
+                    HexIcon hex = (HexIcon) k3invisibles[i - 1].getComponent(0);
                     hex.setVisible(atLeastOneNotEmpty);
                 }
             }
@@ -253,7 +251,6 @@ public class SecondPhasePanel extends JPanel {
         }
         additionnalsPanel.removeAll();
 
-
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
         HexIcon hex = new HexIcon(null, false, p);
@@ -264,17 +261,16 @@ public class SecondPhasePanel extends JPanel {
         for (ModelColor c : p.getAdditionals()) {
             if (n > 5) {
                 gbc.gridy = 1;
-            } 
+            }
             additionnalsPanel.add(new HexIcon(c, false, p), gbc);
             n++;
         }
-        
+
         gbc.gridy = 0;
         hex = new HexIcon(null, false, p);
         hex.setVisible(true);
         additionnalsPanel.add(hex, gbc);
 
-        
         if (addWire) {
             additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
         }
@@ -333,14 +329,14 @@ public class SecondPhasePanel extends JPanel {
     private void updateText() {
         if (k3.getPenality()) {
             gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    k3.getCurrentPlayer().getName() + " volez une pièce à votre adversaire",
+                    k3.getCurrentPlayer().getName() + " : volez une pièce à votre adversaire",
                     TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
+                    new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
         } else {
             gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    k3.getCurrentPlayer().getName() + " jouez sur la montagne commune",
+                    k3.getCurrentPlayer().getName() + " : jouez sur la montagne commune",
                     TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
+                    new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
         }
     }
 
@@ -483,7 +479,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     private JPanel initMountain(int rowMissing, int base, Player p) {
-        if (p == null){
+        if (p == null) {
             k3invisibles = new JPanel[9];
         }
         JPanel constructPanel = new JPanel();
@@ -498,7 +494,7 @@ public class SecondPhasePanel extends JPanel {
             JPanel lineHexa = new JPanel();
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
-            if (p == null){
+            if (p == null) {
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 HexIcon hex = new HexIcon(null, false, p);
@@ -519,11 +515,11 @@ public class SecondPhasePanel extends JPanel {
                 }
                 lineHexa.add(hexa);
             }
-            if (p == null){
+            if (p == null) {
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 hexa.add(new HexIcon(null, false, p));
-                k3invisibles[i-1] = hexa;
+                k3invisibles[i - 1] = hexa;
                 lineHexa.add(hexa);
             }
             gbc.gridx = 0;
@@ -656,6 +652,7 @@ public class SecondPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow);
+        repaint();
     }
 
     public void updateHexSize() {
@@ -700,6 +697,7 @@ public class SecondPhasePanel extends JPanel {
             // Update the old size to the new size
             oldSize = newSize;
             revalidate();
+            repaint();
         }
     }
 
@@ -711,6 +709,10 @@ public class SecondPhasePanel extends JPanel {
     private int calculateNewHexSize(Dimension newSize) {
         double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;
         int newHexSize = (int) (40 * scaleFactor);
-        return newHexSize;
+        if (newHexSize == 0) {
+            Config.error("Tried resizing hexa to 0 width");
+            return 20;
+        }
+        return Math.max(newHexSize, 20);
     }
 }
