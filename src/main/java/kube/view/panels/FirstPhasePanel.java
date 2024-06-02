@@ -132,7 +132,7 @@ public class FirstPhasePanel extends JPanel {
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
         buttons.add(optButton, elemGBC);
 
-        JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
+        JButton sugIaButton = new Buttons.GamePhaseButton("Construction auto");
         sugIaButton.setActionCommand("AI");
         sugIaButton.addMouseListener(controller);
         buttonsMap.put("AI", sugIaButton);

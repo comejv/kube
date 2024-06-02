@@ -48,7 +48,7 @@ public class panelGlow implements ActionListener {
         yellowIntensity = Math.max(yellowIntensity, 0);
         if (toGlow != null){
             for (JPanel pan : toGlow.keySet()) {
-                if (toGlow.get(pan) > 0){ // additionnal pan
+                if (toGlow.containsKey(pan) && toGlow.get(pan) > 0){ // additionnal pan
                     LineBorder line = new LineBorder(new Color(255, 255, yellowIntensity),10);
                     TitledBorder title = BorderFactory.createTitledBorder(line, "Pieces additionnelles du Joueur " + toGlow.get(pan) ,TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 40));

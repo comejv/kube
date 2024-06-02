@@ -27,6 +27,7 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Player;
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.move.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
@@ -129,14 +130,14 @@ public class SecondPhasePanel extends JPanel {
         gbc.gridy = 6;
         panel.add(histoButton, gbc);
 
-        undoButton = new Buttons.GamePhaseButton("Annuler");
+        undoButton = new Buttons.GamePhaseButton("Annuler le coup");
         undoButton.setActionCommand("undo");
         undoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridy = 7;
         panel.add(undoButton, gbc);
 
-        redoButton = new Buttons.GamePhaseButton("Refaire");
+        redoButton = new Buttons.GamePhaseButton("Rejouer le coup");
         redoButton.setActionCommand("redo");
         redoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -304,11 +305,13 @@ public class SecondPhasePanel extends JPanel {
         if (k3.getHistory().canRedo() && !k3.getCurrentPlayer().isAI()) {
             redoButton.setEnabled(true);
         }
+        if (a.getType() != ActionType.UNDO && k3.getPenality()){
+            penalityMessage();
+        }
     }
 
     private void updateText() {
         if (k3.getPenality()) {
-            penalityMessage();
             gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                     k3.getCurrentPlayer().getName() + " volez une pièce à votre adversaire",
                     TitledBorder.CENTER, TitledBorder.TOP,
@@ -467,7 +470,6 @@ public class SecondPhasePanel extends JPanel {
         JPanel constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
-
         GridBagConstraints gbc = new GridBagConstraints();
         int i;
         for (i = 1; i <= base; i++) {
