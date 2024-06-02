@@ -25,6 +25,7 @@ import kube.controller.graphical.GUIControllers;
 import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
+import kube.view.animations.Message;
 import kube.view.panels.*;
 
 public class GUI extends Thread {
@@ -114,7 +115,7 @@ public class GUI extends Thread {
             case Kube.PREPARATION_PHASE:
                 setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE1);
-                firstPhasePanel.updateAll();
+                firstPhasePanel.updateAll(true);
                 mF.showPanel(PHASE1);
                 loadPanel(PHASE2);
                 break;

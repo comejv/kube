@@ -29,7 +29,7 @@ import kube.model.action.Action;
 import kube.model.action.move.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
-import kube.view.animations.hexGlow;
+import kube.view.animations.HexGlow;
 import kube.view.animations.panelGlow;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
@@ -49,7 +49,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private JButton undoButton, redoButton;
 
-    private hexGlow animationHexGlow;
+    private HexGlow animationHexGlow;
     private panelGlow animationPanelGlow;
     // TODO : set hex in middle of pyra not actionable
 
@@ -57,7 +57,7 @@ public class SecondPhasePanel extends JPanel {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
-        this.animationHexGlow = new hexGlow();
+        this.animationHexGlow = new HexGlow();
         this.animationPanelGlow = new panelGlow();
         int k3BaseSize = k3.getK3().getBaseSize();
         int playerBaseSize = k3.getP1().getMountain().getBaseSize();

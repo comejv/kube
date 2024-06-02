@@ -4,7 +4,6 @@ import kube.configuration.Config;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Kube;
 import kube.model.ModelColor;
-import kube.model.Player;
 import kube.model.action.Queue;
 import kube.model.action.Remove;
 import kube.model.action.Swap;
@@ -12,14 +11,14 @@ import kube.model.action.Action;
 import kube.model.action.Build;
 import kube.view.GUI;
 import kube.view.GUIColors;
-import kube.view.animations.hexGlow;
+import kube.view.animations.HexGlow;
+import kube.view.animations.Message;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.*;
-import java.sql.Array;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -29,8 +28,7 @@ import javax.swing.border.TitledBorder;
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
 public class FirstPhasePanel extends JPanel {
-    // TODO : refactor this class to make it more readable
-    private hexGlow animationGlow;
+    private HexGlow animationGlow;
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
@@ -38,27 +36,36 @@ public class FirstPhasePanel extends JPanel {
     private HashMap<ModelColor, JPanel> sidePanels;
     private JPanel[][] moutainPanels;
     private HashMap<String, JButton> buttonsMap;
+    private TransparentPanel transparentPanel;
 
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         setBackground(GUIColors.GAME_BG.toColor());
 
-        /* Buttons panel construction */
+        // Create a JLayeredPane
+        JLayeredPane layeredPane = new JLayeredPane();
+        layeredPane.setPreferredSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
+
+        // Create the main panel that holds other components
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
+        mainPanel.setBackground(GUIColors.GAME_BG.toColor());
+        // Create buttons panel and game panel
         JPanel buttonsPanel = initButtons();
         buttonsPanel.setBackground(GUIColors.GAME_BG.toColor());
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 2;
         gbc.anchor = GridBagConstraints.NORTHEAST;
         gbc.insets = new Insets(0, 10, 0, 10);
+        mainPanel.add(buttonsPanel, gbc);
 
-        add(buttonsPanel, gbc);
-
-        /* Game panel construction */
         JPanel gamePanel = gamePanel();
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -69,9 +76,20 @@ public class FirstPhasePanel extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 20, 20, 20);
-        add(gamePanel, gbc);
+        mainPanel.add(gamePanel, gbc);
 
-        animationGlow = new hexGlow();
+        // Add main panel to the layered pane
+        layeredPane.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
+
+        // Create and add the transparent panel on top
+        transparentPanel = new TransparentPanel("Test");
+        transparentPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
+        layeredPane.add(transparentPanel, JLayeredPane.PALETTE_LAYER);
+        transparentPanel.setVisible(false);
+        // Add layered pane to this panel
+        add(layeredPane, BorderLayout.CENTER);
+
+        animationGlow = new HexGlow();
     }
 
     private JPanel gamePanel() {
@@ -221,11 +239,24 @@ public class FirstPhasePanel extends JPanel {
         mini.repaint();
     }
 
-    public void updateAll() {
-        topPanel.removeAll();
-        for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
-            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false, 1.5));
+    public void updateAll(Boolean firstUpdate) {
+        if (firstUpdate) {
+            boolean onlyDecreasing = k3.getCurrentPlayer() == k3.getP1();
+            new Message(transparentPanel,
+                    "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne", animationGlow,
+                    onlyDecreasing);
+            if (k3.getCurrentPlayer() == k3.getP1()) {
+                topPanel.removeAll();
+                JLabel baseLabel = new JLabel("Base Centrale: ");
+                baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
+                baseLabel.setForeground(GUIColors.TEXT.toColor());
+                topPanel.add(baseLabel);
+                for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
+                    topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false, 1.5));
+                }
+            }
         }
+
         constructPanel
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne",
@@ -272,7 +303,7 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(s.getTo());
                 break;
             case AI_MOVE:
-                updateAll();
+                updateAll(false);
                 break;
             default:
                 break;
