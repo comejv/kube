@@ -17,7 +17,7 @@ public class TransparentPanel extends JPanel {
         this.text = text;
         opacity = 0;
         backgroundImage = ResourceLoader.getBufferedImage("background");
-        
+
         setOpaque(false);
 
         // Set the panelFont to the specified custom font
@@ -36,7 +36,7 @@ public class TransparentPanel extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        if (scaledBackground == null){
+        if (scaledBackground == null) {
             scaledBackground = backgroundImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         }
         super.paintComponent(g);
@@ -44,9 +44,9 @@ public class TransparentPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         g2d.drawImage(scaledBackground, 0, 0, this);
-        //g2d.drawImage(backgroundImage, 0, 0, this);
+        // g2d.drawImage(backgroundImage, 0, 0, this);
 
-        //g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+        // g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
         g2d.setColor(Color.BLACK); // Set the text color
         g2d.setFont(panelFont); // Set the custom font
 
