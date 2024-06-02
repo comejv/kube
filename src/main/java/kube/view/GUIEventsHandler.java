@@ -1,6 +1,10 @@
 package kube.view;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseListener;
+
 import kube.configuration.Config;
+import kube.controller.graphical.Phase1DnD;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.moveSetHeuristique;
@@ -12,10 +16,11 @@ import kube.view.panels.RulesPanel;
 public class GUIEventsHandler implements Runnable {
     // TODO : refactor this class to make it more readable
 
-    Kube kube;
-    Queue<Action> eventsToView;
-    Queue<Action> eventsToModel;
-    GUI gui;
+    private Kube kube;
+    private Queue<Action> eventsToView;
+    private Queue<Action> eventsToModel;
+    private MouseAdapter savedGlassPaneController;
+    private GUI gui;
 
     public GUIEventsHandler(GUI gui, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.eventsToView = eventsToView;
@@ -106,11 +111,14 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case SETTINGS:
                     gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
+                    setSavedGlassPaneController(gui.getCurrentListener());
+                    Config.debug(savedGlassPaneController);
+                    gui.setGlassPaneController(gui.getDefaultGlassPaneController());
                     gui.setGlassPanelVisible(true);
                     break;
                 case CONFIRMED_SETTINGS:
                     gui.removeAllFromOverlay();
-                    gui.setGlassPanelVisible(false);
+                    gui.setGlassPaneController(getSavedGlassPaneController());
                     break;
                 // FIRST PHASE
                 case VALIDATE:
@@ -141,5 +149,13 @@ public class GUIEventsHandler implements Runnable {
                     break;
             }
         }
+    }
+
+    public void setSavedGlassPaneController(MouseAdapter ma){
+        savedGlassPaneController = ma;
+    }
+
+    public MouseAdapter getSavedGlassPaneController(){
+        return savedGlassPaneController;
     }
 }
