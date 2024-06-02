@@ -46,10 +46,6 @@ public class FirstPhasePanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(GUIColors.GAME_BG.toColor());
 
-        // Create a JLayeredPane
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
-
         // Create the main panel that holds other components
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
@@ -79,15 +75,14 @@ public class FirstPhasePanel extends JPanel {
         mainPanel.add(gamePanel, gbc);
 
         // Add main panel to the layered pane
-        layeredPane.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
+        add(mainPanel);
 
         // Create and add the transparent panel on top
-        transparentPanel = new TransparentPanel("Test");
-        transparentPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
-        layeredPane.add(transparentPanel, JLayeredPane.PALETTE_LAYER);
+        transparentPanel = new TransparentPanel("");
+        // transparentPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
+        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
         // Add layered pane to this panel
-        add(layeredPane, BorderLayout.CENTER);
 
         animationGlow = new HexGlow();
     }
@@ -241,9 +236,10 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateAll(Boolean firstUpdate) {
         if (firstUpdate) {
+            gui.addToOverlay(transparentPanel);
             boolean onlyDecreasing = k3.getCurrentPlayer() == k3.getP1();
             new Message(transparentPanel,
-                    "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne", animationGlow,
+                    "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne", gui, animationGlow,
                     onlyDecreasing);
             if (k3.getCurrentPlayer() == k3.getP1()) {
                 topPanel.removeAll();
