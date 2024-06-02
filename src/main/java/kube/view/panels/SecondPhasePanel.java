@@ -50,6 +50,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] k3Panels;
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
+    private JPanel[] k3invisibles;
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private JButton undoButton, redoButton;
     private Dimension oldSize;
@@ -207,27 +208,33 @@ public class SecondPhasePanel extends JPanel {
 
     public void updateVisible() {
         JPanel[][][] toUpdate = { k3Panels, p1Panels, p2Panels };
+        Boolean atLeastOneNotEmpty;
         for (JPanel[][] pan : toUpdate) {
             for (int i = 0; i < pan.length; i++) {
+                atLeastOneNotEmpty = false;
                 for (int j = 0; j < i + 1; j++) {
                     HexIcon hex = (HexIcon) pan[i][j].getComponent(0);
                     if (hex.getColor() == ModelColor.EMPTY) {
                         hex.setVisible(false);
-                    } else if (pan == k3Panels && i > 0) {
-                        pan[i - 1][0].setPreferredSize(k3Panels[8][0].getSize());
+                    } else {
+                        atLeastOneNotEmpty = true;
                     }
+                }
+                if (pan == k3Panels && i > 0){
+                    HexIcon hex = (HexIcon) k3invisibles[i-1].getComponent(0);
+                    hex.setVisible(atLeastOneNotEmpty);
                 }
             }
         }
-        for (Component c : p1Additionnals.getComponents()){
+        for (Component c : p1Additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
-            if (hex.getColor() == ModelColor.EMPTY){
+            if (hex.getColor() == ModelColor.EMPTY) {
                 hex.setVisible(false);
             }
         }
-        for (Component c : p2Additionnals.getComponents()){
+        for (Component c : p2Additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
-            if (hex.getColor() == ModelColor.EMPTY){
+            if (hex.getColor() == ModelColor.EMPTY) {
                 hex.setVisible(false);
             }
         }
@@ -245,18 +252,29 @@ public class SecondPhasePanel extends JPanel {
             additionnalsPanel = p2Additionnals;
         }
         additionnalsPanel.removeAll();
+
+
         GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        HexIcon hex = new HexIcon(null, false, p);
+        hex.setVisible(true);
+        additionnalsPanel.add(hex, gbc);
 
         int n = 0;
         for (ModelColor c : p.getAdditionals()) {
             if (n > 5) {
                 gbc.gridy = 1;
-            } else {
-                gbc.gridy = 0;
-            }
+            } 
             additionnalsPanel.add(new HexIcon(c, false, p), gbc);
             n++;
         }
+        
+        gbc.gridy = 0;
+        hex = new HexIcon(null, false, p);
+        hex.setVisible(true);
+        additionnalsPanel.add(hex, gbc);
+
+        
         if (addWire) {
             additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
         }
@@ -465,6 +483,9 @@ public class SecondPhasePanel extends JPanel {
     }
 
     private JPanel initMountain(int rowMissing, int base, Player p) {
+        if (p == null){
+            k3invisibles = new JPanel[9];
+        }
         JPanel constructPanel = new JPanel();
         constructPanel.setOpaque(false);
         constructPanel.setLayout(new GridBagLayout());
@@ -477,6 +498,14 @@ public class SecondPhasePanel extends JPanel {
             JPanel lineHexa = new JPanel();
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
+            if (p == null){
+                JPanel hexa = new JPanel();
+                hexa.setOpaque(false);
+                HexIcon hex = new HexIcon(null, false, p);
+                hex.setVisible(false);
+                hexa.add(hex);
+                lineHexa.add(hexa);
+            }
             for (int j = 0; j < i; j++) {
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
@@ -488,6 +517,13 @@ public class SecondPhasePanel extends JPanel {
                 } else {
                     p2Panels[i - 1][j] = hexa;
                 }
+                lineHexa.add(hexa);
+            }
+            if (p == null){
+                JPanel hexa = new JPanel();
+                hexa.setOpaque(false);
+                hexa.add(new HexIcon(null, false, p));
+                k3invisibles[i-1] = hexa;
                 lineHexa.add(hexa);
             }
             gbc.gridx = 0;
@@ -546,7 +582,7 @@ public class SecondPhasePanel extends JPanel {
                     glowPan.put(p2, "");
                 } else {
                     if (k3.getP1().getAdditionals().size() > 0) {
-                        glowPan.put(p1Additionnals,  k3.getP1().getName());
+                        glowPan.put(p1Additionnals, k3.getP1().getName());
                     }
                     glowPan.put(p1, "");
                 }
@@ -557,12 +593,12 @@ public class SecondPhasePanel extends JPanel {
             } else {
                 if (k3.getCurrentPlayer() == k3.getP1()) {
                     if (k3.getP1().getAdditionals().size() > 0) {
-                        glowPan.put(p1Additionnals,  k3.getP1().getName());
+                        glowPan.put(p1Additionnals, k3.getP1().getName());
                     }
                     glowPan.put(p1, "");
                 } else {
                     if (k3.getP2().getAdditionals().size() > 0) {
-                        glowPan.put(p2Additionnals,  k3.getP2().getName());
+                        glowPan.put(p2Additionnals, k3.getP2().getName());
                     }
                     glowPan.put(p2, "");
                 }

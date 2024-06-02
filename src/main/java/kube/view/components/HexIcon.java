@@ -39,7 +39,11 @@ public class HexIcon extends Icon {
         this.brightness = 1.0f;
         setActionable(actionable);
         this.scale = scale;
-        resizeIcon((int) (width * scale), (int) (height * scale));
+        if (color == null) {
+            resizeIcon(1, (int) (height * scale));
+        } else {
+            resizeIcon((int) (width * scale), (int) (height * scale));
+        }
     }
 
     public HexIcon(ModelColor color, boolean actionable, Player player) {
@@ -68,10 +72,6 @@ public class HexIcon extends Icon {
 
     @Override
     protected void paintComponent(Graphics g) {
-        // if (Config.getUIScale() != oldUIScale) {
-        // setScale(scale / oldUIScale * Config.getUIScale());
-        // oldUIScale = Config.getUIScale();
-        // }
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         if (isActionable() && isHovered) { // Draw darker image
@@ -86,12 +86,15 @@ public class HexIcon extends Icon {
             float[] offsets = new float[4]; // Add to all bands of each pixel an offset of 0
             RescaleOp rop = new RescaleOp(scales, offsets, null);
             g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
-        } else { // Draw the original image
+        } else if (color != null) { // Draw the original image
             g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
-        }
+        } 
     }
 
     private static String getImageName(ModelColor color) {
+        if (color == null) {
+            return "hexaInvisible";
+        }
         switch (color) {
             case WHITE:
                 return "hexaWhiteTextured";
@@ -108,8 +111,9 @@ public class HexIcon extends Icon {
             case BLACK:
                 return "hexaBlackTextured";
             case EMPTY:
-            default:
                 return "hexaWire";
+            default:
+                return "hexaInvisible";
         }
     }
 
@@ -122,11 +126,19 @@ public class HexIcon extends Icon {
 
     public final void setScale(double scale) {
         this.scale = scale;
-        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+        if (color == null) {
+            resizeIcon(1, (int) (HEIGHT * scale));
+        } else {
+            resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+        }
     }
 
     public final void updateSize() {
-        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+        if (color == null) {
+            resizeIcon(1, (int) (HEIGHT * scale));
+        } else {
+            resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+        }
     }
 
     public final double getScale() {
@@ -154,7 +166,7 @@ public class HexIcon extends Icon {
     }
 
     public void setBrightness(float brightness) {
-        if (getColor() == ModelColor.RED){
+        if (getColor() == ModelColor.RED) {
             this.brightness = brightness * 1.2f;
         } else {
             this.brightness = brightness;
