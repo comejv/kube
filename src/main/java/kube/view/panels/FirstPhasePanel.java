@@ -206,7 +206,6 @@ public class FirstPhasePanel extends JPanel {
             actionable = numberOfPieces > 0;
             mini.add(new HexIcon(c, actionable, 1.5));
             mini.add(numOfPieces);
-            Config.debug("Ajout hexa en position ", x, y);
             gbc.gridx = x;
             gbc.gridy = y;
             x++;
@@ -414,8 +413,8 @@ public class FirstPhasePanel extends JPanel {
 
             // Update the old size to the new size
             oldSize = newSize;
-            constructPanel.revalidate();
-            constructPanel.repaint();
+            revalidate();
+            repaint();
         }
     }
 
@@ -427,7 +426,11 @@ public class FirstPhasePanel extends JPanel {
     private int calculateNewHexSize(Dimension newSize) {
         double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;
         int newHexSize = (int) (40 * scaleFactor);
-        return newHexSize;
+        if (newHexSize == 0) {
+            Config.error("Tried resizing hexa to 0 width");
+            return 20;
+        }
+        return Math.max(newHexSize, 20);
     }
 
     public void buildMessage() {
@@ -436,7 +439,8 @@ public class FirstPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow, k3.getCurrentPlayer() == k3.getP1());
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow,
+                k3.getCurrentPlayer() == k3.getP1());
     }
 
     public void winMessage(Action a) {

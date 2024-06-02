@@ -118,11 +118,11 @@ public class MainFrame extends JFrame {
         return framePanel;
     }
 
-    public MouseAdapter getCurrentListener(){
+    public MouseAdapter getCurrentListener() {
         return currentListener;
     }
 
-    public MouseAdapter getDefaultGlassPaneController(){
+    public MouseAdapter getDefaultGlassPaneController() {
         return defaultGlassPaneController;
     }
 
@@ -149,8 +149,9 @@ public class MainFrame extends JFrame {
     }
 
     public void incrementUIScale(double factor) {
-        Config.setUIScale(Config.getUIScale() * factor);
-        resizeComponents(this.getContentPane(), factor);
+        Config.error("UI scaling has been disabled");
+        // Config.setUIScale(Config.getUIScale() * factor);
+        // resizeComponents(this.getContentPane(), factor);
     }
 
     public void resetUIScale() {
