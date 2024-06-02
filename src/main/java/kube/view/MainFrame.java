@@ -5,6 +5,9 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -27,7 +30,8 @@ public class MainFrame extends JFrame {
     private JPanel framePanel;
     private JPanel overlayPanel;
     private Component overlay;
-    private Phase1DnD currentListener;
+    private MouseAdapter currentListener;
+    private MouseAdapter defaultGlassPaneController;
 
     public MainFrame() {
         setTitle("KUBE");
@@ -37,6 +41,7 @@ public class MainFrame extends JFrame {
         setSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
         setMinimumSize(new Dimension((int) (Config.INIT_WIDTH / 1.5), (int) (Config.INIT_HEIGHT / 1.5)));
         setLocationRelativeTo(null);
+        defaultGlassPaneController = null;
         framePanel = (JPanel) getContentPane();
         OverlayLayout overlay = new OverlayLayout(framePanel);
         framePanel.setLayout(overlay);
@@ -77,11 +82,14 @@ public class MainFrame extends JFrame {
             return;
         }
         GlassPanel g = new GlassPanel();
+        g.addMouseListener(defaultGlassPaneController);
+        g.addMouseMotionListener(defaultGlassPaneController);
+        g.addMouseWheelListener(defaultGlassPaneController);
         this.glassPane = g;
         super.setGlassPane(g);
     }
 
-    public void setGlassPaneController(Phase1DnD ma) {
+    public void setGlassPaneController(MouseAdapter ma) {
         if (currentListener != null) {
             glassPane.removeMouseMotionListener(currentListener);
             glassPane.removeMouseListener(currentListener);
@@ -108,6 +116,14 @@ public class MainFrame extends JFrame {
 
     public JPanel getFramePanel() {
         return framePanel;
+    }
+
+    public MouseAdapter getCurrentListener(){
+        return currentListener;
+    }
+
+    public MouseAdapter getDefaultGlassPaneController(){
+        return defaultGlassPaneController;
     }
 
     public void addToOverlay(Component p) {
