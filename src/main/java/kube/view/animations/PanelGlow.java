@@ -10,21 +10,16 @@ import java.util.HashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import javax.swing.border.EtchedBorder;
 import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.border.TitledBorder;;
 
-import kube.configuration.Config;
-import kube.view.GUIColors;
-import kube.view.panels.SecondPhasePanel;
-
-public class panelGlow implements ActionListener {
+public class PanelGlow implements ActionListener {
     private Timer timer;
     private int yellowIntensity;
     private int state;
     private HashMap<JPanel, String> toGlow;
 
-    public panelGlow() {
+    public PanelGlow() {
         yellowIntensity = 1;
         toGlow = new HashMap<>();
         this.timer = new Timer(1000 / 30, this);

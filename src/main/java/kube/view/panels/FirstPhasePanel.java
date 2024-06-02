@@ -38,6 +38,7 @@ public class FirstPhasePanel extends JPanel {
     private HashMap<String, JButton> buttonsMap;
     private Dimension oldSize;
     private Queue<Action> eventsToModel;
+
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
         this.eventsToModel = eventsToModel;
@@ -335,13 +336,11 @@ public class FirstPhasePanel extends JPanel {
                 if (b.getOldColor() != null && b.getOldColor() != ModelColor.EMPTY) {
                     updateSide(b.getOldColor());
                 }
-                updateButton();
                 break;
             case REMOVE:
                 Remove r = (Remove) a.getData();
                 updateGrid(r.getPosition());
                 updateSide(r.getModelColor());
-                updateButton();
                 break;
             case SWAP:
                 Swap s = (Swap) a.getData();
@@ -349,12 +348,21 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(s.getTo());
                 break;
             case AI_MOVE:
-                updateAll(false);
+                updateActionnable();
+                for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+                    updateSide(c);
+                }
+                for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+                    for (int j = 0; j < i + 1; j++) {
+                        updateGrid(i, j);
+                    }
+                }
                 break;
             default:
                 break;
         }
         updateActionnable();
+        updateButton();
     }
 
     public void setWaitingButton() {
@@ -388,6 +396,8 @@ public class FirstPhasePanel extends JPanel {
             if (numberOfPieces > 0) {
                 hex.setActionable(true);
                 toGlow.add(hex);
+            } else {
+                hex.setActionable(false);
             }
         }
         animationGlow.setToRedraw(toGlow);
@@ -436,9 +446,9 @@ public class FirstPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !", 
-                gui, 
-                animationGlow, 
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !",
+                gui,
+                animationGlow,
                 k3.getCurrentPlayer() == k3.getP1());
     }
 
@@ -448,8 +458,8 @@ public class FirstPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !", 
-                gui, 
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !",
+                gui,
                 animationGlow);
     }
 }

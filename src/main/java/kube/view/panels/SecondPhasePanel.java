@@ -34,7 +34,7 @@ import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.animations.HexGlow;
 import kube.view.animations.Message;
-import kube.view.animations.panelGlow;
+import kube.view.animations.PanelGlow;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
@@ -56,7 +56,7 @@ public class SecondPhasePanel extends JPanel {
     private Dimension oldSize;
 
     private HexGlow animationHexGlow;
-    private panelGlow animationPanelGlow;
+    private PanelGlow animationPanelGlow;
     // TODO : set hex in middle of pyra not actionable
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
@@ -64,7 +64,7 @@ public class SecondPhasePanel extends JPanel {
         this.k3 = k3;
         this.controller = controller;
         this.animationHexGlow = new HexGlow();
-        this.animationPanelGlow = new panelGlow();
+        this.animationPanelGlow = new PanelGlow();
         int k3BaseSize = k3.getK3().getBaseSize();
         int playerBaseSize = k3.getP1().getMountain().getBaseSize();
         k3Panels = new JPanel[k3BaseSize][k3BaseSize];
