@@ -123,35 +123,22 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugIaButton, gbc);
 
-        JButton histoButton = new Buttons.GamePhaseButton("Historique");
-        histoButton.setActionCommand("updateHist");
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        histoButton.addMouseListener(a);
-        gbc.gridy = 6;
-        panel.add(histoButton, gbc);
-
         undoButton = new Buttons.GamePhaseButton("Annuler le coup");
         undoButton.setActionCommand("undo");
         undoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridy = 7;
+        gbc.gridy = 6;
         panel.add(undoButton, gbc);
 
         redoButton = new Buttons.GamePhaseButton("Rejouer le coup");
         redoButton.setActionCommand("redo");
         redoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridy = 8;
+        gbc.gridy = 7;
         panel.add(redoButton, gbc);
 
-        JLabel histoText = new JLabel("HISTO");
-        histoText.setFont(new Font("Jomhuria", Font.PLAIN, 25));
-        histoText.setForeground(GUIColors.TEXT.toColor());
-        histoText.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, (int) (Config.INIT_HEIGHT / 2)));
-        // panel.add(histoText);
         JScrollPane histo = getHisto();
-        // histo.setMinimumSize(new
-        // Dimension(Config.INIT_WIDTH/7,Config.INIT_HEIGHT));
+        histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
         gbc.gridy = 3;
         gbc.gridheight = 3;
         gbc.weighty = 1;
@@ -628,28 +615,36 @@ public class SecondPhasePanel extends JPanel {
             int newHexSize = calculateNewHexSize(newSize);
             Config.debug("Set hex size to ", newHexSize);
             HexIcon.setStaticSize(newHexSize);
-
+            JPanel panel;
+            HexIcon h;
             // Loop through panels and update hex size
             for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {
-                    JPanel panel = k3Panels[i][j];
-                    HexIcon h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
                     panel = p1Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
+                    panel.setPreferredSize(h.getSize());
                     panel = p2Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    for (Component c : p1Additionnals.getComponents()) {
-                        h = (HexIcon) c;
-                        h.updateSize();
-                    }
-                    for (Component c : p2Additionnals.getComponents()) {
-                        HexIcon hex = (HexIcon) c;
-                        hex.setActionable(false);
-                    }
+                    panel.setPreferredSize(h.getSize());
                 }
+            }
+            for (int i = 0; i < k3Panels.length; i++) {
+                for (int j = 0; j < i + 1; j++) {
+                    panel = k3Panels[i][j];
+                    h = (HexIcon) panel.getComponents()[0];
+                    h.updateSize();
+                    panel.setPreferredSize(h.getSize());
+                }
+            }
+            for (Component c : p1Additionnals.getComponents()) {
+                h = (HexIcon) c;
+                h.updateSize();
+            }
+            for (Component c : p2Additionnals.getComponents()) {
+                h = (HexIcon) c;
+                h.updateSize();
             }
 
             // Update the old size to the new size
@@ -665,7 +660,7 @@ public class SecondPhasePanel extends JPanel {
 
     private int calculateNewHexSize(Dimension newSize) {
         double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;
-        int newHexSize = (int) (50 * scaleFactor); // Assuming initial hex size was 40
+        int newHexSize = (int) (40 * scaleFactor);
         return newHexSize;
     }
 }

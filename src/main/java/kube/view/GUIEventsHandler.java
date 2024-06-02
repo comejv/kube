@@ -78,6 +78,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.showWarning("Not your turn", "It's not your turn yet.");
                     break;
                 case PRINT_WIN_MESSAGE:
+                    Config.debug("Win message");
                     gui.winMessage(action);
                     break;
                 // MENU
@@ -151,11 +152,11 @@ public class GUIEventsHandler implements Runnable {
         }
     }
 
-    public void setSavedGlassPaneController(MouseAdapter ma){
+    public void setSavedGlassPaneController(MouseAdapter ma) {
         savedGlassPaneController = ma;
     }
 
-    public MouseAdapter getSavedGlassPaneController(){
+    public MouseAdapter getSavedGlassPaneController() {
         return savedGlassPaneController;
     }
 }

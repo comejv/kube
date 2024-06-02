@@ -47,7 +47,6 @@ public class TransparentPanel extends JPanel {
             scaledBackground = backgroundImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_SMOOTH);
         }
         super.paintComponent(g);
-        Config.debug("Start redraw", opacity);
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         if (noImage) {
@@ -70,6 +69,5 @@ public class TransparentPanel extends JPanel {
         g2d.drawString(text, x, y);
 
         g2d.dispose(); // Clean up graphics context
-        Config.debug("Stop redraw");
     }
 }

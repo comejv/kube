@@ -64,9 +64,8 @@ public class GUI extends Thread {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 Config.debug("Set Look and Feel to system.");
             }
-        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException |
-
-                IllegalAccessException e) {
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
+                | IllegalAccessException e) {
             Config.error("Can't set look and feel : " + e);
         }
 
@@ -285,6 +284,10 @@ public class GUI extends Thread {
 
     public MainFrame getMainFrame() {
         return mF;
+    }
+
+    public Kube getKube() {
+        return k3;
     }
 
     public void updateDnd(Action a) {
