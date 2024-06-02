@@ -213,8 +213,8 @@ public class SecondPhasePanel extends JPanel {
                     HexIcon hex = (HexIcon) pan[i][j].getComponent(0);
                     if (hex.getColor() == ModelColor.EMPTY) {
                         hex.setVisible(false);
-                    } else if (i > 0) {
-                        //pan[i - 1][0].setPreferredSize(k3Panels[8][0].getSize());
+                    } else if (pan == k3Panels && i > 0) {
+                        pan[i - 1][0].setPreferredSize(k3Panels[8][0].getSize());
                     }
                 }
             }
