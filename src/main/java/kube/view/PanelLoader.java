@@ -2,7 +2,6 @@ package kube.view;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
 import kube.controller.graphical.GUIControllers;
 import kube.model.Kube;
 import kube.model.action.Action;
@@ -18,8 +17,9 @@ public class PanelLoader implements Runnable {
     Kube k3;
     Queue<Action> eventsToView;
     Queue<Action> eventsToModel;
-    
-    PanelLoader(GUI gui, String panelName, Kube k3, GUIControllers controller, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
+
+    PanelLoader(GUI gui, String panelName, Kube k3, GUIControllers controller, Queue<Action> eventsToView,
+            Queue<Action> eventsToModel) {
         this.gui = gui;
         this.panelName = panelName;
         this.controllers = controller;

@@ -286,7 +286,16 @@ public class GUI extends Thread {
     }
 
     public void updateHexSize() {
-        Config.debug("Update hex size");
-        // firstPhasePanel.updateHexSize(30);
+        switch (k3.getPhase()) {
+            case Kube.PREPARATION_PHASE:
+                firstPhasePanel.updateHexSize();
+                break;
+            case Kube.GAME_PHASE:
+                secondPhasePanel.updateHexSize();
+                break;
+            default:
+                Config.error("Unimplemented game phase for resize");
+                break;
+        }
     }
 }

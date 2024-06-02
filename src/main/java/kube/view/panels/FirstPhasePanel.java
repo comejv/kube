@@ -34,9 +34,10 @@ public class FirstPhasePanel extends JPanel {
     private GUI gui;
     private JPanel constructPanel, piecesPanel, gamePanel, topPanel;
     private HashMap<ModelColor, JPanel> sidePanels;
-    private JPanel[][] moutainPanels;
+    private JPanel[][] moutainPanels; // TODO : rename symbol to fix typo
     private HashMap<String, JButton> buttonsMap;
     private TransparentPanel transparentPanel;
+    private Dimension oldSize;
 
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
@@ -45,6 +46,7 @@ public class FirstPhasePanel extends JPanel {
         this.controller = controller;
         setLayout(new BorderLayout());
         setBackground(GUIColors.GAME_BG.toColor());
+        addComponentListener(controller);
 
         // Create the main panel that holds other components
         JPanel mainPanel = new JPanel();
@@ -78,6 +80,7 @@ public class FirstPhasePanel extends JPanel {
         add(mainPanel);
 
         animationGlow = new HexGlow();
+        this.oldSize = getSize();
     }
 
     private JPanel gamePanel() {
@@ -344,14 +347,36 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateHexSize() {
-        // HexIcon.setStaticSize(size);
-        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
-            for (int j = 0; j < i + 1; j++) {
-                JPanel panel = moutainPanels[i][j];
-                HexIcon h = (HexIcon) panel.getComponents()[0];
-                h.updateSize();
+        Dimension newSize = this.getSize();
+        if (isSignificantChange(oldSize, newSize)) {
+            // Update the static size of HexIcon based on new size
+            int newHexSize = calculateNewHexSize(newSize);
+            HexIcon.setStaticSize(newHexSize);
+
+            // Loop through panels and update hex size
+            for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+                for (int j = 0; j < i + 1; j++) {
+                    JPanel panel = moutainPanels[i][j];
+                    HexIcon h = (HexIcon) panel.getComponents()[0];
+                    h.updateSize();
+                }
             }
+
+            // Update the old size to the new size
+            oldSize = newSize;
+            revalidate();
         }
+    }
+
+    private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
+        int threshold = 100;
+        return Math.abs(newSize.height - oldSize.height) > threshold;
+    }
+
+    private int calculateNewHexSize(Dimension newSize) {
+        double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;
+        int newHexSize = (int) (50 * scaleFactor); // Assuming initial hex size was 40
+        return newHexSize;
     }
 
     public void buildMessage() {
