@@ -297,7 +297,6 @@ public class Game implements Runnable {
                         undo();
                         break;
                     case SAVE:
-                        Config.debug("JE SUIS LAAAAAAAAAAAAAAAA 1");
                         save(a.getData().toString());
                         break;
                     case RESET:
@@ -326,7 +325,6 @@ public class Game implements Runnable {
                             redo();
                             break;
                         case SAVE:
-                            Config.debug("JE SUIS LAAAAAAAAAAAAAAAA 2");
                             save(a.getData().toString());
                             break;
                         case RESET:

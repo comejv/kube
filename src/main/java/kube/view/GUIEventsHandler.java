@@ -73,8 +73,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.showWarning("Not your turn", "It's not your turn yet.");
                     break;
                 case PRINT_WIN_MESSAGE:
-                    Config.debug("Win message");
-                    gui.showInfo("You won !", "Congratulations, you won the game !");
+                    gui.winMessage(action);
                     break;
                 // MENU
                 case START:

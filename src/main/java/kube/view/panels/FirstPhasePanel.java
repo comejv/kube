@@ -36,7 +36,6 @@ public class FirstPhasePanel extends JPanel {
     private HashMap<ModelColor, JPanel> sidePanels;
     private JPanel[][] moutainPanels;
     private HashMap<String, JButton> buttonsMap;
-    private TransparentPanel transparentPanel;
 
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
@@ -331,13 +330,20 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void buildMessage() {
-        transparentPanel = new TransparentPanel("");
+        TransparentPanel transparentPanel = new TransparentPanel("");
         transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
-        boolean onlyDecreasing = k3.getCurrentPlayer() == k3.getP1();
         new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow,
-                onlyDecreasing);
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow);
+    }
+
+    public void winMessage(Action a) {
+        TransparentPanel transparentPanel = new TransparentPanel("");
+        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
+        transparentPanel.setVisible(false);
+        gui.addToOverlay(transparentPanel);
+        new Message(transparentPanel,
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow);
     }
 }

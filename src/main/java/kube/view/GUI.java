@@ -122,6 +122,7 @@ public class GUI extends Thread {
                 firstPhasePanel.setWaitingButton();
                 setGlassPaneController(new Phase2DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE2);
+                secondPhasePanel.startMessage();
                 secondPhasePanel.updateAll();
                 mF.showPanel(PHASE2);
                 firstPhasePanel.resetButtonValue();
@@ -283,5 +284,9 @@ public class GUI extends Thread {
 
     public void resetUIScale() {
         mF.resetUIScale();
+    }
+
+    public void winMessage(Action a){
+        secondPhasePanel.winMessage(a);
     }
 }
