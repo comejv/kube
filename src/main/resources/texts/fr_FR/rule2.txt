@@ -1,1 +1,2 @@
-Lors de la 1ère phase, vous devez construire votre pyramide à partir de vos hexagones de départ.
+Lors de la première phase, vous devez construire une pyramide à partir des pièces qui vous sont données. 
+Cette pyramide constituera votre réserve de pièces pour la seconde phase.

@@ -1,1 +1,1 @@
-Il existe deux jokers: les naturels et les blancs.
+Il existe deux jokers, les naturels et les blancs.

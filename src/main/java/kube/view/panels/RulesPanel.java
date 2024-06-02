@@ -48,7 +48,7 @@ public class RulesPanel extends JPanel {
         setPreferredSize(new Dimension(width, height));
         setBackground(GUIColors.ACCENT.toColor());
 
-        setCurrentRuleNb(1);
+        setCurrentRuleNb(0);
         
         JLabel ruleTitle = new JLabel("REGLES", SwingConstants.CENTER);
         ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 6)));

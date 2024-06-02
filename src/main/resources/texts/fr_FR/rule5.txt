@@ -1,1 +1,1 @@
-Les supplémentaires compte comme des accessibles et peuvent être jouer lors de son tour à la place d'un hexagone de sa pyramide.
+A savoir que les pièces supplémentaires peuvent être joués tout comme les hexagones dits accessibles.
