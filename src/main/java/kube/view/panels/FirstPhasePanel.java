@@ -77,13 +77,6 @@ public class FirstPhasePanel extends JPanel {
         // Add main panel to the layered pane
         add(mainPanel);
 
-        // Create and add the transparent panel on top
-        transparentPanel = new TransparentPanel("");
-        // transparentPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
-        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
-        transparentPanel.setVisible(false);
-        // Add layered pane to this panel
-
         animationGlow = new HexGlow();
     }
 
@@ -236,11 +229,6 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateAll(Boolean firstUpdate) {
         if (firstUpdate) {
-            gui.addToOverlay(transparentPanel);
-            boolean onlyDecreasing = k3.getCurrentPlayer() == k3.getP1();
-            new Message(transparentPanel,
-                    "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne", gui, animationGlow,
-                    onlyDecreasing);
             if (k3.getCurrentPlayer() == k3.getP1()) {
                 topPanel.removeAll();
                 JLabel baseLabel = new JLabel("Base Centrale: ");
@@ -340,5 +328,16 @@ public class FirstPhasePanel extends JPanel {
             }
         }
         animationGlow.setToRedraw(toGlow);
+    }
+
+    public void buildMessage() {
+        transparentPanel = new TransparentPanel("");
+        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
+        transparentPanel.setVisible(false);
+        gui.addToOverlay(transparentPanel);
+        boolean onlyDecreasing = k3.getCurrentPlayer() == k3.getP1();
+        new Message(transparentPanel,
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow,
+                onlyDecreasing);
     }
 }
