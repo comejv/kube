@@ -34,7 +34,6 @@ public class GUIEventsHandler implements Runnable {
     public void run() {
         while (true) {
             Action action = eventsToView.remove();
-            Config.debug("View receive ", action.getType());
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -129,7 +128,6 @@ public class GUIEventsHandler implements Runnable {
                 case SETTINGS:
                     gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
                     setSavedGlassPaneController(gui.getCurrentListener());
-                    Config.debug(savedGlassPaneController);
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
                     gui.setGlassPanelVisible(true);
                     break;

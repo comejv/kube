@@ -44,7 +44,6 @@ public class Phase2DnD extends Phase1DnD {
             Point posTo = hex.getPosition();
             Player playerTo = hex.getPlayer();
             if (hex.getColor() == ModelColor.EMPTY && playerFrom != playerTo) {
-                Config.debug(posFrom, playerFrom, posTo, playerTo, g.getColor());
                 toModel.add(new Action(ActionType.CREATE_MOVE,
                         new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
             }

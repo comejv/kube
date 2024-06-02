@@ -80,4 +80,15 @@ public class Queue<E> {
 
         return m.element;
     }
+
+    public synchronized boolean isEmpty(){
+        return head == null;
+    }
+
+    public synchronized E peak(){
+        if (head == null){
+            return null;
+        }
+        return head.element;
+    }
 }

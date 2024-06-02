@@ -50,7 +50,6 @@ public class TransparentPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         if (noImage) {
-            Config.debug("no image");
             g2d.setColor(new Color(128, 128, 128, (int)(opacity * 255 / 2))); // Set the grey color with the specified opacity
             g2d.fillRect(0, 0, getWidth(), getHeight()); // Fill the component with the grey color
         } else {

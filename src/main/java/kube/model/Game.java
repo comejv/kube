@@ -122,8 +122,7 @@ public class Game implements Runnable {
             }
             eventsToView.add(new Action(ActionType.VALIDATE, true));
             return CLASSIC_START;
-        }
-        else {
+        } else {
             // Load a saved game
             filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData() + Config.SAVING_FILE_EXTENSION;
             file = new File(filePath);
@@ -235,11 +234,12 @@ public class Game implements Runnable {
 
         Action action;
         boolean isValidated;
-        
+        action = eventsToModel.peak();
+
         if (player.isAI()) {
             player.getAI().constructionPhase(k3);
         }
-        
+
         while (!player.getIsMountainValidated()) {
 
             action = eventsToModel.remove();
@@ -287,6 +287,8 @@ public class Game implements Runnable {
                     break;
                 case RESET:
                     return RESET_EXIT;
+                case AI_PAUSE:
+                    break;
                 default:
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     break;
@@ -298,7 +300,7 @@ public class Game implements Runnable {
     /**
      * Set the first player
      * 
-     * @return void 
+     * @return void
      */
     public void setFirstPlayer() {
 
@@ -341,7 +343,7 @@ public class Game implements Runnable {
      * @return the exit code (RESET_EXIT or NORMAL_EXIT)
      */
     public int gamePhase() {
-
+        Boolean AIpause = false;
         Action action;
         while (true) {
 
@@ -356,16 +358,29 @@ public class Game implements Runnable {
                         break;
                     case RESET:
                         return RESET_EXIT;
+                    case AI_PAUSE:
+                        AIpause = (Boolean) action.getData();
+                        break;
                     default:
                         break;
                 }
             }
 
             while (k3.canCurrentPlayerPlay()) {
-
-                if (k3.getCurrentPlayer().isAI()) {
+                Config.debug("AIpause", AIpause,  eventsToModel.peak());
+                if (!eventsToModel.isEmpty() && eventsToModel.peak().getType() == ActionType.AI_PAUSE) {
+                    action = eventsToModel.remove();
+                    AIpause = (Boolean) action.getData();
+                }
+                if (k3.getCurrentPlayer().isAI() && !AIpause) {
                     Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
-                    playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
+                    if (!eventsToModel.isEmpty() && eventsToModel.peak().getType() == ActionType.AI_PAUSE) {
+                        action = eventsToModel.remove();
+                        AIpause = (Boolean) action.getData();
+                    }
+                    if (!AIpause) { // Verify if a pause as be sent during the AI move search
+                        playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
+                    }
                 } else {
                     action = eventsToModel.remove();
                     switch (action.getType()) {
@@ -385,6 +400,9 @@ public class Game implements Runnable {
                             break;
                         case RESET:
                             return RESET_EXIT;
+                        case AI_PAUSE:
+                            AIpause = (Boolean) action.getData();
+                            break;
                         default:
                             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION, action.getData()));
                             break;
@@ -442,7 +460,6 @@ public class Game implements Runnable {
         return k3.getCurrentPlayer().removeFromMountainToAvailableToBuild(remove.getPosition());
     }
 
-
     /**
      * Play a move
      * 
@@ -466,7 +483,8 @@ public class Game implements Runnable {
                 break;
             case CREATE_MOVE:
                 currentMove = (CreateMove) action.getData();
-                move = k3.createMove(currentMove.getFrom(), currentMove.getPlayerFrom(), currentMove.getTo(), currentMove.getPlayerTo(),
+                move = k3.createMove(currentMove.getFrom(), currentMove.getPlayerFrom(), currentMove.getTo(),
+                        currentMove.getPlayerTo(),
                         currentMove.getModelColor());
                 break;
             case MOVE:

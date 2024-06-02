@@ -43,7 +43,7 @@ public class GUI extends Thread {
     private volatile SecondPhasePanel secondPhasePanel;
     private Thread loaderThread;
     private Queue<Action> eventsToView;
-    private Queue<Action> eventsToModel;
+    public Queue<Action> eventsToModel;
     public MenuPanel mP;
     
     public GUI(Kube k3, GUIControllers controllers, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
