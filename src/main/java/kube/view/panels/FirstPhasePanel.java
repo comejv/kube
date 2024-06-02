@@ -389,6 +389,8 @@ public class FirstPhasePanel extends JPanel {
             if (numberOfPieces > 0) {
                 hex.setActionable(true);
                 toGlow.add(hex);
+            } else {
+                hex.setActionable(false);
             }
         }
         animationGlow.setToRedraw(toGlow);

@@ -88,7 +88,7 @@ public class HexIcon extends Icon {
             g2d.drawImage(getImage(), rop, (int) offsetX, (int) offsetY);
         } else if (color != null) { // Draw the original image
             g2d.drawImage(getImage(), (int) offsetX, (int) offsetY, null);
-        } 
+        }
     }
 
     private static String getImageName(ModelColor color) {
