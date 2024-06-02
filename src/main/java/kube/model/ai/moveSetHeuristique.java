@@ -67,6 +67,7 @@ public class moveSetHeuristique extends MiniMaxAI {
     @Override
     public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
         if (movesMap == null || movesMap.size() == 0) {
+            Config.debug("movesMap is null or empty, movesMap:", movesMap);
             ArrayList<Move> moves = k3.moveSet();
             return moves.get(getRandom().nextInt(moves.size()));
         }

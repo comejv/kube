@@ -187,18 +187,16 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
         map = new HashMap<>();
         moves = kube.moveSet();
 
-        // Loop until timers end
         for (Move m : moves) {
-
             if (getNoMoreTime()) {
                 return null;
             }
-
             kube.playMove(m);
             minValue = Integer.MIN_VALUE;
             maxValue = Integer.MAX_VALUE;
             map.put(m, miniMaxRec(kube.clone(), horizon, minValue, maxValue));
             kube.unPlay();
+
         }
         return map;
     }
@@ -214,25 +212,19 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
      */
     public int miniMaxRec(Kube kube, int horizon, int alpha, int beta) {
 
-        ArrayList<Move> moves;
-        int bestScore, score, evalValue, evalOtherPlayerValue;
-        Player player;
-        boolean hasNotPenlaity, hasNotMoves;
-
-        // Check if the timer is ended
+        // Timer's end
         if (getNoMoreTime()) {
             return -1;
         }
 
-        player = kube.getCurrentPlayer();
+        ArrayList<Move> moves;
+        int bestScore, score;
+        Player player;
 
+        player = kube.getCurrentPlayer();
         // Avoid evaluation of penality moves, because that false the game state
-        hasNotPenlaity = !kube.getPenality() && horizon <= 0;
-        hasNotMoves = (moves = kube.moveSet()).size() == 0;
-        if (hasNotPenlaity || hasNotMoves) {
-            evalValue = evaluation(kube, getPlayer(kube));
-            evalOtherPlayerValue = evaluation(kube, getOtherPlayer(kube));
-            return evalValue - evalOtherPlayerValue;
+        if (!kube.getPenality() && horizon <= 0 || (moves = kube.moveSet()).size() == 0) {
+            return evaluation(kube, getPlayer(kube)) - evaluation(kube, getOtherPlayer(kube));
         } else {
             if (player == getPlayer(kube)) {
                 bestScore = Integer.MIN_VALUE;
@@ -240,29 +232,24 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
                 bestScore = Integer.MAX_VALUE;
             }
             for (Move m : moves) {
-
                 kube.playMove(m);
                 score = miniMaxRec(kube, horizon - 1, alpha, beta);
-
-                // Check if the timer is ended
-                if (getNoMoreTime()) {
+                if (getNoMoreTime()) { // Timer's end
                     return -1;
                 }
                 kube.unPlay();
-
-                // Max node
+                // Noeud max 
                 if (player == getPlayer(kube)) {
                     bestScore = Math.max(score, bestScore);
                     alpha = Math.max(score, alpha);
-                    if (beta <= alpha) {
+                    if (beta <= alpha){
                         break;
                     }
-                }
-                // Min node
-                else {
+                // Noeud min
+                } else {
                     bestScore = Math.min(score, bestScore);
                     beta = Math.min(score, beta);
-                    if (beta <= alpha) {
+                    if (beta <= alpha){
                         break;
                     }
                 }
@@ -320,8 +307,7 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
         getTimer().start();
 
         horizon = 2;
-        solution = null;
-        moveMap = null;
+        solution = moveMap = null;
 
         while (true) {
             moveMap = miniMax(kube.clone(), horizon);
@@ -329,7 +315,7 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
                 if (solution == null) {
                     return selectMove(moveMap, kube);
                 } else {
-                    return selectMove(moveMap, kube);
+                    return selectMove(solution, kube);
                 }
             } else {
                 solution = moveMap;

@@ -78,7 +78,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 // MENU
                 case START:
-                    eventsToModel.add(new Action(ActionType.START, new Start()));
+                    eventsToModel.add(new Action(ActionType.START, new Start(new moveSetHeuristique())));
                     gui.setGlassPanelVisible(true);
                     break;
                 case PLAY_LOCAL:
