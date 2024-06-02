@@ -45,6 +45,7 @@ public enum ActionType {
     SAVE,
     LOAD,
     AI_MOVE,
+    AI_PAUSE,
     CREATE_MOVE,
 
     /**********

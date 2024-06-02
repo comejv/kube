@@ -37,9 +37,10 @@ public class FirstPhasePanel extends JPanel {
     private JPanel[][] moutainPanels; // TODO : rename symbol to fix typo
     private HashMap<String, JButton> buttonsMap;
     private Dimension oldSize;
-
+    private Queue<Action> eventsToModel;
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
+        this.eventsToModel = eventsToModel;
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
@@ -206,7 +207,6 @@ public class FirstPhasePanel extends JPanel {
             actionable = numberOfPieces > 0;
             mini.add(new HexIcon(c, actionable, 1.5));
             mini.add(numOfPieces);
-            Config.debug("Ajout hexa en position ", x, y);
             gbc.gridx = x;
             gbc.gridy = y;
             x++;
@@ -436,7 +436,10 @@ public class FirstPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow, k3.getCurrentPlayer() == k3.getP1());
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !", 
+                gui, 
+                animationGlow, 
+                k3.getCurrentPlayer() == k3.getP1());
     }
 
     public void winMessage(Action a) {
@@ -445,6 +448,8 @@ public class FirstPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow);
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !", 
+                gui, 
+                animationGlow);
     }
 }

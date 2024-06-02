@@ -5,6 +5,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
+import kube.model.action.Action;
+import kube.model.action.ActionType;
+import kube.model.action.Queue;
 import kube.view.GUI;
 import kube.view.panels.TransparentPanel;
 
@@ -22,6 +25,7 @@ public class Message implements ActionListener {
     }
 
     public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow, boolean onlyDecreasing) {
+        gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, true));
         if (onlyDecreasing) {
             opacity = 1;
             increasingState = 0;
@@ -57,6 +61,7 @@ public class Message implements ActionListener {
             panel.setVisible(false);
             gui.removeAllFromOverlay();
             hexGlow.getTimer().restart();
+            gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, false));
             timer.stop();
         } else {
             if (!firstTimeStable) {

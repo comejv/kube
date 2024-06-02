@@ -28,7 +28,6 @@ public class Phase1Controller implements ActionListener, MouseListener, Componen
     }
 
     public void actionPerformed(ActionEvent evt) {
-        Config.debug("Action performed in FirstPhaseController");
         switch (evt.getActionCommand()) {
             case "validate":
                 toModel.add(new Action(ActionType.VALIDATE));
@@ -81,7 +80,6 @@ public class Phase1Controller implements ActionListener, MouseListener, Componen
 
     public void mouseEntered(MouseEvent e) {
         Object source = e.getSource();
-        Config.debug("Mouse entered");
         if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_HOVERED, source));
         }
