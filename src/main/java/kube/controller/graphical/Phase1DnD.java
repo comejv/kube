@@ -4,21 +4,18 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Config;
 import kube.model.action.*;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
-public class Phase1DnD implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class Phase1DnD extends MouseAdapter {
     // TODO : refactor this class to make it more readable
     private Queue<Action> toView;
     private Queue<Action> toModel;

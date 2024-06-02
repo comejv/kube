@@ -1,5 +1,6 @@
 package kube.view.panels;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -30,6 +31,7 @@ import kube.model.action.move.*;
 import kube.view.GUI;
 import kube.view.GUIColors;
 import kube.view.animations.HexGlow;
+import kube.view.animations.Message;
 import kube.view.animations.panelGlow;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
@@ -292,13 +294,14 @@ public class SecondPhasePanel extends JPanel {
 
     private void updateText() {
         if (k3.getPenality()) {
+            penalityMessage();
             gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    "Au tour de " + k3.getCurrentPlayer().getName() + " de résoudre une pénalité",
+                    k3.getCurrentPlayer().getName() + " volez une pièce à votre adversaire",
                     TitledBorder.CENTER, TitledBorder.TOP,
                     new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
         } else {
             gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    "Au tour de " + k3.getCurrentPlayer().getName() + " de jouer une de ses pièces",
+                    k3.getCurrentPlayer().getName() + " jouez sur la montagne commune",
                     TitledBorder.CENTER, TitledBorder.TOP,
                     new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
         }
@@ -575,7 +578,31 @@ public class SecondPhasePanel extends JPanel {
         }
 
         animationPanelGlow.setToRedraw(glowPan);
+    }
 
+    public void startMessage() {
+        TransparentPanel transparentPanel = new TransparentPanel("");
+        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
+        transparentPanel.setVisible(false);
+        gui.addToOverlay(transparentPanel);
+        new Message(transparentPanel, "Le " + k3.getCurrentPlayer().getName() + " commence !", gui, animationHexGlow);
+    }
+
+    public void penalityMessage() {
+        TransparentPanel transparentPanel = new TransparentPanel("", true);
+        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
+        transparentPanel.setVisible(false);
+        gui.addToOverlay(transparentPanel);
+        new Message(transparentPanel, "Pénalité à l'avantage du " + k3.getCurrentPlayer().getName(), gui, animationHexGlow);
+    }
+
+    public void winMessage(Action a) {
+        Player winner = (Player) a.getData();
+        TransparentPanel transparentPanel = new TransparentPanel("");
+        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
+        transparentPanel.setVisible(false);
+        gui.addToOverlay(transparentPanel);
+        new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow);
     }
 
     public void updateHexSize() {

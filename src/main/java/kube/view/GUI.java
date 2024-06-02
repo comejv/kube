@@ -8,6 +8,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.GraphicsEnvironment;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
@@ -121,6 +122,7 @@ public class GUI extends Thread {
                 firstPhasePanel.setWaitingButton();
                 setGlassPaneController(new Phase2DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE2);
+                secondPhasePanel.startMessage();
                 secondPhasePanel.updateAll();
                 mF.showPanel(PHASE2);
                 firstPhasePanel.resetButtonValue();
@@ -187,6 +189,14 @@ public class GUI extends Thread {
         return mF.getOverlayComponent();
     }
 
+    public MouseAdapter getCurrentListener(){
+        return getMainFrame().getCurrentListener();
+    }
+
+    public MouseAdapter getDefaultGlassPaneController(){
+        return getMainFrame().getDefaultGlassPaneController();
+    }
+
     public GUIControllers getControllers() {
         return controllers;
     }
@@ -211,8 +221,16 @@ public class GUI extends Thread {
         mF.createGlassPane();
     }
 
-    public void setGlassPaneController(Phase1DnD ma) {
+    public void setGlassPaneController(MouseAdapter ma) {
         mF.setGlassPaneController(ma);
+    }
+
+    public Phase1DnD getGlassPaneController() {
+        if (mF.getGlassPane().getMouseListeners() == null) {
+            return null;
+        } else {
+            return new Phase1DnD(eventsToView, eventsToModel);
+        }
     }
 
     public void setGlassPanelVisible(boolean b) {
@@ -286,6 +304,10 @@ public class GUI extends Thread {
 
     public void resetUIScale() {
         mF.resetUIScale();
+    }
+
+    public void winMessage(Action a){
+        secondPhasePanel.winMessage(a);
     }
 
     public void updateHexSize() {
