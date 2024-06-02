@@ -90,6 +90,7 @@ public enum ActionType {
     RETURN_TO_MENU,
     DND_START,
     DND_STOP,
+    UPDATE_HEX_SIZE,
 
     // --- Menu ---
 

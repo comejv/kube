@@ -284,4 +284,9 @@ public class GUI extends Thread {
     public void resetUIScale() {
         mF.resetUIScale();
     }
+
+    public void updateHexSize() {
+        Config.debug("Update hex size");
+        // firstPhasePanel.updateHexSize(30);
+    }
 }

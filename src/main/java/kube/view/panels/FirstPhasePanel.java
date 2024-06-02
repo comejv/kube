@@ -257,8 +257,8 @@ public class FirstPhasePanel extends JPanel {
             }
         }
 
-        constructPanel
-                .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+        constructPanel.setBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne",
                         TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
@@ -329,6 +329,7 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap.get("Validate").setEnabled(false);
     }
 
+    // TODO : remove ?
     public void updateDnd(Action a) {
 
     }
@@ -344,5 +345,16 @@ public class FirstPhasePanel extends JPanel {
             }
         }
         animationGlow.setToRedraw(toGlow);
+    }
+
+    public void updateHexSize() {
+        // HexIcon.setStaticSize(size);
+        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                JPanel panel = moutainPanels[i][j];
+                HexIcon h = (HexIcon) panel.getComponents()[0];
+                h.updateSize();
+            }
+        }
     }
 }
