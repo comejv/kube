@@ -13,7 +13,6 @@ import java.awt.image.RescaleOp;
  * This class will have subclasses for all the buttons used.
  */
 public class Buttons {
-
     // TODO : refactor this class to make it more readable
     public static class MenuButton extends JButton {
         public MenuButton(String name) {
@@ -30,6 +29,8 @@ public class Buttons {
 
     // TODO : maybe not in buttons ?
     public static class SelectPlayerButton extends JPanel {
+        public int buttonValue;
+
         public SelectPlayerButton(String name) {
             setLayout(new GridBagLayout());
             setPreferredSize(new Dimension(Config.INIT_WIDTH / 2,
@@ -82,11 +83,13 @@ public class Buttons {
             leftButton.addActionListener(e -> {
                 currentIndex[0] = (currentIndex[0] - 1 + players.length) % players.length;
                 displayLabel.setText(players[currentIndex[0]]);
+                buttonValue = currentIndex[0];
             });
 
             rightButton.addActionListener(e -> {
                 currentIndex[0] = (currentIndex[0] + 1) % players.length;
                 displayLabel.setText(players[currentIndex[0]]);
+                buttonValue = currentIndex[0];
             });
 
             selectComp.setMaximumSize(new Dimension(150, 40));
@@ -97,6 +100,9 @@ public class Buttons {
 
         }
 
+        public int getButtonValue(){
+            return buttonValue;
+        }
     }
 
     public static class GamePhaseButton extends JButton {

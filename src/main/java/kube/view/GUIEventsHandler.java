@@ -7,9 +7,11 @@ import kube.configuration.Config;
 import kube.controller.graphical.Phase1DnD;
 import kube.model.Kube;
 import kube.model.action.*;
+import kube.model.ai.MiniMaxAI;
 import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.components.Buttons.SelectPlayerButton;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
 
@@ -83,7 +85,21 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 // MENU
                 case START:
-                    eventsToModel.add(new Action(ActionType.START, new Start()));
+                    SelectPlayerButton p1 = (SelectPlayerButton) gui.mP.player1;
+                    SelectPlayerButton p2 = (SelectPlayerButton) gui.mP.player2;
+                    MiniMaxAI iaJ1, iaJ2;
+                    if (p1.buttonValue == 0) {
+                        iaJ1 = null;
+                    } else {
+                        iaJ1 = new moveSetHeuristique();
+                    }
+                    if (p2.buttonValue == 0) {
+                        iaJ2 = null;
+                    } else {
+                        iaJ2 = new moveSetHeuristique();
+                    }
+                    eventsToModel.add(new Action(ActionType.START,
+                            new Start(iaJ1, iaJ2)));
                     gui.setGlassPanelVisible(true);
                     break;
                 case PLAY_LOCAL:

@@ -44,7 +44,8 @@ public class GUI extends Thread {
     private Thread loaderThread;
     private Queue<Action> eventsToView;
     private Queue<Action> eventsToModel;
-
+    public MenuPanel mP;
+    
     public GUI(Kube k3, GUIControllers controllers, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
@@ -89,7 +90,7 @@ public class GUI extends Thread {
         // new MainFrame
         mF = new MainFrame();
         // add menu pannel
-        MenuPanel mP = new MenuPanel(this, controllers.getMenuController());
+        mP = new MenuPanel(this, controllers.getMenuController());
         mF.addPanel(mP, MENU);
 
         if (Config.SHOW_BORDERS) {

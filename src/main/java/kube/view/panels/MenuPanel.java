@@ -32,6 +32,7 @@ public class MenuPanel extends JPanel {
     // TODO : refactor this class to make it more readable
     private GUI gui;
     private JButton rules;
+    public JPanel player1, player2;
 
     public MenuPanel(GUI gui, MenuController buttonListener) {
         this.gui = gui;
@@ -163,9 +164,9 @@ public class MenuPanel extends JPanel {
         buttonsGBC.insets = insets;
 
         
-        JPanel player1 = new SelectPlayerButton("JOUEUR 1");
-        JPanel player2 = new SelectPlayerButton("JOUEUR 2");
-
+        player1 = new SelectPlayerButton("JOUEUR 1");
+        player2 = new SelectPlayerButton("JOUEUR 2");
+        
         playersButtons.add(player1, buttonsGBC);
         playersButtons.add(player2, buttonsGBC);
 
