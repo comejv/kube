@@ -1,5 +1,6 @@
 package kube.view.panels;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -602,7 +603,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void penalityMessage() {
-        TransparentPanel transparentPanel = new TransparentPanel("");
+        TransparentPanel transparentPanel = new TransparentPanel("", true);
         transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);

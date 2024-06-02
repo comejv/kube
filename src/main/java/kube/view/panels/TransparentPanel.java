@@ -12,8 +12,15 @@ public class TransparentPanel extends JPanel {
     private String text;
     private Image backgroundImage, scaledBackground;
     private Font panelFont; // Font variable to store the custom font
+    private Boolean noImage;
+
+    public TransparentPanel(String text, Boolean noImage) {
+        this(text);
+        this.noImage = true;
+    }
 
     public TransparentPanel(String text) {
+        this.noImage = false;
         this.text = text;
         opacity = 0;
         backgroundImage = ResourceLoader.getBufferedImage("background");
@@ -43,7 +50,13 @@ public class TransparentPanel extends JPanel {
         Config.debug("Start redraw", opacity);
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
-        g2d.drawImage(scaledBackground, 0, 0, this);
+        if (noImage) {
+            Config.debug("no image");
+            g2d.setColor(new Color(128, 128, 128, (int)(opacity * 255 / 2))); // Set the grey color with the specified opacity
+            g2d.fillRect(0, 0, getWidth(), getHeight()); // Fill the component with the grey color
+        } else {
+            g2d.drawImage(scaledBackground, 0, 0, this);
+        }
         // g2d.drawImage(backgroundImage, 0, 0, this);
 
         // g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
