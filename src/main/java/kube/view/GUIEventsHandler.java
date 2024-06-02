@@ -134,6 +134,8 @@ public class GUIEventsHandler implements Runnable {
                 case REDO:
                     gui.updateSecondPanel(action);
                     break;
+                case PRINT_STATE: // Ignore this action
+                    break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;
