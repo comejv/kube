@@ -1,1 +1,1 @@
-Lors de la 2ème phase, quand c'est à votre tour, vous devez placer l'un de vos hexagones accessibles sur la pyramide centrale. La seule condition est qu'au moins l'une des deux bases soit de la même couleur que votre pion.
+Lors de la seconde phase, vous devrez placer vos pièces sur la pyramide centrale ce, à tour de rôle avec votre adversaire. La seule condition étant qu’au moins l’une des deux bases soit de la même couleur que votre pièce. 
