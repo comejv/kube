@@ -87,8 +87,7 @@ public class GUIEventsHandler implements Runnable {
                     // TODO : maybe tell model about it ?
                     break;
                 case RULES:
-                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController()
-                                                      , action.getType()));
+                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
                     gui.setGlassPanelVisible(true);
                     break;
                 case NEXT_RULE:
@@ -106,8 +105,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController()
-                                                      , action.getType()));
+                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
                     gui.setGlassPanelVisible(true);
                     break;
                 case CONFIRMED_SETTINGS:
@@ -132,6 +130,9 @@ public class GUIEventsHandler implements Runnable {
                 case UNDO:
                 case REDO:
                     gui.updateSecondPanel(action);
+                    break;
+                case UPDATE_HEX_SIZE:
+                    gui.updateHexSize();
                     break;
                 case PRINT_STATE: // Ignore this action
                     break;

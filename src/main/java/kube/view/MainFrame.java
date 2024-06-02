@@ -13,7 +13,6 @@ import javax.swing.OverlayLayout;
 
 import kube.configuration.Config;
 import kube.controller.graphical.Phase1DnD;
-import kube.view.components.HexIcon;
 import kube.view.components.Icon;
 import kube.view.panels.GlassPanel;
 
@@ -36,7 +35,7 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
-        setMinimumSize(new Dimension((int) (Config.INIT_WIDTH / 1.5), Config.INIT_HEIGHT));
+        setMinimumSize(new Dimension((int) (Config.INIT_WIDTH / 1.5), (int) (Config.INIT_HEIGHT / 1.5)));
         setLocationRelativeTo(null);
         framePanel = (JPanel) getContentPane();
         OverlayLayout overlay = new OverlayLayout(framePanel);

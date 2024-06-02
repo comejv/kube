@@ -2,9 +2,7 @@ package kube.view.animations;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
 
-import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import kube.configuration.Config;

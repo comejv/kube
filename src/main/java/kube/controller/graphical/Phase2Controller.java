@@ -2,6 +2,8 @@ package kube.controller.graphical;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -15,7 +17,7 @@ import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.configuration.Config;
 
-public class Phase2Controller implements ActionListener, MouseListener {
+public class Phase2Controller implements ActionListener, MouseListener, ComponentListener {
     // TODO : refactor this class to make it more readable
     private Queue<Action> toView;
     private Queue<Action> toModel;
@@ -67,7 +69,7 @@ public class Phase2Controller implements ActionListener, MouseListener {
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_PRESSED, source));
-            } 
+            }
         }
     }
 
@@ -76,7 +78,7 @@ public class Phase2Controller implements ActionListener, MouseListener {
         if (SwingUtilities.isLeftMouseButton(e)) {
             if (source instanceof ButtonIcon) {
                 toView.add(new Action(ActionType.SET_BUTTON_RELEASED, source));
-            } 
+            }
         }
     }
 
@@ -84,13 +86,29 @@ public class Phase2Controller implements ActionListener, MouseListener {
         Object source = e.getSource();
         if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_HOVERED, source));
-        } 
+        }
     }
 
     public void mouseExited(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof ButtonIcon) {
             toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
-        } 
+        }
+    }
+
+    public void componentResized(ComponentEvent e) {
+        toView.add(new Action(ActionType.UPDATE_HEX_SIZE));
+    }
+
+    public void componentMoved(ComponentEvent e) {
+
+    }
+
+    public void componentShown(ComponentEvent e) {
+
+    }
+
+    public void componentHidden(ComponentEvent e) {
+
     }
 }

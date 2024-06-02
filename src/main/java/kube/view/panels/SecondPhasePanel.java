@@ -49,6 +49,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] p2Panels;
     private JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private JButton undoButton, redoButton;
+    private Dimension oldSize;
 
     private HexGlow animationHexGlow;
     private panelGlow animationPanelGlow;
@@ -89,6 +90,8 @@ public class SecondPhasePanel extends JPanel {
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 15, 20, 15);
         add(gamePanel, gbc);
+
+        oldSize = getSize();
     }
 
     private JPanel createEastPanel(Phase2Controller a) {
@@ -613,5 +616,53 @@ public class SecondPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow);
+    }
+
+    public void updateHexSize() {
+        Dimension newSize = this.getSize();
+        if (isSignificantChange(oldSize, newSize)) {
+            // Update the static size of HexIcon based on new size
+            int newHexSize = calculateNewHexSize(newSize);
+            Config.debug("Set hex size to ", newHexSize);
+            HexIcon.setStaticSize(newHexSize);
+
+            // Loop through panels and update hex size
+            for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+                for (int j = 0; j < i + 1; j++) {
+                    JPanel panel = k3Panels[i][j];
+                    HexIcon h = (HexIcon) panel.getComponents()[0];
+                    h.updateSize();
+                    panel = p1Panels[i][j];
+                    h = (HexIcon) panel.getComponents()[0];
+                    h.updateSize();
+                    panel = p2Panels[i][j];
+                    h = (HexIcon) panel.getComponents()[0];
+                    h.updateSize();
+                    for (Component c : p1Additionnals.getComponents()) {
+                        h = (HexIcon) c;
+                        h.updateSize();
+                    }
+                    for (Component c : p2Additionnals.getComponents()) {
+                        HexIcon hex = (HexIcon) c;
+                        hex.setActionable(false);
+                    }
+                }
+            }
+
+            // Update the old size to the new size
+            oldSize = newSize;
+            revalidate();
+        }
+    }
+
+    private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
+        int threshold = 100;
+        return Math.abs(newSize.height - oldSize.height) > threshold;
+    }
+
+    private int calculateNewHexSize(Dimension newSize) {
+        double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;
+        int newHexSize = (int) (50 * scaleFactor); // Assuming initial hex size was 40
+        return newHexSize;
     }
 }

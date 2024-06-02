@@ -4,8 +4,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
@@ -27,8 +25,8 @@ public class HexIcon extends Icon {
     private ModelColor color;
     private Player player;
 
-    private static final int WIDTH = 40;
-    private static final int HEIGHT = 40;
+    private static int WIDTH = 40;
+    private static int HEIGHT = 40;
     private static final int SCALE = 1;
 
     private double scale;
@@ -128,6 +126,10 @@ public class HexIcon extends Icon {
         resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
     }
 
+    public final void updateSize() {
+        resizeIcon((int) (WIDTH * scale), (int) (HEIGHT * scale));
+    }
+
     public final double getScale() {
         return scale;
     }
@@ -200,6 +202,11 @@ public class HexIcon extends Icon {
 
     public void setPlayer(Player p) {
         player = p;
+    }
+
+    public static final void setStaticSize(int s) {
+        HexIcon.HEIGHT = s;
+        HexIcon.WIDTH = s;
     }
 
     public String toString() {
