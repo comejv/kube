@@ -11,7 +11,6 @@ import java.awt.event.MouseWheelEvent;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Config;
 import kube.model.action.*;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;

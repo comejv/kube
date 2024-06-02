@@ -6,8 +6,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -15,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.OverlayLayout;
 
 import kube.configuration.Config;
-import kube.controller.graphical.Phase1DnD;
+import kube.configuration.ResourceLoader;
 import kube.view.components.Icon;
 import kube.view.panels.GlassPanel;
 
@@ -35,7 +33,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         setTitle("KUBE");
-        // setIconImage(); for later
+        setIconImage(ResourceLoader.getBufferedImage("hexaBlueTextured"));
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));

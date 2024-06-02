@@ -9,7 +9,6 @@ import java.awt.image.RescaleOp;
 import kube.configuration.ResourceLoader;
 import kube.model.ModelColor;
 import kube.model.Player;
-import kube.configuration.Config;
 
 public class HexIcon extends Icon {
 

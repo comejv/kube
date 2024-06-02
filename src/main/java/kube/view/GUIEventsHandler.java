@@ -2,10 +2,8 @@ package kube.view;
 
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseListener;
 
 import kube.configuration.Config;
-import kube.controller.graphical.Phase1DnD;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.MiniMaxAI;
