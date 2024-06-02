@@ -102,7 +102,7 @@ public class Buttons {
     public static class GamePhaseButton extends JButton {
         public GamePhaseButton(String name) {
             super(name);
-            setPreferredSize(new Dimension(200, 50));
+            setPreferredSize(new Dimension(300, 50));
             setBackground(GUIColors.ACCENT.toColor());
             setForeground(GUIColors.TEXT.toColor());
             setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT * Config.getUIScale() / 20)));

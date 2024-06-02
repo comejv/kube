@@ -135,6 +135,8 @@ public class GUIEventsHandler implements Runnable {
                 case UPDATE_HEX_SIZE:
                     gui.updateHexSize();
                     break;
+                case PRINT_STATE: // Ignore this action
+                    break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;

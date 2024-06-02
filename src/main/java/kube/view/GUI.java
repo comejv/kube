@@ -113,7 +113,7 @@ public class GUI extends Thread {
         switch (k3.getPhase()) {
             case Kube.PREPARATION_PHASE:
                 setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
-                waitPanel(PHASE1);
+                firstPhasePanel.buildMessage();
                 firstPhasePanel.updateAll(true);
                 mF.showPanel(PHASE1);
                 loadPanel(PHASE2);

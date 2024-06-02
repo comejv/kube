@@ -46,10 +46,6 @@ public class FirstPhasePanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(GUIColors.GAME_BG.toColor());
 
-        // Create a JLayeredPane
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
-
         // Create the main panel that holds other components
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
@@ -79,15 +75,7 @@ public class FirstPhasePanel extends JPanel {
         mainPanel.add(gamePanel, gbc);
 
         // Add main panel to the layered pane
-        layeredPane.add(mainPanel, JLayeredPane.DEFAULT_LAYER);
-
-        // Create and add the transparent panel on top
-        transparentPanel = new TransparentPanel("Test");
-        transparentPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
-        layeredPane.add(transparentPanel, JLayeredPane.PALETTE_LAYER);
-        transparentPanel.setVisible(false);
-        // Add layered pane to this panel
-        add(layeredPane, BorderLayout.CENTER);
+        add(mainPanel);
 
         animationGlow = new HexGlow();
     }
@@ -120,34 +108,46 @@ public class FirstPhasePanel extends JPanel {
     private JPanel initButtons() {
         buttonsMap = new HashMap<>();
         JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(4, 1));
-        buttons.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, Config.INIT_HEIGHT / 5));
+        buttons.setLayout(new GridBagLayout());
+        buttons.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, Config.INIT_HEIGHT / 2));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
         JButton quitButton = new Buttons.GamePhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addMouseListener(controller);
-        buttons.add(quitButton);
         buttonsMap.put("Quit", quitButton);
+        GridBagConstraints elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 0;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(quitButton, elemGBC);
 
         JButton optButton = new Buttons.GamePhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addMouseListener(controller);
-        buttons.add(optButton);
         buttonsMap.put("Option", optButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 1;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(optButton, elemGBC);
 
         JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
         sugIaButton.setActionCommand("AI");
         sugIaButton.addMouseListener(controller);
-        buttons.add(sugIaButton);
         buttonsMap.put("AI", sugIaButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 2;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(sugIaButton, elemGBC);
 
         JButton validerButton = new Buttons.GamePhaseButton("Valider");
         validerButton.setEnabled(false);
         validerButton.setActionCommand("validate");
         validerButton.addMouseListener(controller);
-        buttons.add(validerButton);
         buttonsMap.put("Validate", validerButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 3;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(validerButton, elemGBC);
 
         return buttons;
     }
@@ -241,10 +241,6 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateAll(Boolean firstUpdate) {
         if (firstUpdate) {
-            boolean onlyDecreasing = k3.getCurrentPlayer() == k3.getP1();
-            new Message(transparentPanel,
-                    "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne", animationGlow,
-                    onlyDecreasing);
             if (k3.getCurrentPlayer() == k3.getP1()) {
                 topPanel.removeAll();
                 JLabel baseLabel = new JLabel("Base Centrale: ");
@@ -356,5 +352,16 @@ public class FirstPhasePanel extends JPanel {
                 h.updateSize();
             }
         }
+    }
+
+    public void buildMessage() {
+        transparentPanel = new TransparentPanel("");
+        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
+        transparentPanel.setVisible(false);
+        gui.addToOverlay(transparentPanel);
+        boolean onlyDecreasing = k3.getCurrentPlayer() == k3.getP1();
+        new Message(transparentPanel,
+                k3.getCurrentPlayer().getName() + " preparez votre montagne !", gui, animationGlow,
+                onlyDecreasing);
     }
 }
