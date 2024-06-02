@@ -29,9 +29,9 @@ public class Message implements ActionListener {
             decresingState = 20;
         } else {
             opacity = 0;
-            increasingState = 10;
-            stableState = 20;
-            decresingState = 10;
+            increasingState = 20;
+            stableState = 40;
+            decresingState = 20;
         }
         state = 0;
         this.panel = panel;

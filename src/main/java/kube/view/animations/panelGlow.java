@@ -16,12 +16,13 @@ import javax.swing.border.TitledBorder;
 
 import kube.configuration.Config;
 import kube.view.GUIColors;
+import kube.view.panels.SecondPhasePanel;
 
 public class panelGlow implements ActionListener {
     private Timer timer;
     private int yellowIntensity;
     private int state;
-    private HashMap<JPanel, Integer> toGlow;
+    private HashMap<JPanel, String> toGlow;
 
     public panelGlow() {
         yellowIntensity = 1;
@@ -30,7 +31,7 @@ public class panelGlow implements ActionListener {
         timer.start();
     }
 
-    public void setToRedraw(HashMap<JPanel, Integer> toGlow) {
+    public void setToRedraw(HashMap<JPanel, String> toGlow) {
         this.toGlow = toGlow;
     }
 
@@ -48,14 +49,14 @@ public class panelGlow implements ActionListener {
         yellowIntensity = Math.max(yellowIntensity, 0);
         if (toGlow != null){
             for (JPanel pan : toGlow.keySet()) {
-                if (toGlow.get(pan) > 0){ // additionnal pan
+                if (toGlow.containsKey(pan) && toGlow.get(pan).length() > 0){ // additionnal pan
                     LineBorder line = new LineBorder(new Color(255, 255, yellowIntensity),10);
-                    TitledBorder title = BorderFactory.createTitledBorder(line, "Pieces additionnelles du Joueur " + toGlow.get(pan) ,TitledBorder.CENTER, TitledBorder.TOP,
+                    TitledBorder title = BorderFactory.createTitledBorder(line, "Pieces additionnelles du " + toGlow.get(pan) ,TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 40));
                     pan.setBorder(title);
                 }
                 else {
-                    pan.setBorder(BorderFactory.createLineBorder (new Color(255, 255, yellowIntensity),10));
+                    pan.setBorder(BorderFactory.createLineBorder(new Color(255, 255, yellowIntensity),10));
                 }
                 pan.repaint();
             }

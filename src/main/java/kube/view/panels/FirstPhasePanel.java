@@ -33,7 +33,7 @@ public class FirstPhasePanel extends JPanel {
     private Phase1Controller controller;
     private GUI gui;
     private JPanel constructPanel, piecesPanel, gamePanel, topPanel;
-    private HashMap<ModelColor, JPanel> sidePanels;
+    private HashMap<ModelColor, JLabel> sidePanels;
     private JPanel[][] moutainPanels; // TODO : rename symbol to fix typo
     private HashMap<String, JButton> buttonsMap;
     private Dimension oldSize;
@@ -132,7 +132,7 @@ public class FirstPhasePanel extends JPanel {
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
         buttons.add(optButton, elemGBC);
 
-        JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
+        JButton sugIaButton = new Buttons.GamePhaseButton("Construction auto");
         sugIaButton.setActionCommand("AI");
         sugIaButton.addMouseListener(controller);
         buttonsMap.put("AI", sugIaButton);
@@ -215,7 +215,7 @@ public class FirstPhasePanel extends JPanel {
                 y++;
             }
             piecesPanel.add(mini, gbc);
-            sidePanels.put(c, mini); // add to hashmap for later update
+            sidePanels.put(c, numOfPieces); // add to hashmap for later update
         }
         JPanel jokers = new JPanel();
         jokers.setOpaque(false);
@@ -234,7 +234,7 @@ public class FirstPhasePanel extends JPanel {
         mini.add(new HexIcon(ModelColor.WHITE, actionable, 1.5));
         mini.add(numOfPieces);
         jokers.add(mini);
-        sidePanels.put(ModelColor.WHITE, mini); // add to hashmap for later update
+        sidePanels.put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
 
         // White
         mini = new JPanel();
@@ -246,7 +246,7 @@ public class FirstPhasePanel extends JPanel {
         mini.add(new HexIcon(ModelColor.NATURAL, actionable, 1.5));
         mini.add(numOfPieces);
         jokers.add(mini);
-        sidePanels.put(ModelColor.NATURAL, mini); // add to hashmap for later update
+        sidePanels.put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -283,15 +283,10 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateSide(ModelColor c) {
-        JPanel mini = sidePanels.get(c);
-        mini.removeAll();
+        JLabel lab = sidePanels.get(c);
         int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
-        JLabel numOfPieces = new JLabel("x" + numberOfPieces);
-        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-        mini.add(new HexIcon(c, false, 1.5));
-        mini.add(numOfPieces);
-        mini.revalidate();
-        mini.repaint();
+        lab.setText("x" + numberOfPieces);
+        lab.repaint();
     }
 
     public void updateAll(Boolean firstUpdate) {
@@ -387,8 +382,8 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateActionnable() {
         ArrayList<HexIcon> toGlow = new ArrayList<>();
-        for (JPanel pan : sidePanels.values()) {
-            HexIcon hex = (HexIcon) pan.getComponent(0);
+        for (JLabel pan : sidePanels.values()) {
+            HexIcon hex = (HexIcon) pan.getParent().getComponent(0);
             int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(hex.getColor());
             if (numberOfPieces > 0) {
                 hex.setActionable(true);
