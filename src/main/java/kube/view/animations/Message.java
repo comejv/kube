@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import kube.configuration.Config;
 import kube.view.GUI;
 import kube.view.panels.TransparentPanel;
 
@@ -69,6 +68,5 @@ public class Message implements ActionListener {
         }
         opacity = Math.max(opacity, 0);
         panel.setOpacity(opacity);
-        Config.debug(opacity, state);
     }
 }

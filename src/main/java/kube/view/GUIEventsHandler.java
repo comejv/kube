@@ -74,7 +74,8 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
-                    gui.showInfo("You won !", "Congratulations, you won the game !");
+                    gui.showInfo("You won !",
+                            "Congratulations, " + gui.getKube().getCurrentPlayer().getName() + " you won the game !");
                     break;
                 // MENU
                 case START:

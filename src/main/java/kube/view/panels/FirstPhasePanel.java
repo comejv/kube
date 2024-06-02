@@ -64,7 +64,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.insets = new Insets(0, 10, 0, 10);
         mainPanel.add(buttonsPanel, gbc);
 
-        JPanel gamePanel = gamePanel();
+        JPanel gamePanel = createGamePanel();
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 0;
@@ -83,7 +83,7 @@ public class FirstPhasePanel extends JPanel {
         this.oldSize = getSize();
     }
 
-    private JPanel gamePanel() {
+    private JPanel createGamePanel() {
         gamePanel = new JPanel();
         gamePanel.setLayout(new BorderLayout());
 
@@ -91,7 +91,7 @@ public class FirstPhasePanel extends JPanel {
         topPanel = new JPanel();
         topPanel.setBackground(GUIColors.GAME_BG_DARK.toColor());
         JLabel baseLabel = new JLabel("Base Centrale: ");
-        baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
+        baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         baseLabel.setForeground(GUIColors.TEXT.toColor());
         topPanel.add(baseLabel);
         for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
@@ -101,7 +101,7 @@ public class FirstPhasePanel extends JPanel {
         gamePanel.add(topPanel, BorderLayout.NORTH);
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
         initGrid();
-        gamePanel.add(constructPanel);
+        gamePanel.add(constructPanel, BorderLayout.CENTER);
         // SIDE BAR - PIECES AVAILABLE
         initSide();
         gamePanel.add(piecesPanel, BorderLayout.EAST);
@@ -188,19 +188,72 @@ public class FirstPhasePanel extends JPanel {
         sidePanels = new HashMap<>();
         piecesPanel = new JPanel();
         piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
-        piecesPanel.setLayout(new GridLayout(4, 2));
-        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
-            JPanel mini = new JPanel();
+        piecesPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+
+        int x = 0, y = 0, numberOfPieces;
+        boolean actionable;
+        JPanel mini;
+        JLabel numOfPieces;
+        for (ModelColor c : ModelColor.getAllColored()) {
+            mini = new JPanel();
             mini.setOpaque(false);
-            int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
-            JLabel numOfPieces = new JLabel("x" + numberOfPieces);
+            numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
+            numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-            boolean actionable = numberOfPieces > 0;
+            actionable = numberOfPieces > 0;
             mini.add(new HexIcon(c, actionable, 1.5));
             mini.add(numOfPieces);
-            piecesPanel.add(mini);
-            sidePanels.put(c, mini);
+            Config.debug("Ajout hexa en position ", x, y);
+            gbc.gridx = x;
+            gbc.gridy = y;
+            x++;
+            if (x > 1) {
+                x = 0;
+                y++;
+            }
+            piecesPanel.add(mini, gbc);
+            sidePanels.put(c, mini); // add to hashmap for later update
         }
+        JPanel jokers = new JPanel();
+        jokers.setOpaque(false);
+        jokers.setBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                        "Jokers", TitledBorder.CENTER, TitledBorder.TOP,
+                        new Font("Jomhuria", Font.PLAIN, 50), GUIColors.ACCENT.toColor()));
+
+        // White
+        mini = new JPanel();
+        mini.setOpaque(false);
+        numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(ModelColor.WHITE);
+        numOfPieces = new JLabel("x" + numberOfPieces);
+        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        actionable = numberOfPieces > 0;
+        mini.add(new HexIcon(ModelColor.WHITE, actionable, 1.5));
+        mini.add(numOfPieces);
+        jokers.add(mini);
+        sidePanels.put(ModelColor.WHITE, mini); // add to hashmap for later update
+
+        // White
+        mini = new JPanel();
+        mini.setOpaque(false);
+        numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(ModelColor.NATURAL);
+        numOfPieces = new JLabel("x" + numberOfPieces);
+        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        actionable = numberOfPieces > 0;
+        mini.add(new HexIcon(ModelColor.NATURAL, actionable, 1.5));
+        mini.add(numOfPieces);
+        jokers.add(mini);
+        sidePanels.put(ModelColor.NATURAL, mini); // add to hashmap for later update
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        piecesPanel.add(jokers, gbc);
+
         piecesPanel.revalidate();
         piecesPanel.repaint();
     }
@@ -353,18 +406,22 @@ public class FirstPhasePanel extends JPanel {
             int newHexSize = calculateNewHexSize(newSize);
             HexIcon.setStaticSize(newHexSize);
 
+            JPanel panel;
+            HexIcon h;
             // Loop through panels and update hex size
             for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {
-                    JPanel panel = moutainPanels[i][j];
-                    HexIcon h = (HexIcon) panel.getComponents()[0];
+                    panel = moutainPanels[i][j];
+                    h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
+                    // panel.setPreferredSize(h.getSize());
                 }
             }
 
             // Update the old size to the new size
             oldSize = newSize;
-            revalidate();
+            constructPanel.revalidate();
+            constructPanel.repaint();
         }
     }
 
@@ -375,7 +432,7 @@ public class FirstPhasePanel extends JPanel {
 
     private int calculateNewHexSize(Dimension newSize) {
         double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;
-        int newHexSize = (int) (50 * scaleFactor); // Assuming initial hex size was 40
+        int newHexSize = (int) (40 * scaleFactor);
         return newHexSize;
     }
 

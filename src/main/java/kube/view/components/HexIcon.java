@@ -4,7 +4,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
 import kube.configuration.ResourceLoader;
@@ -178,10 +177,6 @@ public class HexIcon extends Icon {
 
     public double getYOffset() {
         return offsetY;
-    }
-
-    public BufferedImage getImage() {
-        return super.getImage();
     }
 
     public ModelColor getColor() {

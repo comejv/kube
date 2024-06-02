@@ -74,7 +74,7 @@ public class Icon extends JLabel {
         repaint();
     }
 
-    protected BufferedImage getImage() {
+    public BufferedImage getImage() {
         return img;
     }
 
