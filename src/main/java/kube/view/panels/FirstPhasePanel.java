@@ -32,12 +32,13 @@ public class FirstPhasePanel extends JPanel {
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
-    private JPanel constructPanel, piecesPanel, gamePanel, topPanel;
-    private HashMap<ModelColor, JLabel> sidePanels;
+    private JPanel constructPanel, piecesPanel, gamePanel, topPanel, opponentPanel;
+    private HashMap<ModelColor, JLabel> sidePanels, opponentPiecesPanel;
     private JPanel[][] moutainPanels; // TODO : rename symbol to fix typo
     private HashMap<String, JButton> buttonsMap;
     private Dimension oldSize;
     private Queue<Action> eventsToModel;
+    private HashMap<ModelColor, Integer> p1Pieces;
 
     public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
@@ -54,16 +55,36 @@ public class FirstPhasePanel extends JPanel {
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
         mainPanel.setBackground(GUIColors.GAME_BG.toColor());
+
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridBagLayout());
         // Create buttons panel and game panel
         JPanel buttonsPanel = initButtons();
         buttonsPanel.setBackground(GUIColors.GAME_BG.toColor());
-
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        sidePanel.add(buttonsPanel, gbc);
+
+        // Panel opponentPanel = opponentsPieces();
+        opponentsPieces();
+        opponentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
+                new Font("Jomhuria", Font.PLAIN, 50), GUIColors.ACCENT.toColor()));
+        gbc = new GridBagConstraints();
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        sidePanel.add(opponentPanel, gbc);
+
+        gbc = new GridBagConstraints();
+        gbc.gridy = 0;
         gbc.gridx = 2;
+        gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.NORTHEAST;
         gbc.insets = new Insets(0, 10, 0, 10);
-        mainPanel.add(buttonsPanel, gbc);
+        mainPanel.add(sidePanel, gbc);
 
         JPanel gamePanel = createGamePanel();
         gbc = new GridBagConstraints();
@@ -104,6 +125,7 @@ public class FirstPhasePanel extends JPanel {
         initGrid();
         gamePanel.add(constructPanel, BorderLayout.CENTER);
         // SIDE BAR - PIECES AVAILABLE
+
         initSide();
         gamePanel.add(piecesPanel, BorderLayout.EAST);
         return gamePanel;
@@ -185,9 +207,75 @@ public class FirstPhasePanel extends JPanel {
         constructPanel.repaint();
     }
 
+    public void opponentsPieces() {
+        opponentPanel = new JPanel();
+        opponentPiecesPanel = new HashMap<>();
+        opponentPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
+        opponentPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        int x = 0, y = 0;
+        JPanel mini;
+        JLabel numOfPieces;
+        for (ModelColor c : ModelColor.getAllColored()) {
+            mini = new JPanel();
+            mini.setOpaque(false);
+            numOfPieces = new JLabel("x0");
+            numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+            mini.add(new HexIcon(c, false, 1.5));
+            mini.add(numOfPieces);
+            Config.debug("Ajout hexa en position ", x, y);
+            gbc.gridx = x;
+            gbc.gridy = y;
+            x++;
+            if (x > 1) {
+                x = 0;
+                y++;
+            }
+            opponentPanel.add(mini, gbc);
+            opponentPiecesPanel.put(c, numOfPieces); // add to hashmap for later update
+        }
+        JPanel jokers = new JPanel();
+        jokers.setOpaque(false);
+        jokers.setBorder(
+                BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                        "Jokers", TitledBorder.CENTER, TitledBorder.TOP,
+                        new Font("Jomhuria", Font.PLAIN, 50), GUIColors.ACCENT.toColor()));
+
+        // White
+        mini = new JPanel();
+        mini.setOpaque(false);
+        numOfPieces = new JLabel("x0");
+        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        mini.add(new HexIcon(ModelColor.WHITE, false, 1.5));
+        mini.add(numOfPieces);
+        jokers.add(mini);
+        opponentPiecesPanel.put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
+
+        // White
+        mini = new JPanel();
+        mini.setOpaque(false);
+        numOfPieces = new JLabel("x0");
+        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        mini.add(new HexIcon(ModelColor.NATURAL, false, 1.5));
+        mini.add(numOfPieces);
+        jokers.add(mini);
+        opponentPiecesPanel.put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
+
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;
+        opponentPanel.add(jokers, gbc);
+
+        opponentPanel.revalidate();
+        opponentPanel.repaint();
+    }
+
     public void initSide() {
-        sidePanels = new HashMap<>();
         piecesPanel = new JPanel();
+        sidePanels = new HashMap<>();
         piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
         piecesPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -290,7 +378,34 @@ public class FirstPhasePanel extends JPanel {
         lab.repaint();
     }
 
+    public void updateOpponent() {
+        if (k3.getCurrentPlayer() == k3.getP1()) {
+            p1Pieces = new HashMap<>(k3.getP1().getAvailableToBuild());
+            for (int i = 0; i < k3.getP1().getMountain().getBaseSize(); i++) {
+                for (int j = 0; j < i + 1; j++) {
+                    ModelColor c = k3.getP1().getMountain().getCase(i, j);
+                    if (c != ModelColor.EMPTY) {
+                        p1Pieces.put(c, p1Pieces.get(c) + 1);
+                    }
+                }
+            }
+        }
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+            JLabel label = opponentPiecesPanel.get(c);
+            int numberOfPieces = 0;
+            if (k3.getCurrentPlayer() == k3.getP1()) {
+                numberOfPieces = k3.getP2().getAvailableToBuild().get(c);
+            } else {
+                numberOfPieces = p1Pieces.get(c);
+            }
+            label.setText("x" + numberOfPieces);
+            label.repaint();
+        }
+
+    }
+
     public void updateAll(Boolean firstUpdate) {
+        updateOpponent();
         if (firstUpdate) {
             if (k3.getCurrentPlayer() == k3.getP1()) {
                 topPanel.removeAll();
@@ -303,7 +418,6 @@ public class FirstPhasePanel extends JPanel {
                 }
             }
         }
-
         constructPanel.setBorder(
                 BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne",
@@ -318,9 +432,6 @@ public class FirstPhasePanel extends JPanel {
             for (int j = 0; j < i + 1; j++) {
                 updateGrid(i, j);
             }
-        }
-        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
-            updateSide(c);
         }
         buttonsMap.get("AI").setEnabled(true);
         updateButton();
