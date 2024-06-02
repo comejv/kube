@@ -154,7 +154,11 @@ public class HexIcon extends Icon {
     }
 
     public void setBrightness(float brightness) {
-        this.brightness = brightness;
+        if (getColor() == ModelColor.RED){
+            this.brightness = brightness * 1.2f;
+        } else {
+            this.brightness = brightness;
+        }
     }
 
     public boolean isPressed() {
