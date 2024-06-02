@@ -115,34 +115,46 @@ public class FirstPhasePanel extends JPanel {
     private JPanel initButtons() {
         buttonsMap = new HashMap<>();
         JPanel buttons = new JPanel();
-        buttons.setLayout(new GridLayout(4, 1));
-        buttons.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, Config.INIT_HEIGHT / 5));
+        buttons.setLayout(new GridBagLayout());
+        buttons.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, Config.INIT_HEIGHT / 2));
         buttons.setBackground(GUIColors.GAME_BG.toColor());
 
         JButton quitButton = new Buttons.GamePhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
         quitButton.addMouseListener(controller);
-        buttons.add(quitButton);
         buttonsMap.put("Quit", quitButton);
+        GridBagConstraints elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 0;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(quitButton, elemGBC);
 
         JButton optButton = new Buttons.GamePhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addMouseListener(controller);
-        buttons.add(optButton);
         buttonsMap.put("Option", optButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 1;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(optButton, elemGBC);
 
         JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
         sugIaButton.setActionCommand("AI");
         sugIaButton.addMouseListener(controller);
-        buttons.add(sugIaButton);
         buttonsMap.put("AI", sugIaButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 2;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(sugIaButton, elemGBC);
 
         JButton validerButton = new Buttons.GamePhaseButton("Valider");
         validerButton.setEnabled(false);
         validerButton.setActionCommand("validate");
         validerButton.addMouseListener(controller);
-        buttons.add(validerButton);
         buttonsMap.put("Validate", validerButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 3;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(validerButton, elemGBC);
 
         return buttons;
     }
