@@ -9,8 +9,6 @@ import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JPanel;
 
-import org.w3c.dom.events.MouseEvent;
-
 import kube.configuration.Config;
 import kube.controller.graphical.MenuController;
 import kube.model.action.ActionType;
