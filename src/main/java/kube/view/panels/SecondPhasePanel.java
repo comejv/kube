@@ -353,12 +353,13 @@ public class SecondPhasePanel extends JPanel {
         if (k3.getHistory().canRedo()) {
             redoButton.setEnabled(true);
         }
-        if (a.getType() != ActionType.UNDO && k3.getPenality()) {
+        if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenality()) {
             penalityMessage();
         }
         if (!k3.getCurrentPlayer().isAI()) {
             sugAIButton.setEnabled(true);
         }
+        updatePanelGlow(true);
     }
 
     private void updateText() {
@@ -589,6 +590,7 @@ public class SecondPhasePanel extends JPanel {
         switch (a.getType()) {
             case DND_START:
                 HexIcon hex = (HexIcon) a.getData();
+                updatePanelGlow(true);
                 if (hex == null) {
                     updateVisible();
                 } else if (k3.getPenality()) {
@@ -607,7 +609,6 @@ public class SecondPhasePanel extends JPanel {
                         }
                     }
                 }
-                updatePanelGlow(true);
                 break;
             case DND_STOP:
                 updateVisible();
