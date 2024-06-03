@@ -28,7 +28,7 @@ import javax.swing.border.TitledBorder;
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
 public class FirstPhasePanel extends JPanel {
-    private HexGlow animationGlow;
+    public HexGlow animationGlow;
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
@@ -77,10 +77,10 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridy = 1;
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.BOTH;
-        gbc.weighty=1;
-        gbc.weightx=1;
-        gbc.gridheight=2;
-        gbc.gridwidth=1;
+        gbc.weighty = 1;
+        gbc.weightx = 1;
+        gbc.gridheight = 2;
+        gbc.gridwidth = 1;
         gbc.insets = new Insets(20, 0, 20, 0);
 
         sidePanel.add(opponentPanel, gbc);
@@ -90,7 +90,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridx = 2;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.NORTHEAST;
-        gbc.fill=GridBagConstraints.BOTH;
+        gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 10, 0, 10);
         mainPanel.add(sidePanel, gbc);
 
@@ -183,6 +183,16 @@ public class FirstPhasePanel extends JPanel {
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
         buttons.add(validerButton, elemGBC);
 
+        JButton saveButton = new Buttons.GamePhaseButton("Sauvegarder");
+        saveButton.setEnabled(true);
+        saveButton.setActionCommand("save");
+        saveButton.addMouseListener(controller);
+        buttonsMap.put("Save", saveButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 4;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(saveButton, elemGBC);
+
         return buttons;
     }
 
@@ -259,9 +269,9 @@ public class FirstPhasePanel extends JPanel {
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(ModelColor.WHITE, false, 1.5));
         mini.add(numOfPieces);
-        gbc.gridx=0;
-        gbc.gridy=0;
-        jokers.add(mini,gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        jokers.add(mini, gbc);
         opponentPiecesPanel.put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
 
         // White
@@ -271,9 +281,9 @@ public class FirstPhasePanel extends JPanel {
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(ModelColor.NATURAL, false, 1.5));
         mini.add(numOfPieces);
-        gbc.gridx=1;
-        gbc.gridy=0;
-        jokers.add(mini,gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        jokers.add(mini, gbc);
         opponentPiecesPanel.put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
 
         gbc.gridx = 0;
@@ -504,6 +514,8 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap.get("AI").setEnabled(true);
         buttonsMap.get("Validate").setText("Valider");
         buttonsMap.get("Validate").setEnabled(false);
+        buttonsMap.get("Save").setText("Sauvegarder");
+        buttonsMap.get("Save").setEnabled(true);
     }
 
     // TODO : remove ?
@@ -571,7 +583,7 @@ public class FirstPhasePanel extends JPanel {
 
         revalidate();
         repaint();
-        // }
+        gui.getOverlay().repaint();
     }
 
     // private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
@@ -598,17 +610,7 @@ public class FirstPhasePanel extends JPanel {
                 k3.getCurrentPlayer().getName() + " preparez votre montagne !",
                 gui,
                 animationGlow,
-                k3.getCurrentPlayer() == k3.getP1());
+                k3.getCurrentPlayer() == k3.getP1(), false);
     }
 
-    public void winMessage(Action a) {
-        TransparentPanel transparentPanel = new TransparentPanel("");
-        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
-        transparentPanel.setVisible(false);
-        gui.addToOverlay(transparentPanel);
-        new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !",
-                gui,
-                animationGlow);
-    }
 }

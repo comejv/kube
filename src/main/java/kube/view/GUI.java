@@ -25,6 +25,8 @@ import kube.controller.graphical.GUIControllers;
 import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
+import kube.view.animations.HexGlow;
+import kube.view.animations.PanelGlow;
 import kube.view.panels.*;
 
 public class GUI extends Thread {
@@ -323,5 +325,20 @@ public class GUI extends Thread {
                 Config.error("Unimplemented game phase for resize");
                 break;
         }
+    }
+
+    public void save(Action a) {
+        setGlassPanelVisible(false);
+        HexGlow hexGlow = null;
+        PanelGlow panGlow = null;
+        if ((Integer) a.getData() == 1) {
+            hexGlow = firstPhasePanel.animationGlow;
+        } else if ((Integer) a.getData() == 2) {
+            hexGlow = secondPhasePanel.animationHexGlow;
+            panGlow = secondPhasePanel.animationPanelGlow;
+        }
+        TextEntryPanel savePanel = new TextEntryPanel(this, hexGlow, panGlow);
+        savePanel.setPreferredSize(getMainFrame().getSize());
+        addToOverlay(savePanel);
     }
 }

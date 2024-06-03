@@ -45,7 +45,6 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
                 toModel.add(new Action(ActionType.REDO));
                 break;
             case "quit":
-                toModel.add(new Action(ActionType.SAVE, ""));
                 toModel.add(new Action(ActionType.RESET));
                 toView.add(new Action(ActionType.RETURN_TO_MENU));
                 break;
@@ -60,6 +59,9 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
             case "auto":
                 Config.debug("AI MOVE SEND");
                 toModel.add(new Action(ActionType.AI_MOVE));
+                break;
+            case "save":
+                toView.add(new Action(ActionType.SAVE, 2));
                 break;
             default:
                 break;
