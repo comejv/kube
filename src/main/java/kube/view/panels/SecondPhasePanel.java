@@ -33,6 +33,7 @@ import kube.view.GUIColors;
 import kube.view.animations.HexGlow;
 import kube.view.animations.Message;
 import kube.view.animations.PanelGlow;
+import kube.view.animations.winMsg;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
@@ -647,11 +648,11 @@ public class SecondPhasePanel extends JPanel {
 
     public void winMessage(Action a) {
         Player winner = (Player) a.getData();
-        TransparentPanel transparentPanel = new TransparentPanel("");
-        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
-        transparentPanel.setVisible(false);
-        gui.addToOverlay(transparentPanel);
-        new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow);
+        winPanel panel = new winPanel();
+        panel.setPreferredSize(gui.getMainFrame().getSize());
+        panel.setVisible(false);
+        gui.addToOverlay(panel);
+        new winMsg(panel, gui,"Victoire du " + winner.getName(),controller);
         repaint();
     }
 

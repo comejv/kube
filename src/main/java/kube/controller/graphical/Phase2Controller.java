@@ -49,6 +49,9 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
                 toModel.add(new Action(ActionType.RESET));
                 toView.add(new Action(ActionType.RETURN_TO_MENU));
                 break;
+            case "return":
+                toView.add(new Action(ActionType.RETURN_TO_GAME));
+                break;
 
             default:
                 break;

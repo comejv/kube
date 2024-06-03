@@ -70,9 +70,13 @@ public class GUIEventsHandler implements Runnable {
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
-                    gui.setGlassPanelVisible(false);
                     gui.setGlassPaneController(null);
+                    gui.removeAllFromOverlay();
                     gui.showPanel(GUI.MENU);
+                    break;
+                case RETURN_TO_GAME:
+                    gui.setGlassPaneController(null);
+                    gui.removeAllFromOverlay();
                     break;
                 case QUIT:
                     System.exit(0);
