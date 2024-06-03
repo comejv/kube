@@ -9,14 +9,17 @@ import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
 import kube.controller.graphical.MenuController;
 import kube.model.action.ActionType;
 import kube.view.GUI;
 
 public class OverlayPanel extends JPanel{
 
+    private GUI gui;
+
     public OverlayPanel(GUI gui, MenuController buttonListener, ActionType action){
+
+        this.gui = gui;
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(gui.getMainFrame().getWidth(), gui.getMainFrame().getHeight()));

@@ -28,6 +28,7 @@ import kube.view.components.Buttons.RulesButton;
 public class RulesPanel extends JPanel {
     // TODO : refactor this class to make it more readables
 
+    private GUI gui;
     private int width;
     private int height;
     private MenuController buttonListener;
@@ -43,6 +44,7 @@ public class RulesPanel extends JPanel {
     public RulesPanel(GUI gui, MenuController buttonListener) {
 
         this.buttonListener = buttonListener;
+        this.gui = gui;
 
         width = Math.round(gui.getMainFrame().getWidth() / 1.5f);
         height = Math.round(gui.getMainFrame().getHeight());
@@ -161,7 +163,7 @@ public class RulesPanel extends JPanel {
         private void addTextArea(int ruleNb) {
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
-            elemGBC.gridy = 1;
+            elemGBC.gridy = 2;
             elemGBC.anchor = GridBagConstraints.CENTER;
             elemGBC.fill = GridBagConstraints.BOTH;
             elemGBC.insets = new Insets(0, 30, 0, 30);
@@ -172,10 +174,10 @@ public class RulesPanel extends JPanel {
             if (rulesWithAnimNb.contains(ruleNb)) {
                 GridBagConstraints elemGBC = new GridBagConstraints();
                 elemGBC.gridx = 0;
-                elemGBC.gridy = 2;
+                elemGBC.gridy = 1;
                 elemGBC.anchor = GridBagConstraints.CENTER;
                 elemGBC.fill = GridBagConstraints.BOTH;
-                add(new AnimationPanel(ruleNb));
+                add(new AnimationPanel(ruleNb, gui));
             }
         }
         
@@ -204,7 +206,7 @@ public class RulesPanel extends JPanel {
                 JButton previous = new RulesButton("Précédent");
                 GridBagConstraints elemGBC = new GridBagConstraints();
                 elemGBC.gridx = 0;
-                elemGBC.gridy = 2;
+                elemGBC.gridy = 3;
                 elemGBC.anchor = GridBagConstraints.LAST_LINE_START;
                 elemGBC.weightx = .5;
                 elemGBC.weighty = .5;
@@ -222,10 +224,10 @@ public class RulesPanel extends JPanel {
         private int updatedWidth;
         private int updatedHeight;
 
-        private AnimationPanel(int ruleNb){
+        private AnimationPanel(int ruleNb, GUI gui){
             frames = new JLabel[4];
-            updatedWidth = 500;
-            updatedHeight = 300;
+            updatedWidth = Math.round(gui.getMainFrame().getWidth() / 2.25f);
+            updatedHeight = Math.round(gui.getMainFrame().getHeight() / 2.25f);
             for (int i = 0; i < 4; i++) {
                 Image image = ResourceLoader.getBufferedImage("animations/animation" + ruleNb + i);
                 Image resized = image.getScaledInstance(updatedWidth, updatedHeight, Image.SCALE_AREA_AVERAGING);
