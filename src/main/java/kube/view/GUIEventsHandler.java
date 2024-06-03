@@ -169,6 +169,9 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_STATE: // Ignore this action
                     break;
+                case SAVE:
+                    gui.save(action);
+                    break;
                 default:
                     Config.debug("Unrecognized action : " + action);
                     break;

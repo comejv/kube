@@ -283,6 +283,7 @@ public class Game implements Runnable {
                     }
                     break;
                 case SAVE:
+                    Config.debug("Save");
                     save(action.getData().toString());
                     break;
                 case RESET:

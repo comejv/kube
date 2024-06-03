@@ -28,7 +28,7 @@ import javax.swing.border.TitledBorder;
  * This class extends JPanel and creates the GUI for the first phase of the game.
  */
 public class FirstPhasePanel extends JPanel {
-    private HexGlow animationGlow;
+    public HexGlow animationGlow;
     private Kube k3;
     private Phase1Controller controller;
     private GUI gui;
@@ -182,6 +182,16 @@ public class FirstPhasePanel extends JPanel {
         elemGBC.gridy = 3;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
         buttons.add(validerButton, elemGBC);
+
+        JButton saveButton = new Buttons.GamePhaseButton("Sauvegarder");
+        saveButton.setEnabled(true);
+        saveButton.setActionCommand("save");
+        saveButton.addMouseListener(controller);
+        buttonsMap.put("Save", saveButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 4;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(saveButton, elemGBC);
 
         return buttons;
     }
@@ -504,6 +514,8 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap.get("AI").setEnabled(true);
         buttonsMap.get("Validate").setText("Valider");
         buttonsMap.get("Validate").setEnabled(false);
+        buttonsMap.get("Save").setText("Sauvegarder");
+        buttonsMap.get("Save").setEnabled(true);
     }
 
     // TODO : remove ?

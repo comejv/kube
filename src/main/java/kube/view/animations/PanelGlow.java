@@ -30,6 +30,10 @@ public class PanelGlow implements ActionListener {
         this.toGlow = toGlow;
     }
 
+    public Timer getTimer() {
+        return timer;
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         state = state + 1;
@@ -42,16 +46,16 @@ public class PanelGlow implements ActionListener {
             state = 0;
         }
         yellowIntensity = Math.max(yellowIntensity, 0);
-        if (toGlow != null){
+        if (toGlow != null) {
             for (JPanel pan : toGlow.keySet()) {
-                if (toGlow.containsKey(pan) && toGlow.get(pan).length() > 0){ // additionnal pan
-                    LineBorder line = new LineBorder(new Color(255, 255, yellowIntensity),10);
-                    TitledBorder title = BorderFactory.createTitledBorder(line, "Pieces additionnelles du " + toGlow.get(pan) ,TitledBorder.CENTER, TitledBorder.TOP,
-                        new Font("Jomhuria", Font.PLAIN, 40));
+                if (toGlow.containsKey(pan) && toGlow.get(pan).length() > 0) { // additionnal pan
+                    LineBorder line = new LineBorder(new Color(255, 255, yellowIntensity), 10);
+                    TitledBorder title = BorderFactory.createTitledBorder(line,
+                            "Pieces additionnelles du " + toGlow.get(pan), TitledBorder.CENTER, TitledBorder.TOP,
+                            new Font("Jomhuria", Font.PLAIN, 40));
                     pan.setBorder(title);
-                }
-                else {
-                    pan.setBorder(BorderFactory.createLineBorder(new Color(255, 255, yellowIntensity),10));
+                } else {
+                    pan.setBorder(BorderFactory.createLineBorder(new Color(255, 255, yellowIntensity), 10));
                 }
                 pan.repaint();
             }

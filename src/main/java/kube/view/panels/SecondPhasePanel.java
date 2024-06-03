@@ -57,8 +57,8 @@ public class SecondPhasePanel extends JPanel {
     private Dimension oldSize;
     private JButton pauseAi, sugAIButton;
 
-    private HexGlow animationHexGlow;
-    private PanelGlow animationPanelGlow;
+    public HexGlow animationHexGlow;
+    public PanelGlow animationPanelGlow;
     // TODO : set hex in middle of pyra not actionable
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
