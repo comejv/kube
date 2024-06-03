@@ -68,7 +68,7 @@ public class MenuController implements ActionListener, MouseListener {
                 toView.add(new Action(ActionType.END_OVERLAY_MENU));
                 break;
             case "loadmenu":
-                toView.add(new Action(ActionType.SETTINGS, true));
+                toView.add(new Action(ActionType.LOAD_PANEL));
                 break;
             default:
                 break;

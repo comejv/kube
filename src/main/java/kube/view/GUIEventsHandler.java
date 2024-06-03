@@ -138,10 +138,6 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case SETTINGS:
                     OverlayPanel settings = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
-                    if (action.getData() != null){
-                        SettingsPanel s = (SettingsPanel) settings.getComponent(0);
-                        s.loadPanel();
-                    }
                     gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
@@ -171,17 +167,23 @@ public class GUIEventsHandler implements Runnable {
                 case AI_PAUSE:
                     gui.updateSecondPanel(action);
                     break;
+                case LOAD_PANEL:
+                    OverlayPanel loadMenu = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    gui.addToOverlay(loadMenu);
+                    setSavedGlassPaneController(gui.getCurrentListener());
+                    gui.setGlassPaneController(gui.getDefaultGlassPaneController());
+                    gui.setGlassPanelVisible(true);
+                    break;
                 case LOAD_FILE_SELECTED:
                     OverlayPanel op = (OverlayPanel) gui.getOverlay().getComponent(0);
-                    SettingsPanel sp = (SettingsPanel) op.getComponent(0);
-                    LoadPanel lp = (LoadPanel) sp.getTabbedPanel().getComponent(3);
+                    LoadPanel lp = (LoadPanel) op.getComponent(0);
                     lp.enableLoadButton();
                     lp.enableDeleteButton();
                     break;
                 case UPDATE_HEX_SIZE:
                     gui.updateHexSize();
                     break;
-                case PRINT_STATE: // Ignore this action
+                case PRINT_STATE:
                     break;
                 case SAVE:
                     gui.save(action);

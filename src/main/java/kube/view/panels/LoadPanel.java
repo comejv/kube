@@ -24,7 +24,7 @@ public class LoadPanel extends JPanel {
     private int height;
     private JList<String> fileList;
 
-    public LoadPanel(GUI gui, MenuController buttonListener, boolean inSettings) {
+    public LoadPanel(GUI gui, MenuController buttonListener) {
 
         File folder = new File("saves/");
         File[] listOfFiles = folder.listFiles((dir, name) -> name.endsWith(".ser"));
