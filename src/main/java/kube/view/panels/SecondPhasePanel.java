@@ -49,10 +49,12 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
     private JPanel[] k3invisibles;
+    private JPanel leftWhiteDrop;
+    private JPanel rightwhiteDrop;
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private JButton undoButton, redoButton;
     private Dimension oldSize;
-    private JButton pauseAi;
+    private JButton pauseAi, sugAIButton;
 
     private HexGlow animationHexGlow;
     private PanelGlow animationPanelGlow;
@@ -118,11 +120,12 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(optButton, gbc);
 
-        JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
-        sugIaButton.addMouseListener(a);
+        sugAIButton = new Buttons.GamePhaseButton("Coup auto");
+        sugAIButton.setActionCommand("auto");
+        sugAIButton.addMouseListener(a);
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(sugIaButton, gbc);
+        panel.add(sugAIButton, gbc);
 
         pauseAi = new Buttons.GamePhaseButton("Pause Kubot");
         pauseAi.setVisible(false);
@@ -300,6 +303,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void update(Action a) {
+        sugAIButton.setEnabled(false);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
         if (a.getType() == ActionType.AI_PAUSE) {
@@ -350,6 +354,9 @@ public class SecondPhasePanel extends JPanel {
         }
         if (a.getType() != ActionType.UNDO && k3.getPenality()) {
             penalityMessage();
+        }
+        if (!k3.getCurrentPlayer().isAI()) {
+            sugAIButton.setEnabled(true);
         }
     }
 
@@ -406,6 +413,7 @@ public class SecondPhasePanel extends JPanel {
                 }
             }
         }
+        sugAIButton.setEnabled(!k3.getCurrentPlayer().isAI());
         updateHisto();
         updateAdditionnals(k3.getP1());
         updateAdditionnals(k3.getP2());
@@ -522,6 +530,14 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
             if (p == null) {
+                /*if (i == 8) {
+                    leftWhiteDrop = new JPanel();
+                    leftWhiteDrop.setOpaque(false);
+                    HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
+                    leftWhiteDrop.add(hex);
+                    lineHexa.add(leftWhiteDrop);
+                }
+                */
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 HexIcon hex = new HexIcon(null, false, p);
@@ -548,6 +564,18 @@ public class SecondPhasePanel extends JPanel {
                 hexa.add(new HexIcon(null, false, p));
                 k3invisibles[i - 1] = hexa;
                 lineHexa.add(hexa);
+                /*if (i == 8) {
+                    rightwhiteDrop = new JPanel();
+                    rightwhiteDrop.setBorder(
+                            BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                    "Passer", TitledBorder.CENTER, TitledBorder.TOP,
+                                    new Font("Jomhuria", Font.PLAIN, 20), GUIColors.ACCENT.toColor()));
+                    rightwhiteDrop.setOpaque(false);
+                    HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
+                    rightwhiteDrop.add(hex);
+                    lineHexa.add(rightwhiteDrop);
+                }
+                */
             }
             gbc.gridx = 0;
             gbc.gridy = i;
