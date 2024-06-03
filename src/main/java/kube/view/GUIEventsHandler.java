@@ -11,8 +11,10 @@ import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
+import kube.view.panels.LoadPanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
+import kube.view.panels.SettingsPanel;
 
 public class GUIEventsHandler implements Runnable {
     // TODO : refactor this class to make it more readable
@@ -130,12 +132,13 @@ public class GUIEventsHandler implements Runnable {
                     rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.previousRule();
                     break;
-                case END_RULE:
+                case END_OVERLAY_MENU:
                     gui.removeAllFromOverlay();
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
+                    OverlayPanel settings = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
                     gui.setGlassPanelVisible(true);
@@ -164,10 +167,23 @@ public class GUIEventsHandler implements Runnable {
                 case AI_PAUSE:
                     gui.updateSecondPanel(action);
                     break;
+                case LOAD_PANEL:
+                    OverlayPanel loadMenu = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    gui.addToOverlay(loadMenu);
+                    setSavedGlassPaneController(gui.getCurrentListener());
+                    gui.setGlassPaneController(gui.getDefaultGlassPaneController());
+                    gui.setGlassPanelVisible(true);
+                    break;
+                case LOAD_FILE_SELECTED:
+                    OverlayPanel op = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    LoadPanel lp = (LoadPanel) op.getComponent(0);
+                    lp.enableLoadButton();
+                    lp.enableDeleteButton();
+                    break;
                 case UPDATE_HEX_SIZE:
                     gui.updateHexSize();
                     break;
-                case PRINT_STATE: // Ignore this action
+                case PRINT_STATE:
                     break;
                 case SAVE:
                     gui.save(action);

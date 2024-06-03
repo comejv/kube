@@ -56,7 +56,7 @@ public class SettingsPanel extends JPanel {
 
         JPanel audioPanel = createTab("Audio");
         addFillerPanel(audioPanel);
-
+        
         setVisible(true);
     }
 
@@ -150,6 +150,10 @@ public class SettingsPanel extends JPanel {
         }
     }
 
+    public JTabbedPane getTabbedPanel() {
+        return tabbedPanel;
+    }
+
     private void wrapInJPanel(Component c, GridBagConstraints elemGBC,
             JPanel container) {
         JPanel wraper = new JPanel(new GridBagLayout());
@@ -164,5 +168,9 @@ public class SettingsPanel extends JPanel {
 
     private void setTabNb(int newTabNb) {
         tabNb = newTabNb;
+    }
+
+    public void loadPanel(){
+        tabbedPanel.setSelectedIndex(2);
     }
 }

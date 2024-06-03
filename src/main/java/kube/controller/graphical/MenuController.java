@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import javax.swing.JList;
 import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
@@ -17,10 +18,12 @@ public class MenuController implements ActionListener, MouseListener {
     // TODO : refactor this class to make it more readable
     Queue<Action> toView;
     Queue<Action> toModel;
+    String selectedFile;
 
     public MenuController(Queue<Action> toView, Queue<Action> toModel) {
         this.toView = toView;
         this.toModel = toModel;
+        selectedFile = null;
     }
 
     public void actionPerformed(ActionEvent evt) {
@@ -43,9 +46,6 @@ public class MenuController implements ActionListener, MouseListener {
             case "previousRule":
                 toView.add(new Action(ActionType.PREVIOUS_RULE));
                 break;
-            case "endRule":
-                toView.add(new Action(ActionType.END_RULE));
-                break;
             case "quit":
                 toView.add(new Action(ActionType.QUIT));
                 break;
@@ -57,6 +57,18 @@ public class MenuController implements ActionListener, MouseListener {
                 break;
             case "confirmed_settings":
                 toView.add(new Action(ActionType.CONFIRMED_SETTINGS));
+                break;
+            case "endRule":
+            case "return":
+                toView.add(new Action(ActionType.END_OVERLAY_MENU));
+                break;
+            case "load":
+                toModel.add(new Action(ActionType.RESET));
+                toModel.add(new Action(ActionType.LOAD, selectedFile));
+                toView.add(new Action(ActionType.END_OVERLAY_MENU));
+                break;
+            case "loadmenu":
+                toView.add(new Action(ActionType.LOAD_PANEL));
                 break;
             default:
                 break;
@@ -72,14 +84,25 @@ public class MenuController implements ActionListener, MouseListener {
                     Config.debug("Settings clicked");
                     toView.add(new Action(ActionType.SETTINGS));
                     break;
-
                 case "volume":
                     Config.debug("Volume clicked");
                     toView.add(new Action(ActionType.VOLUME));
                     break;
-
                 default:
                     Config.error("Unrecognised buttonIcon action.");
+                    break;
+            }
+        } else if (source instanceof JList) {
+            JList<?> list = (JList<?>) source;
+            switch (list.getName()) {
+                case "fileList":
+                    selectedFile = (String) list.getSelectedValue();
+                    if (selectedFile != null) {
+                        toView.add(new Action(ActionType.LOAD_FILE_SELECTED));
+                    }
+                    break;
+                default:
+                    Config.error("Unrecognised JList action.");
                     break;
             }
         }

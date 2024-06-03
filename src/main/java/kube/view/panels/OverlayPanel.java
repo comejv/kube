@@ -19,7 +19,7 @@ public class OverlayPanel extends JPanel{
     public OverlayPanel(GUI gui, MenuController buttonListener, ActionType action){
 
         setLayout(new GridBagLayout());
-        setPreferredSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
+        setPreferredSize(gui.getMainFrame().getSize());
         setBackground(new Color(0, 0, 0, 150));
 
         GridBagConstraints center = new GridBagConstraints();
@@ -28,6 +28,9 @@ public class OverlayPanel extends JPanel{
         switch (action) {
             case SETTINGS:
                 add(new SettingsPanel(gui, buttonListener), center);
+                break;
+            case LOAD_PANEL:
+                add(new LoadPanel(gui, buttonListener), center);
                 break;
             case RULES:
                 add(new RulesPanel(gui, buttonListener), center);

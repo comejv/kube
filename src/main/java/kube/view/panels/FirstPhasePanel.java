@@ -193,6 +193,16 @@ public class FirstPhasePanel extends JPanel {
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
         buttons.add(saveButton, elemGBC);
 
+        JButton loadButton = new Buttons.GamePhaseButton("Charger");
+        loadButton.setEnabled(true);
+        loadButton.setActionCommand("load");
+        loadButton.addMouseListener(controller);
+        buttonsMap.put("Load", loadButton);
+        elemGBC = new GridBagConstraints();
+        elemGBC.gridy = 5;
+        elemGBC.fill = GridBagConstraints.HORIZONTAL;
+        buttons.add(loadButton, elemGBC);
+
         return buttons;
     }
 
