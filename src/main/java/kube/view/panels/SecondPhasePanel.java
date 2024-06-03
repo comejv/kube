@@ -697,11 +697,13 @@ public class SecondPhasePanel extends JPanel {
                     panel = p1Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    panel.setPreferredSize(h.getSize());
+                    panel.removeAll();
+                    panel.add(h);
                     panel = p2Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    panel.setPreferredSize(h.getSize());
+                    panel.removeAll();
+                    panel.add(h);
                 }
             }
             for (int i = 0; i < k3Panels.length; i++) {
@@ -709,7 +711,8 @@ public class SecondPhasePanel extends JPanel {
                     panel = k3Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    panel.setPreferredSize(h.getSize());
+                    panel.removeAll();
+                    panel.add(h);
                 }
             }
             for (Component c : p1Additionnals.getComponents()) {
