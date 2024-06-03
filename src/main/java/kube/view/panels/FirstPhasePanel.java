@@ -58,6 +58,7 @@ public class FirstPhasePanel extends JPanel {
 
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
+        sidePanel.setOpaque(false);
         // Create buttons panel and game panel
         JPanel buttonsPanel = initButtons();
         buttonsPanel.setBackground(GUIColors.GAME_BG.toColor());
@@ -71,11 +72,17 @@ public class FirstPhasePanel extends JPanel {
         opponentsPieces();
         opponentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                 " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
-                new Font("Jomhuria", Font.PLAIN, 50), GUIColors.ACCENT.toColor()));
+                new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
         gbc = new GridBagConstraints();
         gbc.gridy = 1;
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty=1;
+        gbc.weightx=1;
+        gbc.gridheight=2;
+        gbc.gridwidth=1;
+        gbc.insets = new Insets(20, 0, 20, 0);
+
         sidePanel.add(opponentPanel, gbc);
 
         gbc = new GridBagConstraints();
@@ -83,6 +90,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridx = 2;
         gbc.gridwidth = 2;
         gbc.anchor = GridBagConstraints.NORTHEAST;
+        gbc.fill=GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 10, 0, 10);
         mainPanel.add(sidePanel, gbc);
 
@@ -238,6 +246,7 @@ public class FirstPhasePanel extends JPanel {
             opponentPiecesPanel.put(c, numOfPieces); // add to hashmap for later update
         }
         JPanel jokers = new JPanel();
+        jokers.setLayout(new GridBagLayout());
         jokers.setOpaque(false);
         jokers.setBorder(
                 BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
@@ -251,7 +260,9 @@ public class FirstPhasePanel extends JPanel {
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(ModelColor.WHITE, false, 1.5));
         mini.add(numOfPieces);
-        jokers.add(mini);
+        gbc.gridx=0;
+        gbc.gridy=0;
+        jokers.add(mini,gbc);
         opponentPiecesPanel.put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
 
         // White
@@ -261,7 +272,9 @@ public class FirstPhasePanel extends JPanel {
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         mini.add(new HexIcon(ModelColor.NATURAL, false, 1.5));
         mini.add(numOfPieces);
-        jokers.add(mini);
+        gbc.gridx=1;
+        gbc.gridy=0;
+        jokers.add(mini,gbc);
         opponentPiecesPanel.put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
 
         gbc.gridx = 0;
