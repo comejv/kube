@@ -6,10 +6,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.util.HashSet;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -20,6 +19,7 @@ import javax.swing.SwingConstants;
 
 import kube.view.GUI;
 import kube.view.GUIColors;
+import kube.view.animations.AnimatedRule;
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
@@ -44,9 +44,8 @@ public class RulesPanel extends JPanel {
 
         this.buttonListener = buttonListener;
 
-        width = Math.round(Config.INIT_WIDTH / 1.5f);
-        height = Math.round(Config.INIT_HEIGHT / 1.25f);
-
+        width = Math.round(gui.getMainFrame().getWidth() / 1.5f);
+        height = Math.round(gui.getMainFrame().getHeight());
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(width, height));
@@ -176,7 +175,7 @@ public class RulesPanel extends JPanel {
                 elemGBC.gridy = 2;
                 elemGBC.anchor = GridBagConstraints.CENTER;
                 elemGBC.fill = GridBagConstraints.BOTH;
-                add(new AnimatedRule(ruleNb));
+                add(new AnimationPanel(ruleNb));
             }
         }
         
@@ -214,41 +213,35 @@ public class RulesPanel extends JPanel {
                 previous.setActionCommand("previousRule");
                 add(previous, elemGBC);
             }
-            
         }
     }
 
-    private class AnimatedRule extends JPanel {
+    public class AnimationPanel extends JPanel{
 
         private JLabel[] frames;
-        private int currentFrame;
-        private Timer timer;
+        private int updatedWidth;
+        private int updatedHeight;
 
-        private AnimatedRule (int ruleNb){
+        private AnimationPanel(int ruleNb){
             frames = new JLabel[4];
-            currentFrame = 0;
+            updatedWidth = 500;
+            updatedHeight = 300;
             for (int i = 0; i < 4; i++) {
-                ImageIcon image = new ImageIcon(ResourceLoader.getBufferedImage
-                    ("animations/animation" + ruleNb + i));
-                JLabel frame = new JLabel(image);
+                Image image = ResourceLoader.getBufferedImage("animations/animation" + ruleNb + i);
+                Image resized = image.getScaledInstance(updatedWidth, updatedHeight, Image.SCALE_AREA_AVERAGING);
+                JLabel frame = new JLabel(new ImageIcon(resized));
+                frame.setPreferredSize(new Dimension(updatedWidth, updatedHeight));
                 if(i > 0){
                     frame.setVisible(false);
                 }
                 frames[i] = frame;
                 add(frame);
-                Config.debug("animation créée");
             }
-            TimerTask changeImage = new TimerTask() {
-                @Override
-                public void run() {
-                    Config.debug(currentFrame);
-                    frames[currentFrame].setVisible(false);
-                    currentFrame = (currentFrame + 1) %4;
-                    frames[currentFrame].setVisible(true);
-                }
-            };
-            timer = new Timer();
-            timer.schedule(changeImage, 500, 500);
+            new AnimatedRule(ruleNb, this);
         }
-    }
+
+        public JLabel[] getFrames(){
+            return frames;
+        }
+    } 
 }
