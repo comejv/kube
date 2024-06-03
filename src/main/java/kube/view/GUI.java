@@ -331,9 +331,9 @@ public class GUI extends Thread {
         setGlassPanelVisible(false);
         HexGlow hexGlow = null;
         PanelGlow panGlow = null;
-        if ((Boolean) a.getData()){
+        if ((Integer) a.getData() == 1) {
             hexGlow = firstPhasePanel.animationGlow;
-        } else {
+        } else if ((Integer) a.getData() == 2) {
             hexGlow = secondPhasePanel.animationHexGlow;
             panGlow = secondPhasePanel.animationPanelGlow;
         }

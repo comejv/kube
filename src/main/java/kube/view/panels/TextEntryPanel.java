@@ -117,7 +117,9 @@ public class TextEntryPanel extends JPanel {
         // Add resizing listener to adjust font size and button size dynamically
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
+                Config.debug("hum");
                 adjustSizes();
+                repaint();
             }
         });
     }

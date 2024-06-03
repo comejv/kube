@@ -19,13 +19,15 @@ public class Message implements ActionListener {
     private HexGlow hexGlow;
     private boolean firstTimeStable;
     private GUI gui;
-
+    private boolean aiAlreadyPaused;
     public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow) {
-        this(panel, text, gui, hexGlow, false);
+        this(panel, text, gui, hexGlow, false, false);
     }
 
-    public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow, boolean onlyDecreasing) {
-        gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, true));
+    public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow, boolean onlyDecreasing, boolean aiAlreadyPaused) {
+        if (!aiAlreadyPaused){
+            gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, true));
+        }
         if (onlyDecreasing) {
             opacity = 1;
             increasingState = 0;
@@ -38,6 +40,7 @@ public class Message implements ActionListener {
             decresingState = 20;
         }
         state = 0;
+        this.aiAlreadyPaused = aiAlreadyPaused;
         this.panel = panel;
         this.firstTimeStable = true;
         this.timer = new Timer(2000 / (increasingState + stableState + decresingState), this);
@@ -61,7 +64,9 @@ public class Message implements ActionListener {
             panel.setVisible(false);
             gui.removeAllFromOverlay();
             hexGlow.getTimer().restart();
-            gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, false));
+            if (!aiAlreadyPaused){
+                gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, false));
+            }
             timer.stop();
         } else {
             if (!firstTimeStable) {

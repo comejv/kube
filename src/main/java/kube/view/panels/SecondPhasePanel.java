@@ -701,8 +701,9 @@ public class SecondPhasePanel extends JPanel {
         transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
+        boolean aiAlreadyPaused = pauseAi.getText() == "Reprendre Kubot";
         new Message(transparentPanel, "Pénalité à l'avantage du " + k3.getCurrentPlayer().getName(), gui,
-                animationHexGlow);
+                animationHexGlow, false, aiAlreadyPaused);
     }
 
     public void winMessage(Action a) {
@@ -711,7 +712,8 @@ public class SecondPhasePanel extends JPanel {
         transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
-        new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow);
+        boolean aiAlreadyPaused = pauseAi.getText() == "Reprendre Kubot";
+        new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow, false, aiAlreadyPaused);
         repaint();
     }
 
