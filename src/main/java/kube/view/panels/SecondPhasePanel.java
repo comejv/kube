@@ -530,14 +530,14 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
             if (p == null) {
-                /*if (i == 8) {
+                if (i == 8) {
                     leftWhiteDrop = new JPanel();
                     leftWhiteDrop.setOpaque(false);
                     HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
                     leftWhiteDrop.add(hex);
                     lineHexa.add(leftWhiteDrop);
                 }
-                */
+                
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 HexIcon hex = new HexIcon(null, false, p);
@@ -564,7 +564,7 @@ public class SecondPhasePanel extends JPanel {
                 hexa.add(new HexIcon(null, false, p));
                 k3invisibles[i - 1] = hexa;
                 lineHexa.add(hexa);
-                /*if (i == 8) {
+                if (i == 8) {
                     rightwhiteDrop = new JPanel();
                     rightwhiteDrop.setBorder(
                             BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
@@ -575,7 +575,7 @@ public class SecondPhasePanel extends JPanel {
                     rightwhiteDrop.add(hex);
                     lineHexa.add(rightwhiteDrop);
                 }
-                */
+                
             }
             gbc.gridx = 0;
             gbc.gridy = i;
