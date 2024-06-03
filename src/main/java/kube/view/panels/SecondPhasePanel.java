@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.lang.module.Configuration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -208,7 +209,7 @@ public class SecondPhasePanel extends JPanel {
         }
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
-            if (playableColors.contains(hex.getColor())) {
+            if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
                 hex.setActionable(true);
                 hexToGlow.add(hex);
             }
@@ -216,7 +217,7 @@ public class SecondPhasePanel extends JPanel {
         for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
-                if (playableColors.contains(hex.getColor())) {
+                if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
                     hex.setActionable(true);
                     hexToGlow.add(hex);
                 }
@@ -530,14 +531,16 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
             if (p == null) {
+
                 if (i == 8) {
                     leftWhiteDrop = new JPanel();
                     leftWhiteDrop.setOpaque(false);
                     HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
                     leftWhiteDrop.add(hex);
+                    leftWhiteDrop.setVisible(false);
                     lineHexa.add(leftWhiteDrop);
                 }
-                
+
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 HexIcon hex = new HexIcon(null, false, p);
@@ -566,16 +569,13 @@ public class SecondPhasePanel extends JPanel {
                 lineHexa.add(hexa);
                 if (i == 8) {
                     rightwhiteDrop = new JPanel();
-                    rightwhiteDrop.setBorder(
-                            BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                                    "Passer", TitledBorder.CENTER, TitledBorder.TOP,
-                                    new Font("Jomhuria", Font.PLAIN, 20), GUIColors.ACCENT.toColor()));
                     rightwhiteDrop.setOpaque(false);
                     HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
                     rightwhiteDrop.add(hex);
+                    rightwhiteDrop.setVisible(false);
                     lineHexa.add(rightwhiteDrop);
                 }
-                
+
             }
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -600,8 +600,11 @@ public class SecondPhasePanel extends JPanel {
                             h.setVisible(true);
                         }
                     } else {
-                        HexIcon h = (HexIcon) k3Panels[0][0].getComponent(0);
-                        h.setVisible(true);
+                        if (k3.getCurrentPlayer() == k3.getP1()) {
+                            leftWhiteDrop.setVisible(true);
+                        } else {
+                            rightwhiteDrop.setVisible(true);
+                        }
                     }
                 }
                 updatePanelGlow(true);
@@ -609,6 +612,8 @@ public class SecondPhasePanel extends JPanel {
             case DND_STOP:
                 updateVisible();
                 updatePanelGlow(false);
+                leftWhiteDrop.setVisible(false);
+                rightwhiteDrop.setVisible(false);
                 break;
             default:
                 break;
@@ -713,48 +718,64 @@ public class SecondPhasePanel extends JPanel {
     public void updateHexSize() {
         Dimension newSize = this.getSize();
         // if (isSignificantChange(oldSize, newSize)) {
-            // Update the static size of HexIcon based on new size
-            int newHexSize = calculateNewHexSize(newSize);
-            HexIcon.setStaticSize(newHexSize);
-            JPanel panel;
-            HexIcon h;
-            // Loop through panels and update hex size
-            for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    panel = p1Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.removeAll();
-                    panel.add(h);
-                    panel = p2Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.removeAll();
-                    panel.add(h);
-                }
-            }
-            for (int i = 0; i < k3Panels.length; i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    panel = k3Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.removeAll();
-                    panel.add(h);
-                }
-            }
-            for (Component c : p1Additionnals.getComponents()) {
-                h = (HexIcon) c;
+        // Update the static size of HexIcon based on new size
+        int newHexSize = calculateNewHexSize(newSize);
+        HexIcon.setStaticSize(newHexSize);
+        JPanel panel;
+        HexIcon h;
+        // Loop through panels and update hex size
+        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                panel = p1Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
                 h.updateSize();
-            }
-            for (Component c : p2Additionnals.getComponents()) {
-                h = (HexIcon) c;
+                panel.removeAll();
+                panel.add(h);
+                panel = p2Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
                 h.updateSize();
+                panel.removeAll();
+                panel.add(h);
             }
+        }
+        for (int i = 0; i < k3Panels.length; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                panel = k3Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
+                h.updateSize();
+                panel.removeAll();
+                panel.add(h);
+            }
+        }
+        for (Component c : p1Additionnals.getComponents()) {
+            h = (HexIcon) c;
+            h.updateSize();
+        }
+        for (Component c : p2Additionnals.getComponents()) {
+            h = (HexIcon) c;
+            h.updateSize();
+        }
+        try {
+            h = (HexIcon) leftWhiteDrop.getComponent(0);
+            h.updateSize();
+            leftWhiteDrop.removeAll();
+            leftWhiteDrop.setBorder(null);
 
-            // Update the old size to the new size
-            oldSize = newSize;
-            revalidate();
-            repaint();
+            leftWhiteDrop.add(h);
+
+            h = (HexIcon) rightwhiteDrop.getComponent(0);
+            h.updateSize();
+            rightwhiteDrop.removeAll();
+            rightwhiteDrop.setBorder(null);
+
+            rightwhiteDrop.add(h);
+        } catch (Exception e) {
+            Config.debug("leftWhiteDrop or rightwhiteDrop doesn't exist");
+        }
+        // Update the old size to the new size
+        oldSize = newSize;
+        revalidate();
+        repaint();
         // }
     }
 
