@@ -189,16 +189,26 @@ public class SecondPhasePanel extends JPanel {
             additionnals = p2Additionnals;
         }
         ArrayList<HexIcon> hexToGlow = new ArrayList<>();
+        ArrayList<ModelColor> playableColors = new ArrayList<>();
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()){
+            if (k3.getK3().compatible(c).size() > 0){
+                playableColors.add(c);
+            }
+        }
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
-            hex.setActionable(true);
-            hexToGlow.add(hex);
+            if (playableColors.contains(hex.getColor())){
+                hex.setActionable(true);
+                hexToGlow.add(hex);
+            }
         }
         for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
-                hex.setActionable(true);
-                hexToGlow.add(hex);
+                if (playableColors.contains(hex.getColor())){
+                    hex.setActionable(true);
+                    hexToGlow.add(hex);
+                }
             }
         }
         animationHexGlow.setToRedraw(hexToGlow);
