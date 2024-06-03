@@ -118,6 +118,13 @@ public class testThomas extends MiniMaxAI {
         for (ModelColor c : ModelColor.getAllColored()) {
             redistributeProbs(k3, c);
         }
+        for (ModelColor c : probabilities.keySet()) {
+            if (ennemyPieces.get(c) > getPlayer(k3).getAvailableToBuild().get(c)){
+                probabilities.put(c, probabilities.get(c) / 2);
+            } else {
+                probabilities.put(c, probabilities.get(c) * 2);
+            }
+        }
         return probabilities;
     }
 
@@ -133,8 +140,12 @@ public class testThomas extends MiniMaxAI {
 
     private ModelColor getColorBasedOnProbabilities() {
         List<Map.Entry<ModelColor, Float>> entryList = new ArrayList<>(probabilities.entrySet());
+        float sum = 0;
+        for (Map.Entry<ModelColor, Float> entry : entryList){
+            sum += entry.getValue();
+        }
         entryList.sort(Map.Entry.comparingByValue());
-        float f = getRandom().nextFloat();
+        float f = getRandom().nextFloat() * sum;
         for (Map.Entry<ModelColor, Float> entry : entryList) {
             f -= entry.getValue();
             if (f < 0) {

@@ -167,17 +167,10 @@ public class simpleHeuristique extends MiniMaxAI {
     private Point getStartPoint(Kube k3) {
         Mountain m = getPlayer(k3).getMountain();
         for (int i = 0; i < m.getBaseSize(); i++) {
-            int j = 0;
-            int k = i;
-            while (j <= k){
+            for (int j = 0; j <= i; j++) {
                 if (m.getCase(i, j) == ModelColor.EMPTY) {
                     return new Point(i, j);
                 }
-                j++;
-                if (m.getCase(i, k) == ModelColor.EMPTY) {
-                    return new Point(i, k);
-                }
-                k--;
             }
         }
         return null;
