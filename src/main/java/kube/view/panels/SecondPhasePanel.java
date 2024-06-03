@@ -711,6 +711,7 @@ public class SecondPhasePanel extends JPanel {
         panel.setVisible(false);
         gui.addToOverlay(panel);
         new winMsg(panel, gui,"Victoire du " + winner.getName(),controller);
+        revalidate();
         repaint();
     }
 
