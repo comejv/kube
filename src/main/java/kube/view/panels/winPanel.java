@@ -1,11 +1,11 @@
 package kube.view.panels;
 
-import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 public class winPanel extends JPanel {
     private float opacity;
@@ -42,8 +42,15 @@ public class winPanel extends JPanel {
         } else {
             g2d.drawImage(scaledBackground, 0, 0, this);
         }
-        // g2d.drawImage(backgroundImage, 0, 0, this);
+        FontMetrics fm = g2d.getFontMetrics();
 
+        int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
+        g2d.setColor(new Color(255, 255, 255, 150)); // Set the text color
+        Rectangle2D rect = fm.getStringBounds("", g);
+        g2d.fillRect(0,
+                y - fm.getAscent() -125,
+                (int) getWidth(),
+                (int) rect.getHeight() + 250);
 
         g2d.dispose(); // Clean up graphics context
     }

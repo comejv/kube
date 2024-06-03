@@ -1,4 +1,4 @@
-package kube.view.animations;
+package kube.view.panels;
 
 import java.awt.*;
 
@@ -10,7 +10,6 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.view.GUI;
 import kube.view.components.Buttons;
-import kube.view.panels.winPanel;
 
 public class winMsg {
     private winPanel panel;
@@ -43,19 +42,16 @@ public class winMsg {
         jeuButton.setActionCommand("return");
         jeuButton.addMouseListener(controller);
         gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         panelButton.add(jeuButton, gbc);
 
         JButton quitButton = new Buttons.GamePhaseButton("Retourner au Menu");
         quitButton.setActionCommand("quit");
         quitButton.addMouseListener(controller);
         gbc.gridy = 2;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
         panelButton.add(quitButton, gbc);
 
 
         panel.add(panelButton,BorderLayout.CENTER);
-
     }
 
 

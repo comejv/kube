@@ -8,7 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
-import java.lang.module.Configuration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -34,7 +33,6 @@ import kube.view.GUIColors;
 import kube.view.animations.HexGlow;
 import kube.view.animations.Message;
 import kube.view.animations.PanelGlow;
-import kube.view.animations.winMsg;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
