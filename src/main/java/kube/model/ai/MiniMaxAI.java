@@ -2,6 +2,7 @@ package kube.model.ai;
 
 // Import model classes
 import kube.model.Kube;
+import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.move.Move;
 
@@ -163,7 +164,7 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
     }
 
     /**
-     * Fill the mountain with random cubes
+     * Fill the mountain
      * 
      * @return void
      */
@@ -238,18 +239,18 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
                     return -1;
                 }
                 kube.unPlay();
-                // Noeud max 
+                // Noeud max
                 if (player == getPlayer(kube)) {
                     bestScore = Math.max(score, bestScore);
                     alpha = Math.max(score, alpha);
-                    if (beta <= alpha){
+                    if (beta <= alpha) {
                         break;
                     }
-                // Noeud min
+                    // Noeud min
                 } else {
                     bestScore = Math.min(score, bestScore);
                     beta = Math.min(score, beta);
-                    if (beta <= alpha){
+                    if (beta <= alpha) {
                         break;
                     }
                 }
@@ -326,6 +327,15 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
     }
 
     /**
+     * Construct a mountain
+     * 
+     * @return a mountain
+     */
+    protected Mountain constructMountain(Kube k3) {
+        return null;
+    }
+
+    /**
      * Clone the MiniMaxAI object
      * 
      * @return the cloned object
@@ -336,7 +346,18 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
             return new moveSetHeuristique(getTime());
         } else if (this instanceof randomAI) {
             return new randomAI(getTime());
-        } else {
+        } else if (this instanceof betterBase) {
+            return new betterBase(getTime());
+        } else if (this instanceof betterConstruct) {
+            return new betterConstruct(getTime());
+        } else if (this instanceof betterConstructV2) {
+            return new betterConstructV2(getTime());
+        } else if (this instanceof betterConstructV3) {
+            return new betterConstructV3(getTime());
+        } else if (this instanceof betterBaseV2){
+            return new betterBaseV2(getTime());
+        } 
+        else {
             throw new UnsupportedOperationException("Unsupported type for cloning.");
         }
     }

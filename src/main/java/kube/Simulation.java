@@ -7,6 +7,10 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
+import kube.model.ai.betterBase;
+import kube.model.ai.betterBaseV2;
+import kube.model.ai.betterConstruct;
+import kube.model.ai.betterConstructV2;
 import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 
@@ -65,15 +69,20 @@ public class Simulation implements Runnable {
         Simulation s;
         Thread[] threads;
 
-        nbGames = 100;
 
         try {
             nbGames = Integer.parseInt(args[0]);
         } catch (Exception e) {
+            nbGames = 100;
             System.out.println("Nombre de parties par défaut: 100");
         }
+        try {
+            nbThreads = Integer.parseInt(args[1]);
+        } catch (Exception e) {
+            nbThreads = 8;
+            System.out.println("Nombre de threads par défaut: 8");
+        }
 
-        nbThreads = 8;
         s = new Simulation(nbGames);
 
         s.winJ1 = 0;
@@ -186,12 +195,16 @@ public class Simulation implements Runnable {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new moveSetHeuristique(50), new randomAI(50));
+            k.init(new betterBase(50), new betterBaseV2(50));
             k.getP1().getAI().constructionPhase(k);
+            k.getP1().validateBuilding();
             k.updatePhase();
             k.getP2().getAI().constructionPhase(k);
+            k.getP2().validateBuilding();
             k.updatePhase();
             // Phsae 2
+            // System.out.println(k.getP1());
+            // System.out.println(k.getP2());
             k.setCurrentPlayer(k.getRandomPlayer());
             while (k.canCurrentPlayerPlay()) {
                 Move move = k.getCurrentPlayer().getAI().nextMove(k);
