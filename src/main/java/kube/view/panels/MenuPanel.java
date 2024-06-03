@@ -60,10 +60,9 @@ public class MenuPanel extends JPanel {
         title.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 6)));
 
         GridBagConstraints elemGBC = new GridBagConstraints();
-        elemGBC.gridx = 0;
+        elemGBC.gridx = 1;
         elemGBC.gridy = 0;
         elemGBC.fill = GridBagConstraints.BOTH;
-        elemGBC.gridwidth = GridBagConstraints.REMAINDER;
         elemGBC.anchor = GridBagConstraints.CENTER;
         elemGBC.weighty = 1;
         elemGBC.weightx = .3;
@@ -75,7 +74,7 @@ public class MenuPanel extends JPanel {
         settings.recolor(GUIColors.ACCENT);
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 2;
-        elemGBC.gridy = 2;
+        elemGBC.gridy = 0;
         elemGBC.weighty = 1;
         elemGBC.weightx = .3;
         modal.add(settings, elemGBC);
@@ -86,7 +85,7 @@ public class MenuPanel extends JPanel {
         volume.recolor(GUIColors.ACCENT);
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 0;
-        elemGBC.gridy = 2;
+        elemGBC.gridy = 0;
         elemGBC.weighty = 1;
         elemGBC.weightx = .3;
         modal.add(volume, elemGBC);
