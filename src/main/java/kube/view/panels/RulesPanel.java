@@ -7,7 +7,11 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.util.HashSet;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -31,6 +35,7 @@ public class RulesPanel extends JPanel {
     private JTextArea[] textAreas;
     private RulePanel[] rulePanels;
     private int currentRuleNb;
+    private HashSet<Integer> rulesWithAnimNb = new HashSet<>();
     private final int TOTAL_RULE_NB = 8;
     private final Color BACKGROUND = GUIColors.ACCENT.toColor();
     private final Color FOREGROUND = GUIColors.TEXT.toColor();
@@ -38,16 +43,17 @@ public class RulesPanel extends JPanel {
     public RulesPanel(GUI gui, MenuController buttonListener) {
 
         this.buttonListener = buttonListener;
-        width = Config.INIT_WIDTH / 2;
-        height = Config.INIT_HEIGHT / 2;
 
         width = Math.round(Config.INIT_WIDTH / 1.5f);
         height = Math.round(Config.INIT_HEIGHT / 1.25f);
+
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(width, height));
         setBackground(GUIColors.ACCENT.toColor());
 
+        int[] rulesWithAnimation = {1, 3};
+        setRulesWithAnimation(rulesWithAnimation);
         setCurrentRuleNb(0);
         
         JLabel ruleTitle = new JLabel("REGLES", SwingConstants.CENTER);
@@ -104,7 +110,7 @@ public class RulesPanel extends JPanel {
         rulePanels[0] = rulePanel;
         cardPanel.add(rulePanels[0]);
         for (int i = 1; i < TOTAL_RULE_NB; i++) {
-             rulePanel = new RulePanel();
+            rulePanel = new RulePanel();
             rulePanel.addTextArea(i);
             rulePanel.addNextButton(i);
             rulePanel.addPreviousButton(i);
@@ -113,6 +119,7 @@ public class RulesPanel extends JPanel {
             cardPanel.add(rulePanels[i]);
             rulePanel.setVisible(true);
         }
+        rulePanels[1].addAnimation(1);
     }
     
     public void nextRule() {
@@ -139,6 +146,12 @@ public class RulesPanel extends JPanel {
         currentRuleNb = i % TOTAL_RULE_NB;
     }
 
+    public void setRulesWithAnimation(int[] rulesWithAnimation){
+        for (int i : rulesWithAnimation) {
+            rulesWithAnimNb.add(i);
+        }
+    }
+
     private class RulePanel extends JPanel {
         
         private RulePanel() {
@@ -153,15 +166,25 @@ public class RulesPanel extends JPanel {
             elemGBC.anchor = GridBagConstraints.CENTER;
             elemGBC.fill = GridBagConstraints.BOTH;
             elemGBC.insets = new Insets(0, 30, 0, 30);
-            //textAreas goes from 0 to 7, not 1 to 8
             add(textAreas[ruleNb], elemGBC);
         }
 
+        private void addAnimation(int ruleNb){
+            if (rulesWithAnimNb.contains(ruleNb)) {
+                GridBagConstraints elemGBC = new GridBagConstraints();
+                elemGBC.gridx = 0;
+                elemGBC.gridy = 2;
+                elemGBC.anchor = GridBagConstraints.CENTER;
+                elemGBC.fill = GridBagConstraints.BOTH;
+                add(new AnimatedRule(ruleNb));
+            }
+        }
+        
         private void addNextButton(int ruleNb) {
             JButton next = new RulesButton("Suivant");
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
-            elemGBC.gridy = 2;
+            elemGBC.gridy = 3;
             elemGBC.anchor = GridBagConstraints.LAST_LINE_END;
             elemGBC.weightx = .5;
             elemGBC.weighty = .5;
@@ -176,7 +199,7 @@ public class RulesPanel extends JPanel {
             }
             add(next, elemGBC);
         }
-
+        
         private void addPreviousButton(int ruleNb) {
             if (ruleNb != 0) {
                 JButton previous = new RulesButton("Précédent");
@@ -191,6 +214,41 @@ public class RulesPanel extends JPanel {
                 previous.setActionCommand("previousRule");
                 add(previous, elemGBC);
             }
+            
+        }
+    }
+
+    private class AnimatedRule extends JPanel {
+
+        private JLabel[] frames;
+        private int currentFrame;
+        private Timer timer;
+
+        private AnimatedRule (int ruleNb){
+            frames = new JLabel[4];
+            currentFrame = 0;
+            for (int i = 0; i < 4; i++) {
+                ImageIcon image = new ImageIcon(ResourceLoader.getBufferedImage
+                    ("animations/animation" + ruleNb + i));
+                JLabel frame = new JLabel(image);
+                if(i > 0){
+                    frame.setVisible(false);
+                }
+                frames[i] = frame;
+                add(frame);
+                Config.debug("animation créée");
+            }
+            TimerTask changeImage = new TimerTask() {
+                @Override
+                public void run() {
+                    Config.debug(currentFrame);
+                    frames[currentFrame].setVisible(false);
+                    currentFrame = (currentFrame + 1) %4;
+                    frames[currentFrame].setVisible(true);
+                }
+            };
+            timer = new Timer();
+            timer.schedule(changeImage, 500, 500);
         }
     }
 }
