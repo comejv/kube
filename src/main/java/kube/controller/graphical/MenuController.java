@@ -67,6 +67,9 @@ public class MenuController implements ActionListener, MouseListener {
                 toModel.add(new Action(ActionType.LOAD, selectedFile));
                 toView.add(new Action(ActionType.END_OVERLAY_MENU));
                 break;
+            case "loadmenu":
+                toView.add(new Action(ActionType.SETTINGS, true));
+                break;
             default:
                 break;
         }

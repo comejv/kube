@@ -175,6 +175,12 @@ public class MenuPanel extends JPanel {
         play.addActionListener(buttonListener);
         play.setActionCommand("play");
 
+        JButton loadButton = new MenuButton("CHARGER");
+        playersButtons.add(loadButton, buttonsGBC);
+        loadButton.addActionListener(buttonListener);
+        loadButton.setActionCommand("loadmenu");
+
+        
         JButton returnButton = new MenuButton("RETOUR");
         playersButtons.add(returnButton, buttonsGBC);
         returnButton.addActionListener(e -> {

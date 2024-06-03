@@ -137,7 +137,12 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
+                    OverlayPanel settings = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    if (action.getData() != null){
+                        SettingsPanel s = (SettingsPanel) settings.getComponent(0);
+                        s.loadPanel();
+                    }
+                    gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
                     gui.setGlassPanelVisible(true);

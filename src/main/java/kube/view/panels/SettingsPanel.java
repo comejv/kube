@@ -58,7 +58,7 @@ public class SettingsPanel extends JPanel {
         addFillerPanel(audioPanel);
 
         addLoadPanel();
-
+        
         setVisible(true);
     }
 
@@ -181,5 +181,9 @@ public class SettingsPanel extends JPanel {
 
     private void setTabNb(int newTabNb) {
         tabNb = newTabNb;
+    }
+
+    public void loadPanel(){
+        tabbedPanel.setSelectedIndex(2);
     }
 }
