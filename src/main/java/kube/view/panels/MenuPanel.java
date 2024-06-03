@@ -265,6 +265,12 @@ public class MenuPanel extends JPanel {
         hostPanel.add(ipPortPanel, buttonsGBC);
         hostPanel.add(copy, buttonsGBC);
 
+        JButton start = new MenuButton("DÉMARRER");
+        start.addActionListener(buttonListener);
+        start.setActionCommand("startOnline");
+
+        hostPanel.add(start, buttonsGBC);
+
         JButton returnHost = new MenuButton("RETOUR");
         returnHost.setActionCommand("returnHost");
         returnHost.addActionListener(e -> {
@@ -273,12 +279,6 @@ public class MenuPanel extends JPanel {
         returnHost.addActionListener(buttonListener);
 
         hostPanel.add(returnHost, buttonsGBC);
-
-        JButton start = new MenuButton("DÉMARRER");
-        start.addActionListener(buttonListener);
-        start.setActionCommand("startOnline");
-        
-        hostPanel.add(start, buttonsGBC);
 
         buttonsPanel.add("host", hostPanel);
     }
