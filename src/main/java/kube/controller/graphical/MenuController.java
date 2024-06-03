@@ -65,7 +65,6 @@ public class MenuController implements ActionListener, MouseListener {
             case "load":
                 toModel.add(new Action(ActionType.RESET));
                 toModel.add(new Action(ActionType.LOAD, selectedFile));
-                toView.add(new Action(ActionType.LOAD));
                 toView.add(new Action(ActionType.END_OVERLAY_MENU));
                 break;
             default:
@@ -90,13 +89,14 @@ public class MenuController implements ActionListener, MouseListener {
                     Config.error("Unrecognised buttonIcon action.");
                     break;
             }
-        }
-        else if (source instanceof JList) {
+        } else if (source instanceof JList) {
             JList<?> list = (JList<?>) source;
             switch (list.getName()) {
                 case "fileList":
-                    toView.add(new Action(ActionType.LOAD_FILE_SELECTED));
                     selectedFile = (String) list.getSelectedValue();
+                    if (selectedFile != null) {
+                        toView.add(new Action(ActionType.LOAD_FILE_SELECTED));
+                    }
                     break;
                 default:
                     Config.error("Unrecognised JList action.");

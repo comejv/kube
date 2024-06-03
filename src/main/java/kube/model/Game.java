@@ -135,6 +135,7 @@ public class Game implements Runnable {
                     k3.init((Kube) ois.readObject());
                     ois.close();
                     Config.debug("initilized game");
+                    eventsToView.add(new Action(ActionType.VALIDATE, true));
                     return LOAD_START;
                 } catch (Exception e) {
                     eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));

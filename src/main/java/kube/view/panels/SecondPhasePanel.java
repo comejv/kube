@@ -365,7 +365,6 @@ public class SecondPhasePanel extends JPanel {
         if (!k3.getCurrentPlayer().isAI()) {
             sugAIButton.setEnabled(true);
         }
-        updatePanelGlow(false);
     }
 
     private void updateText() {

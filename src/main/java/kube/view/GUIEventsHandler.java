@@ -112,10 +112,6 @@ public class GUIEventsHandler implements Runnable {
                             new Start(iaJ1, iaJ2)));
                     gui.setGlassPanelVisible(true);
                     break;
-                case LOAD:
-                    gui.updatePanel();
-                    gui.setGlassPanelVisible(true);
-                    break;
                 case PLAY_LOCAL:
                     // TODO : maybe tell model about it ?
                     break;

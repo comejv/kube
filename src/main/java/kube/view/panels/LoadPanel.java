@@ -86,16 +86,14 @@ public class LoadPanel extends JPanel {
         buttonsPanel.add(deleteButton, buttonGBC);
         deleteButton.setEnabled(false);
 
-        if (!inSettings) {
-            MenuButton returnButton = new MenuButton("RETOUR");
-            returnButton.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 15)));
-            returnButton.setPreferredSize(new Dimension(250, 100));
-            returnButton.setActionCommand("return");
-            returnButton.addActionListener(buttonListener);
-            buttonGBC = new GridBagConstraints();
-            buttonGBC.gridy = 2;
-            buttonsPanel.add(returnButton, buttonGBC);
-        }
+        MenuButton returnButton = new MenuButton("RETOUR");
+        returnButton.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 15)));
+        returnButton.setPreferredSize(new Dimension(250, 100));
+        returnButton.setActionCommand("return");
+        returnButton.addActionListener(buttonListener);
+        buttonGBC = new GridBagConstraints();
+        buttonGBC.gridy = 2;
+        buttonsPanel.add(returnButton, buttonGBC);
 
         add(buttonsPanel, buttonPanelGBC);
     }
