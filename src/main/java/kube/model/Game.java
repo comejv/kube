@@ -31,9 +31,10 @@ public class Game implements Runnable {
     public static final int RESET_EXIT = 0;
     public static final int NORMAL_EXIT = 1;
 
-    public static final int CLASSIC_START = 0;
-    public static final int LOAD_START = 1;
-    public static final int LOAD_ERROR = 2;
+    public static final int CLASSIC_START = 1;
+    public static final int LOAD_START = 2;
+    public static final int LOAD_ERROR = 3;
+    public static final int ERROR_START = 4;
 
     public static final int PORT = 1234;
 
@@ -84,7 +85,7 @@ public class Game implements Runnable {
         while (true) {
             int startType;
             startType = waitStartGame();
-            if (startType == LOAD_ERROR) {
+            if (startType == LOAD_ERROR || startType == RESET_EXIT) {
                 continue;
             }
             localGame(startType);
@@ -107,35 +108,44 @@ public class Game implements Runnable {
 
         action = eventsToModel.remove();
 
-        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD) {
+        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD && 
+            action.getType() != ActionType.RESET) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             action = eventsToModel.remove();
         }
 
-        if (action.getType() == ActionType.START) {
-            // Start a new game
-            start = (Start) action.getData();
-            if (start == null) {
-                k3.init();
-            } else {
-                k3.init(start.getAIJ1(), start.getAIJ2());
-            }
-            eventsToView.add(new Action(ActionType.VALIDATE, true));
-            return CLASSIC_START;
-        } else {
-            // Load a saved game
-            filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData() + Config.SAVING_FILE_EXTENSION;
-            file = new File(filePath);
-            try {
-                fis = new FileInputStream(file);
-                ois = new ObjectInputStream(fis);
-                k3.init((Kube) ois.readObject());
-                ois.close();
-                return LOAD_START;
-            } catch (Exception e) {
-                eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
-                return LOAD_ERROR;
-            }
+        switch (action.getType()) {
+            case START:
+                // Start a new game
+                start = (Start) action.getData();
+                if (start == null) {
+                    k3.init();
+                } else {
+                    k3.init(start.getAIJ1(), start.getAIJ2());
+                }
+                eventsToView.add(new Action(ActionType.VALIDATE, true));
+                return CLASSIC_START;
+            case LOAD:
+                // Load a saved game
+                filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData();
+                file = new File(filePath);
+                try {
+                    fis = new FileInputStream(file);
+                    ois = new ObjectInputStream(fis);
+                    k3.init((Kube) ois.readObject());
+                    ois.close();
+                    Config.debug("initilized game");
+                    return LOAD_START;
+                } catch (Exception e) {
+                    eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
+                    return LOAD_ERROR;
+                }
+            case RESET:
+                Config.debug("Recieved RESET action");
+                return RESET_EXIT;
+            default:
+                eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                return ERROR_START;
         }
     }
 

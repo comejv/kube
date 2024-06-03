@@ -11,8 +11,10 @@ import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
+import kube.view.panels.LoadPanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
+import kube.view.panels.SettingsPanel;
 
 public class GUIEventsHandler implements Runnable {
     // TODO : refactor this class to make it more readable
@@ -110,6 +112,10 @@ public class GUIEventsHandler implements Runnable {
                             new Start(iaJ1, iaJ2)));
                     gui.setGlassPanelVisible(true);
                     break;
+                case LOAD:
+                    Config.debug("TEST");
+                    gui.setGlassPanelVisible(true);
+                    break;
                 case PLAY_LOCAL:
                     // TODO : maybe tell model about it ?
                     break;
@@ -130,7 +136,7 @@ public class GUIEventsHandler implements Runnable {
                     rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.previousRule();
                     break;
-                case END_RULE:
+                case END_OVERLAY_MENU:
                     gui.removeAllFromOverlay();
                     gui.setGlassPanelVisible(false);
                     break;
@@ -163,6 +169,13 @@ public class GUIEventsHandler implements Runnable {
                 case REDO:
                 case AI_PAUSE:
                     gui.updateSecondPanel(action);
+                    break;
+                case LOAD_FILE_SELECTED:
+                    OverlayPanel op = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    SettingsPanel sp = (SettingsPanel) op.getComponent(0);
+                    LoadPanel lp = (LoadPanel) sp.getTabbedPanel().getComponent(3);
+                    lp.enableLoadButton();
+                    lp.enableDeleteButton();
                     break;
                 case UPDATE_HEX_SIZE:
                     gui.updateHexSize();
