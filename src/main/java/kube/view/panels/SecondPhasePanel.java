@@ -53,9 +53,8 @@ public class SecondPhasePanel extends JPanel {
     private JPanel leftWhiteDrop;
     private JPanel rightwhiteDrop;
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
-    private JButton undoButton, redoButton;
+    private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton;
     private Dimension oldSize;
-    private JButton pauseAi, sugAIButton;
 
     public HexGlow animationHexGlow;
     public PanelGlow animationPanelGlow;
@@ -128,6 +127,13 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugAIButton, gbc);
 
+        saveButton = new Buttons.GamePhaseButton("Sauvegarder");
+        saveButton.setActionCommand("save");
+        saveButton.addMouseListener(a);
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(saveButton, gbc);
+
         pauseAi = new Buttons.GamePhaseButton("Pause Kubot");
         pauseAi.setVisible(false);
         pauseAi.setActionCommand("pauseAI");
@@ -152,7 +158,7 @@ public class SecondPhasePanel extends JPanel {
 
         JScrollPane histo = getHisto();
         histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(histo, gbc);
@@ -359,7 +365,7 @@ public class SecondPhasePanel extends JPanel {
         if (!k3.getCurrentPlayer().isAI()) {
             sugAIButton.setEnabled(true);
         }
-        updatePanelGlow(true);
+        updatePanelGlow(false);
     }
 
     private void updateText() {
@@ -779,7 +785,7 @@ public class SecondPhasePanel extends JPanel {
         oldSize = newSize;
         revalidate();
         repaint();
-        // }
+        gui.getOverlay().repaint();
     }
 
     private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
