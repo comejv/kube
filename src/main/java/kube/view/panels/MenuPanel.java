@@ -268,6 +268,7 @@ public class MenuPanel extends JPanel {
         JButton start = new MenuButton("DÉMARRER");
         start.addActionListener(buttonListener);
         start.setActionCommand("startOnline");
+        start.setEnabled(false);
 
         hostPanel.add(start, buttonsGBC);
 
