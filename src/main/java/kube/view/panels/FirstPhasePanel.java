@@ -488,7 +488,7 @@ public class FirstPhasePanel extends JPanel {
         buttonsMap.get("Quit").setEnabled(true);
         buttonsMap.get("Option").setText("Paramètres");
         buttonsMap.get("Option").setEnabled(true);
-        buttonsMap.get("AI").setText("Suggestion IA");
+        buttonsMap.get("AI").setText("Construction auto");
         buttonsMap.get("AI").setEnabled(true);
         buttonsMap.get("Validate").setText("Valider");
         buttonsMap.get("Validate").setEnabled(false);

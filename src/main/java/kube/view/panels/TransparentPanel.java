@@ -1,6 +1,8 @@
 package kube.view.panels;
 
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
+
 import javax.swing.*;
 
 import kube.configuration.Config;
@@ -50,23 +52,27 @@ public class TransparentPanel extends JPanel {
         Graphics2D g2d = (Graphics2D) g.create();
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacity));
         if (noImage) {
-            g2d.setColor(new Color(128, 128, 128, (int)(opacity * 255 / 2))); // Set the grey color with the specified opacity
+            g2d.setColor(new Color(128, 128, 128, (int) (opacity * 255 / 2))); // Set the grey color with the specified
+                                                                               // opacity
             g2d.fillRect(0, 0, getWidth(), getHeight()); // Fill the component with the grey color
         } else {
             g2d.drawImage(scaledBackground, 0, 0, this);
         }
-        // g2d.drawImage(backgroundImage, 0, 0, this);
-
-        // g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-        g2d.setColor(Color.BLACK); // Set the text color
         g2d.setFont(panelFont); // Set the custom font
 
         // Draw the text in the center of the panel
         FontMetrics fm = g2d.getFontMetrics();
         int x = (getWidth() - fm.stringWidth(text)) / 2;
         int y = (getHeight() - fm.getHeight()) / 2 + fm.getAscent();
-        g2d.drawString(text, x, y);
+        g2d.setColor(new Color(255, 255, 255, 100)); // Set the text color
+        Rectangle2D rect = fm.getStringBounds(text, g);
+        g2d.fillRect(x,
+                y - fm.getAscent(),
+                (int) rect.getWidth(),
+                (int) rect.getHeight());
 
+        g2d.setColor(Color.BLACK); // Set the text color
+        g2d.drawString(text, x, y);
         g2d.dispose(); // Clean up graphics context
     }
 }
