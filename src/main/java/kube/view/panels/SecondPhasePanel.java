@@ -712,10 +712,9 @@ public class SecondPhasePanel extends JPanel {
 
     public void updateHexSize() {
         Dimension newSize = this.getSize();
-        if (isSignificantChange(oldSize, newSize)) {
+        // if (isSignificantChange(oldSize, newSize)) {
             // Update the static size of HexIcon based on new size
             int newHexSize = calculateNewHexSize(newSize);
-            Config.debug("Set hex size to ", newHexSize);
             HexIcon.setStaticSize(newHexSize);
             JPanel panel;
             HexIcon h;
@@ -725,11 +724,13 @@ public class SecondPhasePanel extends JPanel {
                     panel = p1Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    panel.setPreferredSize(h.getSize());
+                    panel.removeAll();
+                    panel.add(h);
                     panel = p2Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    panel.setPreferredSize(h.getSize());
+                    panel.removeAll();
+                    panel.add(h);
                 }
             }
             for (int i = 0; i < k3Panels.length; i++) {
@@ -737,7 +738,8 @@ public class SecondPhasePanel extends JPanel {
                     panel = k3Panels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    panel.setPreferredSize(h.getSize());
+                    panel.removeAll();
+                    panel.add(h);
                 }
             }
             for (Component c : p1Additionnals.getComponents()) {
@@ -753,7 +755,7 @@ public class SecondPhasePanel extends JPanel {
             oldSize = newSize;
             revalidate();
             repaint();
-        }
+        // }
     }
 
     private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {

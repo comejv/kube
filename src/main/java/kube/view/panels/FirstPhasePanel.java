@@ -34,7 +34,7 @@ public class FirstPhasePanel extends JPanel {
     private GUI gui;
     private JPanel constructPanel, piecesPanel, gamePanel, topPanel, opponentPanel;
     private HashMap<ModelColor, JLabel> sidePanels, opponentPiecesPanel;
-    private JPanel[][] moutainPanels; // TODO : rename symbol to fix typo
+    private JPanel[][] mountainPanels; // TODO : rename symbol to fix typo
     private HashMap<String, JButton> buttonsMap;
     private Dimension oldSize;
     private Queue<Action> eventsToModel;
@@ -187,7 +187,7 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void initGrid() {
-        moutainPanels = new JPanel[6][6];
+        mountainPanels = new JPanel[6][6];
         constructPanel = new JPanel();
 
         constructPanel.setOpaque(false);
@@ -204,7 +204,7 @@ public class FirstPhasePanel extends JPanel {
                 hex.setPosition(new Point(i - 1, j));
                 hexPanel.add(hex);
                 lineHexa.add(hexPanel);
-                moutainPanels[i - 1][j] = hexPanel;
+                mountainPanels[i - 1][j] = hexPanel;
             }
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -234,7 +234,6 @@ public class FirstPhasePanel extends JPanel {
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             mini.add(new HexIcon(c, false, 1.5));
             mini.add(numOfPieces);
-            Config.debug("Ajout hexa en position ", x, y);
             gbc.gridx = x;
             gbc.gridy = y;
             x++;
@@ -377,7 +376,7 @@ public class FirstPhasePanel extends JPanel {
         boolean actionable = c != ModelColor.EMPTY;
         HexIcon hex = new HexIcon(c, actionable, 2);
         hex.setPosition(pos);
-        JPanel panel = moutainPanels[pos.x][pos.y];
+        JPanel panel = mountainPanels[pos.x][pos.y];
         panel.removeAll();
         panel.add(hex);
         panel.revalidate();
@@ -529,34 +528,56 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateHexSize() {
         Dimension newSize = this.getSize();
-        if (isSignificantChange(oldSize, newSize)) {
-            // Update the static size of HexIcon based on new size
-            int newHexSize = calculateNewHexSize(newSize);
-            HexIcon.setStaticSize(newHexSize);
+        // if (isSignificantChange(oldSize, newSize)) {
+        // Update the static size of HexIcon based on new size
+        int newHexSize = calculateNewHexSize(newSize);
+        HexIcon.setStaticSize(newHexSize);
 
-            JPanel panel;
-            HexIcon h;
-            // Loop through panels and update hex size
-            for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    panel = moutainPanels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    //panel.setPreferredSize(h.getSize());
-                }
+        JPanel panel;
+        HexIcon h;
+        // Loop through panels and update hex size
+        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                panel = mountainPanels[i][j];
+                h = (HexIcon) panel.getComponents()[0];
+                h.updateSize();
+                panel.removeAll();
+                panel.add(h);
             }
-
-            // Update the old size to the new size
-            oldSize = newSize;
-            revalidate();
-            repaint();
         }
+
+        for (JLabel pan : sidePanels.values()) {
+            JPanel p = (JPanel) pan.getParent();
+            h = (HexIcon) p.getComponents()[0];
+            JLabel lab = (JLabel) p.getComponents()[1];
+            p.removeAll();
+            h.updateSize();
+            p.add(h);
+            p.add(lab);
+        }
+
+        for (JLabel pan : opponentPiecesPanel.values()) {
+            JPanel p = (JPanel) pan.getParent();
+            h = (HexIcon) p.getComponents()[0];
+            JLabel lab = (JLabel) p.getComponents()[1];
+            p.removeAll();
+            h.updateSize();
+            p.add(h);
+            p.add(lab);
+        }
+
+        // Update the old size to the new size
+        oldSize = newSize;
+
+        revalidate();
+        repaint();
+        // }
     }
 
-    private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
-        int threshold = 100;
-        return Math.abs(newSize.height - oldSize.height) > threshold;
-    }
+    // private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
+    // int threshold = 1;
+    // return Math.abs(newSize.height - oldSize.height) > threshold;
+    // }
 
     private int calculateNewHexSize(Dimension newSize) {
         double scaleFactor = newSize.getHeight() / (double) Config.INIT_HEIGHT;

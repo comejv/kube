@@ -85,6 +85,8 @@ public class GUI extends Thread {
     }
 
     public void run() {
+        // Disable optimized drawing
+        System.setProperty("sun.java2d.opengl", "true");
         // new MainFrame
         mF = new MainFrame();
         // add menu pannel
