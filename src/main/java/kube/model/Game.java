@@ -108,8 +108,8 @@ public class Game implements Runnable {
 
         action = eventsToModel.remove();
 
-        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD && 
-            action.getType() != ActionType.RESET) {
+        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD &&
+                action.getType() != ActionType.RESET) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             action = eventsToModel.remove();
         }
@@ -363,6 +363,8 @@ public class Game implements Runnable {
                 action = eventsToModel.remove();
                 switch (action.getType()) {
                     case UNDO:
+                        AIpause = true;
+                        eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                         undo();
                         break;
                     case SAVE:
@@ -402,9 +404,13 @@ public class Game implements Runnable {
                             playMove(action);
                             break;
                         case UNDO:
+                            AIpause = true;
+                            eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                             undo();
                             break;
                         case REDO:
+                            AIpause = true;
+                            eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                             redo();
                             break;
                         case SAVE:
