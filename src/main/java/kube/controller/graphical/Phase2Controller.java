@@ -52,7 +52,18 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
             case "return":
                 toView.add(new Action(ActionType.RETURN_TO_GAME));
                 break;
-
+            case "pauseAI":
+                toModel.add(new Action(ActionType.AI_PAUSE, true));
+                toView.add(new Action(ActionType.AI_PAUSE, true));
+                break;
+            case "stoppauseAI":
+                toModel.add(new Action(ActionType.AI_PAUSE, false));
+                toView.add(new Action(ActionType.AI_PAUSE, false));
+                break;
+            case "auto":
+                Config.debug("AI MOVE SEND");
+                toModel.add(new Action(ActionType.AI_MOVE));
+                break;
             default:
                 break;
         }

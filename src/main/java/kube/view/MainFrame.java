@@ -37,7 +37,7 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(new Dimension(Config.INIT_WIDTH, Config.INIT_HEIGHT));
-        setMinimumSize(new Dimension((int) (Config.INIT_WIDTH / 1.5), (int) (Config.INIT_HEIGHT / 1.5)));
+        setMinimumSize(new Dimension((int) (Config.INIT_WIDTH / 1.4), (int) (Config.INIT_HEIGHT)));
         setLocationRelativeTo(null);
         defaultGlassPaneController = null;
         framePanel = (JPanel) getContentPane();

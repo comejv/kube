@@ -73,10 +73,12 @@ public class ResourceLoader {
                 return null;
             }
         } else {
+            String fullPath = null;
             try {
-                resourceStream = new FileInputStream(relativePath);
+                fullPath = "src/main/resources/" + relativePath;
+                resourceStream = new FileInputStream(fullPath);
             } catch (FileNotFoundException e1) {
-                Config.error("File " + relativePath + " not found.");
+                Config.error("File " + fullPath + " not found.");
                 return null;
             }
         }

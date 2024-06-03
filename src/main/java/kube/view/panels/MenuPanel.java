@@ -187,9 +187,44 @@ public class MenuPanel extends JPanel {
         buttonsPanel.add("players", playersButtons);
 
         // ***************************************************************************************//
-        // RULES //
+        // ONLINE //
         // ***************************************************************************************//
 
+        // Online panel that will be displayed when the online button is clicked,
+        // will give two options to the user, either create a game or join a game
+        // When create a game is clicked, the user will be shown his ip and a port number
+        // When join a game is clicked, the user will be shown a text field to enter the ip and port number
+
+        JPanel onlinePanel = new JPanel();
+        onlinePanel.setOpaque(false);
+        onlinePanel.setLayout(new GridBagLayout());
+        buttonsGBC = new GridBagConstraints();
+        insets = new Insets(10, 0, 10, 0);
+        buttonsGBC.gridx = 0;
+        buttonsGBC.gridy = GridBagConstraints.RELATIVE;
+        buttonsGBC.fill = GridBagConstraints.BOTH;
+        buttonsGBC.insets = insets;
+
+        JButton createGame = new MenuButton("CREER UNE PARTIE");
+        createGame.addActionListener(buttonListener);
+        createGame.setActionCommand("createGame");
+
+        JButton joinGame = new MenuButton("REJOINDRE UNE PARTIE");
+        joinGame.addActionListener(buttonListener);
+        joinGame.setActionCommand("joinGame");
+
+        JButton returnOnline = new MenuButton("RETOUR");
+        returnOnline.addActionListener(e -> {
+            // Switch to the main panel
+            CardLayout cl = (CardLayout) (buttonsPanel.getLayout());
+            cl.show(buttonsPanel, "start");
+        });
+
+        onlinePanel.add(createGame, buttonsGBC);
+        onlinePanel.add(joinGame, buttonsGBC);
+        onlinePanel.add(returnOnline, buttonsGBC);
+
+        buttonsPanel.add("online", onlinePanel);
     }
 
     public JButton getRulesButton() {

@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.lang.module.Configuration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -50,9 +51,12 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
     private JPanel[] k3invisibles;
+    private JPanel leftWhiteDrop;
+    private JPanel rightwhiteDrop;
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private JButton undoButton, redoButton;
     private Dimension oldSize;
+    private JButton pauseAi, sugAIButton;
 
     private HexGlow animationHexGlow;
     private PanelGlow animationPanelGlow;
@@ -118,11 +122,20 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(optButton, gbc);
 
-        JButton sugIaButton = new Buttons.GamePhaseButton("Suggestion IA");
-        sugIaButton.addMouseListener(a);
+        sugAIButton = new Buttons.GamePhaseButton("Coup auto");
+        sugAIButton.setActionCommand("auto");
+        sugAIButton.addMouseListener(a);
         gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel.add(sugIaButton, gbc);
+        panel.add(sugAIButton, gbc);
+
+        pauseAi = new Buttons.GamePhaseButton("Pause Kubot");
+        pauseAi.setVisible(false);
+        pauseAi.setActionCommand("pauseAI");
+        pauseAi.addMouseListener(a);
+        gbc.gridy = 5;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(pauseAi, gbc);
 
         undoButton = new Buttons.GamePhaseButton("Annuler le coup");
         undoButton.setActionCommand("undo");
@@ -141,7 +154,6 @@ public class SecondPhasePanel extends JPanel {
         JScrollPane histo = getHisto();
         histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
         gbc.gridy = 3;
-        gbc.gridheight = 3;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(histo, gbc);
@@ -190,22 +202,35 @@ public class SecondPhasePanel extends JPanel {
             additionnals = p2Additionnals;
         }
         ArrayList<HexIcon> hexToGlow = new ArrayList<>();
+        ArrayList<ModelColor> playableColors = new ArrayList<>();
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+            if (k3.getK3().compatible(c).size() > 0) {
+                playableColors.add(c);
+            }
+        }
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
-            hex.setActionable(true);
-            hexToGlow.add(hex);
+            if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
+                hex.setActionable(true);
+                hexToGlow.add(hex);
+            }
         }
         for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
-                hex.setActionable(true);
-                hexToGlow.add(hex);
+                if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
+                    hex.setActionable(true);
+                    hexToGlow.add(hex);
+                }
             }
         }
         animationHexGlow.setToRedraw(hexToGlow);
     }
 
     public void updateVisible() {
+        if (k3.getP1().isAI() || k3.getP2().isAI()) {
+            pauseAi.setVisible(true);
+        }
         JPanel[][][] toUpdate = { k3Panels, p1Panels, p2Panels };
         Boolean atLeastOneNotEmpty;
         for (JPanel[][] pan : toUpdate) {
@@ -280,50 +305,60 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void update(Action a) {
+        sugAIButton.setEnabled(false);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
-        Move move = (Move) a.getData();
-        if (move instanceof MoveAA) {
-            updateAdditionnals(k3.getP1());
-            updateAdditionnals(k3.getP2());
-            updateMoutain(k3.getP1(), new Point(0, 0));
-            updateMoutain(k3.getP2(), new Point(0, 0));
-        } else if (move instanceof MoveAM) {
-            MoveAM am = (MoveAM) move;
-            updateAdditionnals(am.getPlayer());
-            updateMoutain(null, am.getTo());
-        } else if (move instanceof MoveAW) {
-            MoveAW aw = (MoveAW) move;
-            updateAdditionnals(aw.getPlayer());
-        } else if (move instanceof MoveMA) {
-            MoveMA ma = (MoveMA) move;
-            updateAdditionnals(ma.getPlayer());
-            if (ma.getPlayer() == k3.getP1()) {
-                updateMoutain(k3.getP2(), ma.getFrom());
-            } else {
-                updateMoutain(k3.getP1(), ma.getFrom());
+        if (a.getType() == ActionType.AI_PAUSE) {
+            Boolean pause = (Boolean) a.getData();
+            pauseAi.setText(pause ? "Reprendre Kubot" : "Pause Kubot");
+            pauseAi.setActionCommand(pause ? "stoppauseAI" : "pauseAI");
+        } else {
+            Move move = (Move) a.getData();
+            if (move instanceof MoveAA) {
+                updateAdditionnals(k3.getP1());
+                updateAdditionnals(k3.getP2());
+                updateMoutain(k3.getP1(), new Point(0, 0));
+                updateMoutain(k3.getP2(), new Point(0, 0));
+            } else if (move instanceof MoveAM) {
+                MoveAM am = (MoveAM) move;
+                updateAdditionnals(am.getPlayer());
+                updateMoutain(null, am.getTo());
+            } else if (move instanceof MoveAW) {
+                MoveAW aw = (MoveAW) move;
+                updateAdditionnals(aw.getPlayer());
+            } else if (move instanceof MoveMA) {
+                MoveMA ma = (MoveMA) move;
+                updateAdditionnals(ma.getPlayer());
+                if (ma.getPlayer() == k3.getP1()) {
+                    updateMoutain(k3.getP2(), ma.getFrom());
+                } else {
+                    updateMoutain(k3.getP1(), ma.getFrom());
+                }
+            } else if (move instanceof MoveMM) {
+                MoveMM mm = (MoveMM) move;
+                updateMoutain(mm.getPlayer(), mm.getFrom());
+                updateMoutain(null, mm.getTo());
+            } else if (move instanceof MoveMW) {
+                MoveMW mw = (MoveMW) move;
+                updateMoutain(mw.getPlayer(), mw.getFrom());
             }
-        } else if (move instanceof MoveMM) {
-            MoveMM mm = (MoveMM) move;
-            updateMoutain(mm.getPlayer(), mm.getFrom());
-            updateMoutain(null, mm.getTo());
-        } else if (move instanceof MoveMW) {
-            MoveMW mw = (MoveMW) move;
-            updateMoutain(mw.getPlayer(), mw.getFrom());
         }
         updateActionnable();
         updateHisto();
         updateText();
         updateVisible();
         updatePanelGlow(false);
-        if (k3.getHistory().canUndo() && !k3.getCurrentPlayer().isAI()) {
+        if (k3.getHistory().canUndo()) {
             undoButton.setEnabled(true);
         }
-        if (k3.getHistory().canRedo() && !k3.getCurrentPlayer().isAI()) {
+        if (k3.getHistory().canRedo()) {
             redoButton.setEnabled(true);
         }
         if (a.getType() != ActionType.UNDO && k3.getPenality()) {
             penalityMessage();
+        }
+        if (!k3.getCurrentPlayer().isAI()) {
+            sugAIButton.setEnabled(true);
         }
     }
 
@@ -380,6 +415,7 @@ public class SecondPhasePanel extends JPanel {
                 }
             }
         }
+        sugAIButton.setEnabled(!k3.getCurrentPlayer().isAI());
         updateHisto();
         updateAdditionnals(k3.getP1());
         updateAdditionnals(k3.getP2());
@@ -496,6 +532,16 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
             if (p == null) {
+
+                if (i == 8) {
+                    leftWhiteDrop = new JPanel();
+                    leftWhiteDrop.setOpaque(false);
+                    HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
+                    leftWhiteDrop.add(hex);
+                    leftWhiteDrop.setVisible(false);
+                    lineHexa.add(leftWhiteDrop);
+                }
+
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 HexIcon hex = new HexIcon(null, false, p);
@@ -522,6 +568,15 @@ public class SecondPhasePanel extends JPanel {
                 hexa.add(new HexIcon(null, false, p));
                 k3invisibles[i - 1] = hexa;
                 lineHexa.add(hexa);
+                if (i == 8) {
+                    rightwhiteDrop = new JPanel();
+                    rightwhiteDrop.setOpaque(false);
+                    HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
+                    rightwhiteDrop.add(hex);
+                    rightwhiteDrop.setVisible(false);
+                    lineHexa.add(rightwhiteDrop);
+                }
+
             }
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -546,8 +601,11 @@ public class SecondPhasePanel extends JPanel {
                             h.setVisible(true);
                         }
                     } else {
-                        HexIcon h = (HexIcon) k3Panels[0][0].getComponent(0);
-                        h.setVisible(true);
+                        if (k3.getCurrentPlayer() == k3.getP1()) {
+                            leftWhiteDrop.setVisible(true);
+                        } else {
+                            rightwhiteDrop.setVisible(true);
+                        }
                     }
                 }
                 updatePanelGlow(true);
@@ -555,6 +613,8 @@ public class SecondPhasePanel extends JPanel {
             case DND_STOP:
                 updateVisible();
                 updatePanelGlow(false);
+                leftWhiteDrop.setVisible(false);
+                rightwhiteDrop.setVisible(false);
                 break;
             default:
                 break;
@@ -658,48 +718,66 @@ public class SecondPhasePanel extends JPanel {
 
     public void updateHexSize() {
         Dimension newSize = this.getSize();
-        if (isSignificantChange(oldSize, newSize)) {
-            // Update the static size of HexIcon based on new size
-            int newHexSize = calculateNewHexSize(newSize);
-            Config.debug("Set hex size to ", newHexSize);
-            HexIcon.setStaticSize(newHexSize);
-            JPanel panel;
-            HexIcon h;
-            // Loop through panels and update hex size
-            for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    panel = p1Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.setPreferredSize(h.getSize());
-                    panel = p2Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.setPreferredSize(h.getSize());
-                }
-            }
-            for (int i = 0; i < k3Panels.length; i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    panel = k3Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.setPreferredSize(h.getSize());
-                }
-            }
-            for (Component c : p1Additionnals.getComponents()) {
-                h = (HexIcon) c;
+        // if (isSignificantChange(oldSize, newSize)) {
+        // Update the static size of HexIcon based on new size
+        int newHexSize = calculateNewHexSize(newSize);
+        HexIcon.setStaticSize(newHexSize);
+        JPanel panel;
+        HexIcon h;
+        // Loop through panels and update hex size
+        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                panel = p1Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
                 h.updateSize();
-            }
-            for (Component c : p2Additionnals.getComponents()) {
-                h = (HexIcon) c;
+                panel.removeAll();
+                panel.add(h);
+                panel = p2Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
                 h.updateSize();
+                panel.removeAll();
+                panel.add(h);
             }
-
-            // Update the old size to the new size
-            oldSize = newSize;
-            revalidate();
-            repaint();
         }
+        for (int i = 0; i < k3Panels.length; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                panel = k3Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
+                h.updateSize();
+                panel.removeAll();
+                panel.add(h);
+            }
+        }
+        for (Component c : p1Additionnals.getComponents()) {
+            h = (HexIcon) c;
+            h.updateSize();
+        }
+        for (Component c : p2Additionnals.getComponents()) {
+            h = (HexIcon) c;
+            h.updateSize();
+        }
+        try {
+            h = (HexIcon) leftWhiteDrop.getComponent(0);
+            h.updateSize();
+            leftWhiteDrop.removeAll();
+            leftWhiteDrop.setBorder(null);
+
+            leftWhiteDrop.add(h);
+
+            h = (HexIcon) rightwhiteDrop.getComponent(0);
+            h.updateSize();
+            rightwhiteDrop.removeAll();
+            rightwhiteDrop.setBorder(null);
+
+            rightwhiteDrop.add(h);
+        } catch (Exception e) {
+            Config.debug("leftWhiteDrop or rightwhiteDrop doesn't exist");
+        }
+        // Update the old size to the new size
+        oldSize = newSize;
+        revalidate();
+        repaint();
+        // }
     }
 
     private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
