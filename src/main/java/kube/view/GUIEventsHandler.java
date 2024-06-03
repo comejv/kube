@@ -112,8 +112,7 @@ public class GUIEventsHandler implements Runnable {
                     } else {
                         iaJ2 = new moveSetHeuristique();
                     }
-                    eventsToModel.add(new Action(ActionType.START,
-                            new Start(iaJ1, iaJ2)));
+                    eventsToModel.add(new Action(ActionType.START, new Start(iaJ1, iaJ2)));
                     gui.setGlassPanelVisible(true);
                     break;
                 case START_ONLINE:

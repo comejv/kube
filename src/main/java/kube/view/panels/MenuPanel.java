@@ -189,7 +189,7 @@ public class MenuPanel extends JPanel {
         JButton play = new MenuButton("JOUER");
         playersButtons.add(play, buttonsGBC);
         play.addActionListener(buttonListener);
-        play.setActionCommand("play");
+        play.setActionCommand("startLocal");
 
         JButton returnButton = new MenuButton("RETOUR");
         playersButtons.add(returnButton, buttonsGBC);
