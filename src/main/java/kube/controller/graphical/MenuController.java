@@ -16,6 +16,7 @@ import kube.controller.network.NetworkSender;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.services.Client;
 import kube.services.Network;
 import kube.services.Server;
 import kube.view.components.Buttons.ButtonIcon;
@@ -29,6 +30,8 @@ public class MenuController implements ActionListener, MouseListener {
     Network network;
     Thread networkListenerThread;
     Thread networkSenderThread;
+    NetworkListener networkListener;
+    NetworkSender networkSender;
 
     public MenuController(Queue<Action> toView, Queue<Action> toModel, Queue<Action> toNetwork) {
         this.toView = toView;
@@ -40,7 +43,10 @@ public class MenuController implements ActionListener, MouseListener {
         switch (evt.getActionCommand()) {
             case "local":
                 break;
-            case "online":
+            case "join":
+                network = new Client();
+                networkListener = new NetworkListener(network, toModel);
+                networkSender = new NetworkSender(network, toNetwork, 2);
                 break;
             case "host":
                 try {
@@ -52,11 +58,10 @@ public class MenuController implements ActionListener, MouseListener {
                 }
                 try {
                     network = new Server();
-                    Config.setHostPort(((Server) network).getPort());
-                    NetworkListener networkListener = new NetworkListener(network, toModel);
-                    NetworkSender networkSender = new NetworkSender(network, toNetwork, 1);
-                    networkListenerThread = new Thread(networkListener);
-                    networkSenderThread = new Thread(networkSender);
+                    Config.setHostPort( network.getPort());
+                    networkListener = new NetworkListener(network, toModel);
+                    networkSender = new NetworkSender(network, toNetwork, 1);
+
                     toView.add(new Action(ActionType.HOST));
                 } catch (IOException e) {
                     Config.error("Could not create the server.");
@@ -81,6 +86,30 @@ public class MenuController implements ActionListener, MouseListener {
                 // action PRINT_INVALID_ADDRESS à la view si oui envoyer START_ONLINE à la vue
                 // et gérer la logique dans GUIEventsHandler
                 // Si serveur jsp mdr
+                
+                if (network.isServer()) {
+                    //SERVER SIDE
+
+                } else {
+                    //CLIENT SIDE
+                    while (Config.getHostIP() == null || Config.getHostPort() == 0) {
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    try{
+                    network.connect(Config.getHostIP(), Config.getHostPort());
+                } catch (IOException e) {
+                    toView.add(new Action(ActionType.PRINT_INVALID_ADDRESS));
+                    break;
+                }
+                    networkListenerThread = new Thread(networkListener);
+                    networkSenderThread = new Thread(networkSender);
+                    networkListenerThread.start();
+                    networkSenderThread.start();
+                }
 
                 toView.add(new Action(ActionType.PRINT_INVALID_ADDRESS));
                 // networkListenerThread.start();

@@ -30,8 +30,14 @@ public class Client extends Network {
      * @param IP the IP address
      * @param port the port
      */
-    public Client(String IP, int port){
-        connect(IP, port);
+    public Client(String IP, int port) {
+        setIp(IP);
+        setPort(port);
+        try {
+            connect(IP, port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**********
@@ -62,7 +68,7 @@ public class Client extends Network {
      * @return true if the connection is successful, false otherwise
      */
     @Override
-    public final boolean connect(String ip, int port) {
+    public final boolean connect(String ip, int port) throws IOException {
         try {
             setIp(ip);
             setPort(port);
@@ -70,7 +76,7 @@ public class Client extends Network {
             setOut(new ObjectOutputStream(getSocket().getOutputStream()));
             setIn(new ObjectInputStream(getSocket().getInputStream()));
         } catch (IOException e) {
-            return false;
+            throw new IOException(e.getMessage());
         }
         return true;
     }

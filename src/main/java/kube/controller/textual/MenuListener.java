@@ -1,5 +1,6 @@
 package kube.controller.textual;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import kube.controller.network.NetworkListener;
@@ -83,7 +84,6 @@ public class MenuListener implements Runnable {
             eventsToNetwork = new Queue<>();
             controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, type, scanner);
             networkSender = new NetworkSender(network, eventsToNetwork, type);
-            networkSender = new NetworkSender(network, eventsToNetwork, type);
             networkListener = new NetworkListener(network, eventsToModel);
 
             Thread networkListenerThread = new Thread(networkListener);
@@ -154,12 +154,18 @@ public class MenuListener implements Runnable {
         Network network = new Client();
         eventsToView.add(new Action(ActionType.PRINT_ASK_IP));
         s = scanner.nextLine();
-        if (!network.connect(s, PORT)) {
+        try {
+            if (!network.connect(s, PORT)) {
+                eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                return askIP();
+            } else {
+                eventsToView.add(new Action(ActionType.PRINT_START));
+                return network;
+            }
+        } catch (IOException e) {
             eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
             return askIP();
-        } else {
-            eventsToView.add(new Action(ActionType.PRINT_START));
-            return network;
         }
+        
     }
 }
