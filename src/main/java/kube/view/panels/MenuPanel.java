@@ -14,13 +14,17 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
+import javax.swing.border.TitledBorder;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
@@ -42,6 +46,7 @@ public class MenuPanel extends JPanel {
     private CardLayout buttonsLayout;
     private JPanel buttonsPanel;
     public JPanel player1, player2;
+    private HashMap<String, JComponent> networkObjects;
 
     public MenuPanel(GUI gui, MenuController buttonListener) {
         this.gui = gui;
@@ -199,6 +204,8 @@ public class MenuPanel extends JPanel {
         // ONLINE //
         // ***************************************************************************************//
 
+        networkObjects = new HashMap<>();
+
         JPanel onlinePanel = new JPanel();
         onlinePanel.setOpaque(false);
         onlinePanel.setLayout(new GridBagLayout());
@@ -216,6 +223,10 @@ public class MenuPanel extends JPanel {
         JButton joinGame = new MenuButton("REJOINDRE");
         joinGame.addActionListener(buttonListener);
         joinGame.setActionCommand("join");
+        joinGame.addActionListener(e -> {
+            // Switch to the main panel
+            buttonsLayout.show(buttonsPanel, "join");
+        });
 
         JButton returnOnline = new MenuButton("RETOUR");
         returnOnline.addActionListener(e -> {
@@ -247,6 +258,9 @@ public class MenuPanel extends JPanel {
         ipPort.setOpaque(false);
         ipPort.setBackground(new Color(0, 0, 0, 0));
         ipPort.setEditable(false);
+
+        networkObjects.put("ipPane", ipPort);
+
         JPanel ipPortPanel = new JPanel();
         ipPortPanel.setOpaque(true);
         ipPortPanel.setBackground(GUIColors.ACCENT.toColor());
@@ -265,10 +279,18 @@ public class MenuPanel extends JPanel {
         hostPanel.add(ipPortPanel, buttonsGBC);
         hostPanel.add(copy, buttonsGBC);
 
+        JButton refresh = new MenuButton("REFRESH");
+        refresh.addActionListener(buttonListener);
+        refresh.setActionCommand("refreshConnexion");
+
+        hostPanel.add(refresh, buttonsGBC);
+
         JButton start = new MenuButton("DÉMARRER");
         start.addActionListener(buttonListener);
         start.setActionCommand("startOnline");
         start.setEnabled(false);
+
+        networkObjects.put("startButton", start);
 
         hostPanel.add(start, buttonsGBC);
 
@@ -282,16 +304,78 @@ public class MenuPanel extends JPanel {
         hostPanel.add(returnHost, buttonsGBC);
 
         buttonsPanel.add("host", hostPanel);
+
+        // JOIN //
+        JPanel joinPanel = new JPanel();
+        joinPanel.setOpaque(false);
+        joinPanel.setLayout(new GridBagLayout());
+        buttonsGBC = new GridBagConstraints();
+        insets = new Insets(10, 0, 10, 0);
+        buttonsGBC.gridx = 0;
+        buttonsGBC.gridy = GridBagConstraints.RELATIVE;
+        buttonsGBC.fill = GridBagConstraints.BOTH;
+        buttonsGBC.insets = insets;
+
+        JPanel ipPortFieldPanel = new JPanel();
+        ipPortFieldPanel.setOpaque(true);
+        ipPortFieldPanel.setBackground(GUIColors.ACCENT.toColor());
+        ipPortFieldPanel.setBorder(BorderFactory.createTitledBorder(
+                BorderFactory.createLineBorder(GUIColors.TEXT.toColor(), 1),
+                "Renseignez l'addresse (IP:port)",
+                TitledBorder.DEFAULT_JUSTIFICATION,
+                TitledBorder.DEFAULT_POSITION,
+                new Font("Jomhuria", Font.PLAIN, 40),
+                GUIColors.TEXT.toColor()));
+
+        JTextField ipPortField = new JTextField(20);
+        ipPortField.setFont(new Font("Jomhuria", Font.PLAIN, 30));
+        ipPortField.setForeground(GUIColors.TEXT.toColor());
+        ipPortField.setOpaque(true);
+        ipPortField.setBackground(GUIColors.ACCENT.toColor());
+        ipPortFieldPanel.add(ipPortField);
+
+        joinPanel.add(ipPortFieldPanel, buttonsGBC);
+
+        JButton connect = new MenuButton("CONNECTER");
+        connect.setActionCommand("startOnline");
+        connect.addActionListener(e -> {
+            String input = ipPortField.getText();
+            if (input.contains(":")) {
+                String[] parts = input.split(":");
+                String ip = parts[0];
+                int port = Integer.valueOf(parts[1]);
+                Config.debug("Connecting to IP: " + ip + " on port: " + port);
+                Config.setHostIP(ip);
+                Config.setHostPort(port);
+            } else {
+                Config.debug("Addresse invalide (manque :)");
+            }
+        });
+        connect.addActionListener(buttonListener);
+
+        JButton returnJoin = new MenuButton("RETOUR");
+        returnJoin.addActionListener(e -> {
+            buttonsLayout.show(buttonsPanel, "online");
+        });
+
+        joinPanel.add(connect, buttonsGBC);
+        joinPanel.add(returnJoin, buttonsGBC);
+
+        buttonsPanel.add("join", joinPanel);
     }
 
     public void showHostMenu() {
         // Set text of the ip and port
-        JPanel hostPanel = (JPanel) buttonsPanel.getComponent(3);
-        JTextPane ipPort = (JTextPane) ((JPanel) hostPanel.getComponent(0)).getComponent(0);
+        JTextPane ipPort = (JTextPane) networkObjects.get("ipPane");
         ipPort.setText(Config.getHostIP() + ":" + Config.getHostPort());
         buttonsPanel.revalidate();
         buttonsPanel.repaint();
         buttonsLayout.show(buttonsPanel, "host");
+    }
+
+    public void enableHostStartButton(boolean b) {
+        JButton start = (JButton) networkObjects.get("startButton");
+        start.setEnabled(b);
     }
 
     public JButton getRulesButton() {

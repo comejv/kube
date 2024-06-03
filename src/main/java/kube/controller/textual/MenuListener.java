@@ -11,7 +11,6 @@ import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Start;
 import kube.model.ai.moveSetHeuristique;
-import kube.model.ai.randomAI;
 import kube.services.Client;
 import kube.services.Network;
 import kube.services.Server;

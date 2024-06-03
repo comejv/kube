@@ -28,6 +28,7 @@ public enum ActionType {
     PRINT_LOADED,
     PRINT_SAVED,
     PRINT_WRONG_FILE_NAME,
+    PRINT_INVALID_ADDRESS,
 
     // --- MODEL ---
 
@@ -98,6 +99,7 @@ public enum ActionType {
     HOST,
     JOIN,
     SERVER_ERROR,
+    REFRESH_CONNEXION,
 
     // --- Menu ---
 

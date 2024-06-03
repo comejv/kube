@@ -93,6 +93,10 @@ public class GUIEventsHandler implements Runnable {
                     Config.debug("Win message");
                     gui.winMessage(action);
                     break;
+                case PRINT_INVALID_ADDRESS:
+                    gui.showError("Connexion impossible",
+                            "Impossible de se connecter à l'hôte, veuillez vérifier l'adresse et le port.");
+                    break;
                 // MENU
                 case START_LOCAL:
                     SelectPlayerButton p1 = (SelectPlayerButton) gui.getMenu().player1;
@@ -145,6 +149,9 @@ public class GUIEventsHandler implements Runnable {
                 case CONFIRMED_SETTINGS:
                     gui.removeAllFromOverlay();
                     gui.setGlassPaneController(getSavedGlassPaneController());
+                    break;
+                case REFRESH_CONNEXION:
+                    gui.enableHostStartButton((boolean) action.getData());
                     break;
                 // FIRST PHASE
                 case VALIDATE:

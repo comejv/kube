@@ -33,6 +33,7 @@ public class MenuController implements ActionListener, MouseListener {
     public MenuController(Queue<Action> toView, Queue<Action> toModel, Queue<Action> toNetwork) {
         this.toView = toView;
         this.toModel = toModel;
+        this.toNetwork = toNetwork;
     }
 
     public void actionPerformed(ActionEvent evt) {
@@ -40,6 +41,8 @@ public class MenuController implements ActionListener, MouseListener {
             case "local":
                 break;
             case "online":
+                break;
+            case "host":
                 try {
                     InetAddress inetAddress = InetAddress.getLocalHost();
                     String ipAddress = inetAddress.getHostAddress();
@@ -47,8 +50,6 @@ public class MenuController implements ActionListener, MouseListener {
                 } catch (UnknownHostException e) {
                     Config.error("Could not get the host IP address");
                 }
-                break;
-            case "host":
                 try {
                     network = new Server();
                     Config.setHostPort(((Server) network).getPort());
@@ -64,15 +65,27 @@ public class MenuController implements ActionListener, MouseListener {
                 break;
             case "returnHost":
                 toNetwork.add(new Action(ActionType.STOP_NETWORK));
-                ((Server) network).closeSocket();
+                ((Server) network).disconnect();
+                break;
+            case "refreshConnexion":
+                toView.add(new Action(ActionType.REFRESH_CONNEXION, ((Server) network).connect(null, 0)));
                 break;
             case "startLocal":
                 toView.add(new Action(ActionType.START_LOCAL));
                 break;
             case "startOnline":
-                networkListenerThread.start();
-                networkSenderThread.start();
-                toView.add(new Action(ActionType.START_ONLINE));
+                // Logique à ajouter :
+                // différencier si on est serveur ou client
+                // si client récupérer ip et port auquel on se connecte dans Config.getHostIP
+                // et Config.getHostPort puis tester si addresse valide, sinon envoyer new
+                // action PRINT_INVALID_ADDRESS à la view si oui envoyer START_ONLINE à la vue
+                // et gérer la logique dans GUIEventsHandler
+                // Si serveur jsp mdr
+
+                toView.add(new Action(ActionType.PRINT_INVALID_ADDRESS));
+                // networkListenerThread.start();
+                // networkSenderThread.start();
+                // toView.add(new Action(ActionType.START_ONLINE));
                 break;
             case "rules":
                 toView.add(new Action(ActionType.RULES));

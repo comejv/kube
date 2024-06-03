@@ -328,4 +328,8 @@ public class GUI extends Thread {
     public MenuPanel getMenu() {
         return menuPanel;
     }
+
+    public void enableHostStartButton(boolean b) {
+        getMenu().enableHostStartButton(b);
+    }
 }

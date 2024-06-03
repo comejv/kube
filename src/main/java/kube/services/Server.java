@@ -85,16 +85,6 @@ public class Server extends Network {
         }
     }
 
-    public void closeSocket() {
-        if (acceptThread != null) {
-            try {
-                getClientSocket().close();
-            } catch (IOException e) {
-                Config.error("Could not close the client socket.");
-            }
-        }
-    }
-
     /**********
      * SETTERS
      **********/
@@ -128,7 +118,7 @@ public class Server extends Network {
      **********/
 
     /**
-     * Connect to the server
+     * Is client connected to the server ?
      * 
      * @param ip   the IP address
      * @param port the port
@@ -136,11 +126,11 @@ public class Server extends Network {
      */
     @Override
     public boolean connect(String ip, int port) {
-        return clientSocket.isConnected();
+        return !(clientSocket == null) && clientSocket.isConnected();
     }
 
     /**
-     * Disconnect from the server
+     * Close client socket.
      * 
      * @return true if the disconnection is successful, false otherwise
      */
@@ -152,7 +142,8 @@ public class Server extends Network {
             getIn().close();
             getClientSocket().close();
             getServerSocket().close();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
+            Config.error("Failed to close connexion", e);
             return false;
         }
 
