@@ -161,6 +161,7 @@ public class GUIEventsHandler implements Runnable {
                 case MOVE:
                 case UNDO:
                 case REDO:
+                case AI_PAUSE:
                     gui.updateSecondPanel(action);
                     break;
                 case UPDATE_HEX_SIZE:

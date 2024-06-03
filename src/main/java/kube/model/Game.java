@@ -542,13 +542,8 @@ public class Game implements Runnable {
      * @return void
      */
     public void undo() {
-
         if (k3.getHistory().canUndo() && k3.unPlay()) {
             eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
-            while (k3.getCurrentPlayer().isAI() && k3.getHistory().canUndo()) {
-                k3.unPlay();
-                eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
-            }
         } else {
             eventsToView.add(new Action(ActionType.UNDO, null));
         }

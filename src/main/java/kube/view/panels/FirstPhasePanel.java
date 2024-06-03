@@ -529,7 +529,7 @@ public class FirstPhasePanel extends JPanel {
                     panel = moutainPanels[i][j];
                     h = (HexIcon) panel.getComponents()[0];
                     h.updateSize();
-                    panel.setPreferredSize(h.getSize());
+                    //panel.setPreferredSize(h.getSize());
                 }
             }
 

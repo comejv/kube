@@ -52,6 +52,7 @@ public class SecondPhasePanel extends JPanel {
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private JButton undoButton, redoButton;
     private Dimension oldSize;
+    private JButton pauseAi;
 
     private HexGlow animationHexGlow;
     private PanelGlow animationPanelGlow;
@@ -123,6 +124,14 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugIaButton, gbc);
 
+        pauseAi = new Buttons.GamePhaseButton("Pause Kubot");
+        pauseAi.setVisible(false);
+        pauseAi.setActionCommand("pauseAI");
+        pauseAi.addMouseListener(a);
+        gbc.gridy = 5;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(pauseAi, gbc);
+
         undoButton = new Buttons.GamePhaseButton("Annuler le coup");
         undoButton.setActionCommand("undo");
         undoButton.addMouseListener(a);
@@ -140,7 +149,6 @@ public class SecondPhasePanel extends JPanel {
         JScrollPane histo = getHisto();
         histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
         gbc.gridy = 3;
-        gbc.gridheight = 3;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(histo, gbc);
@@ -190,14 +198,14 @@ public class SecondPhasePanel extends JPanel {
         }
         ArrayList<HexIcon> hexToGlow = new ArrayList<>();
         ArrayList<ModelColor> playableColors = new ArrayList<>();
-        for (ModelColor c : ModelColor.getAllColoredAndJokers()){
-            if (k3.getK3().compatible(c).size() > 0){
+        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+            if (k3.getK3().compatible(c).size() > 0) {
                 playableColors.add(c);
             }
         }
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
-            if (playableColors.contains(hex.getColor())){
+            if (playableColors.contains(hex.getColor())) {
                 hex.setActionable(true);
                 hexToGlow.add(hex);
             }
@@ -205,7 +213,7 @@ public class SecondPhasePanel extends JPanel {
         for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
-                if (playableColors.contains(hex.getColor())){
+                if (playableColors.contains(hex.getColor())) {
                     hex.setActionable(true);
                     hexToGlow.add(hex);
                 }
@@ -215,6 +223,9 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateVisible() {
+        if (k3.getP1().isAI() || k3.getP2().isAI()) {
+            pauseAi.setVisible(true);
+        }
         JPanel[][][] toUpdate = { k3Panels, p1Panels, p2Panels };
         Boolean atLeastOneNotEmpty;
         for (JPanel[][] pan : toUpdate) {
@@ -291,44 +302,50 @@ public class SecondPhasePanel extends JPanel {
     public void update(Action a) {
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
-        Move move = (Move) a.getData();
-        if (move instanceof MoveAA) {
-            updateAdditionnals(k3.getP1());
-            updateAdditionnals(k3.getP2());
-            updateMoutain(k3.getP1(), new Point(0, 0));
-            updateMoutain(k3.getP2(), new Point(0, 0));
-        } else if (move instanceof MoveAM) {
-            MoveAM am = (MoveAM) move;
-            updateAdditionnals(am.getPlayer());
-            updateMoutain(null, am.getTo());
-        } else if (move instanceof MoveAW) {
-            MoveAW aw = (MoveAW) move;
-            updateAdditionnals(aw.getPlayer());
-        } else if (move instanceof MoveMA) {
-            MoveMA ma = (MoveMA) move;
-            updateAdditionnals(ma.getPlayer());
-            if (ma.getPlayer() == k3.getP1()) {
-                updateMoutain(k3.getP2(), ma.getFrom());
-            } else {
-                updateMoutain(k3.getP1(), ma.getFrom());
+        if (a.getType() == ActionType.AI_PAUSE) {
+            Boolean pause = (Boolean) a.getData();
+            pauseAi.setText(pause ? "Reprendre Kubot" : "Pause Kubot");
+            pauseAi.setActionCommand(pause ? "stoppauseAI" : "pauseAI");
+        } else {
+            Move move = (Move) a.getData();
+            if (move instanceof MoveAA) {
+                updateAdditionnals(k3.getP1());
+                updateAdditionnals(k3.getP2());
+                updateMoutain(k3.getP1(), new Point(0, 0));
+                updateMoutain(k3.getP2(), new Point(0, 0));
+            } else if (move instanceof MoveAM) {
+                MoveAM am = (MoveAM) move;
+                updateAdditionnals(am.getPlayer());
+                updateMoutain(null, am.getTo());
+            } else if (move instanceof MoveAW) {
+                MoveAW aw = (MoveAW) move;
+                updateAdditionnals(aw.getPlayer());
+            } else if (move instanceof MoveMA) {
+                MoveMA ma = (MoveMA) move;
+                updateAdditionnals(ma.getPlayer());
+                if (ma.getPlayer() == k3.getP1()) {
+                    updateMoutain(k3.getP2(), ma.getFrom());
+                } else {
+                    updateMoutain(k3.getP1(), ma.getFrom());
+                }
+            } else if (move instanceof MoveMM) {
+                MoveMM mm = (MoveMM) move;
+                updateMoutain(mm.getPlayer(), mm.getFrom());
+                updateMoutain(null, mm.getTo());
+            } else if (move instanceof MoveMW) {
+                MoveMW mw = (MoveMW) move;
+                updateMoutain(mw.getPlayer(), mw.getFrom());
             }
-        } else if (move instanceof MoveMM) {
-            MoveMM mm = (MoveMM) move;
-            updateMoutain(mm.getPlayer(), mm.getFrom());
-            updateMoutain(null, mm.getTo());
-        } else if (move instanceof MoveMW) {
-            MoveMW mw = (MoveMW) move;
-            updateMoutain(mw.getPlayer(), mw.getFrom());
         }
         updateActionnable();
         updateHisto();
         updateText();
         updateVisible();
         updatePanelGlow(false);
-        if (k3.getHistory().canUndo() && !k3.getCurrentPlayer().isAI()) {
+        if (k3.getHistory().canUndo()) {
             undoButton.setEnabled(true);
         }
-        if (k3.getHistory().canRedo() && !k3.getCurrentPlayer().isAI()) {
+        if (k3.getHistory().canRedo()) {
             redoButton.setEnabled(true);
         }
         if (a.getType() != ActionType.UNDO && k3.getPenality()) {
