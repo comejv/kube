@@ -1,0 +1,1 @@
+Les naturels n'ont pas de contraintes de terrain (ils peuvent cependant provoquer une pénalité). N'importe quelle pièce peut être jouée par dessus.

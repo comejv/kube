@@ -1,0 +1,3 @@
+Le jeu se déroule en 2 phases.
+
+Le but du jeu est de faire en sorte que votre adversaire ne puisse plus jouer de coups lors de la seconde phase. 
