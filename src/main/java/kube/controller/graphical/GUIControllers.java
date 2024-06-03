@@ -11,8 +11,8 @@ public class GUIControllers {
     Phase2Controller phase2Controller;
     Phase1DnD hexPhase1DnD;
 
-    public GUIControllers(Queue<Action> toView, Queue<Action> toModel) {
-        menuController = new MenuController(toView, toModel);
+    public GUIControllers(Queue<Action> toView, Queue<Action> toModel, Queue<Action> toNetwork) {
+        menuController = new MenuController(toView, toModel, toNetwork);
         phase1Controller = new Phase1Controller(toView, toModel);
         Config.debug("GUIControllers: Phase1Controller created : ", phase1Controller);
         phase2Controller = new Phase2Controller(toView, toModel);

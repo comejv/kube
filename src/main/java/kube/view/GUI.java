@@ -37,12 +37,12 @@ public class GUI extends Thread {
     private GUIControllers controllers;
     private Kube k3;
 
+    private MenuPanel menuPanel;
     private volatile FirstPhasePanel firstPhasePanel;
     private volatile SecondPhasePanel secondPhasePanel;
     private Thread loaderThread;
     private Queue<Action> eventsToView;
     public Queue<Action> eventsToModel;
-    public MenuPanel mP;
 
     public GUI(Kube k3, GUIControllers controllers, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.eventsToView = eventsToView;
@@ -90,8 +90,8 @@ public class GUI extends Thread {
         // new MainFrame
         mF = new MainFrame();
         // add menu pannel
-        mP = new MenuPanel(this, controllers.getMenuController());
-        mF.addPanel(mP, MENU);
+        menuPanel = new MenuPanel(this, controllers.getMenuController());
+        mF.addPanel(menuPanel, MENU);
 
         if (Config.SHOW_BORDERS) {
             showAllBorders(mF);
@@ -323,5 +323,9 @@ public class GUI extends Thread {
                 Config.error("Unimplemented game phase for resize");
                 break;
         }
+    }
+
+    public MenuPanel getMenu() {
+        return menuPanel;
     }
 }

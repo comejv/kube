@@ -70,6 +70,9 @@ public enum ActionType {
     PRINT_WAITING_RESPONSE,
     CONNECTION_CLOSED,
 
+    // --- NETWORK ---
+    STOP_NETWORK,
+
     /**********
      * GUI
      **********/
@@ -92,11 +95,14 @@ public enum ActionType {
     DND_START,
     DND_STOP,
     UPDATE_HEX_SIZE,
+    HOST,
+    JOIN,
+    SERVER_ERROR,
 
     // --- Menu ---
 
-    PLAY_LOCAL,
-    PLAY_ONLINE,
+    START_LOCAL,
+    START_ONLINE,
     RULES,
     QUIT,
     VOLUME,

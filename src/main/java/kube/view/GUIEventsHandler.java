@@ -2,6 +2,8 @@ package kube.view;
 
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import kube.configuration.Config;
 import kube.model.Kube;
@@ -92,9 +94,9 @@ public class GUIEventsHandler implements Runnable {
                     gui.winMessage(action);
                     break;
                 // MENU
-                case START:
-                    SelectPlayerButton p1 = (SelectPlayerButton) gui.mP.player1;
-                    SelectPlayerButton p2 = (SelectPlayerButton) gui.mP.player2;
+                case START_LOCAL:
+                    SelectPlayerButton p1 = (SelectPlayerButton) gui.getMenu().player1;
+                    SelectPlayerButton p2 = (SelectPlayerButton) gui.getMenu().player2;
                     MiniMaxAI iaJ1, iaJ2;
                     if (p1.buttonValue == 0) {
                         iaJ1 = null;
@@ -110,11 +112,11 @@ public class GUIEventsHandler implements Runnable {
                             new Start(iaJ1, iaJ2)));
                     gui.setGlassPanelVisible(true);
                     break;
-                case PLAY_LOCAL:
-                    // TODO : maybe tell model about it ?
+                case START_ONLINE:
+                    Config.debug("Starting online game");
                     break;
-                case PLAY_ONLINE:
-                    // TODO : maybe tell model about it ?
+                case HOST:
+                    gui.getMenu().showHostMenu();
                     break;
                 case RULES:
                     gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));

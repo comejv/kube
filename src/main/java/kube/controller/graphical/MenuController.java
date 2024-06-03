@@ -4,21 +4,33 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.SwingUtilities;
 
 import kube.configuration.Config;
+import kube.controller.network.NetworkListener;
+import kube.controller.network.NetworkSender;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.services.Network;
+import kube.services.Server;
 import kube.view.components.Buttons.ButtonIcon;
 
 public class MenuController implements ActionListener, MouseListener {
     // TODO : refactor this class to make it more readable
     Queue<Action> toView;
     Queue<Action> toModel;
+    Queue<Action> toNetwork;
 
-    public MenuController(Queue<Action> toView, Queue<Action> toModel) {
+    Network network;
+    Thread networkListenerThread;
+    Thread networkSenderThread;
+
+    public MenuController(Queue<Action> toView, Queue<Action> toModel, Queue<Action> toNetwork) {
         this.toView = toView;
         this.toModel = toModel;
     }
@@ -26,13 +38,41 @@ public class MenuController implements ActionListener, MouseListener {
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
             case "local":
-                toView.add(new Action(ActionType.PLAY_LOCAL));
                 break;
             case "online":
-                toView.add(new Action(ActionType.PLAY_ONLINE));
+                try {
+                    InetAddress inetAddress = InetAddress.getLocalHost();
+                    String ipAddress = inetAddress.getHostAddress();
+                    Config.setHostIP(ipAddress);
+                } catch (UnknownHostException e) {
+                    Config.error("Could not get the host IP address");
+                }
                 break;
-            case "play":
-                toView.add(new Action(ActionType.START));
+            case "host":
+                try {
+                    network = new Server();
+                    Config.setHostPort(((Server) network).getPort());
+                    NetworkListener networkListener = new NetworkListener(network, toModel);
+                    NetworkSender networkSender = new NetworkSender(network, toNetwork, 1);
+                    networkListenerThread = new Thread(networkListener);
+                    networkSenderThread = new Thread(networkSender);
+                    toView.add(new Action(ActionType.HOST));
+                } catch (IOException e) {
+                    Config.error("Could not create the server.");
+                    toView.add(new Action(ActionType.SERVER_ERROR));
+                }
+                break;
+            case "returnHost":
+                toNetwork.add(new Action(ActionType.STOP_NETWORK));
+                ((Server) network).closeSocket();
+                break;
+            case "startLocal":
+                toView.add(new Action(ActionType.START_LOCAL));
+                break;
+            case "startOnline":
+                networkListenerThread.start();
+                networkSenderThread.start();
+                toView.add(new Action(ActionType.START_ONLINE));
                 break;
             case "rules":
                 toView.add(new Action(ActionType.RULES));
