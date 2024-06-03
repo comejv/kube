@@ -4,16 +4,23 @@ Welcome to Kube, a Java clone of the classic K3 game!
 
 ## About Kube
 
-\[Description du jeu]
-
 This project is a Java implementation of the original K3 game, built using Maven for dependency management and project build.
 
 ## Features
 
+- [x] Play in your terminal.
+- [x] Play using a graphical user interface.
+- [x] Build a pyramid in the first phase.
+- [x] Place your pieces on the central pyramid in the second phase.
+- [x] Undo and redo moves.
+- [x] Play against the computer.
+- [x] Resize your window to fit your screen.
+- [ ] Save and load games.
+- [ ] Play against other players online.
 
 ## Installation
 
-To run Kube on your local machine, make sure you have Java Development Kit (JDK) installed, along with Apache Maven.
+To run Kube on your local machine, make sure you have Java Development Kit (JDK) version 11 or later installed, along with Apache Maven.
 
 1. Clone this repository to your local machine:
 
@@ -36,14 +43,26 @@ mvn clean package
 4. Run the game:
 
 ```bash
-java -jar target/kube-game.jar
+java -jar target/kube-alpha.jar
 ```
+Or double click on the jar file in the target directory.
 
 ## How to Play
 
-\[Instructions de jeu]
+The game is played in 2 phases.
+
+The aim of the game is to prevent your opponent from making any more moves in the second phase. In the first phase, you must build a pyramid from the pieces you are given. 
+In the second phase, you place your pieces on the central pyramid, taking turns with your opponent. The only condition is that at least one of the two bases must be the same color as your piece. When you play a piece on two pieces of the same color, you receive a penalty. In this case, your opponent must take one of your “accessible” pieces and add it to his or her reserve of “extra” pieces.Note that extra pieces can be played just like “accessible” pieces.There are two jokers, natural and white.White pieces allow you to pass your turn without playing on the central pyramid.Natural pieces have no terrain constraints (they can, however, provoke a penalty). Any piece can be played over them.
 
 ## Acknowledgments
 
 - Inspired by the classic K3 game.
 - Built with Java and Maven.
+
+## Credits
+
+- [Undo icon](link-to-undo-icon) by Styfico
+- [Redo icon](link-to-redo-icon) by Styfico
+- [Volume icon](link-to-volume-icon) by Styfico
+- [Jomhuria font](link-to-jomhuria-font) by KB Studio
+- [HSL toolkit](link-to-hsl-toolkit) adapted from mjakson on github
