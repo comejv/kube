@@ -137,6 +137,7 @@ public class SecondPhasePanel extends JPanel {
         JButton loadButton = new Buttons.GamePhaseButton("Charger");
         loadButton.setActionCommand("load");
         loadButton.addMouseListener(a);
+        loadButton.setEnabled(true);
         gbc.gridy = 4;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(loadButton, gbc);

@@ -119,6 +119,7 @@ public class GUI extends Thread {
                 firstPhasePanel.buildMessage();
                 firstPhasePanel.updateAll(true);
                 mF.showPanel(PHASE1);
+                setGlassPanelVisible(true);
                 loadPanel(PHASE2);
                 break;
             case Kube.GAME_PHASE:
@@ -128,6 +129,7 @@ public class GUI extends Thread {
                 secondPhasePanel.startMessage();
                 secondPhasePanel.updateAll();
                 mF.showPanel(PHASE2);
+                setGlassPanelVisible(true);
                 firstPhasePanel.resetButtonValue();
                 break;
         }
