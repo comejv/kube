@@ -324,20 +324,4 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
             }
         }
     }
-
-    /**
-     * Clone the MiniMaxAI object
-     * 
-     * @return the cloned object
-     */
-    public MiniMaxAI clone() {
-        // TODO: export in each AI classes
-        if (this instanceof moveSetHeuristique) {
-            return new moveSetHeuristique(getTime());
-        } else if (this instanceof randomAI) {
-            return new randomAI(getTime());
-        } else {
-            throw new UnsupportedOperationException("Unsupported type for cloning.");
-        }
-    }
 }

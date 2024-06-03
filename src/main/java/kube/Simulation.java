@@ -7,8 +7,11 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
+import kube.model.ai.betterConstructV2;
 import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
+import kube.model.ai.simpleHeuristique;
+import kube.model.ai.testThomas;
 
 // Import java classes
 import java.awt.Point;
@@ -65,15 +68,15 @@ public class Simulation implements Runnable {
         Simulation s;
         Thread[] threads;
 
-        nbGames = 100;
+        nbGames = 1000;
+        nbThreads = 8;
 
         try {
             nbGames = Integer.parseInt(args[0]);
         } catch (Exception e) {
-            System.out.println("Nombre de parties par défaut: 100");
+            System.out.println("Nombre de parties par défaut: " + nbGames);
         }
 
-        nbThreads = 8;
         s = new Simulation(nbGames);
 
         s.winJ1 = 0;
@@ -186,10 +189,12 @@ public class Simulation implements Runnable {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new moveSetHeuristique(50), new randomAI(50));
+            k.init(new testThomas(50), new simpleHeuristique(50));
             k.getP1().getAI().constructionPhase(k);
+            k.getP1().validateBuilding();
             k.updatePhase();
             k.getP2().getAI().constructionPhase(k);
+            k.getP2().validateBuilding();
             k.updatePhase();
             // Phsae 2
             k.setCurrentPlayer(k.getRandomPlayer());
