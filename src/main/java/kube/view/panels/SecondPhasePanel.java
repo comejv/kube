@@ -684,10 +684,9 @@ public class SecondPhasePanel extends JPanel {
 
     public void updateHexSize() {
         Dimension newSize = this.getSize();
-        if (isSignificantChange(oldSize, newSize)) {
+        // if (isSignificantChange(oldSize, newSize)) {
             // Update the static size of HexIcon based on new size
             int newHexSize = calculateNewHexSize(newSize);
-            Config.debug("Set hex size to ", newHexSize);
             HexIcon.setStaticSize(newHexSize);
             JPanel panel;
             HexIcon h;
@@ -728,7 +727,7 @@ public class SecondPhasePanel extends JPanel {
             oldSize = newSize;
             revalidate();
             repaint();
-        }
+        // }
     }
 
     private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {

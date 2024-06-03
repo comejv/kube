@@ -226,7 +226,6 @@ public class FirstPhasePanel extends JPanel {
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             mini.add(new HexIcon(c, false, 1.5));
             mini.add(numOfPieces);
-            Config.debug("Ajout hexa en position ", x, y);
             gbc.gridx = x;
             gbc.gridy = y;
             x++;
@@ -532,6 +531,26 @@ public class FirstPhasePanel extends JPanel {
                 panel.removeAll();
                 panel.add(h);
             }
+        }
+
+        for (JLabel pan : sidePanels.values()) {
+            JPanel p = (JPanel) pan.getParent();
+            h = (HexIcon) p.getComponents()[0];
+            JLabel lab = (JLabel) p.getComponents()[1];
+            p.removeAll();
+            h.updateSize();
+            p.add(h);
+            p.add(lab);
+        }
+
+        for (JLabel pan : opponentPiecesPanel.values()) {
+            JPanel p = (JPanel) pan.getParent();
+            h = (HexIcon) p.getComponents()[0];
+            JLabel lab = (JLabel) p.getComponents()[1];
+            p.removeAll();
+            h.updateSize();
+            p.add(h);
+            p.add(lab);
         }
 
         // Update the old size to the new size
