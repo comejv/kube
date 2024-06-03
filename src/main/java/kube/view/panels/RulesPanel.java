@@ -230,7 +230,7 @@ public class RulesPanel extends JPanel {
             updatedHeight = Math.round(gui.getMainFrame().getHeight() / 2.25f);
             for (int i = 0; i < 4; i++) {
                 Image image = ResourceLoader.getBufferedImage("animations/animation" + ruleNb + i);
-                Image resized = image.getScaledInstance(updatedWidth, updatedHeight, Image.SCALE_AREA_AVERAGING);
+                Image resized = image.getScaledInstance(updatedWidth, updatedHeight, Image.SCALE_SMOOTH);
                 JLabel frame = new JLabel(new ImageIcon(resized));
                 frame.setPreferredSize(new Dimension(updatedWidth, updatedHeight));
                 if(i > 0){
