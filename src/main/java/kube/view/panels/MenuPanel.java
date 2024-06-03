@@ -279,7 +279,7 @@ public class MenuPanel extends JPanel {
         hostPanel.add(ipPortPanel, buttonsGBC);
         hostPanel.add(copy, buttonsGBC);
 
-        JButton refresh = new MenuButton("REFRESH");
+        JButton refresh = new MenuButton("RAFRAÎCHIR");
         refresh.addActionListener(buttonListener);
         refresh.setActionCommand("refreshConnexion");
 
