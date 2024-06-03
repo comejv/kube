@@ -104,6 +104,7 @@ public enum ActionType {
     PREVIOUS_RULE,
     END_OVERLAY_MENU,
     LOAD_FILE_SELECTED,
+    LOAD_PANEL,
 
     /**********
      * UNUSED

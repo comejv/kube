@@ -29,6 +29,9 @@ public class OverlayPanel extends JPanel{
             case SETTINGS:
                 add(new SettingsPanel(gui, buttonListener), center);
                 break;
+            case LOAD_PANEL:
+                add(new LoadPanel(gui, buttonListener), center);
+                break;
             case RULES:
                 add(new RulesPanel(gui, buttonListener), center);
                 break;

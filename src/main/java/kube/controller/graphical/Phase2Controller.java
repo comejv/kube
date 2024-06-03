@@ -63,6 +63,9 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
             case "save":
                 toView.add(new Action(ActionType.SAVE, 2));
                 break;
+            case "load":
+                toView.add(new Action(ActionType.LOAD_PANEL));
+                break;
             default:
                 break;
         }

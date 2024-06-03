@@ -134,11 +134,18 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(saveButton, gbc);
 
+        JButton loadButton = new Buttons.GamePhaseButton("Charger");
+        loadButton.setActionCommand("load");
+        loadButton.addMouseListener(a);
+        gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(loadButton, gbc);
+
         pauseAi = new Buttons.GamePhaseButton("Pause Kubot");
         pauseAi.setVisible(false);
         pauseAi.setActionCommand("pauseAI");
         pauseAi.addMouseListener(a);
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(pauseAi, gbc);
 
@@ -146,19 +153,19 @@ public class SecondPhasePanel extends JPanel {
         undoButton.setActionCommand("undo");
         undoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         panel.add(undoButton, gbc);
 
         redoButton = new Buttons.GamePhaseButton("Rejouer le coup");
         redoButton.setActionCommand("redo");
         redoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         panel.add(redoButton, gbc);
 
         JScrollPane histo = getHisto();
         histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(histo, gbc);
