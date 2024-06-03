@@ -57,6 +57,8 @@ public class SettingsPanel extends JPanel {
         JPanel audioPanel = createTab("Audio");
         addFillerPanel(audioPanel);
 
+        addLoadPanel();
+
         setVisible(true);
     }
 
@@ -148,6 +150,21 @@ public class SettingsPanel extends JPanel {
             filler.setBorder(BorderFactory.createLineBorder(Color.red));
             container.add(filler);
         }
+    }
+
+    private void addLoadPanel() {
+        JPanel loadPanel = new LoadPanel(gui, buttonListener, true);
+        JLabel loadLabel = new JLabel("Charger", SwingConstants.CENTER);
+        loadLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 12)));
+        loadLabel.setForeground(GUIColors.ACCENT.toColor());
+        loadLabel.setPreferredSize(new Dimension(200, 50));
+        tabbedPanel.addTab("Charger", loadPanel);
+        tabbedPanel.setTabComponentAt(getTabNb(), loadLabel);
+        setTabNb(getTabNb() + 1);
+    }
+
+    public JTabbedPane getTabbedPanel() {
+        return tabbedPanel;
     }
 
     private void wrapInJPanel(Component c, GridBagConstraints elemGBC,
