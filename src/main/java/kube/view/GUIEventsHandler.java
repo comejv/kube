@@ -113,7 +113,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(true);
                     break;
                 case LOAD:
-                    Config.debug("TEST");
+                    gui.updatePanel();
                     gui.setGlassPanelVisible(true);
                     break;
                 case PLAY_LOCAL:
