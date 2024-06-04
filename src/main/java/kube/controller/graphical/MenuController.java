@@ -74,11 +74,13 @@ public class MenuController implements ActionListener, MouseListener {
             if (network != null) {
                 toNetwork.add(new Action(ActionType.STOP_NETWORK));
                 if (network.isServer()) {
-                    ((Server) network).disconnect();
-                    toView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                    if (((Server) network).disconnect()){
+                        toView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                    }
                 } else {
-                    ((Client) network).disconnect();
-                    toView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                    if (((Client) network).disconnect()){
+                        toView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                    }
                 }
             }
                 break;
