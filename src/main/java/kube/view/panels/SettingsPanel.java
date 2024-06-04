@@ -190,13 +190,13 @@ public class SettingsPanel extends JPanel {
 
         // Music Control
         JLabel musicLabel = new JLabel("Musique :");
-        BufferedImage musicVolumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+        BufferedImage musicVolumeImg = Config.isMusicMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
         ButtonIcon musicButton = new ButtonIcon("musicVolume", musicVolumeImg, buttonListener);
         musicButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                BufferedImage volumeImg = Config.isMusicMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
-                musicButton.setImage(volumeImg);
+                BufferedImage musicVolumeImg = Config.isMusicMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
+                musicButton.setImage(musicVolumeImg);
             }
         });
 
@@ -210,13 +210,13 @@ public class SettingsPanel extends JPanel {
 
         // Sound Effects Control
         JLabel soundEffectsLabel = new JLabel("Effets sonores :");
-        BufferedImage soundVolumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+        BufferedImage soundVolumeImg = Config.isMusicMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
         ButtonIcon soundButton = new ButtonIcon("soundVolume", soundVolumeImg, buttonListener);
         soundButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                BufferedImage volumeImg = Config.isSoundMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
-                soundButton.setImage(volumeImg);
+                BufferedImage soundVolumeImg = Config.isSoundMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
+                soundButton.setImage(soundVolumeImg);
             }
         });
 

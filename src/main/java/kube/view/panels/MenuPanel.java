@@ -105,8 +105,8 @@ public class MenuPanel extends JPanel {
         volumeOffImg.resizeIcon(100, 100);
         volumeOffImg.recolor(GUIColors.ACCENT);
 
-        BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOnImg.getImage()
-                : volumeOffImg.getImage();
+        BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOffImg.getImage()
+                : volumeOnImg.getImage();
         ButtonIcon volume = new ButtonIcon("volume", volumeImg, buttonListener);
         volume.addMouseListener(new MouseAdapter() {
             @Override
