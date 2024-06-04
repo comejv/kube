@@ -760,6 +760,18 @@ public class SecondPhasePanel extends JPanel {
             p2Additionnals.repaint();
         }
 
+        if (!glowPan.keySet().contains(p1)){
+            p1.repaint();
+        }
+
+        if (!glowPan.keySet().contains(p2)){
+            p2.repaint();
+        }
+
+        if (!glowPan.keySet().contains(base)){
+            base.repaint();
+        }
+        
         animationPanelGlow.setToRedraw(glowPan);
     }
 
