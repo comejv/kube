@@ -150,8 +150,8 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 // MENU
                 case START:
-                    p1 = (SelectPlayerButton) gui.mP.player1;
-                    p2 = (SelectPlayerButton) gui.mP.player2;
+                    p1 = (SelectPlayerButton) gui.getMenuPanel().player1;
+                    p2 = (SelectPlayerButton) gui.getMenuPanel().player2;
                     iaJ1 = null;
                     iaJ2 = null;
                     
@@ -206,7 +206,7 @@ public class GUIEventsHandler implements Runnable {
                     // TODO : maybe tell model about it ?
                     break;
                 case RULES:
-                    menuController = gui.getControllers().getMenuController();
+                    menuController = gui.getControllerManager().getMenuController();
                     gui.addToOverlay(new OverlayPanel(gui, menuController, action.getType()));
                     gui.setGlassPanelVisible(true);
                     break;
@@ -234,7 +234,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    menuController = gui.getControllers().getMenuController();
+                    menuController = gui.getControllerManager().getMenuController();
                     settings = new OverlayPanel(gui, menuController, action.getType());
                     gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
@@ -265,7 +265,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateSecondPanel(action);
                     break;
                 case LOAD_PANEL:
-                    menuController = gui.getControllers().getMenuController();
+                    menuController = gui.getControllerManager().getMenuController();
                     loadMenu = new OverlayPanel(gui, menuController, action.getType());
                     gui.addToOverlay(loadMenu);
                     setSavedGlassPaneController(gui.getCurrentListener());

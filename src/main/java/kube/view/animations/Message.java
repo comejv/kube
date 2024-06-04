@@ -26,7 +26,7 @@ public class Message implements ActionListener {
 
     public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow, boolean onlyDecreasing, boolean aiAlreadyPaused) {
         if (!aiAlreadyPaused){
-            gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, true));
+            gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, true));
         }
         if (onlyDecreasing) {
             opacity = 1;
@@ -65,7 +65,7 @@ public class Message implements ActionListener {
             gui.removeAllFromOverlay();
             hexGlow.getTimer().restart();
             if (!aiAlreadyPaused){
-                gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, false));
+                gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, false));
             }
             timer.stop();
         } else {

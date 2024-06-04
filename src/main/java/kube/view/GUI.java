@@ -5,7 +5,7 @@ import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.Phase1DnD;
 import kube.controller.graphical.Phase2DnD;
-import kube.controller.graphical.GUIControllers;
+import kube.controller.graphical.GUIControllerManager;
 import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
@@ -47,12 +47,12 @@ public class GUI implements Runnable {
     private volatile SecondPhasePanel secondPhasePanel;
     private volatile FirstPhasePanel firstPhasePanel;
 
-    private MainFrame mF;
-    private GUIControllers controllers;
+    private MainFrame mainFrame;
+    private GUIControllerManager controllerManager;
     private Kube k3;
     private Thread loaderThread;
-    public Queue<Action> eventsToView, eventsToModel;
-    public MenuPanel mP;
+    private Queue<Action> eventsToView, eventsToModel;
+    private MenuPanel menuPanel;
 
     /**********
      * CONSTRUCTOR
@@ -61,12 +61,13 @@ public class GUI implements Runnable {
     /**
      * Constructor for the GUI class
      * 
-     * @param k3            the Kube object
-     * @param controllers   the GUIControllers object
-     * @param eventsToView  the Queue of Action to send to the view
-     * @param eventsToModel the Queue of Action to send to the model
+     * @param k3                the Kube object
+     * @param controllerManager the GUIControllers object
+     * @param eventsToView      the Queue of Action to send to the view
+     * @param eventsToModel     the Queue of Action to send to the model
      */
-    public GUI(Kube k3, GUIControllers controllers, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
+    public GUI(Kube k3, GUIControllerManager controllerManager, Queue<Action> eventsToView,
+            Queue<Action> eventsToModel) {
 
         boolean nimbusFound;
         GraphicsEnvironment ge;
@@ -74,7 +75,7 @@ public class GUI implements Runnable {
 
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
-        this.controllers = controllers;
+        this.controllerManager = controllerManager;
         this.k3 = k3;
 
         try {
@@ -118,7 +119,7 @@ public class GUI implements Runnable {
      **********/
 
     public void setGlassPanelVisible(boolean b) {
-        mF.getGlassPane().setVisible(b);
+        getMainFrame().getGlassPane().setVisible(b);
     }
 
     protected void setPanel(String panelName, JPanel panel) {
@@ -134,15 +135,43 @@ public class GUI implements Runnable {
                 break;
         }
 
-        mF.addPanel(panel, panelName);
+        getMainFrame().addPanel(panel, panelName);
     }
 
     /**********
      * GETTERS
      **********/
 
+    public SecondPhasePanel getSecondPhasePanel() {
+        return secondPhasePanel;
+    }
+
+    public FirstPhasePanel getFirstPhasePanel() {
+        return firstPhasePanel;
+    }
+
+    public Queue<Action> getEventsToView() {
+        return eventsToView;
+    }
+
+    public Queue<Action> getEventsToModel() {
+        return eventsToModel;
+    }
+
     public MainFrame getMainFrame() {
-        return mF;
+        return mainFrame;
+    }
+
+    public MenuPanel getMenuPanel() {
+        return menuPanel;
+    }
+
+    public Kube getK3() {
+        return k3;
+    }
+
+    public Thread getLoaderThread() {
+        return loaderThread;
     }
 
     public Kube getKube() {
@@ -150,11 +179,11 @@ public class GUI implements Runnable {
     }
 
     public JPanel getContentPane() {
-        return mF.getFramePanel();
+        return getMainFrame().getFramePanel();
     }
 
     public Component getOverlayComponent() {
-        return mF.getOverlayComponent();
+        return getMainFrame().getOverlayComponent();
     }
 
     public MouseAdapter getCurrentListener() {
@@ -165,8 +194,8 @@ public class GUI implements Runnable {
         return getMainFrame().getDefaultGlassPaneController();
     }
 
-    public GUIControllers getControllers() {
-        return controllers;
+    public GUIControllerManager getControllerManager() {
+        return controllerManager;
     }
 
     public JPanel getPanel(String panelName) {
@@ -182,11 +211,11 @@ public class GUI implements Runnable {
     }
 
     public void setGlassPaneController(MouseAdapter ma) {
-        mF.setGlassPaneController(ma);
+        getMainFrame().setGlassPaneController(ma);
     }
 
     public Phase1DnD getGlassPaneController() {
-        if (mF.getGlassPane().getMouseListeners() == null) {
+        if (getMainFrame().getGlassPane().getMouseListeners() == null) {
             return null;
         } else {
             return new Phase1DnD(eventsToView, eventsToModel);
@@ -194,7 +223,7 @@ public class GUI implements Runnable {
     }
 
     public JPanel getOverlay() {
-        return mF.getOverlay();
+        return getMainFrame().getOverlay();
     }
 
     /**********
@@ -207,7 +236,7 @@ public class GUI implements Runnable {
      * @param action the action to update the panel with
      */
     public void updateFirstPanel(Action action) {
-        firstPhasePanel.update(action);
+        getFirstPhasePanel().update(action);
     }
 
     /**
@@ -216,7 +245,7 @@ public class GUI implements Runnable {
      * @param action the action to update the panel with
      */
     public void updateSecondPanel(Action action) {
-        secondPhasePanel.update(action);
+        getSecondPhasePanel().update(action);
     }
 
     /**
@@ -225,10 +254,10 @@ public class GUI implements Runnable {
      * @param action the action to update the drag and drop with
      */
     public void updateDnd(Action action) {
-        if (k3.getPhase() == Kube.PREPARATION_PHASE) {
-            firstPhasePanel.updateDnd(action);
+        if (getK3().getPhase() == Kube.PREPARATION_PHASE) {
+            getFirstPhasePanel().updateDnd(action);
         } else {
-            secondPhasePanel.updateDnd(action);
+            getSecondPhasePanel().updateDnd(action);
         }
     }
 
@@ -238,12 +267,12 @@ public class GUI implements Runnable {
      * @return void
      */
     public void updateHexSize() {
-        switch (k3.getPhase()) {
+        switch (getK3().getPhase()) {
             case Kube.PREPARATION_PHASE:
-                firstPhasePanel.updateHexSize();
+                getFirstPhasePanel().updateHexSize();
                 break;
             case Kube.GAME_PHASE:
-                secondPhasePanel.updateHexSize();
+                getSecondPhasePanel().updateHexSize();
                 break;
             default:
                 Config.error("Unimplemented kube's phase for resize");
@@ -263,7 +292,7 @@ public class GUI implements Runnable {
      */
     public void showPanel(String panelName) {
         waitPanel(panelName);
-        mF.showPanel(panelName);
+        getMainFrame().showPanel(panelName);
     }
 
     /**
@@ -330,16 +359,16 @@ public class GUI implements Runnable {
         // Disable optimized drawing
         System.setProperty("sun.java2d.opengl", "true");
 
-        mF = new MainFrame();
-        mP = new MenuPanel(this, controllers.getMenuController());
-        mF.addPanel(mP, MENU);
+        mainFrame = new MainFrame();
+        menuPanel = new MenuPanel(this, getControllerManager().getMenuController());
+        getMainFrame().addPanel(menuPanel, MENU);
 
         if (Config.SHOW_BORDERS) {
-            showAllBorders(mF);
+            showAllBorders(mainFrame);
         }
 
-        mF.repaint();
-        mF.setFrameVisible(true);
+        getMainFrame().repaint();
+        getMainFrame().setFrameVisible(true);
         loadPanel(PHASE1);
 
         // After repaint start loading next panel
@@ -353,26 +382,26 @@ public class GUI implements Runnable {
      */
     public void updatePanel() {
 
-        switch (k3.getPhase()) {
+        switch (getK3().getPhase()) {
 
             case Kube.PREPARATION_PHASE:
                 setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
-                firstPhasePanel.buildMessage();
-                firstPhasePanel.updateAll(true);
-                mF.showPanel(PHASE1);
+                getFirstPhasePanel().buildMessage();
+                getFirstPhasePanel().updateAll(true);
+                getMainFrame().showPanel(PHASE1);
                 setGlassPanelVisible(true);
                 loadPanel(PHASE2);
                 break;
             case Kube.GAME_PHASE:
                 loadPanel(PHASE2);
-                firstPhasePanel.setWaitingButton();
+                getFirstPhasePanel().setWaitingButton();
                 setGlassPaneController(new Phase2DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE2);
-                secondPhasePanel.startMessage();
-                secondPhasePanel.updateAll();
-                mF.showPanel(PHASE2);
+                getSecondPhasePanel().startMessage();
+                getSecondPhasePanel().updateAll();
+                getMainFrame().showPanel(PHASE2);
                 setGlassPanelVisible(true);
-                firstPhasePanel.resetButtonValue();
+                getFirstPhasePanel().resetButtonValue();
                 break;
         }
     }
@@ -399,9 +428,9 @@ public class GUI implements Runnable {
                 break;
         }
 
-        loader = new PanelLoader(this, panelName, k3, controllers, eventsToView, eventsToModel);
+        loader = new PanelLoader(this, panelName, k3, controllerManager, eventsToView, eventsToModel);
         loaderThread = new Thread(loader);
-        loaderThread.start();
+        getLoaderThread().start();
     }
 
     /**
@@ -441,7 +470,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void addToOverlay(Component p) {
-        mF.addToOverlay(p);
+        getMainFrame().addToOverlay(p);
     }
 
     /**
@@ -451,7 +480,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void removeAllFromOverlay() {
-        mF.removeAllFromOverlay();
+        getMainFrame().removeAllFromOverlay();
     }
 
     /**
@@ -460,7 +489,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void createGlassPane() {
-        mF.createGlassPane();
+        getMainFrame().createGlassPane();
     }
 
     /**
@@ -469,7 +498,7 @@ public class GUI implements Runnable {
      * @param factor the factor to increment the scale with
      */
     public void incrementUIScale(double factor) {
-        mF.incrementUIScale(factor);
+        getMainFrame().incrementUIScale(factor);
     }
 
     /**
@@ -478,7 +507,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void resetUIScale() {
-        mF.resetUIScale();
+        getMainFrame().resetUIScale();
     }
 
     /**
@@ -488,7 +517,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void winMessage(Action action) {
-        secondPhasePanel.winMessage(action);
+        getSecondPhasePanel().winMessage(action);
     }
 
     /**
@@ -532,10 +561,10 @@ public class GUI implements Runnable {
         panGlow = null;
 
         if ((Integer) action.getData() == 1) {
-            hexGlow = firstPhasePanel.animationGlow;
+            hexGlow = getFirstPhasePanel().animationGlow;
         } else if ((Integer) action.getData() == 2) {
-            hexGlow = secondPhasePanel.animationHexGlow;
-            panGlow = secondPhasePanel.animationPanelGlow;
+            hexGlow = getSecondPhasePanel().animationHexGlow;
+            panGlow = getSecondPhasePanel().animationPanelGlow;
         }
 
         savePanel = new TextEntryPanel(this, hexGlow, panGlow);

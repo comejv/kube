@@ -1,22 +1,41 @@
 package kube.controller.graphical;
 
+// Import kube classes
 import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 
-public class GUIControllers {
-    // TODO : refactor this class to make it more readable
-    MenuController menuController;
-    Phase1Controller phase1Controller;
-    Phase2Controller phase2Controller;
-    Phase1DnD hexPhase1DnD;
+public class GUIControllerManager {
 
-    public GUIControllers(Queue<Action> toView, Queue<Action> toModel) {
+    /**********
+     * ATTRIBUTES
+     **********/
+    
+    private MenuController menuController;
+    private Phase1Controller phase1Controller;
+    private Phase2Controller phase2Controller;
+    private Phase1DnD hexPhase1DnD;
+
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor for GUIControllers
+     * 
+     * @param toView queue of actions to view
+     * @param toModel queue of actions to model
+     */
+    public GUIControllerManager(Queue<Action> toView, Queue<Action> toModel) {
         menuController = new MenuController(toView, toModel);
         phase1Controller = new Phase1Controller(toView, toModel);
         Config.debug("GUIControllers: Phase1Controller created : ", phase1Controller);
         phase2Controller = new Phase2Controller(toView, toModel);
     }
+
+    /**********
+     * GETTERS
+     **********/
 
     public MenuController getMenuController() {
         return menuController;
