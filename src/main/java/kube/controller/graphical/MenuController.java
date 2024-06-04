@@ -169,6 +169,7 @@ public class MenuController implements ActionListener, MouseListener {
                     toView.add(new Action(ActionType.SETTINGS));
                     break;
                 case "volume":
+                    Config.debug("Volume toggled");
                     if (Config.isMusicMute() && Config.isSoundMute()) {
                         Config.setMusicMute(false);
                         Config.setSoundMute(false);

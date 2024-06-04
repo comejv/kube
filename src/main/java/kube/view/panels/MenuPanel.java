@@ -107,7 +107,15 @@ public class MenuPanel extends JPanel {
 
         BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOffImg.getImage()
                 : volumeOnImg.getImage();
-        ButtonIcon volume = new ButtonIcon("volume", volumeImg, buttonListener);
+        ButtonIcon volume = new ButtonIcon("volume", volumeImg, buttonListener) {
+            @Override
+            public void paintComponent(Graphics g) {
+                BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOffImg.getImage()
+                        : volumeOnImg.getImage();
+                setImage(volumeImg);
+                super.paintComponent(g);
+            }
+        };
         volume.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {

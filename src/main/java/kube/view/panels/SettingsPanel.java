@@ -210,7 +210,7 @@ public class SettingsPanel extends JPanel {
 
         // Sound Effects Control
         JLabel soundEffectsLabel = new JLabel("Effets sonores :");
-        BufferedImage soundVolumeImg = Config.isMusicMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
+        BufferedImage soundVolumeImg = Config.isSoundMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
         ButtonIcon soundButton = new ButtonIcon("soundVolume", soundVolumeImg, buttonListener);
         soundButton.addMouseListener(new MouseAdapter() {
             @Override
