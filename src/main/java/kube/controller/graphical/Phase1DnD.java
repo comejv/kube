@@ -23,7 +23,7 @@ public class Phase1DnD extends MouseAdapter {
      **********/
 
     private Queue<Action> toView, toModel;
-    private Component component;
+    private Component oldComponent;
 
     /**********
      * CONSTRUCTOR
@@ -32,12 +32,36 @@ public class Phase1DnD extends MouseAdapter {
     /**
      * Constructor for Phase1DnD
      * 
-     * @param eventsToView  queue of actions to view
+     * @param toView        queue of actions to view
      * @param eventsToModel queue of actions to model
      */
-    public Phase1DnD(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
-        this.toView = eventsToView;
+    public Phase1DnD(Queue<Action> toView, Queue<Action> eventsToModel) {
+        this.toView = toView;
         this.toModel = eventsToModel;
+    }
+
+    /**********
+     * SETTERS
+     **********/
+
+    public final void setOldComponent(Component component) {
+        this.oldComponent = component;
+    }
+
+    /**********
+     * GETTERS
+     **********/
+
+    public Queue<Action> getToView() {
+        return toView;
+    }
+
+    public Queue<Action> getToModel() {
+        return toModel;
+    }
+
+    public Component getOldComponent() {
+        return oldComponent;
     }
 
     /**********
@@ -78,7 +102,7 @@ public class Phase1DnD extends MouseAdapter {
             glassPanel.setHexIcon(newIcon);
             glassPanel.setPoint(event.getPoint());
             glassPanel.setColor(newIcon.getColor());
-            toView.add(new Action(ActionType.DND_START, newIcon));
+            getToView().add(new Action(ActionType.DND_START, newIcon));
             glassPanel.repaint();
         }
     }
@@ -98,9 +122,11 @@ public class Phase1DnD extends MouseAdapter {
         Point to, from;
 
         g = (GlassPanel) event.getSource();
+        
         // Get the object that was clicked in the content pane underneath
         container = ((JFrame) SwingUtilities.getWindowAncestor((Component) event.getSource())).getContentPane();
         component = SwingUtilities.getDeepestComponentAt(container, event.getX(), event.getY());
+
         if (g.getHexIcon() != null) {
             hex = null;
             to = null;
@@ -110,13 +136,14 @@ public class Phase1DnD extends MouseAdapter {
             }
             from = g.getHexIcon().getPosition();
             if (from == null && to != null) {
-                toModel.add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getColor(), to)));
+                getToModel().add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getColor(), to)));
             } else if (from != null && to != null) {
-                toModel.add(new Action(ActionType.SWAP, new Swap(from, to)));
+                getToModel().add(new Action(ActionType.SWAP, new Swap(from, to)));
             } else if (from != null && to == null) {
-                toModel.add(new Action(ActionType.REMOVE, new Remove(g.getColor(), from)));
+                getToModel().add(new Action(ActionType.REMOVE, new Remove(g.getColor(), from)));
             }
         }
+
         g.setCursor(Cursor.getDefaultCursor());
         g.clear();
     }
@@ -176,12 +203,15 @@ public class Phase1DnD extends MouseAdapter {
      * @return void
      */
     public void mouseDragged(MouseEvent event) {
+
         GlassPanel g;
+
         g = (GlassPanel) event.getSource();
         if (g.getImage() == null) {
             redispatchMouseEvent(event);
             return;
         }
+
         g.setPoint(event.getPoint());
     }
 
@@ -209,30 +239,30 @@ public class Phase1DnD extends MouseAdapter {
         if (newComponent != null && newComponent != glassPane) {
 
             event = SwingUtilities.convertMouseEvent(glassPane, e, newComponent);
-            if (newComponent != component) {
+            if (newComponent != oldComponent) {
 
                 if (newComponent instanceof HexIcon) {
-                    toView.add(new Action(ActionType.SET_HEX_HOVERED, newComponent));
+                    getToView().add(new Action(ActionType.SET_HEX_HOVERED, newComponent));
                 } else {
                     newComponent.dispatchEvent(
                             new MouseEvent(newComponent, MouseEvent.MOUSE_ENTERED, e.getWhen(), e.getModifiersEx(),
                                     e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
                 }
 
-                if (component != null) {
+                if (oldComponent != null) {
 
-                    if (component instanceof HexIcon) {
-                        toView.add(new Action(ActionType.SET_HEX_DEFAULT, component));
+                    if (oldComponent instanceof HexIcon) {
+                        getToView().add(new Action(ActionType.SET_HEX_DEFAULT, oldComponent));
                     } else {
-                        component.dispatchEvent(
-                                new MouseEvent(component, MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
+                        getOldComponent().dispatchEvent(
+                                new MouseEvent(oldComponent, MouseEvent.MOUSE_EXITED, e.getWhen(), e.getModifiersEx(),
                                         e.getX(), e.getY(), e.getClickCount(), e.isPopupTrigger(), e.getButton()));
                     }
                 }
             }
 
             newComponent.dispatchEvent(event);
-            component = newComponent;
+            setOldComponent(newComponent);
         }
     }
 
