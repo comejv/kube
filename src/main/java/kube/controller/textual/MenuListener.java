@@ -70,7 +70,7 @@ public class MenuListener implements Runnable {
             if (mode == 1) {
                 eventsToView.add(new Action(ActionType.PRINT_WAITING_FOR_CONNECTION, (Integer) PORT));
                 try {
-                    network = new Server(PORT);
+                    network = new Server(PORT, eventsToViews);
                 } catch (Exception e) {
                     eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
                     return;

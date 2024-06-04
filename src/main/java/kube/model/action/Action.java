@@ -12,7 +12,7 @@ public class Action implements Serializable {
     private ActionType type;
     private Object data;
     private int playerId;
-
+    private boolean fromNetwork;
     /**********
      * CONSTRUCTORS
      **********/
@@ -28,6 +28,7 @@ public class Action implements Serializable {
         this.type = type;
         this.data = data;
         this.playerId = playerId;
+        this.fromNetwork = false;
     }
 
     /**
@@ -57,6 +58,10 @@ public class Action implements Serializable {
         this.playerId = p;
     }
 
+    public void setFromNetwork(boolean fromNetwork){
+        this.fromNetwork = fromNetwork;
+    }
+
     /**********
      * GETTERS
      **********/
@@ -73,6 +78,10 @@ public class Action implements Serializable {
         return playerId;
     }
 
+    public boolean getFromNetwork() {
+        return fromNetwork;
+    }
+    
     /**********
      * METHOD
      **********/

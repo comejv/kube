@@ -10,12 +10,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import kube.configuration.Config;
+import kube.model.action.Action;
+import kube.model.action.ActionType;
+import kube.model.action.Queue;
 
 public class Server extends Network {
 
     /**********
      * ATTRIBUTES
      **********/
+    private Queue<Action> eventsToView;
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
@@ -32,8 +36,9 @@ public class Server extends Network {
      * 
      * @param port the port
      */
-    public Server(int port) throws IOException {
+    public Server(int port, Queue<Action> eventsToView) throws IOException {
         try {
+            setEventsToView(eventsToView);
             init(port);
             setWaitingForConnection(true);
         } catch (IOException e) {
@@ -44,8 +49,9 @@ public class Server extends Network {
     /*
      * Constructor of the class Server that finds a free port
      */
-    public Server() throws IOException {
+    public Server(Queue<Action> eventsToView) throws IOException {
         try {
+            setEventsToView(eventsToView);
             init(0);
             setWaitingForConnection(true);
         } catch (IOException e) {
@@ -76,6 +82,9 @@ public class Server extends Network {
                     Config.debug("Client connected on port " + getPort() + ".");
                     setOut(new ObjectOutputStream(getClientSocket().getOutputStream()));
                     setIn(new ObjectInputStream(getClientSocket().getInputStream()));
+                    if (eventsToView != null){
+                        eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ETABLISHED));
+                    }
                 } catch (IOException e) {
                     Config.error("Could not accept the client.");
                     e.printStackTrace();
@@ -92,6 +101,9 @@ public class Server extends Network {
     /**********
      * SETTERS
      **********/
+    public void setEventsToView(Queue<Action> eventsToView) {
+        this.eventsToView = eventsToView;
+    }
 
     public final void setClientSocket(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -104,6 +116,10 @@ public class Server extends Network {
     /**********
      * GETTERS
      **********/
+
+    public Queue<Action> getEventsToView() {
+        return eventsToView;
+    }
 
     public ServerSocket getServerSocket() {
         return serverSocket;

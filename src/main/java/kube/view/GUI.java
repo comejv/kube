@@ -569,7 +569,7 @@ public class GUI implements Runnable {
         panGlow = null;
 
         if ((Integer) action.getData() == 1) {
-            hexGlow = getFirstPhasePanel().animationGlow;
+            hexGlow = getFirstPhasePanel().getAnimationGlow();
         } else if ((Integer) action.getData() == 2) {
             hexGlow = getSecondPhasePanel().animationHexGlow;
             panGlow = getSecondPhasePanel().animationPanelGlow;

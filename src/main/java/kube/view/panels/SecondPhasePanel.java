@@ -64,7 +64,7 @@ public class SecondPhasePanel extends JPanel {
         this.controller = controller;
         this.animationHexGlow = new HexGlow();
         this.animationPanelGlow = new PanelGlow(k3);
-        int k3BaseSize = k3.getK3().getBaseSize();
+        int k3BaseSize = k3.getMountain().getBaseSize();
         int playerBaseSize = k3.getP1().getMountain().getBaseSize();
         k3Panels = new JPanel[k3BaseSize][k3BaseSize];
         p1Panels = new JPanel[playerBaseSize][playerBaseSize];
@@ -243,7 +243,7 @@ public class SecondPhasePanel extends JPanel {
         ArrayList<HexIcon> hexToGlow = new ArrayList<>();
         ArrayList<ModelColor> playableColors = new ArrayList<>();
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
-            if (k3.getK3().compatible(c).size() > 0) {
+            if (k3.getMountain().compatible(c).size() > 0) {
                 playableColors.add(c);
             }
         }
@@ -476,7 +476,7 @@ public class SecondPhasePanel extends JPanel {
         ModelColor c;
         JPanel panel;
         if (p == null) {
-            c = k3.getK3().getCase(pos);
+            c = k3.getMountain().getCase(pos);
             panel = k3Panels[pos.x][pos.y];
         } else if (p == k3.getP1()) {
             c = p.getMountain().getCase(pos);
@@ -542,7 +542,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p2, gbc);
 
-        base = initMountain(-1, k3.getK3().getBaseSize(), null);
+        base = initMountain(-1, k3.getMountain().getBaseSize(), null);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 1;
@@ -638,7 +638,7 @@ public class SecondPhasePanel extends JPanel {
                     updateAdditionnals(k3.getCurrentPlayer(), true);
                 } else {
                     if (hex.getColor() != ModelColor.WHITE) {
-                        for (Point p : k3.getK3().compatible(hex.getColor())) {
+                        for (Point p : k3.getMountain().compatible(hex.getColor())) {
                             HexIcon h = (HexIcon) k3Panels[p.x][p.y].getComponent(0);
                             h.setVisible(true);
                         }

@@ -18,7 +18,6 @@ public class NetworkListener implements Runnable {
 
     Network network;
     Queue<Action> networkToModel;
-
     /**********
      * CONSTRUCTOR
      **********/
@@ -43,11 +42,15 @@ public class NetworkListener implements Runnable {
         while (true) {
             try {
                 Action action = network.receive();
+                Config.debug("Network received", action);
                 if (action != null) {
+                    action.setFromNetwork(true);
                     networkToModel.add(action);
                 }
             } catch (IOException e) {
-                networkToModel.add(new Action(ActionType.CONNECTION_CLOSED, e));
+                Action action = new Action(ActionType.RESET);
+                action.setFromNetwork(true);
+                networkToModel.add(action);
                 Config.debug("Closing listener.");
                 break;
             }

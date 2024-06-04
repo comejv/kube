@@ -136,7 +136,7 @@ public class GUIEventsHandler implements Runnable {
                             "Êtes-vous sûr de vouloir quitter la partie ?")) {
                         getGUI().setGlassPaneController(null);
                         getGUI().removeAllFromOverlay();
-                        getGUI().showPanel(getGUI().MENU);
+                        getGUI().showPanel(GUI.MENU);
                         eventsToModel.add(new Action(ActionType.RESET));
                     }
                     break;
@@ -173,7 +173,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 // MENU
                 case START_LOCAL:
-                    MenuPanel menu = (MenuPanel) getGUI().getPanel(getGUI().MENU);
+                    MenuPanel menu = (MenuPanel) getGUI().getPanel(GUI.MENU);
                     p1 = (SelectPlayerButton) menu.player1;
                     p2 = (SelectPlayerButton) menu.player2;
                     iaJ1 = null;
@@ -226,7 +226,7 @@ public class GUIEventsHandler implements Runnable {
                     Config.debug("Starting online game");
                     break;
                 case HOST:
-                    MenuPanel mp = (MenuPanel) getGUI().getPanel(getGUI().MENU);
+                    MenuPanel mp = (MenuPanel) getGUI().getPanel(GUI.MENU);
                     mp.showHostMenu();
                     break;
                 case RULES:

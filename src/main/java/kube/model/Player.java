@@ -473,9 +473,7 @@ public class Player implements Serializable {
     public Player clone() {
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
-        if (!getIsMountainValidated()) {
-            p.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
-        }
+        p.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
         p.setName(getName());
         p.setUsedPiece(new HashMap<>(getUsedPiece()));
         p.setMountain(getMountain().clone());

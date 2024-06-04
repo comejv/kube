@@ -308,10 +308,10 @@ public class TextualMode implements Runnable {
 
     private void printState() {
         if (kube.getPhase() == Kube.PREPARATION_PHASE) {
-            System.out.println(kube.getK3());
+            System.out.println(kube.getMountain());
             System.out.println(kube.getCurrentPlayer());
         } else {
-            System.out.println(kube.getK3());
+            System.out.println(kube.getMountain());
             System.out.println(kube.getP1());
             System.out.println(kube.getP2());
             if (kube.getPenality()) {
@@ -361,7 +361,7 @@ public class TextualMode implements Runnable {
 
     private void printWinMessage(Player winner) {
         System.out.println("Victoire de " + winner.getName() + ". Félicitations !");
-        System.out.println("Plateau final : \n" + kube.getK3() + "\n");
+        System.out.println("Plateau final : \n" + kube.getMountain() + "\n");
         System.out.println(kube.getP1());
         System.out.println(kube.getP2());
     }

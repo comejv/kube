@@ -60,11 +60,10 @@ public class MenuController implements ActionListener, MouseListener {
                     Config.error("Could not get the host IP address");
                 }
                 try {
-                    network = new Server();
+                    network = new Server(toView);
                     Config.setHostPort(network.getPort());
                     networkListener = new NetworkListener(network, toModel);
                     networkSender = new NetworkSender(network, toNetwork, 1);
-
                     toView.add(new Action(ActionType.HOST));
                 } catch (IOException e) {
                     Config.error("Could not create the server.");

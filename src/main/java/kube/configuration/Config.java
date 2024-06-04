@@ -1,5 +1,7 @@
 package kube.configuration;
 
+import kube.model.Game;
+
 public class Config {
 
     /**********

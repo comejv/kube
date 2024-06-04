@@ -78,8 +78,8 @@ public class betterConstruct extends MiniMaxAI {
             probabilities.put(c, 0f);
         }
         for (int i = 1; i < baseSize; i++) {
-            ModelColor c1 = k3.getK3().getCase(baseSize - 1, i);
-            ModelColor c2 = k3.getK3().getCase(baseSize - 1, i - 1);
+            ModelColor c1 = k3.getMountain().getCase(baseSize - 1, i);
+            ModelColor c2 = k3.getMountain().getCase(baseSize - 1, i - 1);
             if (c1 != c2) {
                 probabilities.put(c1, probabilities.get(c1) + 1);
                 probabilities.put(c2, probabilities.get(c2) + 1);
