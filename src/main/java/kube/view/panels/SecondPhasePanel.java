@@ -384,7 +384,8 @@ public class SecondPhasePanel extends JPanel {
         updateText();
         updateVisible();
         updatePanelGlow(false);
-        if (k3.getHistory().canUndo() && gameType == Game.LOCAL) {
+        Config.debug(k3.getCurrentPlayer().getId(), k3.getGameType());
+        if (k3.getHistory().canUndo() && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() != k3.getGameType())) {
             undoButton.setEnabled(true);
         }
         if (k3.getHistory().canRedo() && gameType == Game.LOCAL) {

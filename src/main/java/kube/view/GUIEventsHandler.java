@@ -260,7 +260,7 @@ public class GUIEventsHandler implements Runnable {
                     transparentPanel.setVisible(false);
                     getGUI().addToOverlay(transparentPanel);
                     new Message(transparentPanel,
-                            "Erreur de connexion",
+                            "Connexion interrompue",
                             getGUI(),
                             null,
                             false, true);
