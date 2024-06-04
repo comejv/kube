@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,7 +9,6 @@ import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -63,6 +61,7 @@ public class SettingsPanel extends JPanel {
     private void addGraphismePanel() {
         JPanel graphismePanel = createTab("Graphisme");
         JComboBox<String> resolutionManager = new JComboBox<>(res);
+        resolutionManager.setSelectedIndex(0);
         resolutionManager.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
