@@ -358,6 +358,16 @@ public class Game implements Runnable {
     public int gamePhase() {
         Boolean AIpause = false;
         Action action;
+        // Instant loose case
+        if (!k3.canCurrentPlayerPlay()){
+            eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
+            if (k3.getCurrentPlayer() == k3.getP1()) {
+                eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
+            } else {
+                eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
+            }
+        }
+
         while (true) {
 
             while (!k3.canCurrentPlayerPlay()) {

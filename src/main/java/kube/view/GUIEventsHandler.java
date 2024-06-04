@@ -36,6 +36,7 @@ public class GUIEventsHandler implements Runnable {
     public void run() {
         while (true) {
             Action action = eventsToView.remove();
+            Config.debug("View receive : ", action);
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -59,11 +60,9 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case SET_HEX_HOVERED:
                     h = (HexIcon) action.getData();
-                    Config.debug("Hovering hex");
                     if (h.isActionable()) {
                         h.setHovered(true);
                         gui.getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                        Config.debug("Hex is actionable");
                     }
                     break;
                 case SET_HEX_PRESSED:
@@ -96,6 +95,9 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
+                    while (gui.getOverlay().getComponentCount() > 0){
+                        System.out.print(""); // IDK why but doesn't work whithout, nice java
+                    }
                     gui.winMessage(action);
                     break;
                 // MENU
