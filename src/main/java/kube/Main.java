@@ -1,8 +1,5 @@
 package kube;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import kube.configuration.Config;
 // Import kube classes
 import kube.configuration.ResourceLoader;
@@ -12,6 +9,7 @@ import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.GUI;
+import kube.view.Music;
 
 public class Main {
 
@@ -37,5 +35,11 @@ public class Main {
 
         GUIControllerManager controllers = new GUIControllerManager(eventsToView, eventsToModel, eventsToNetwork);
         new GUI(kube, controllers, eventsToView, eventsToModel);
+
+        Music bgMusic = new Music("Ether-Vox");
+        Config.setMusic(bgMusic);
+        if (!Config.isMute()) {
+            bgMusic.play();
+        }
     }
 }

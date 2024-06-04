@@ -1,5 +1,7 @@
 package kube.configuration;
 
+import kube.view.Music;
+
 public class Config {
 
     /**********
@@ -28,8 +30,10 @@ public class Config {
     private static String serverAddress;
     private static int serverPort;
 
+    private static Music music;
+
     /**********
-     * CONFIGURATION SETTER
+     * CONFIGURATION SETTERS
      **********/
 
     public static void setLanguage(String lang) {
@@ -56,8 +60,12 @@ public class Config {
         serverPort = port;
     }
 
+    public static void setMusic(Music m) {
+        music = m;
+    }
+
     /**********
-     * CONFIGURATION GETTER
+     * CONFIGURATION GETTERS
      **********/
 
     public static String getLanguage() {
@@ -103,13 +111,6 @@ public class Config {
     }
 
     /**
-     * Toggle the mute state
-     */
-    public static void toggleMute() {
-        mute = !mute;
-    }
-
-    /**
      * Print debug message
      * 
      * @param args the message to print
@@ -150,6 +151,20 @@ public class Config {
             }
 
             System.out.println();
+        }
+    }
+
+    /**
+     * Toggle all sounds and musics
+     */
+    public static void toggleSounds() {
+        debug("Toggle sounds");
+        if (mute) {
+            mute = false;
+            music.play();
+        } else {
+            mute = true;
+            music.stop();
         }
     }
 }

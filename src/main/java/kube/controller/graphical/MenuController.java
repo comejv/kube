@@ -140,12 +140,6 @@ public class MenuController implements ActionListener, MouseListener {
             case "quit":
                 toView.add(new Action(ActionType.QUIT));
                 break;
-            case "volume":
-                toView.add(new Action(ActionType.VOLUME));
-                break;
-            case "settings":
-                toView.add(new Action(ActionType.SETTINGS));
-                break;
             case "confirmed_settings":
                 toView.add(new Action(ActionType.CONFIRMED_SETTINGS));
                 break;
@@ -175,7 +169,7 @@ public class MenuController implements ActionListener, MouseListener {
                     toView.add(new Action(ActionType.SETTINGS));
                     break;
                 case "volume":
-                    Config.debug("Volume clicked");
+                    Config.toggleSounds();
                     toView.add(new Action(ActionType.VOLUME));
                     break;
                 default:
