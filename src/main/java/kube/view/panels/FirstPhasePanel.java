@@ -868,7 +868,7 @@ public class FirstPhasePanel extends JPanel {
         transparentPanel.setPreferredSize(getGui().getMainFrame().getSize());
         transparentPanel.setVisible(false);
         getGui().addToOverlay(transparentPanel);
-        if (k3.getGameType() == Game.LOCAL) {
+        if (kube.getGameType() == Game.LOCAL) {
             new Message(transparentPanel,
                     getKube().getCurrentPlayer().getName() + " preparez votre montagne !",
                     getGui(),
