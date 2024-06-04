@@ -20,6 +20,8 @@ public abstract class Network {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+    private boolean waiting = false;
+
     /**********
      * SETTERS
      **********/
@@ -38,6 +40,10 @@ public abstract class Network {
 
     public final void setIn(ObjectInputStream in) {
         this.in = in;
+    }
+
+    public final void setWaitingForConnection(boolean waiting) {
+        this.waiting = waiting;
     }
 
     /**********
@@ -123,5 +129,9 @@ public abstract class Network {
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    public boolean waitingForConnection() {
+        return waiting;
     }
 }

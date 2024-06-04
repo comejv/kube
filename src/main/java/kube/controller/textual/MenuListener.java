@@ -3,6 +3,7 @@ package kube.controller.textual;
 import java.io.IOException;
 import java.util.Scanner;
 
+import kube.configuration.Config;
 import kube.controller.network.NetworkListener;
 import kube.controller.network.NetworkSender;
 import kube.model.Game;
@@ -18,7 +19,7 @@ import kube.services.Server;
 
 public class MenuListener implements Runnable {
 
-    private static final int PORT = 1234;
+    private static final int PORT = 36933;
 
     Queue<Action> eventsToView;
     Queue<Action> eventsToModel;
@@ -74,6 +75,14 @@ public class MenuListener implements Runnable {
                     eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
                     return;
                 }
+                while (network.getOut()==null){
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Config.debug("Connection established");
                 eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ETABLISHED));
                 type = Game.HOST;
             } else {

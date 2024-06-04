@@ -58,7 +58,7 @@ public class MenuController implements ActionListener, MouseListener {
                 }
                 try {
                     network = new Server();
-                    Config.setHostPort( network.getPort());
+                    Config.setHostPort(network.getPort());
                     networkListener = new NetworkListener(network, toModel);
                     networkSender = new NetworkSender(network, toNetwork, 1);
 
@@ -86,34 +86,39 @@ public class MenuController implements ActionListener, MouseListener {
                 // action PRINT_INVALID_ADDRESS à la view si oui envoyer START_ONLINE à la vue
                 // et gérer la logique dans GUIEventsHandler
                 // Si serveur jsp mdr
-                
+                Config.debug("Starting online game");
                 if (network.isServer()) {
-                    //SERVER SIDE
-
-                } else {
-                    //CLIENT SIDE
-                    while (Config.getHostIP() == null || Config.getHostPort() == 0) {
+                    // SERVER SIDE
+                    while (network.getOut() == null) {
                         try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            network.connect(null, 0);
+                        } catch (IOException e) {
+                            toView.add(new Action(ActionType.SERVER_ERROR));
+                            break;
                         }
                     }
+
+                } else {
+                    // CLIENT SIDE
                     try{
-                    network.connect(Config.getHostIP(), Config.getHostPort());
-                } catch (IOException e) {
-                    toView.add(new Action(ActionType.PRINT_INVALID_ADDRESS));
-                    break;
-                }
+                        while(Config.getHostIP() == null);
+                        if (!network.connect(Config.getHostIP(), Config.getHostPort())){
+                            Config.debug(Config.getHostIP(), Config.getHostPort());
+                            Config.debug("Timed out");
+                            toView.add(new Action(ActionType.PRINT_INVALID_ADDRESS));
+                            break;
+                    }
+                    }catch(IOException  e){
+                        Config.error(e.getMessage());
+                        break;
+                    }
+                    Config.debug("Connection etablished");
                     networkListenerThread = new Thread(networkListener);
                     networkSenderThread = new Thread(networkSender);
                     networkListenerThread.start();
                     networkSenderThread.start();
                 }
-
-                toView.add(new Action(ActionType.PRINT_INVALID_ADDRESS));
-                // networkListenerThread.start();
-                // networkSenderThread.start();
+                Config.debug("Connection etablished");
                 // toView.add(new Action(ActionType.START_ONLINE));
                 break;
             case "rules":
@@ -198,4 +203,5 @@ public class MenuController implements ActionListener, MouseListener {
             toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
         }
     }
+
 }

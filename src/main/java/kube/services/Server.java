@@ -35,6 +35,7 @@ public class Server extends Network {
     public Server(int port) throws IOException {
         try {
             init(port);
+            setWaitingForConnection(true);
         } catch (IOException e) {
             throw new IOException("Could not initialize the server.");
         }
@@ -46,6 +47,7 @@ public class Server extends Network {
     public Server() throws IOException {
         try {
             init(0);
+            setWaitingForConnection(true);
         } catch (IOException e) {
             throw new IOException("Could not initialize the server.");
         }
@@ -78,6 +80,8 @@ public class Server extends Network {
                     Config.error("Could not accept the client.");
                     e.printStackTrace();
                 }
+                Config.debug("Connection " + getClientSocket().getInetAddress().getHostAddress() + " on port "
+                        + getClientSocket().getPort() + " accepted.");
             });
             executorService.submit(acceptThread);
         } catch (IOException e) {

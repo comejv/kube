@@ -337,8 +337,8 @@ public class MenuPanel extends JPanel {
         joinPanel.add(ipPortFieldPanel, buttonsGBC);
 
         JButton connect = new MenuButton("CONNECTER");
-        connect.setActionCommand("startOnline");
         connect.addActionListener(e -> {
+            Config.debug("YOUHOU");
             String input = ipPortField.getText();
             if (input.contains(":")) {
                 String[] parts = input.split(":");
@@ -350,7 +350,12 @@ public class MenuPanel extends JPanel {
             } else {
                 Config.debug("Addresse invalide (manque :)");
             }
+            buttonListener.actionPerformed(e);
+            connect.setActionCommand("startOnline");
+
         });
+
+        Config.debug("NOOOOO");
         connect.addActionListener(buttonListener);
 
         JButton returnJoin = new MenuButton("RETOUR");
