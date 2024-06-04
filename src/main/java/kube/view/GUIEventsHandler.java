@@ -72,9 +72,13 @@ public class GUIEventsHandler implements Runnable {
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
-                    gui.setGlassPaneController(null);
-                    gui.removeAllFromOverlay();
-                    gui.showPanel(GUI.MENU);
+                    if (gui.askForConfirmation("Retourner au menu",
+                            "Êtes vous sûr de vouloir abandonner la partie ?")) {
+                        gui.setGlassPaneController(null);
+                        gui.removeAllFromOverlay();
+                        gui.showPanel(GUI.MENU);
+                        eventsToModel.add(new Action(ActionType.RESET));
+                    }
                     break;
                 case RETURN_TO_GAME:
                     gui.setGlassPaneController(null);
@@ -95,7 +99,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
-                    while (gui.getOverlay().getComponentCount() > 0){
+                    while (gui.getOverlay().getComponentCount() > 0) {
                         try {
                             Thread.sleep(50);
                         } catch (InterruptedException e) {
@@ -157,7 +161,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    OverlayPanel settings = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    OverlayPanel settings = new OverlayPanel(gui, gui.getControllers().getMenuController(),
+                            action.getType());
                     gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
@@ -188,7 +193,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateSecondPanel(action);
                     break;
                 case LOAD_PANEL:
-                    OverlayPanel loadMenu = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    OverlayPanel loadMenu = new OverlayPanel(gui, gui.getControllers().getMenuController(),
+                            action.getType());
                     gui.addToOverlay(loadMenu);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
