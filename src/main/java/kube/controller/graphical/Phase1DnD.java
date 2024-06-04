@@ -145,7 +145,7 @@ public class Phase1DnD extends MouseAdapter {
                 Sounds.playSound("swap");
             } else if (from != null && to == null) {
                 getToModel().add(new Action(ActionType.REMOVE, new Remove(g.getColor(), from)));
-                Sounds.playSound("build");
+                Sounds.playSound("remove");
             }
         }
 
