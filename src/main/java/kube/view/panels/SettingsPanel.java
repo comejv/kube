@@ -31,15 +31,15 @@ public class SettingsPanel extends JPanel {
     private MenuController buttonListener;
     private JTabbedPane tabbedPanel;
     private int tabNb;
-    private String[] res = { "800 x 600", "1366 x 768", "1600 x 900", "1920 x 1080" };
+    private String[] res = { "1140 x 900", "1366 x 900", "1600 x 900", "1920 x 1080", "2560 x 1440"};
 
     public SettingsPanel(GUI gui, MenuController buttonListener) {
 
         this.gui = gui;
         this.buttonListener = buttonListener;
         tabNb = 0;
-        width = Math.round(Config.INIT_WIDTH / 2f);
-        height = Math.round(Config.INIT_HEIGHT / 1.33f);
+        width = 600;
+        height = 600;
 
         setLayout(new GridBagLayout());
         setPreferredSize(new Dimension(width, height));
@@ -68,11 +68,11 @@ public class SettingsPanel extends JPanel {
             public void itemStateChanged(ItemEvent e) {
                 switch ((String) resolutionManager.getSelectedItem()) {
                     // TODO : refactor this switch case : use events and a controller ?
-                    case "800 x 600":
-                        gui.getMainFrame().setSize(800, 600);
+                    case "1140 x 900":
+                        gui.getMainFrame().setSize(1140, 900);
                         break;
-                    case "1366 x 768":
-                        gui.getMainFrame().setSize(1366, 768);
+                    case "1366 x 900":
+                        gui.getMainFrame().setSize(1366, 900);
                         break;
                     case "1600 x 900":
                         gui.getMainFrame().setSize(1600, 900);
@@ -86,7 +86,8 @@ public class SettingsPanel extends JPanel {
                     default:
                         break;
                 }
-                // gui.getMainFrame().resize();
+                OverlayPanel overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                overlay.repaint();
             }
         });
 
@@ -116,7 +117,7 @@ public class SettingsPanel extends JPanel {
 
         addFillerPanel(graphismePanel);
 
-        JButton saveChanges = new JButton("Save changes");
+        JButton saveChanges = new JButton("Confirmer");
         saveChanges.setPreferredSize(new Dimension(150, 50));
         saveChanges.addActionListener(buttonListener);
         saveChanges.setActionCommand("confirmed_settings");
@@ -145,21 +146,23 @@ public class SettingsPanel extends JPanel {
         int nbToFill = 7 - container.getComponentCount();
         for (int i = 0; i < nbToFill; i++) {
             JPanel filler = new JPanel();
-            filler.setBorder(BorderFactory.createLineBorder(Color.red));
             container.add(filler);
         }
+    }
+    
+    private void wrapInJPanel(Component c, GridBagConstraints elemGBC,
+    JPanel container) {
+        JPanel wraper = new JPanel(new GridBagLayout());
+        container.add(wraper);
+        wraper.add(c, elemGBC);
+    }
+    
+    public void loadPanel(){
+        tabbedPanel.setSelectedIndex(2);
     }
 
     public JTabbedPane getTabbedPanel() {
         return tabbedPanel;
-    }
-
-    private void wrapInJPanel(Component c, GridBagConstraints elemGBC,
-            JPanel container) {
-        JPanel wraper = new JPanel(new GridBagLayout());
-        container.add(wraper);
-        wraper.setBorder(BorderFactory.createLineBorder(Color.red));
-        wraper.add(c, elemGBC);
     }
 
     private int getTabNb() {
@@ -168,9 +171,5 @@ public class SettingsPanel extends JPanel {
 
     private void setTabNb(int newTabNb) {
         tabNb = newTabNb;
-    }
-
-    public void loadPanel(){
-        tabbedPanel.setSelectedIndex(2);
     }
 }

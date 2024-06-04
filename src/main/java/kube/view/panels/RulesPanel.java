@@ -8,6 +8,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -29,7 +31,7 @@ import kube.model.ModelColor;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.RulesButton;
 
-public class RulesPanel extends JPanel {
+public class RulesPanel extends JPanel{
     // TODO : refactor this class to make it more readables
 
     private GUI gui;
@@ -150,6 +152,16 @@ public class RulesPanel extends JPanel {
         return currentRuleNb;
     }
 
+    @Override
+    public int getWidth() {
+        return width;
+    }
+
+    @Override
+    public int getHeight() {
+        return height;
+    }
+
     public void setCurrentRuleNb(int i) {
         currentRuleNb = i % TOTAL_RULE_NB;
     }
@@ -158,6 +170,24 @@ public class RulesPanel extends JPanel {
         for (int i : rulesWithAnimation) {
             rulesWithAnimNb.add(i);
         }
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    @Override
+    public void repaint() {
+        if (gui != null) {
+            setWidth(Math.round(gui.getMainFrame().getWidth() / 1.5f));
+            setHeight(Math.round(gui.getMainFrame().getHeight()));
+            setPreferredSize(new Dimension(getWidth(), getHeight()));
+        }
+        super.repaint();
     }
 
     private class RulePanel extends JPanel {

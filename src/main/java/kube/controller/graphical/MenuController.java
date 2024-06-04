@@ -2,6 +2,8 @@ package kube.controller.graphical;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -12,7 +14,9 @@ import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
+import kube.view.MainFrame;
 import kube.view.components.Buttons.ButtonIcon;
+import kube.view.panels.MenuPanel;
 
 public class MenuController implements ActionListener, MouseListener {
     // TODO : refactor this class to make it more readable
@@ -141,4 +145,20 @@ public class MenuController implements ActionListener, MouseListener {
             toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
         }
     }
+    
+    // public void componentHidden(ComponentEvent e) {
+    // }
+
+    // public void componentMoved(ComponentEvent e) {
+    // }
+
+    // public void componentResized(ComponentEvent e) {
+    //     Object source = e.getSource();
+    //     if (source instanceof MainFrame) {
+    //         toView.add(new Action(ActionType.RESIZE));
+    //     }
+    // }
+
+    // public void componentShown(ComponentEvent e) {
+    // }
 }
