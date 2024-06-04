@@ -1,6 +1,6 @@
 package kube.view;
 
-// Import Java classes
+// Import kube classes
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.Phase1DnD;
@@ -13,7 +13,7 @@ import kube.view.animations.HexGlow;
 import kube.view.animations.PanelGlow;
 import kube.view.panels.*;
 
-// Import Java classes
+// Import java classes
 import java.io.IOException;
 import java.awt.Color;
 import java.awt.Component;
