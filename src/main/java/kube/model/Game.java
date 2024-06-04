@@ -6,9 +6,9 @@ import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.ExpertAI;
 import kube.model.ai.MiniMaxAI;
-import kube.model.ai.betterConstructV2;
-import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.utilsAI;
+import kube.model.ai.tests.betterConstructV2;
+import kube.model.ai.tests.moveSetHeuristique;
 
 // Import java class
 import java.util.Calendar;

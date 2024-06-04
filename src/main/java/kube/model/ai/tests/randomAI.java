@@ -1,4 +1,4 @@
-package kube.model.ai;
+package kube.model.ai.tests;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,6 +7,8 @@ import java.util.Random;
 import kube.model.Kube;
 import kube.model.Player;
 import kube.model.action.move.Move;
+import kube.model.ai.MiniMaxAI;
+import kube.model.ai.utilsAI;
 
 public class randomAI extends MiniMaxAI {
 

@@ -9,7 +9,7 @@ import kube.model.ai.ExpertAI;
 import kube.model.ai.HardAI;
 import kube.model.ai.MediumAI;
 import kube.model.ai.MiniMaxAI;
-import kube.model.ai.betterConstructV2;
+import kube.model.ai.tests.betterConstructV2;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;

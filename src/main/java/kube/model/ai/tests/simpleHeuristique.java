@@ -1,4 +1,4 @@
-package kube.model.ai;
+package kube.model.ai.tests;
 
 import java.awt.Point;
 import java.util.ArrayList;
@@ -14,8 +14,9 @@ import kube.model.Player;
 import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
+import kube.model.ai.MiniMaxAI;
 
-public class testThomas extends MiniMaxAI {
+public class simpleHeuristique extends MiniMaxAI {
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;
@@ -25,20 +26,20 @@ public class testThomas extends MiniMaxAI {
      * CONSTRUCTORS
      **********/
 
-    public testThomas(int time, Random r) {
+    public simpleHeuristique(int time, Random r) {
         super(time, r);
     }
 
-    public testThomas(int time, int seed) {
+    public simpleHeuristique(int time, int seed) {
         super(time, seed);
 
     }
 
-    public testThomas(int time) {
+    public simpleHeuristique(int time) {
         super(time);
     }
 
-    public testThomas() {
+    public simpleHeuristique() {
         super();
     }
 
@@ -118,13 +119,6 @@ public class testThomas extends MiniMaxAI {
         for (ModelColor c : ModelColor.getAllColored()) {
             redistributeProbs(k3, c);
         }
-        for (ModelColor c : probabilities.keySet()) {
-            if (ennemyPieces.get(c) > getPlayer(k3).getAvailableToBuild().get(c)){
-                probabilities.put(c, probabilities.get(c) / 2);
-            } else {
-                probabilities.put(c, probabilities.get(c) * 2);
-            }
-        }
         return probabilities;
     }
 
@@ -140,12 +134,8 @@ public class testThomas extends MiniMaxAI {
 
     private ModelColor getColorBasedOnProbabilities() {
         List<Map.Entry<ModelColor, Float>> entryList = new ArrayList<>(probabilities.entrySet());
-        float sum = 0;
-        for (Map.Entry<ModelColor, Float> entry : entryList){
-            sum += entry.getValue();
-        }
         entryList.sort(Map.Entry.comparingByValue());
-        float f = getRandom().nextFloat() * sum;
+        float f = getRandom().nextFloat();
         for (Map.Entry<ModelColor, Float> entry : entryList) {
             f -= entry.getValue();
             if (f < 0) {
@@ -178,17 +168,10 @@ public class testThomas extends MiniMaxAI {
     private Point getStartPoint(Kube k3) {
         Mountain m = getPlayer(k3).getMountain();
         for (int i = 0; i < m.getBaseSize(); i++) {
-            int j = 0;
-            int k = i;
-            while (j <= k){
+            for (int j = 0; j <= i; j++) {
                 if (m.getCase(i, j) == ModelColor.EMPTY) {
                     return new Point(i, j);
                 }
-                j++;
-                if (m.getCase(i, k) == ModelColor.EMPTY) {
-                    return new Point(i, k);
-                }
-                k--;
             }
         }
         return null;
