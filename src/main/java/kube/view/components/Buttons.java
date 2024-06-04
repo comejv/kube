@@ -47,7 +47,7 @@ public class Buttons {
             gbc.insets = new Insets(5, 2, 5, 25);
             add(nameLabel, gbc);
 
-            String[] players = { "Humain", "IA Facile", "IA Moyenne", "IA Difficile" };
+            String[] players = { "Humain", "IA Facile", "IA Moyenne", "IA Difficile", "IA Experte" };
             final int[] currentIndex = { 0 };
             JPanel selectComp = new JPanel();
             selectComp.setLayout(new BorderLayout());

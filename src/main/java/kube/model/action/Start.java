@@ -1,5 +1,6 @@
 package kube.model.action;
 
+import kube.configuration.Config;
 // Import model class
 import kube.model.ai.MiniMaxAI;
 
