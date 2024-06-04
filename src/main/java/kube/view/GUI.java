@@ -482,7 +482,6 @@ public class GUI implements Runnable {
     /**
      * Remove all components from the overlay
      * 
-     * @param p the component to remove
      * @return void
      */
     public void removeAllFromOverlay() {
@@ -595,7 +594,9 @@ public class GUI implements Runnable {
         Config.setMode(mode);
         firstPhasePanel.removeAll();
         firstPhasePanel.resetPanel();
-        secondPhasePanel.removeAll();
-        secondPhasePanel.resetPanel();
+        if(secondPhasePanel!=null){
+            secondPhasePanel.removeAll();
+            secondPhasePanel.resetPanel();
+        }
     }
 }
