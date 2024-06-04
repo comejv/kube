@@ -73,6 +73,8 @@ public class Config {
         musicMute = b;
         if (!isMusicMute()) {
             music.play();
+        } else {
+            music.stop();
         }
     }
 
