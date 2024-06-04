@@ -139,12 +139,6 @@ public class MenuController implements ActionListener, MouseListener {
             case "quit":
                 toView.add(new Action(ActionType.QUIT));
                 break;
-            case "volume":
-                toView.add(new Action(ActionType.VOLUME));
-                break;
-            case "settings":
-                toView.add(new Action(ActionType.SETTINGS));
-                break;
             case "confirmed_settings":
                 toView.add(new Action(ActionType.CONFIRMED_SETTINGS));
                 break;
@@ -174,8 +168,20 @@ public class MenuController implements ActionListener, MouseListener {
                     toView.add(new Action(ActionType.SETTINGS));
                     break;
                 case "volume":
-                    Config.debug("Volume clicked");
-                    toView.add(new Action(ActionType.VOLUME));
+                    Config.debug("Volume toggled");
+                    if (Config.isMusicMute() && Config.isSoundMute()) {
+                        Config.setMusicMute(false);
+                        Config.setSoundMute(false);
+                    } else {
+                        Config.setMusicMute(true);
+                        Config.setSoundMute(true);
+                    }
+                    break;
+                case "soundVolume":
+                    Config.toggleSounds();
+                    break;
+                case "musicVolume":
+                    Config.toggleMusic();
                     break;
                 default:
                     Config.error("Unrecognised buttonIcon action.");

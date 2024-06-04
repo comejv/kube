@@ -2,6 +2,8 @@ package kube.configuration;
 
 import kube.model.Game;
 
+import kube.view.Music;
+
 public class Config {
 
     /**********
@@ -25,13 +27,16 @@ public class Config {
     private static String language = "fr_FR";
     private static String mode = TEXTURED_MODE;
     private static double UIScale = 1;
-    private static boolean mute = true;
+    private static boolean musicMute = true;
+    private static boolean soundMute = true;
 
     private static String serverAddress;
     private static int serverPort;
 
+    private static Music music;
+
     /**********
-     * CONFIGURATION SETTER
+     * CONFIGURATION SETTERS
      **********/
 
     public static void setLanguage(String lang) {
@@ -58,8 +63,23 @@ public class Config {
         serverPort = port;
     }
 
+    public static void setMusic(Music m) {
+        music = m;
+    }
+
+    public static void setSoundMute(boolean b) {
+        soundMute = b;
+    }
+
+    public static void setMusicMute(boolean b) {
+        musicMute = b;
+        if (!isMusicMute()) {
+            music.play();
+        }
+    }
+
     /**********
-     * CONFIGURATION GETTER
+     * CONFIGURATION GETTERS
      **********/
 
     public static String getLanguage() {
@@ -96,19 +116,21 @@ public class Config {
     }
 
     /**
-     * Check if the program is currently muted
+     * Check if the music is currently muted
      * 
      * @return true if the program is muted, false otherwise
      */
-    public static boolean isMute() {
-        return mute;
+    public static boolean isMusicMute() {
+        return musicMute;
     }
 
     /**
-     * Toggle the mute state
+     * Check if the sound effects are currently muted
+     * 
+     * @return true if the program is muted, false otherwise
      */
-    public static void toggleMute() {
-        mute = !mute;
+    public static boolean isSoundMute() {
+        return soundMute;
     }
 
     /**
@@ -152,6 +174,30 @@ public class Config {
             }
 
             System.out.println();
+        }
+    }
+
+    /**
+     * Toggle all sounds
+     */
+    public static void toggleSounds() {
+        if (soundMute) {
+            setSoundMute(false);
+        } else {
+            setSoundMute(true);
+        }
+    }
+
+    /**
+     * Toggle music
+     */
+    public static void toggleMusic() {
+        if (musicMute) {
+            setMusicMute(false);
+            music.play();
+        } else {
+            setMusicMute(true);
+            music.stop();
         }
     }
 }

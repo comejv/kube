@@ -122,7 +122,7 @@ public class Phase1DnD extends MouseAdapter {
         Point to, from;
 
         g = (GlassPanel) event.getSource();
-        
+
         // Get the object that was clicked in the content pane underneath
         container = ((JFrame) SwingUtilities.getWindowAncestor((Component) event.getSource())).getContentPane();
         component = SwingUtilities.getDeepestComponentAt(container, event.getX(), event.getY());

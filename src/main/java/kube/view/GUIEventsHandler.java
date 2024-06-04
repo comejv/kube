@@ -108,9 +108,13 @@ public class GUIEventsHandler implements Runnable {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
                     ((ButtonIcon) action.getData()).setDefault();
+                    getGUI().getMainFrame().getGlassPane()
+                            .setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     break;
                 case SET_BUTTON_HOVERED:
                     ((ButtonIcon) action.getData()).setHovered(true);
+                    getGUI().getMainFrame().getGlassPane()
+                            .setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     break;
                 case SET_BUTTON_PRESSED:
                     ((ButtonIcon) action.getData()).setPressed(true);
@@ -122,14 +126,16 @@ public class GUIEventsHandler implements Runnable {
                     h = (HexIcon) action.getData();
                     if (h.isActionable()) {
                         h.setDefault();
-                        getGUI().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                        getGUI().getMainFrame().getGlassPane()
+                                .setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     }
                     break;
                 case SET_HEX_HOVERED:
                     h = (HexIcon) action.getData();
                     if (h.isActionable()) {
                         h.setHovered(true);
-                        getGUI().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                        getGUI().getMainFrame().getGlassPane()
+                                .setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     }
                     break;
                 case SET_HEX_PRESSED:
@@ -318,14 +324,32 @@ public class GUIEventsHandler implements Runnable {
                     getGUI().updateDnd(action);
                     break;
                 case BUILD:
+                    Sounds.playSound("build");
+                    getGUI().updateFirstPanel(action);
+                    break;
                 case REMOVE:
+                    Sounds.playSound("remove");
+                    getGUI().updateFirstPanel(action);
+                    break;
                 case SWAP:
+                    Sounds.playSound("swap");
+                    getGUI().updateFirstPanel(action);
+                    break;
                 case AI_MOVE:
                     getGUI().updateFirstPanel(action);
                     break;
                 case MOVE:
+                    Sounds.playSound("build");
+                    getGUI().updateSecondPanel(action);
+                    break;
                 case UNDO:
+                    Sounds.playSound("remove");
+                    getGUI().updateSecondPanel(action);
+                    break;
                 case REDO:
+                    Sounds.playSound("build");
+                    getGUI().updateSecondPanel(action);
+                    break;
                 case AI_PAUSE:
                     getGUI().updateSecondPanel(action);
                     break;

@@ -100,7 +100,7 @@ public class Buttons {
 
         }
 
-        public int getButtonValue(){
+        public int getButtonValue() {
             return buttonValue;
         }
     }

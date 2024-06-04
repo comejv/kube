@@ -22,6 +22,10 @@ import kube.view.components.HexIcon;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -88,7 +92,7 @@ public class FirstPhasePanel extends JPanel {
         sidePanel.add(buttonsPanel, gbc);
 
         opponentsPieces();
-        getOppenentPanel()
+        getOpponentPanel()
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
@@ -103,7 +107,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridwidth = 1;
         gbc.insets = new Insets(20, 0, 20, 0);
 
-        sidePanel.add(getOppenentPanel(), gbc);
+        sidePanel.add(getOpponentPanel(), gbc);
 
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -216,7 +220,7 @@ public class FirstPhasePanel extends JPanel {
         return topPanel;
     }
 
-    public JPanel getOppenentPanel() {
+    public JPanel getOpponentPanel() {
         return opponentPanel;
     }
 
@@ -259,6 +263,8 @@ public class FirstPhasePanel extends JPanel {
         mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
         mainPanel.setBackground(GUIColors.GAME_BG.toColor());
 
+        // TODO : continue the refactoring
+
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
         sidePanel.setOpaque(false);
@@ -272,7 +278,7 @@ public class FirstPhasePanel extends JPanel {
         sidePanel.add(buttonsPanel, gbc);
 
         opponentsPieces();
-        getOppenentPanel()
+        getOpponentPanel()
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
@@ -286,7 +292,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridwidth = 1;
         gbc.insets = new Insets(20, 0, 20, 0);
 
-        sidePanel.add(getOppenentPanel(), gbc);
+        sidePanel.add(getOpponentPanel(), gbc);
 
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -443,8 +449,8 @@ public class FirstPhasePanel extends JPanel {
     public void opponentsPieces() {
         setOppenentPanel(new JPanel());
         setOppenentPiecesPanel(new HashMap<>());
-        getOppenentPanel().setBackground(GUIColors.TEXT_HOVER.toColor());
-        getOppenentPanel().setLayout(new GridBagLayout());
+        getOpponentPanel().setBackground(GUIColors.TEXT_HOVER.toColor());
+        getOpponentPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -466,9 +472,11 @@ public class FirstPhasePanel extends JPanel {
                 x = 0;
                 y++;
             }
-            getOppenentPanel().add(mini, gbc);
+            getOpponentPanel().add(mini, gbc);
             getOpponentPiecesPanel().put(c, numOfPieces); // add to hashmap for later update
         }
+
+        // Jokers
         JPanel jokers = new JPanel();
         jokers.setLayout(new GridBagLayout());
         jokers.setOpaque(false);
@@ -476,6 +484,8 @@ public class FirstPhasePanel extends JPanel {
                 BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Jokers", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 50), GUIColors.ACCENT.toColor()));
+
+        gbc = new GridBagConstraints();
 
         // White
         mini = new JPanel();
@@ -489,7 +499,7 @@ public class FirstPhasePanel extends JPanel {
         jokers.add(mini, gbc);
         getOpponentPiecesPanel().put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
 
-        // White
+        // Natural
         mini = new JPanel();
         mini.setOpaque(false);
         numOfPieces = new JLabel("x0");
@@ -504,10 +514,10 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        getOppenentPanel().add(jokers, gbc);
+        getOpponentPanel().add(jokers, gbc);
 
-        getOppenentPanel().revalidate();
-        getOppenentPanel().repaint();
+        getOpponentPanel().revalidate();
+        getOpponentPanel().repaint();
     }
 
     public void initSide() {
@@ -544,36 +554,34 @@ public class FirstPhasePanel extends JPanel {
             getPiecesPanel().add(mini, gbc);
             getSidePanels().put(c, numOfPieces); // add to hashmap for later update
         }
+
+        // Jokers
         JPanel jokers = new JPanel();
+        jokers.setLayout(new GridBagLayout());
         jokers.setOpaque(false);
         jokers.setBorder(
                 BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Jokers", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 50), GUIColors.ACCENT.toColor()));
 
-        // White
-        mini = new JPanel();
-        mini.setOpaque(false);
-        numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(ModelColor.WHITE);
-        numOfPieces = new JLabel("x" + numberOfPieces);
-        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-        actionable = numberOfPieces > 0;
-        mini.add(new HexIcon(ModelColor.WHITE, actionable, 1.5));
-        mini.add(numOfPieces);
-        jokers.add(mini);
-        getSidePanels().put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
+        gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10); // Add padding between elements
 
         // White
-        mini = new JPanel();
-        mini.setOpaque(false);
-        numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(ModelColor.NATURAL);
-        numOfPieces = new JLabel("x" + numberOfPieces);
-        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
-        actionable = numberOfPieces > 0;
-        mini.add(new HexIcon(ModelColor.NATURAL, actionable, 1.5));
-        mini.add(numOfPieces);
-        jokers.add(mini);
-        getSidePanels().put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
+        JPanel whitePanel = createHexPanel(ModelColor.WHITE,
+                "<html>Permet de passer son tour en le jouant<br>sur le côté de la montagne commune.</html>");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        jokers.add(whitePanel, gbc);
+        getSidePanels().put(ModelColor.WHITE, (JLabel) whitePanel.getComponent(1));
+
+        // Natural
+        JPanel naturalPanel = createHexPanel(ModelColor.NATURAL,
+                "<html>Peut être posé n'importe où et sert<br> de base à n'importe quelle pièce.</html>");
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        jokers.add(naturalPanel, gbc);
+        getSidePanels().put(ModelColor.NATURAL, (JLabel) naturalPanel.getComponent(1));
 
         gbc.gridx = 0;
         gbc.gridy = 3;
@@ -582,6 +590,32 @@ public class FirstPhasePanel extends JPanel {
 
         getPiecesPanel().revalidate();
         getPiecesPanel().repaint();
+    }
+
+    private JPanel createHexPanel(ModelColor color, String tooltipText) {
+        JPanel mini = new JPanel();
+        mini.setOpaque(false);
+        mini.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Ensure components are laid out properly
+
+        JLabel numOfPieces = new JLabel("x0");
+        numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+
+        HexIcon hexIcon = new HexIcon(color, false, 1.5);
+        hexIcon.setToolTipText(tooltipText); // Set the tooltip text
+
+        mini.add(hexIcon);
+        mini.add(numOfPieces);
+
+        // Optionally add a mouse listener for additional context menu features
+        mini.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                // Show tooltip or context menu on hover
+                mini.setToolTipText(tooltipText);
+            }
+        });
+
+        return mini;
     }
 
     public void updateButton() {

@@ -13,6 +13,9 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -33,6 +36,7 @@ import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
 import kube.view.GUI;
 import kube.view.GUIColors;
+import kube.view.components.Icon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.MenuButton;
 import kube.view.components.Buttons.SelectPlayerButton;
@@ -96,9 +100,32 @@ public class MenuPanel extends JPanel {
         modal.add(settings, elemGBC);
 
         // Volume
-        ButtonIcon volume = new ButtonIcon("volume", ResourceLoader.getBufferedImage("volume"), buttonListener);
-        volume.resizeIcon(100, 100);
-        volume.recolor(GUIColors.ACCENT);
+        Icon volumeOnImg = new Icon(ResourceLoader.getBufferedImage("volume"));
+        volumeOnImg.resizeIcon(100, 100);
+        volumeOnImg.recolor(GUIColors.ACCENT);
+        Icon volumeOffImg = new Icon(ResourceLoader.getBufferedImage("mute"));
+        volumeOffImg.resizeIcon(100, 100);
+        volumeOffImg.recolor(GUIColors.ACCENT);
+
+        BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOffImg.getImage()
+                : volumeOnImg.getImage();
+        ButtonIcon volume = new ButtonIcon("volume", volumeImg, buttonListener) {
+            @Override
+            public void paintComponent(Graphics g) {
+                BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOffImg.getImage()
+                        : volumeOnImg.getImage();
+                setImage(volumeImg);
+                super.paintComponent(g);
+            }
+        };
+        volume.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOffImg.getImage()
+                        : volumeOnImg.getImage();
+                volume.setImage(volumeImg);
+            }
+        });
         elemGBC = new GridBagConstraints();
         elemGBC.gridx = 0;
         elemGBC.gridy = 0;
