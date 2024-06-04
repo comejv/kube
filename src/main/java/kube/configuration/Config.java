@@ -114,7 +114,7 @@ public class Config {
     }
 
     /**
-     * Check if the program is currently muted
+     * Check if the music is currently muted
      * 
      * @return true if the program is muted, false otherwise
      */
@@ -123,7 +123,7 @@ public class Config {
     }
 
     /**
-     * Check if the program is currently muted
+     * Check if the sound effects are currently muted
      * 
      * @return true if the program is muted, false otherwise
      */
