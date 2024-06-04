@@ -162,6 +162,8 @@ public class GUIEventsHandler implements Runnable {
                     MenuPanel menu = (MenuPanel) gui.getPanel(GUI.MENU);
                     p1 = (SelectPlayerButton) menu.player1;
                     p2 = (SelectPlayerButton) menu.player2;
+                    iaJ1 = null;
+                    iaJ2 = null;
 
                     switch (p1.buttonValue) {
                         case 0:
@@ -214,7 +216,7 @@ public class GUIEventsHandler implements Runnable {
                     mp.showHostMenu();
                     break;
                 case RULES:
-                    menuController = gui.getControllers().getMenuController();
+                    menuController = gui.getControllerManager().getMenuController();
                     gui.addToOverlay(new OverlayPanel(gui, menuController, action.getType()));
                     gui.setGlassPanelVisible(true);
                     break;
@@ -242,7 +244,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    menuController = gui.getControllers().getMenuController();
+                    menuController = gui.getControllerManager().getMenuController();
                     settings = new OverlayPanel(gui, menuController, action.getType());
                     gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
@@ -277,7 +279,7 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateSecondPanel(action);
                     break;
                 case LOAD_PANEL:
-                    menuController = gui.getControllers().getMenuController();
+                    menuController = gui.getControllerManager().getMenuController();
                     loadMenu = new OverlayPanel(gui, menuController, action.getType());
                     gui.addToOverlay(loadMenu);
                     setSavedGlassPaneController(gui.getCurrentListener());

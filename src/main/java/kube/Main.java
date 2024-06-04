@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 import kube.configuration.Config;
 // Import kube classes
 import kube.configuration.ResourceLoader;
-import kube.controller.graphical.GUIControllers;
+import kube.controller.graphical.GUIControllerManager;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
@@ -35,7 +35,7 @@ public class Main {
 
         modelThread.start();
 
-        GUIControllers controllers = new GUIControllers(eventsToView, eventsToModel, eventsToNetwork);
+        GUIControllerManager controllers = new GUIControllerManager(eventsToView, eventsToModel, eventsToNetwork);
         new GUI(kube, controllers, eventsToView, eventsToModel);
     }
 }

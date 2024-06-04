@@ -17,7 +17,7 @@ public class winMsg {
     private Phase2Controller controller;
 
     public winMsg(winPanel panel, GUI gui,String text, Phase2Controller controller) {
-        gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, true));
+        gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, true));
         this.panel = panel;
         this.gui = gui;
         this.controller=controller;

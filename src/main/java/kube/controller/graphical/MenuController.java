@@ -229,5 +229,4 @@ public class MenuController implements ActionListener, MouseListener {
             toView.add(new Action(ActionType.SET_BUTTON_DEFAULT, source));
         }
     }
-
 }
