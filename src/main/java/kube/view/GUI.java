@@ -414,4 +414,12 @@ public class GUI implements Runnable {
         savePanel.setPreferredSize(getMainFrame().getSize());
         addToOverlay(savePanel);
     }
+
+    public void changeMode(String mode) {
+        Config.setMode(mode);
+        firstPhasePanel.removeAll();
+        firstPhasePanel.resetPanel();
+        secondPhasePanel.removeAll();
+        secondPhasePanel.resetPanel();
+    }
 }

@@ -107,14 +107,28 @@ public class SettingsPanel extends JPanel {
         resetButton.addActionListener(e -> {
             gui.resetUIScale();
         });
+        JButton changeModeSymbolButton = new JButton("Mode Accessibilité");
+        changeModeSymbolButton.addActionListener(e -> {
+            gui.changeMode("Symbol");
+        });
+        JButton changeModeTexturedButton = new JButton("Mode Texturé");
+        changeModeTexturedButton.addActionListener(e -> {
+            gui.changeMode("Textured");
+        });
 
         wrapInJPanel(enlargeButton, null, graphismePanel);
         wrapInJPanel(shrinkButton, null, graphismePanel);
         wrapInJPanel(resetButton, null, graphismePanel);
         resolutionManager.setPreferredSize(new Dimension(350, 50));
         wrapInJPanel(resolutionManager, null, graphismePanel);
+        wrapInJPanel(changeModeSymbolButton, null, graphismePanel);
+        wrapInJPanel(changeModeTexturedButton, null, graphismePanel);
+
 
         addFillerPanel(graphismePanel);
+
+
+
 
         JButton saveChanges = new JButton("Save changes");
         saveChanges.setPreferredSize(new Dimension(150, 50));

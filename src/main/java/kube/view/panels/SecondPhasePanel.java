@@ -98,6 +98,35 @@ public class SecondPhasePanel extends JPanel {
         oldSize = getSize();
     }
 
+    public void resetPanel(){
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        // EAST
+        JPanel eastPane = createEastPanel(controller);
+        gbc.gridy = 0;
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(20, 5, 20, 5);
+        add(eastPane, gbc);
+        gamePanel = gamePanel();
+        gamePanel.setBackground(GUIColors.TEXT.toColor());
+        gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.insets = new Insets(20, 15, 20, 15);
+        add(gamePanel, gbc);
+
+        oldSize = getSize();
+        updateAll();
+    }
+
+
     private JPanel createEastPanel(Phase2Controller a) {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
