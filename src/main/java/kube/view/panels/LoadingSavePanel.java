@@ -18,13 +18,13 @@ import kube.controller.graphical.MenuController;
 import kube.view.GUI;
 import kube.view.components.Buttons.MenuButton;
 
-public class LoadPanel extends JPanel {
+public class LoadingSavePanel extends JPanel {
 
     private int width;
     private int height;
     private JList<String> fileList;
 
-    public LoadPanel(GUI gui, MenuController buttonListener) {
+    public LoadingSavePanel(GUI gui, MenuController buttonListener) {
 
         File folder = new File("saves/");
         File[] listOfFiles = folder.listFiles((dir, name) -> name.endsWith(".ser"));
