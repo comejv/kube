@@ -132,9 +132,13 @@ public class GUIEventsHandler implements Runnable {
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
-                    getGUI().setGlassPaneController(null);
-                    getGUI().removeAllFromOverlay();
-                    getGUI().showPanel(GUI.MENU);
+                    if (getGUI().askForConfirmation("Abandonner la partie",
+                            "Êtes-vous sûr de vouloir quitter la partie ?")) {
+                        getGUI().setGlassPaneController(null);
+                        getGUI().removeAllFromOverlay();
+                        getGUI().showPanel(getGUI().MENU);
+                        eventsToModel.add(new Action(ActionType.RESET));
+                    }
                     break;
                 case RETURN_TO_GAME:
                     getGUI().removeAllFromOverlay();
@@ -147,6 +151,10 @@ public class GUIEventsHandler implements Runnable {
                     message = (String) action.getData() == null ? "You can't do that now."
                             : (String) action.getData();
                     getGUI().showError("Forbidden action", message);
+                    break;
+                case PRINT_INVALID_SAVE:
+                    getGUI().showError("Invalid save file",
+                            "Please select another save file, this one is invalid, too old or corrupted.");
                     break;
                 case PRINT_NOT_YOUR_TURN:
                     Config.debug("Not your turn");
