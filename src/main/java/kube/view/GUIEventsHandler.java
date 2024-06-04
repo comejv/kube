@@ -77,7 +77,7 @@ public class GUIEventsHandler implements Runnable {
         HexIcon h;
 
         while (true) {
-            Action action = eventsToView.remove();
+            action = eventsToView.remove();
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
