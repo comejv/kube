@@ -1,7 +1,5 @@
 package kube.configuration;
 
-import java.net.InetAddress;
-
 public class Config {
 
     /**********
@@ -12,6 +10,8 @@ public class Config {
     public static final boolean SHOW_BORDERS = false;
     public static final String SAVING_PATH_DIRECTORY = "saves/";
     public static final String SAVING_FILE_EXTENSION = ".ser";
+    public static final String TEXTURED_MODE = "Textured";
+    public static final String SYMBOL_MODE = "Symbol";
 
     public static final int INIT_WIDTH = 1600;
     public static final int INIT_HEIGHT = 900;
@@ -21,10 +21,10 @@ public class Config {
      **********/
 
     private static String language = "fr_FR";
+    private static String mode = TEXTURED_MODE;
     private static double UIScale = 1;
-
     private static boolean mute = true;
-    
+
     private static String serverAddress;
     private static int serverPort;
 
@@ -38,6 +38,10 @@ public class Config {
 
     public static void setUIScale(double size) {
         UIScale = size;
+    }
+
+    public static void setMode(String str) {
+        mode = str;
     }
 
     public static void resetUIScale() {
@@ -58,6 +62,10 @@ public class Config {
 
     public static String getLanguage() {
         return language;
+    }
+
+    public static String getMode() {
+        return mode;
     }
 
     public static double getUIScale() {

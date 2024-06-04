@@ -28,6 +28,7 @@ public enum ActionType {
     PRINT_LOADED,
     PRINT_SAVED,
     PRINT_WRONG_FILE_NAME,
+    PRINT_INVALID_SAVE,
     PRINT_INVALID_ADDRESS,
 
     // --- MODEL ---

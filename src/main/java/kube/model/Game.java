@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
@@ -149,7 +151,11 @@ public class Game implements Runnable {
                     Config.debug("initilized game");
                     eventsToView.add(new Action(ActionType.VALIDATE, true));
                     return LOAD_START;
-                } catch (Exception e) {
+                } catch (ClassNotFoundException | InvalidClassException | InvalidObjectException e) {
+                    Config.error(e);
+                    eventsToView.add(new Action(ActionType.PRINT_INVALID_SAVE));
+                    return LOAD_ERROR;
+                } catch (IOException e) {
                     Config.error(e);
                     eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
                     return LOAD_ERROR;
