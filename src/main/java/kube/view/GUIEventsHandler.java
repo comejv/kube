@@ -1,11 +1,8 @@
 package kube.view;
 
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
-
-import javax.swing.Timer;
-
+// Import kube classes
 import kube.configuration.Config;
+import kube.controller.graphical.MenuController;
 import kube.model.action.*;
 import kube.model.ai.EasyAI;
 import kube.model.ai.ExpertAI;
@@ -19,6 +16,11 @@ import kube.view.components.Buttons.SelectPlayerButton;
 import kube.view.panels.LoadingSavePanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
+
+// Import java classes
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import javax.swing.Timer;
 
 public class GUIEventsHandler implements Runnable {
 
@@ -77,9 +79,11 @@ public class GUIEventsHandler implements Runnable {
         OverlayPanel overlay, loadMenu, settings;
         RulesPanel rulesPanel;
         LoadingSavePanel loadingSavePanel;
+        MenuController menuController;
         HexIcon h;
 
         while (true) {
+
             action = eventsToView.remove();
             switch (action.getType()) {
                 // GLOBAL
@@ -150,6 +154,7 @@ public class GUIEventsHandler implements Runnable {
                     p2 = (SelectPlayerButton) gui.mP.player2;
                     iaJ1 = null;
                     iaJ2 = null;
+                    
                     switch (p1.buttonValue) {
                         case 0:
                             iaJ1 = null;
@@ -169,6 +174,7 @@ public class GUIEventsHandler implements Runnable {
                         default:
                             break;
                     }
+
                     switch (p2.buttonValue) {
                         case 0:
                             iaJ2 = null;
@@ -188,8 +194,8 @@ public class GUIEventsHandler implements Runnable {
                         default:
                             break;
                     }
-                    eventsToModel.add(new Action(ActionType.START,
-                            new Start(iaJ1, iaJ2)));
+
+                    eventsToModel.add(new Action(ActionType.START, new Start(iaJ1, iaJ2)));
 
                     gui.setGlassPanelVisible(true);
                     break;
@@ -200,7 +206,8 @@ public class GUIEventsHandler implements Runnable {
                     // TODO : maybe tell model about it ?
                     break;
                 case RULES:
-                    gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
+                    menuController = gui.getControllers().getMenuController();
+                    gui.addToOverlay(new OverlayPanel(gui, menuController, action.getType()));
                     gui.setGlassPanelVisible(true);
                     break;
                 case END_RULE:
@@ -227,8 +234,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    settings = new OverlayPanel(gui, gui.getControllers().getMenuController(),
-                            action.getType());
+                    menuController = gui.getControllers().getMenuController();
+                    settings = new OverlayPanel(gui, menuController, action.getType());
                     gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
@@ -258,8 +265,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateSecondPanel(action);
                     break;
                 case LOAD_PANEL:
-                    loadMenu = new OverlayPanel(gui, gui.getControllers().getMenuController(),
-                            action.getType());
+                    menuController = gui.getControllers().getMenuController();
+                    loadMenu = new OverlayPanel(gui, menuController, action.getType());
                     gui.addToOverlay(loadMenu);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
