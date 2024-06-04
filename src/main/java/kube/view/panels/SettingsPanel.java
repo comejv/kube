@@ -57,7 +57,7 @@ public class SettingsPanel extends JPanel {
         gbc.anchor = GridBagConstraints.CENTER;
 
         // Resolution Manager
-        JLabel resolutionLabel = new JLabel("Resolution:");
+        JLabel resolutionLabel = new JLabel("Résolution de la fenêtre ");
         JComboBox<String> resolutionManager = new JComboBox<>(res);
         resolutionManager.setSelectedIndex(0);
         resolutionManager.addItemListener(new ItemListener() {
@@ -119,7 +119,7 @@ public class SettingsPanel extends JPanel {
         graphismePanel.add(uiScalePanel, gbc);
 
         // Reset Button
-        JLabel resetLabel = new JLabel("Reset UI Scale:");
+        JLabel resetLabel = new JLabel("Réinitialiser l'interface");
         JButton resetButton = new JButton("Reset");
         resetButton.setPreferredSize(new Dimension(100, 30));
         resetButton.addActionListener(e -> gui.resetUIScale());
@@ -181,7 +181,6 @@ public class SettingsPanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
 
-        // Volume
         Icon volumeOnImg = new Icon(ResourceLoader.getBufferedImage("volume"));
         volumeOnImg.resizeIcon(100, 100);
         volumeOnImg.recolor(GUIColors.ACCENT);
@@ -189,20 +188,45 @@ public class SettingsPanel extends JPanel {
         volumeOffImg.resizeIcon(100, 100);
         volumeOffImg.recolor(GUIColors.ACCENT);
 
-        BufferedImage volumeImg = Config.isMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
-        ButtonIcon volume = new ButtonIcon("volume", volumeImg, buttonListener);
-        volume.addMouseListener(new MouseAdapter() {
+        // Music Control
+        JLabel musicLabel = new JLabel("Musique :");
+        BufferedImage musicVolumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+        ButtonIcon musicButton = new ButtonIcon("volume", musicVolumeImg, buttonListener);
+        musicButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                BufferedImage volumeImg = Config.isMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
-                volume.setImage(volumeImg);
+                BufferedImage volumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+                musicButton.setImage(volumeImg);
             }
         });
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        audioPanel.add(volume, gbc);
+        audioPanel.add(musicLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        audioPanel.add(musicButton, gbc);
+
+        // Sound Effects Control
+        JLabel soundEffectsLabel = new JLabel("Effets sonores :");
+        BufferedImage soundVolumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+        ButtonIcon soundButton = new ButtonIcon("volume", soundVolumeImg, buttonListener);
+        soundButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BufferedImage volumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+                soundButton.setImage(volumeImg);
+            }
+        });
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        audioPanel.add(soundEffectsLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        audioPanel.add(soundButton, gbc);
 
         // Quit Button
         JButton saveChanges = new JButton("Quitter");
@@ -211,7 +235,7 @@ public class SettingsPanel extends JPanel {
         saveChanges.setActionCommand("confirmed_settings");
 
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.SOUTHEAST;
         audioPanel.add(saveChanges, gbc);
     }

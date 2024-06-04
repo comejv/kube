@@ -169,7 +169,13 @@ public class MenuController implements ActionListener, MouseListener {
                     toView.add(new Action(ActionType.SETTINGS));
                     break;
                 case "volume":
-                    Config.toggleSounds();
+                    if (Config.isMusicMute() && Config.isSoundMute()) {
+                        Config.setMusicMute(false);
+                        Config.setSoundMute(false);
+                    } else {
+                        Config.setMusicMute(true);
+                        Config.setSoundMute(true);
+                    }
                     break;
                 default:
                     Config.error("Unrecognised buttonIcon action.");

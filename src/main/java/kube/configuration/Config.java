@@ -25,7 +25,8 @@ public class Config {
     private static String language = "fr_FR";
     private static String mode = TEXTURED_MODE;
     private static double UIScale = 1;
-    private static boolean mute = true;
+    private static boolean musicMute = true;
+    private static boolean soundMute = true;
 
     private static String serverAddress;
     private static int serverPort;
@@ -62,6 +63,14 @@ public class Config {
 
     public static void setMusic(Music m) {
         music = m;
+    }
+
+    public static void setSoundMute(boolean b) {
+        soundMute = b;
+    }
+
+    public static void setMusicMute(boolean b) {
+        musicMute = b;
     }
 
     /**********
@@ -106,8 +115,17 @@ public class Config {
      * 
      * @return true if the program is muted, false otherwise
      */
-    public static boolean isMute() {
-        return mute;
+    public static boolean isMusicMute() {
+        return musicMute;
+    }
+
+    /**
+     * Check if the program is currently muted
+     * 
+     * @return true if the program is muted, false otherwise
+     */
+    public static boolean isSoundMute() {
+        return soundMute;
     }
 
     /**
@@ -155,15 +173,29 @@ public class Config {
     }
 
     /**
-     * Toggle all sounds and musics
+     * Toggle all sounds
      */
     public static void toggleSounds() {
         debug("Toggle sounds");
-        if (mute) {
-            mute = false;
+        if (soundMute) {
+            soundMute = false;
             music.play();
         } else {
-            mute = true;
+            soundMute = true;
+            music.stop();
+        }
+    }
+
+    /**
+     * Toggle music
+     */
+    public static void toggleMusic() {
+        debug("Toggle sounds");
+        if (musicMute) {
+            musicMute = false;
+            music.play();
+        } else {
+            musicMute = true;
             music.stop();
         }
     }

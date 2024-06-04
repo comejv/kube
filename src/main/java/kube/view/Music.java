@@ -32,7 +32,6 @@ public class Music {
     }
 
     public void play() {
-        Config.debug("Playing music");
         if (clip == null) {
             Config.error("Music not loaded, maybe due to missing file.");
             return;

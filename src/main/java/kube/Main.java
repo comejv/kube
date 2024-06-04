@@ -38,7 +38,7 @@ public class Main {
 
         Music bgMusic = new Music("Ether-Vox");
         Config.setMusic(bgMusic);
-        if (!Config.isMute()) {
+        if (!Config.isMusicMute()) {
             bgMusic.play();
         }
     }

@@ -13,7 +13,7 @@ import kube.configuration.ResourceLoader;
 
 public class Sounds {
     public static void playSound(String s) {
-        if (Config.isMute()) {
+        if (Config.isSoundMute()) {
             return;
         }
         Clip clip;
