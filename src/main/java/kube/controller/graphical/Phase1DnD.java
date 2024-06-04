@@ -1,9 +1,7 @@
 package kube.controller.graphical;
 
-import kube.configuration.Config;
 // Import kube classes
 import kube.model.action.*;
-import kube.view.Sounds;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
@@ -139,13 +137,10 @@ public class Phase1DnD extends MouseAdapter {
             from = g.getHexIcon().getPosition();
             if (from == null && to != null) {
                 getToModel().add(new Action(ActionType.BUILD, new Build(g.getColor(), hex.getColor(), to)));
-                Sounds.playSound("build");
             } else if (from != null && to != null) {
                 getToModel().add(new Action(ActionType.SWAP, new Swap(from, to)));
-                Sounds.playSound("swap");
             } else if (from != null && to == null) {
                 getToModel().add(new Action(ActionType.REMOVE, new Remove(g.getColor(), from)));
-                Sounds.playSound("remove");
             }
         }
 

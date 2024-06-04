@@ -14,7 +14,6 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.CreateMove;
 import kube.model.action.Queue;
-import kube.view.Sounds;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
@@ -41,7 +40,6 @@ public class Phase2DnD extends Phase1DnD {
             if (hex.getColor() == ModelColor.EMPTY && playerFrom != playerTo) {
                 getToModel().add(new Action(ActionType.CREATE_MOVE,
                         new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
-                Sounds.playSound("build");
             }
         }
         getToView().add(new Action(ActionType.DND_STOP));
