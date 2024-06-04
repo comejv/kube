@@ -91,21 +91,14 @@ public class MenuController implements ActionListener, MouseListener {
                 // Si serveur jsp mdr
                 Config.debug("Starting online game");
                 if (network.isServer()) {
-                    // SERVER SIDE
-                    while (network.getOut() == null) {
-                        try {
-                            network.connect(null, 0);
-                        } catch (IOException e) {
-                            toView.add(new Action(ActionType.SERVER_ERROR));
-                            break;
-                        }
-                    }
-
+                    networkListenerThread = new Thread(networkListener);
+                    networkSenderThread = new Thread(networkSender);
+                    networkListenerThread.start();
+                    networkSenderThread.start();
+                    toModel.add(new Action(ActionType.START_ONLINE, true));
                 } else {
-                    // CLIENT SIDE
+                    Config.debug("Le client se connecte");
                     try {
-                        while (Config.getHostIP() == null)
-                            ;
                         if (!network.connect(Config.getHostIP(), Config.getHostPort())) {
                             Config.debug(Config.getHostIP(), Config.getHostPort());
                             Config.debug("Timed out");
@@ -121,8 +114,9 @@ public class MenuController implements ActionListener, MouseListener {
                     networkSenderThread = new Thread(networkSender);
                     networkListenerThread.start();
                     networkSenderThread.start();
+                    toModel.add(new Action(ActionType.START_ONLINE, false));
+                    Config.debug("Le client est prêt");
                 }
-                Config.debug("Connection etablished");
                 // toView.add(new Action(ActionType.START_ONLINE));
                 break;
             case "rules":

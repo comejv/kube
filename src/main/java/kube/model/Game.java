@@ -110,13 +110,23 @@ public class Game implements Runnable {
         action = eventsToModel.remove();
 
         while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD &&
-                action.getType() != ActionType.RESET) {
+                action.getType() != ActionType.RESET && action.getType() != ActionType.START_ONLINE) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             action = eventsToModel.remove();
         }
 
         switch (action.getType()) {
+            case START_ONLINE:
+                Boolean isHost = (Boolean) action.getData();
+                if (isHost) {
+                    setGameType(HOST);
+                } else {
+                    setGameType(JOIN);
+                }
+                Config.debug("Start online reçu !");
+                return CLASSIC_START;
             case START:
+                setGameType(LOCAL);
                 // Start a new game
                 start = (Start) action.getData();
                 if (start == null) {
@@ -127,6 +137,7 @@ public class Game implements Runnable {
                 eventsToView.add(new Action(ActionType.VALIDATE, true));
                 return CLASSIC_START;
             case LOAD:
+                setGameType(LOCAL);
                 // Load a saved game
                 filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData();
                 file = new File(filePath);
@@ -184,25 +195,34 @@ public class Game implements Runnable {
         Action action;
         switch (getGameType()) {
             case HOST:
+                Config.debug("Debut envoie data initialisation");
                 eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getK3().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP1().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP2().clone()));
                 k3.setCurrentPlayer(k3.getP1());
+                eventsToView.add(new Action(ActionType.VALIDATE, true));
+                Config.debug("Fin envoie data initialisation");
                 break;
             case JOIN:
+                Config.debug("Debut reception data initialisation");
                 while ((action = eventsToModel.remove()).getType() != ActionType.INIT_K3) {
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
+                Config.debug("Rceptio data 1");
                 k3.setK3((Mountain) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
+                Config.debug("Rceptio data 2");
                 k3.setP1((Player) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
+                Config.debug("Rceptio data 2");
                 k3.setP2((Player) action.getData());
                 k3.setCurrentPlayer(k3.getP2());
+                Config.debug("Fin reception data initialisation");
+                eventsToView.add(new Action(ActionType.VALIDATE, true));
                 break;
             case LOCAL:
                 k3.setCurrentPlayer(k3.getP1());

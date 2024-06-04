@@ -25,6 +25,8 @@ import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
@@ -338,26 +340,41 @@ public class MenuPanel extends JPanel {
         ipPortField.setBackground(GUIColors.ACCENT.toColor());
         ipPortFieldPanel.add(ipPortField);
 
+        ipPortField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                handleTextChange(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                handleTextChange(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                handleTextChange(e);
+            }
+
+            private void handleTextChange(DocumentEvent e) {
+                String input = ipPortField.getText();
+                if (input.contains(":")) {
+                    String[] parts = input.split(":");
+                    String ip = parts[0];
+                    int port = Integer.valueOf(parts[1]);
+                    Config.debug("Connecting to IP: " + ip + " on port: " + port);
+                    Config.setHostIP(ip);
+                    Config.setHostPort(port);
+                } else {
+                    Config.debug("Addresse invalide (manque :)");
+                }
+            }
+        });
+        
         joinPanel.add(ipPortFieldPanel, buttonsGBC);
 
         JButton connect = new MenuButton("CONNECTER");
-        connect.addActionListener(e -> {
-            String input = ipPortField.getText();
-            if (input.contains(":")) {
-                String[] parts = input.split(":");
-                String ip = parts[0];
-                int port = Integer.valueOf(parts[1]);
-                Config.debug("Connecting to IP: " + ip + " on port: " + port);
-                Config.setHostIP(ip);
-                Config.setHostPort(port);
-            } else {
-                Config.debug("Addresse invalide (manque :)");
-            }
-            buttonListener.actionPerformed(e);
-            connect.setActionCommand("startOnline");
-
-        });
-
+        connect.setActionCommand("startOnline");
         connect.addActionListener(buttonListener);
 
         JButton returnJoin = new MenuButton("RETOUR");
