@@ -47,6 +47,7 @@ public class FirstPhasePanel extends JPanel {
     private HashMap<ModelColor, Integer> p1Pieces;
     private JButton loadButton, validateButton;
     private int gameType;
+
     /**********
      * CONSTRUCTOR
      **********/
@@ -708,7 +709,7 @@ public class FirstPhasePanel extends JPanel {
                         "Au tour de " + getKube().getCurrentPlayer().getName() + " de construire sa montagne",
                         TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
-        
+
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             updateSide(c);
         }
@@ -867,11 +868,19 @@ public class FirstPhasePanel extends JPanel {
         transparentPanel.setPreferredSize(getGui().getMainFrame().getSize());
         transparentPanel.setVisible(false);
         getGui().addToOverlay(transparentPanel);
-        new Message(transparentPanel,
-                getKube().getCurrentPlayer().getName() + " preparez votre montagne !",
-                getGui(),
-                getAnimationGlow(),
-                getKube().getCurrentPlayer() == getKube().getP1(), false);
+        if (k3.getGameType() == Game.LOCAL) {
+            new Message(transparentPanel,
+                    getKube().getCurrentPlayer().getName() + " preparez votre montagne !",
+                    getGui(),
+                    getAnimationGlow(),
+                    getKube().getCurrentPlayer() == getKube().getP1(), false);
+        } else {
+            new Message(transparentPanel,
+                    "Construisez votre montagne !",
+                    getGui(),
+                    getAnimationGlow(),
+                    getKube().getCurrentPlayer() == getKube().getP1(), false);
+        }
     }
 
 }

@@ -20,6 +20,7 @@ public abstract class Network {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
+    private boolean hasBeenConnected;
     private boolean waiting = false;
 
     /**********
@@ -44,6 +45,10 @@ public abstract class Network {
 
     public final void setWaitingForConnection(boolean waiting) {
         this.waiting = waiting;
+    }
+
+    public void setHasBeenConnected(boolean hasBeenConnected){
+        
     }
 
     /**********

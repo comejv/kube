@@ -385,7 +385,8 @@ public class SecondPhasePanel extends JPanel {
         updateVisible();
         updatePanelGlow(false);
         Config.debug(k3.getCurrentPlayer().getId(), k3.getGameType());
-        if (k3.getHistory().canUndo() && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() != k3.getGameType())) {
+        if (k3.getHistory().canUndo()
+                && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() != k3.getGameType())) {
             undoButton.setEnabled(true);
         }
         if (k3.getHistory().canRedo() && gameType == Game.LOCAL) {
@@ -418,13 +419,13 @@ public class SecondPhasePanel extends JPanel {
             if (k3.getPenality()) {
                 gamePanel.setBorder(
                         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                                "L'autre joueur doit vous voler une pièce",
+                                "L'adversaire doit vous voler une pièce",
                                 TitledBorder.CENTER, TitledBorder.TOP,
                                 new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
             } else {
                 gamePanel.setBorder(
                         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                                "L'autre joueur doit jouer sur la montagne commune",
+                                "L'adversaire doit jouer sur la montagne commune",
                                 TitledBorder.CENTER, TitledBorder.TOP,
                                 new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
             }
@@ -432,7 +433,7 @@ public class SecondPhasePanel extends JPanel {
             if (k3.getPenality()) {
                 gamePanel.setBorder(
                         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                                "A vous de voler une pièce à l'autre joueur",
+                                "A vous de voler une pièce à l'adversaire",
                                 TitledBorder.CENTER, TitledBorder.TOP,
                                 new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
             } else {
@@ -760,6 +761,18 @@ public class SecondPhasePanel extends JPanel {
             p2Additionnals.repaint();
         }
 
+        if (!glowPan.keySet().contains(p1)) {
+            p1.repaint();
+        }
+
+        if (!glowPan.keySet().contains(p2)) {
+            p2.repaint();
+        }
+
+        if (!glowPan.keySet().contains(base)) {
+            base.repaint();
+        }
+
         animationPanelGlow.setToRedraw(glowPan);
     }
 
@@ -768,7 +781,16 @@ public class SecondPhasePanel extends JPanel {
         transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
-        new Message(transparentPanel, "Le " + k3.getCurrentPlayer().getName() + " commence !", gui, animationHexGlow);
+        if (k3.getGameType() == Game.LOCAL) {
+            new Message(transparentPanel, "Le " + k3.getCurrentPlayer().getName() + " commence !", gui,
+                    animationHexGlow);
+        } else if (k3.getCurrentPlayer().getId() == k3.getGameType()) {
+            new Message(transparentPanel, "A vous de commencer !", gui,
+                    animationHexGlow);
+        } else {
+            new Message(transparentPanel, "A l'adversaire de commencer !", gui,
+                    animationHexGlow);
+        }
     }
 
     public void penalityMessage() {
@@ -777,8 +799,17 @@ public class SecondPhasePanel extends JPanel {
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
         boolean aiAlreadyPaused = pauseAi.getText() == "Reprendre Kubot";
-        new Message(transparentPanel, "Pénalité à l'avantage du " + k3.getCurrentPlayer().getName(), gui,
-                animationHexGlow, false, aiAlreadyPaused);
+        if (k3.getGameType() == Game.LOCAL) {
+            new Message(transparentPanel, "Pénalité à l'avantage du " + k3.getCurrentPlayer().getName(), gui,
+                    animationHexGlow, false, aiAlreadyPaused);
+        } else if (k3.getCurrentPlayer().getId() == k3.getGameType()) {
+            new Message(transparentPanel, "Pénalité à votre avantage", gui,
+                    animationHexGlow, false, aiAlreadyPaused);
+        } else {
+            new Message(transparentPanel, "Pénalité à l'avantage de l'adversaire", gui,
+                    animationHexGlow, false, aiAlreadyPaused);
+        }
+
     }
 
     public void winMessage(Action a) {
@@ -787,7 +818,13 @@ public class SecondPhasePanel extends JPanel {
         panel.setPreferredSize(gui.getMainFrame().getSize());
         panel.setVisible(false);
         gui.addToOverlay(panel);
-        new winMsg(panel, gui, "Victoire du " + winner.getName(), controller);
+        if (k3.getGameType() == Game.LOCAL) {
+            new winMsg(panel, gui, "Victoire du " + winner.getName(), controller);
+        } else if (winner.getId() == k3.getGameType()) {
+            new winMsg(panel, gui, "Vous avez gagné !", controller);
+        } else {
+            new winMsg(panel, gui, "Vous avez perdu !", controller);
+        }
         revalidate();
         repaint();
     }
