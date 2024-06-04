@@ -119,9 +119,8 @@ public class testThomas2 extends MiniMaxAI {
             redistributeProbs(k3, c);
         }
         for (ModelColor c : probabilities.keySet()) {
-            float diff = ((float)(getPlayer(k3).getAvailableToBuild().get(c)+1) / (float)(ennemyPieces.get(c)+1));
+            float diff = ((float) (getPlayer(k3).getAvailableToBuild().get(c) + 1) / (float) (ennemyPieces.get(c) + 1));
             probabilities.put(c, probabilities.get(c) * diff);
-
         }
         return probabilities;
     }
