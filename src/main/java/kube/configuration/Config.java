@@ -71,6 +71,9 @@ public class Config {
 
     public static void setMusicMute(boolean b) {
         musicMute = b;
+        if (isMusicMute()) {
+            music.play();
+        }
     }
 
     /**********
@@ -176,13 +179,10 @@ public class Config {
      * Toggle all sounds
      */
     public static void toggleSounds() {
-        debug("Toggle sounds");
         if (soundMute) {
-            soundMute = false;
-            music.play();
+            setSoundMute(false);
         } else {
-            soundMute = true;
-            music.stop();
+            setSoundMute(true);
         }
     }
 
@@ -190,12 +190,11 @@ public class Config {
      * Toggle music
      */
     public static void toggleMusic() {
-        debug("Toggle sounds");
         if (musicMute) {
-            musicMute = false;
+            setMusicMute(false);
             music.play();
         } else {
-            musicMute = true;
+            setMusicMute(true);
             music.stop();
         }
     }
