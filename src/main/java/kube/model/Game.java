@@ -4,6 +4,7 @@ package kube.model;
 import kube.configuration.Config;
 import kube.model.action.*;
 import kube.model.action.move.Move;
+import kube.model.ai.betterConstructV2;
 import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.utilsAI;
 
@@ -108,8 +109,8 @@ public class Game implements Runnable {
 
         action = eventsToModel.remove();
 
-        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD && 
-            action.getType() != ActionType.RESET) {
+        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD &&
+                action.getType() != ActionType.RESET) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             action = eventsToModel.remove();
         }
@@ -363,6 +364,8 @@ public class Game implements Runnable {
                 action = eventsToModel.remove();
                 switch (action.getType()) {
                     case UNDO:
+                        AIpause = true;
+                        eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                         undo();
                         break;
                     case SAVE:
@@ -379,7 +382,6 @@ public class Game implements Runnable {
             }
 
             while (k3.canCurrentPlayerPlay()) {
-                Config.debug("AIpause", AIpause, eventsToModel.peak());
                 if (!eventsToModel.isEmpty() && eventsToModel.peak().getType() == ActionType.AI_PAUSE) {
                     action = eventsToModel.remove();
                     AIpause = (Boolean) action.getData();
@@ -402,9 +404,13 @@ public class Game implements Runnable {
                             playMove(action);
                             break;
                         case UNDO:
+                            AIpause = true;
+                            eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                             undo();
                             break;
                         case REDO:
+                            AIpause = true;
+                            eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                             redo();
                             break;
                         case SAVE:
@@ -416,7 +422,7 @@ public class Game implements Runnable {
                             AIpause = (Boolean) action.getData();
                             break;
                         case AI_MOVE:
-                            k3.getCurrentPlayer().setAI(new moveSetHeuristique(50));
+                            k3.getCurrentPlayer().setAI(new betterConstructV2(50));
                             k3.getCurrentPlayer().getAI().setPlayerId(k3.getCurrentPlayer().getId());
                             Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
                             playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
@@ -597,7 +603,7 @@ public class Game implements Runnable {
             }
         }
 
-        player.setAI(new moveSetHeuristique());
+        player.setAI(new betterConstructV2());
         player.getAI().setPlayerId(player.getId());
         player.getAI().constructionPhase(k3);
         player.setAI(null);

@@ -325,40 +325,4 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
             }
         }
     }
-
-    /**
-     * Construct a mountain
-     * 
-     * @return a mountain
-     */
-    protected Mountain constructMountain(Kube k3) {
-        return null;
-    }
-
-    /**
-     * Clone the MiniMaxAI object
-     * 
-     * @return the cloned object
-     */
-    public MiniMaxAI clone() {
-        // TODO: export in each AI classes
-        if (this instanceof moveSetHeuristique) {
-            return new moveSetHeuristique(getTime());
-        } else if (this instanceof randomAI) {
-            return new randomAI(getTime());
-        } else if (this instanceof betterBase) {
-            return new betterBase(getTime());
-        } else if (this instanceof betterConstruct) {
-            return new betterConstruct(getTime());
-        } else if (this instanceof betterConstructV2) {
-            return new betterConstructV2(getTime());
-        } else if (this instanceof betterConstructV3) {
-            return new betterConstructV3(getTime());
-        } else if (this instanceof betterBaseV2){
-            return new betterBaseV2(getTime());
-        } 
-        else {
-            throw new UnsupportedOperationException("Unsupported type for cloning.");
-        }
-    }
 }

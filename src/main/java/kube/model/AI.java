@@ -43,7 +43,7 @@ public class AI extends Player {
     @Override
     public AI clone() {
         AI copy;
-        copy = new AI(getId(), getAI().clone());
+        copy = new AI(getId(), getAI());
         copy.setAdditionals(new ArrayList<>(getAdditionals()));
         if (!getIsMountainValidated()) {
             copy.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));

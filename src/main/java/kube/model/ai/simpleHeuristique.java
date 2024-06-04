@@ -1,5 +1,6 @@
 package kube.model.ai;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,52 +15,73 @@ import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
-public class betterConstructV2 extends MiniMaxAI {
+public class simpleHeuristique extends MiniMaxAI {
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;
+    HashMap<ModelColor, Integer> ennemyPieces;
 
     /**********
      * CONSTRUCTORS
      **********/
 
-    public betterConstructV2(int time, Random r) {
+    public simpleHeuristique(int time, Random r) {
         super(time, r);
     }
 
-    public betterConstructV2(int time, int seed) {
+    public simpleHeuristique(int time, int seed) {
         super(time, seed);
 
     }
 
-    public betterConstructV2(int time) {
+    public simpleHeuristique(int time) {
         super(time);
     }
 
-    public betterConstructV2() {
+    public simpleHeuristique() {
         super();
     }
 
     /**********
      * METHODS
      **********/
+
+    public HashMap<ModelColor, Integer> getEnnemyPieces(Kube k3) {
+        Player p;
+        if (getPlayer(k3) == k3.getP1()) {
+            p = k3.getP2();
+        } else {
+            p = k3.getP1();
+        }
+        ennemyPieces = new HashMap<>(p.getAvailableToBuild());
+        for (int i = 0; i < p.getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                ModelColor c = p.getMountain().getCase(i, j);
+                if (c != ModelColor.EMPTY) {
+                    ennemyPieces.put(c, ennemyPieces.get(c) + 1);
+                }
+            }
+        }
+        return ennemyPieces;
+    }
+
     @Override
     public void constructionPhase(Kube k3) {
-        Integer[] startPoint;
+        getEnnemyPieces(k3);
+        Point startPoint;
         getBaseRepartiton(k3);
         setJokers(k3, getRandom());
         while (!getPlayer(k3).isMountainFull()) {
             ModelColor c = getColorBasedOnProbabilities();
             startPoint = getStartPoint(k3);
-            getPlayer(k3).addToMountainFromAvailableToBuild(startPoint[0], startPoint[1], c);
+            getPlayer(k3).addToMountainFromAvailableToBuild(startPoint, c);
             redistributeProbs(k3, c);
         }
-
     }
 
     @Override
     public int evaluation(Kube k, Player p) {
-        return k.moveSet(p).size() + p.getAdditionals().size() - p.getWhiteUsed();
+        return k.moveSet(p).size();
     }
 
     @Override
@@ -142,12 +164,12 @@ public class betterConstructV2 extends MiniMaxAI {
         }
     }
 
-    private Integer[] getStartPoint(Kube k3) {
+    private Point getStartPoint(Kube k3) {
         Mountain m = getPlayer(k3).getMountain();
         for (int i = 0; i < m.getBaseSize(); i++) {
             for (int j = 0; j <= i; j++) {
                 if (m.getCase(i, j) == ModelColor.EMPTY) {
-                    return new Integer[] { i, j };
+                    return new Point(i, j);
                 }
             }
         }
