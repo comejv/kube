@@ -139,11 +139,12 @@ public class Game implements Runnable {
                     eventsToView.add(new Action(ActionType.VALIDATE, true));
                     return LOAD_START;
                 } catch (Exception e) {
+                    Config.error(e);
                     eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
                     return LOAD_ERROR;
                 }
             case RESET:
-                Config.debug("Recieved RESET action");
+                Config.debug("Received RESET action");
                 return RESET_EXIT;
             default:
                 eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
