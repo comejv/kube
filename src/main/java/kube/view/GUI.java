@@ -122,6 +122,14 @@ public class GUI implements Runnable {
         getMainFrame().getGlassPane().setVisible(b);
     }
 
+    public final void setMainFrame(MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
+    }
+
+    public final void setMenuPanel(MenuPanel menuPanel) {
+        this.menuPanel = menuPanel;
+    }
+
     protected void setPanel(String panelName, JPanel panel) {
 
         switch (panelName) {
@@ -301,12 +309,12 @@ public class GUI implements Runnable {
      */
     private void showAllBorders(Container container) {
 
-        for (Component comp : container.getComponents()) {
-            if (comp instanceof Container) {
-                showAllBorders((Container) comp);
+        for (Component component : container.getComponents()) {
+            if (component instanceof Container) {
+                showAllBorders((Container) component);
             }
-            if (comp instanceof JPanel) {
-                ((JPanel) comp).setBorder(BorderFactory.createLineBorder(Color.red));
+            if (component instanceof JPanel) {
+                ((JPanel) component).setBorder(BorderFactory.createLineBorder(Color.red));
             }
         }
     }
@@ -357,8 +365,8 @@ public class GUI implements Runnable {
         // Disable optimized drawing
         System.setProperty("sun.java2d.opengl", "true");
 
-        mainFrame = new MainFrame();
-        menuPanel = new MenuPanel(this, getControllerManager().getMenuController());
+        setMainFrame(new MainFrame());
+        setMenuPanel(new MenuPanel(this, getControllerManager().getMenuController()));
         getMainFrame().addPanel(menuPanel, MENU);
 
         if (Config.SHOW_BORDERS) {
@@ -526,11 +534,13 @@ public class GUI implements Runnable {
      * @return boolean whether or not the user confirmed the action
      */
     public boolean askForConfirmation(String title, String message) {
+
         // Custom options for buttons
-        Object[] options = { "Oui", "Non" };
+        Object[] options={"Oui","Non"};
+        int option;
 
         // Show custom dialog
-        int option = JOptionPane.showOptionDialog(null,
+        option = JOptionPane.showOptionDialog(null,
                 message,
                 title,
                 JOptionPane.YES_NO_OPTION,
@@ -570,8 +580,14 @@ public class GUI implements Runnable {
         addToOverlay(savePanel);
     }
 
+    /**
+     * Enable the host start button
+     * 
+     * @param b whether or not to enable the button
+     */
     public void enableHostStartButton(boolean b) {
-        MenuPanel p = (MenuPanel) getPanel(MENU);
-        p.enableHostStartButton(b);
+        MenuPanel menuPanel;
+        menuPanel = (MenuPanel) getPanel(MENU);
+        menuPanel.enableHostStartButton(b);
     }
 }
