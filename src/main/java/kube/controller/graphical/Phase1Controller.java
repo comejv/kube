@@ -35,8 +35,7 @@ public class Phase1Controller implements ActionListener, MouseListener, Componen
                 toView.add(new Action(ActionType.SETTINGS));
                 break;
             case "quit":
-                // Event to model handled in GUIEventsController to allow for confirmation
-                // message
+                toModel.add(new Action(ActionType.RESET));
                 toView.add(new Action(ActionType.RETURN_TO_MENU));
                 break;
             case "AI":
