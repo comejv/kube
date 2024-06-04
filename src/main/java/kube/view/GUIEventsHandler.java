@@ -6,7 +6,6 @@ import java.awt.event.MouseAdapter;
 import javax.swing.Timer;
 
 import kube.configuration.Config;
-import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.betterConstructV2;
@@ -18,22 +17,55 @@ import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
 
 public class GUIEventsHandler implements Runnable {
-    // TODO : refactor this class to make it more readable
 
-    private Kube kube;
-    private Queue<Action> eventsToView;
-    private Queue<Action> eventsToModel;
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    private Queue<Action> eventsToView, eventsToModel;
     private MouseAdapter savedGlassPaneController;
     private GUI gui;
 
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor for the GUIEventsHandler class
+     * 
+     * @param gui           the GUI object
+     * @param eventsToView  the queue of actions to view
+     * @param eventsToModel the queue of actions to model
+     */
     public GUIEventsHandler(GUI gui, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
         this.gui = gui;
     }
 
+    /**********
+     * SETTER
+     **********/
+
+    public void setSavedGlassPaneController(MouseAdapter ma) {
+        savedGlassPaneController = ma;
+    }
+
+    /**********
+     * GETTER
+     **********/
+
+    public MouseAdapter getSavedGlassPaneController() {
+        return savedGlassPaneController;
+    }
+
+    /**********
+     * RUN METHOD
+     **********/
+
     @Override
     public void run() {
+        
         while (true) {
             Action action = eventsToView.remove();
             Config.debug("View receive : ", action);
@@ -219,13 +251,5 @@ public class GUIEventsHandler implements Runnable {
                     break;
             }
         }
-    }
-
-    public void setSavedGlassPaneController(MouseAdapter ma) {
-        savedGlassPaneController = ma;
-    }
-
-    public MouseAdapter getSavedGlassPaneController() {
-        return savedGlassPaneController;
     }
 }
