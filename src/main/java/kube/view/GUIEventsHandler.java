@@ -7,6 +7,7 @@ import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.MiniMaxAI;
+import kube.model.ai.betterConstructV2;
 import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
@@ -72,9 +73,13 @@ public class GUIEventsHandler implements Runnable {
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
-                    gui.setGlassPanelVisible(false);
                     gui.setGlassPaneController(null);
+                    gui.removeAllFromOverlay();
                     gui.showPanel(GUI.MENU);
+                    break;
+                case RETURN_TO_GAME:
+                    gui.setGlassPaneController(null);
+                    gui.removeAllFromOverlay();
                     break;
                 case QUIT:
                     System.exit(0);
@@ -101,12 +106,12 @@ public class GUIEventsHandler implements Runnable {
                     if (p1.buttonValue == 0) {
                         iaJ1 = null;
                     } else {
-                        iaJ1 = new moveSetHeuristique();
+                        iaJ1 = new betterConstructV2();
                     }
                     if (p2.buttonValue == 0) {
                         iaJ2 = null;
                     } else {
-                        iaJ2 = new moveSetHeuristique();
+                        iaJ2 = new betterConstructV2();
                     }
                     eventsToModel.add(new Action(ActionType.START,
                             new Start(iaJ1, iaJ2)));
