@@ -367,6 +367,7 @@ public class GUI implements Runnable {
                 loadPanel(PHASE2);
                 break;
             case Kube.GAME_PHASE:
+                loadPanel(PHASE2);
                 firstPhasePanel.setWaitingButton();
                 setGlassPaneController(new Phase2DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE2);
