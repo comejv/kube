@@ -114,6 +114,7 @@ public class Game implements Runnable {
 
         while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD &&
                 action.getType() != ActionType.RESET && action.getType() != ActionType.START_ONLINE) {
+            Config.debug("Reception de ", action);
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             action = eventsToModel.remove();
         }
@@ -164,9 +165,6 @@ public class Game implements Runnable {
                     return LOAD_ERROR;
                 }
             case RESET:
-                if (action.getFromNetwork()) {
-                    eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                }
                 return RESET_EXIT;
             default:
                 eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -229,9 +227,6 @@ public class Game implements Runnable {
             case JOIN:
                 while ((action = eventsToModel.remove()).getType() != ActionType.INIT_K3) {
                     if (action.getType() == ActionType.RESET) {
-                        if (action.getFromNetwork()) {
-                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                        }
                         return RESET_EXIT;
                     }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -239,9 +234,6 @@ public class Game implements Runnable {
                 k3.setMountain((Mountain) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     if (action.getType() == ActionType.RESET) {
-                        if (action.getFromNetwork()) {
-                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                        }
                         return RESET_EXIT;
                     }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -249,9 +241,6 @@ public class Game implements Runnable {
                 k3.setP1((Player) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     if (action.getType() == ActionType.RESET) {
-                        if (action.getFromNetwork()) {
-                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                        }
                         return RESET_EXIT;
                     }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -362,9 +351,6 @@ public class Game implements Runnable {
                     save(action.getData().toString());
                     break;
                 case RESET:
-                    if (action.getFromNetwork()) {
-                        eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                    }
                     return RESET_EXIT;
                 case AI_PAUSE:
                     break;
@@ -439,9 +425,6 @@ public class Game implements Runnable {
                         save(action.getData().toString());
                         break;
                     case RESET:
-                        if (action.getFromNetwork()) {
-                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                        }
                         return RESET_EXIT;
                     case AI_PAUSE:
                         AIpause = (Boolean) action.getData();
@@ -491,9 +474,6 @@ public class Game implements Runnable {
                             save(action.getData().toString());
                             break;
                         case RESET:
-                            if (action.getFromNetwork()) {
-                                eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                            }
                             return RESET_EXIT;
                         case AI_PAUSE:
                             AIpause = (Boolean) action.getData();
@@ -705,9 +685,6 @@ public class Game implements Runnable {
                 }
                 k3.updatePhase();
             } else if (action.getType() == ActionType.RESET) {
-                if (action.getFromNetwork()) {
-                    eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
-                }
                 return RESET_EXIT;
             } else {
                 eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));

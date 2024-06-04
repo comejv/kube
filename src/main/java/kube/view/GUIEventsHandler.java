@@ -37,6 +37,7 @@ public class GUIEventsHandler implements Runnable {
     private MouseAdapter savedGlassPaneController;
     private GUI gui;
     private TransparentPanel transparentPanel;
+
     /**********
      * CONSTRUCTOR
      **********/
@@ -165,7 +166,7 @@ public class GUIEventsHandler implements Runnable {
                     Config.debug("Forbidden action : " + action.getData());
                     message = (String) action.getData() == null ? "You can't do that now."
                             : (String) action.getData();
-                    getGUI().showError("Forbidden action", message);
+                    //getGUI().showError("Forbidden action", message);
                     break;
                 case PRINT_INVALID_SAVE:
                     getGUI().showError("Invalid save file",
@@ -256,7 +257,7 @@ public class GUIEventsHandler implements Runnable {
                             "Erreur de connexion",
                             getGUI(),
                             null,
-                            false, false);
+                            false, true);
                     break;
                 case START_ONLINE:
                     Config.debug("Starting online game");

@@ -18,6 +18,8 @@ public class NetworkListener implements Runnable {
 
     Network network;
     Queue<Action> networkToModel;
+    Queue<Action> networkToView;
+
     /**********
      * CONSTRUCTOR
      **********/
@@ -26,11 +28,13 @@ public class NetworkListener implements Runnable {
      * Constructor of the class
      * 
      * @param network        the network object
-     * @param networkToModel the queue of actions to send to the model
+     * @param networkToModel the queue of actions to send to the model*
+     * @param networkToView the queue of actions to send to the view
      */
-    public NetworkListener(Network network, Queue<Action> networkToModel) {
+    public NetworkListener(Network network, Queue<Action> networkToModel, Queue<Action> networkToView) {
         this.network = network;
         this.networkToModel = networkToModel;
+        this.networkToView = networkToView;
     }
 
     /**********
@@ -51,7 +55,6 @@ public class NetworkListener implements Runnable {
                 }
             } catch (IOException e) {
                 Action action = new Action(ActionType.RESET);
-                action.setFromNetwork(true);
                 networkToModel.add(action);
                 break;
             }

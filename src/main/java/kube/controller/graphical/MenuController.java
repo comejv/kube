@@ -48,7 +48,7 @@ public class MenuController implements ActionListener, MouseListener {
                 break;
             case "join":
                 network = new Client();
-                networkListener = new NetworkListener(network, toModel);
+                networkListener = new NetworkListener(network, toModel, toView);
                 networkSender = new NetworkSender(network, toNetwork, 2);
                 break;
             case "host":
@@ -62,7 +62,7 @@ public class MenuController implements ActionListener, MouseListener {
                 try {
                     network = new Server(toView);
                     Config.setHostPort(network.getPort());
-                    networkListener = new NetworkListener(network, toModel);
+                    networkListener = new NetworkListener(network, toModel, toView);
                     networkSender = new NetworkSender(network, toNetwork, 1);
                     toView.add(new Action(ActionType.HOST));
                 } catch (IOException e) {
@@ -75,8 +75,10 @@ public class MenuController implements ActionListener, MouseListener {
                 toNetwork.add(new Action(ActionType.STOP_NETWORK));
                 if (network.isServer()) {
                     ((Server) network).disconnect();
+                    toView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
                 } else {
                     ((Client) network).disconnect();
+                    toView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
                 }
             }
                 break;
