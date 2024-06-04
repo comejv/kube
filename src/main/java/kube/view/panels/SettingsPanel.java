@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -10,7 +9,6 @@ import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -127,7 +125,7 @@ public class SettingsPanel extends JPanel {
 
         addFillerPanel(graphismePanel);
 
-        JButton saveChanges = new JButton("Confirmer");
+        JButton saveChanges = new JButton("Quitter");
         saveChanges.setPreferredSize(new Dimension(150, 50));
         saveChanges.addActionListener(buttonListener);
         saveChanges.setActionCommand("confirmed_settings");
