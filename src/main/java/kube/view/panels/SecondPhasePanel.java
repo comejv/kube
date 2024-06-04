@@ -8,7 +8,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Point;
-import java.lang.module.Configuration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -722,12 +721,12 @@ public class SecondPhasePanel extends JPanel {
 
     public void winMessage(Action a) {
         Player winner = (Player) a.getData();
-        TransparentPanel transparentPanel = new TransparentPanel("");
-        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
-        transparentPanel.setVisible(false);
-        gui.addToOverlay(transparentPanel);
-        boolean aiAlreadyPaused = pauseAi.getText() == "Reprendre Kubot";
-        new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow, false, aiAlreadyPaused);
+        winPanel panel = new winPanel();
+        panel.setPreferredSize(gui.getMainFrame().getSize());
+        panel.setVisible(false);
+        gui.addToOverlay(panel);
+        new winMsg(panel, gui, "Victoire du " + winner.getName(), controller);
+        revalidate();
         repaint();
     }
 
