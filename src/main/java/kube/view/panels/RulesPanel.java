@@ -8,8 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -302,18 +301,23 @@ public class RulesPanel extends JPanel{
 
     public class AnimationPanel extends JPanel{
 
+        private GUI animGui;
         private JLabel[] frames;
+        private int initialWidth;
         private int updatedWidth;
-        private int updatedHeight;
+        private double updatedHeightFactor;
         private AnimatedRule animation;
 
         private AnimationPanel(int ruleNb, GUI gui){
+            animGui = gui;
             frames = new JLabel[4];
             updatedWidth = Math.round(gui.getMainFrame().getWidth() / 2.66f);
-            updatedHeight = Math.round(gui.getMainFrame().getHeight() / 2.66f);
             for (int i = 0; i < 4; i++) {
-                Image image = ResourceLoader.getBufferedImage("animations/animation" + ruleNb + i);
-                Image resized = image.getScaledInstance(updatedWidth, updatedHeight, Image.SCALE_SMOOTH);
+                BufferedImage image = ResourceLoader.getBufferedImage("animations/animation" + ruleNb + i);
+                setInitialWidth(image.getWidth());
+                setUpdatedHeightFactor((double) updatedWidth / (double) initialWidth);
+                int updatedHeight = (int) Math.round(image.getHeight() * getUpdatedHeightFactor());
+                Image resized = image.getScaledInstance(getUpdatedWidth(), updatedHeight, Image.SCALE_SMOOTH);
                 JLabel frame = new JLabel(new ImageIcon(resized));
                 frame.setPreferredSize(new Dimension(updatedWidth, updatedHeight));
                 if(i > 0){
@@ -331,6 +335,26 @@ public class RulesPanel extends JPanel{
 
         public AnimatedRule getAnimation() {
             return animation;
+        }
+
+        public int getUpdatedWidth() {
+            return updatedWidth;
+        }
+
+        public double getUpdatedHeightFactor() {
+            return updatedHeightFactor;
+        }
+
+        public void setInitialWidth(int initialWidth) {
+            this.initialWidth = initialWidth;
+        }
+
+        public void setUpdatedWidth(int updatedWidth) {
+            this.updatedWidth = updatedWidth;
+        }
+
+        public void setUpdatedHeightFactor(double updatedHeightFactor) {
+            this.updatedHeightFactor = updatedHeightFactor;
         }
     } 
 }

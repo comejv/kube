@@ -61,6 +61,7 @@ public class SettingsPanel extends JPanel {
     private void addGraphismePanel() {
         JPanel graphismePanel = createTab("Graphisme");
         JComboBox<String> resolutionManager = new JComboBox<>(res);
+        resolutionManager.setSelectedIndex(0);
         resolutionManager.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
