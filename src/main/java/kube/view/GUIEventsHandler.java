@@ -19,7 +19,10 @@ import kube.view.panels.RulesPanel;
 
 // Import java classes
 import java.awt.Cursor;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
+
+import javax.swing.JButton;
 import javax.swing.Timer;
 
 public class GUIEventsHandler implements Runnable {
@@ -166,6 +169,11 @@ public class GUIEventsHandler implements Runnable {
                         System.out.print(""); // IDK why but doesn't work whithout, nice java
                     }
                     getGUI().winMessage(action);
+                    break;
+                case PRINT_CONNECTION_ETABLISHED:
+                    ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "startOnline");
+                    MenuPanel menuPanel = (MenuPanel) getGUI().getPanel(GUI.MENU);
+                    menuPanel.getButtonListener().actionPerformed(event);
                     break;
                 case PRINT_INVALID_ADDRESS:
                     getGUI().showError("Connexion impossible",

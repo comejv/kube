@@ -49,10 +49,10 @@ public class MenuPanel extends JPanel {
     private JPanel buttonsPanel;
     public JPanel player1, player2;
     private HashMap<String, JComponent> networkObjects;
-
+    private  MenuController buttonListener;
     public MenuPanel(GUI gui, MenuController buttonListener) {
         this.gui = gui;
-
+        this.buttonListener = buttonListener;
         setLayout(new BorderLayout());
 
         // ****************************************************************************************//
@@ -284,22 +284,7 @@ public class MenuPanel extends JPanel {
 
         hostPanel.add(ipPortPanel, buttonsGBC);
         hostPanel.add(copy, buttonsGBC);
-
-        JButton refresh = new MenuButton("RAFRAÎCHIR");
-        refresh.addActionListener(buttonListener);
-        refresh.setActionCommand("refreshConnexion");
-
-        hostPanel.add(refresh, buttonsGBC);
-
-        JButton start = new MenuButton("DÉMARRER");
-        start.addActionListener(buttonListener);
-        start.setActionCommand("startOnline");
-        start.setEnabled(false);
-
-        networkObjects.put("startButton", start);
-
-        hostPanel.add(start, buttonsGBC);
-
+        
         JButton returnHost = new MenuButton("RETOUR");
         returnHost.setActionCommand("returnHost");
         returnHost.addActionListener(e -> {
@@ -404,5 +389,13 @@ public class MenuPanel extends JPanel {
 
     public JButton getRulesButton() {
         return rules;
+    }
+
+    public HashMap<String, JComponent> getNetworkObjects(){
+        return networkObjects;
+    }
+
+    public MenuController getButtonListener(){
+        return buttonListener;
     }
 }
