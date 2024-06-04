@@ -111,8 +111,8 @@ public class MenuPanel extends JPanel {
         volume.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOnImg.getImage()
-                        : volumeOffImg.getImage();
+                BufferedImage volumeImg = Config.isSoundMute() && Config.isMusicMute() ? volumeOffImg.getImage()
+                        : volumeOnImg.getImage();
                 volume.setImage(volumeImg);
             }
         });

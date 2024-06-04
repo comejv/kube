@@ -195,7 +195,7 @@ public class SettingsPanel extends JPanel {
         musicButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                BufferedImage volumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+                BufferedImage volumeImg = Config.isMusicMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
                 musicButton.setImage(volumeImg);
             }
         });
@@ -215,7 +215,7 @@ public class SettingsPanel extends JPanel {
         soundButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                BufferedImage volumeImg = Config.isMusicMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+                BufferedImage volumeImg = Config.isSoundMute() ? volumeOffImg.getImage() : volumeOnImg.getImage();
                 soundButton.setImage(volumeImg);
             }
         });

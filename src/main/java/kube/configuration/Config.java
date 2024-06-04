@@ -71,7 +71,7 @@ public class Config {
 
     public static void setMusicMute(boolean b) {
         musicMute = b;
-        if (isMusicMute()) {
+        if (!isMusicMute()) {
             music.play();
         }
     }
