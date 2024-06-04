@@ -77,7 +77,6 @@ public class GUI implements Runnable {
         this.controllers = controllers;
         this.k3 = k3;
 
-
         try {
             nimbusFound = false;
 
@@ -98,7 +97,6 @@ public class GUI implements Runnable {
                 | InstantiationException | IllegalAccessException e) {
             Config.error("Can't set look and feel : " + e);
         }
-
 
         try {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -146,7 +144,7 @@ public class GUI implements Runnable {
     public MainFrame getMainFrame() {
         return mF;
     }
-    
+
     public Kube getKube() {
         return k3;
     }
@@ -194,7 +192,6 @@ public class GUI implements Runnable {
             return new Phase1DnD(eventsToView, eventsToModel);
         }
     }
-
 
     public JPanel getOverlay() {
         return mF.getOverlay();
@@ -367,6 +364,7 @@ public class GUI implements Runnable {
                 loadPanel(PHASE2);
                 break;
             case Kube.GAME_PHASE:
+                loadPanel(PHASE2);
                 firstPhasePanel.setWaitingButton();
                 setGlassPaneController(new Phase2DnD(eventsToView, eventsToModel));
                 waitPanel(PHASE2);
@@ -473,7 +471,7 @@ public class GUI implements Runnable {
     public void incrementUIScale(double factor) {
         mF.incrementUIScale(factor);
     }
-    
+
     /**
      * Reset the UI scale
      * 
@@ -482,7 +480,7 @@ public class GUI implements Runnable {
     public void resetUIScale() {
         mF.resetUIScale();
     }
-    
+
     /**
      * Display the win message
      * 
@@ -491,6 +489,30 @@ public class GUI implements Runnable {
      */
     public void winMessage(Action action) {
         secondPhasePanel.winMessage(action);
+    }
+
+    /**
+     * Ask for confirmation for an action
+     *
+     * @param title   title of the Window
+     * @param message message to display
+     * @return boolean whether or not the user confirmed the action
+     */
+    public boolean askForConfirmation(String title, String message) {
+        // Custom options for buttons
+        Object[] options = { "Oui", "Non" };
+
+        // Show custom dialog
+        int option = JOptionPane.showOptionDialog(null,
+                message,
+                title,
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]);
+
+        return option == JOptionPane.YES_OPTION;
     }
 
     /**

@@ -3,38 +3,79 @@ package kube.view;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 
+import javax.swing.Timer;
+
 import kube.configuration.Config;
-import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.ExpertAI;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.betterConstructV2;
-import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
 import kube.view.panels.LoadingSavePanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
-import kube.view.panels.SettingsPanel;
 
 public class GUIEventsHandler implements Runnable {
-    // TODO : refactor this class to make it more readable
 
-    private Kube kube;
-    private Queue<Action> eventsToView;
-    private Queue<Action> eventsToModel;
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    private Queue<Action> eventsToView, eventsToModel;
     private MouseAdapter savedGlassPaneController;
     private GUI gui;
 
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor for the GUIEventsHandler class
+     * 
+     * @param gui           the GUI object
+     * @param eventsToView  the queue of actions to view
+     * @param eventsToModel the queue of actions to model
+     */
     public GUIEventsHandler(GUI gui, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
         this.gui = gui;
     }
 
+    /**********
+     * SETTER
+     **********/
+
+    public void setSavedGlassPaneController(MouseAdapter ma) {
+        savedGlassPaneController = ma;
+    }
+
+    /**********
+     * GETTER
+     **********/
+
+    public MouseAdapter getSavedGlassPaneController() {
+        return savedGlassPaneController;
+    }
+
+    /**********
+     * RUN METHOD
+     **********/
+
     @Override
     public void run() {
+
+        Action action;
+        String message;
+        SelectPlayerButton p1, p2;
+        MiniMaxAI iaJ1, iaJ2;
+        OverlayPanel overlay, loadMenu, settings;
+        RulesPanel rulesPanel;
+        LoadingSavePanel loadingSavePanel;
+        HexIcon h;
+
         while (true) {
             Action action = eventsToView.remove();
             switch (action.getType()) {
@@ -52,7 +93,7 @@ public class GUIEventsHandler implements Runnable {
                     ((ButtonIcon) action.getData()).setPressed(false);
                     break;
                 case SET_HEX_DEFAULT:
-                    HexIcon h = (HexIcon) action.getData();
+                    h = (HexIcon) action.getData();
                     if (h.isActionable()) {
                         h.setDefault();
                         gui.getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -85,7 +126,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_FORBIDDEN_ACTION:
                     Config.debug("Forbidden action : " + action.getData());
-                    String message = (String) action.getData() == null ? "You can't do that now."
+                    message = (String) action.getData() == null ? "You can't do that now."
                             : (String) action.getData();
                     gui.showError("Forbidden action", message);
                     break;
@@ -95,32 +136,31 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
-                    while (gui.getOverlay().getComponentCount() > 0){
-                        try {
-                            Thread.sleep(50);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                    while (gui.getOverlay().getComponentCount() > 0) {
+                        System.out.print(""); // IDK why but doesn't work whithout, nice java
                     }
                     gui.winMessage(action);
                     break;
                 // MENU
                 case START:
-                    SelectPlayerButton p1 = (SelectPlayerButton) gui.mP.player1;
-                    SelectPlayerButton p2 = (SelectPlayerButton) gui.mP.player2;
-                    MiniMaxAI iaJ1, iaJ2;
+                    p1 = (SelectPlayerButton) gui.mP.player1;
+                    p2 = (SelectPlayerButton) gui.mP.player2;
+
                     if (p1.buttonValue == 0) {
                         iaJ1 = null;
                     } else {
                         iaJ1 = new ExpertAI();
                     }
+
                     if (p2.buttonValue == 0) {
                         iaJ2 = null;
                     } else {
                         iaJ2 = new ExpertAI();
                     }
+                    
                     eventsToModel.add(new Action(ActionType.START,
                             new Start(iaJ1, iaJ2)));
+
                     gui.setGlassPanelVisible(true);
                     break;
                 case PLAY_LOCAL:
@@ -133,9 +173,18 @@ public class GUIEventsHandler implements Runnable {
                     gui.addToOverlay(new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType()));
                     gui.setGlassPanelVisible(true);
                     break;
+                case END_RULE:
+                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    rulesPanel = (RulesPanel) overlay.getComponent(0);
+                    for (Timer timer : rulesPanel.getAnimatedRuleTimer()) {
+                        timer.stop();
+                    }
+                    gui.removeAllFromOverlay();
+                    gui.setGlassPanelVisible(false);
+                    break;
                 case NEXT_RULE:
-                    OverlayPanel overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
-                    RulesPanel rulesPanel = (RulesPanel) overlay.getComponent(0);
+                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.nextRule();
                     break;
                 case PREVIOUS_RULE:
@@ -148,7 +197,8 @@ public class GUIEventsHandler implements Runnable {
                     gui.setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    OverlayPanel settings = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    settings = new OverlayPanel(gui, gui.getControllers().getMenuController(),
+                            action.getType());
                     gui.addToOverlay(settings);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
@@ -158,7 +208,6 @@ public class GUIEventsHandler implements Runnable {
                     gui.removeAllFromOverlay();
                     gui.setGlassPaneController(getSavedGlassPaneController());
                     break;
-                // FIRST PHASE
                 case VALIDATE:
                     gui.updatePanel();
                     break;
@@ -179,17 +228,18 @@ public class GUIEventsHandler implements Runnable {
                     gui.updateSecondPanel(action);
                     break;
                 case LOAD_PANEL:
-                    OverlayPanel loadMenu = new OverlayPanel(gui, gui.getControllers().getMenuController(), action.getType());
+                    loadMenu = new OverlayPanel(gui, gui.getControllers().getMenuController(),
+                            action.getType());
                     gui.addToOverlay(loadMenu);
                     setSavedGlassPaneController(gui.getCurrentListener());
                     gui.setGlassPaneController(gui.getDefaultGlassPaneController());
                     gui.setGlassPanelVisible(true);
                     break;
                 case LOAD_FILE_SELECTED:
-                    OverlayPanel op = (OverlayPanel) gui.getOverlay().getComponent(0);
-                    LoadingSavePanel lp = (LoadingSavePanel) op.getComponent(0);
-                    lp.enableLoadButton();
-                    lp.enableDeleteButton();
+                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    loadingSavePanel = (LoadingSavePanel) overlay.getComponent(0);
+                    loadingSavePanel.enableLoadButton();
+                    loadingSavePanel.enableDeleteButton();
                     break;
                 case UPDATE_HEX_SIZE:
                     gui.updateHexSize();
@@ -204,13 +254,5 @@ public class GUIEventsHandler implements Runnable {
                     break;
             }
         }
-    }
-
-    public void setSavedGlassPaneController(MouseAdapter ma) {
-        savedGlassPaneController = ma;
-    }
-
-    public MouseAdapter getSavedGlassPaneController() {
-        return savedGlassPaneController;
     }
 }
