@@ -1,7 +1,5 @@
 package kube.model;
 
-// Import model classes
-import kube.model.ai.MiniMaxAI;
 import kube.model.action.move.Move;
 import kube.model.action.move.MoveAA;
 import kube.model.action.move.MoveAM;
@@ -9,6 +7,7 @@ import kube.model.action.move.MoveAW;
 import kube.model.action.move.MoveMA;
 import kube.model.action.move.MoveMM;
 import kube.model.action.move.MoveMW;
+import kube.model.ai.MiniMaxAI;
 
 // Import java classes
 import java.io.Serializable;

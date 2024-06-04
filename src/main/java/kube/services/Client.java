@@ -22,6 +22,7 @@ public class Client extends Network {
      * Constructor of the class Client
      */
     public Client() {
+        setWaitingForConnection(true);
     }
     
     /**
@@ -30,8 +31,10 @@ public class Client extends Network {
      * @param IP the IP address
      * @param port the port
      */
-    public Client(String IP, int port){
-        connect(IP, port);
+    public Client(String IP, int port) {
+        setIp(IP);
+        setPort(port);
+            connect(IP, port);
     }
 
     /**********
@@ -62,15 +65,16 @@ public class Client extends Network {
      * @return true if the connection is successful, false otherwise
      */
     @Override
-    public final boolean connect(String ip, int port) {
+    public final boolean connect(String ip, int port){
         try {
             setIp(ip);
             setPort(port);
             setSocket(new Socket(ip, port));
+            //getSocket().setSoTimeout(5000); // Set a timeout of 5 seconds
             setOut(new ObjectOutputStream(getSocket().getOutputStream()));
             setIn(new ObjectInputStream(getSocket().getInputStream()));
         } catch (IOException e) {
-            return false;
+           return false;
         }
         return true;
     }

@@ -1,8 +1,5 @@
 package kube.model;
 
-// Import model classes
-import kube.model.ai.MiniMaxAI;
-
 // Import java classes
 import java.awt.Point;
 import java.io.Serializable;
@@ -10,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
+
+import kube.model.ai.MiniMaxAI;
 
 public class Player implements Serializable {
 

@@ -29,7 +29,7 @@ public class SettingsPanel extends JPanel {
     private MenuController buttonListener;
     private JTabbedPane tabbedPanel;
     private int tabNb;
-    private String[] res = { "1140 x 900", "1366 x 900", "1600 x 900", "1920 x 1080", "2560 x 1440"};
+    private String[] res = { "1140 x 900", "1366 x 900", "1600 x 900", "1920 x 1080", "2560 x 1440" };
 
     public SettingsPanel(GUI gui, MenuController buttonListener) {
 
@@ -54,7 +54,7 @@ public class SettingsPanel extends JPanel {
 
         JPanel audioPanel = createTab("Audio");
         addFillerPanel(audioPanel);
-        
+
         setVisible(true);
     }
 
@@ -107,16 +107,26 @@ public class SettingsPanel extends JPanel {
         resetButton.addActionListener(e -> {
             gui.resetUIScale();
         });
+        JButton changeModeSymbolButton = new JButton("Mode Accessibilité");
+        changeModeSymbolButton.addActionListener(e -> {
+            gui.changeMode("Symbol");
+        });
+        JButton changeModeTexturedButton = new JButton("Mode Texturé");
+        changeModeTexturedButton.addActionListener(e -> {
+            gui.changeMode("Textured");
+        });
 
         wrapInJPanel(enlargeButton, null, graphismePanel);
         wrapInJPanel(shrinkButton, null, graphismePanel);
         wrapInJPanel(resetButton, null, graphismePanel);
         resolutionManager.setPreferredSize(new Dimension(350, 50));
         wrapInJPanel(resolutionManager, null, graphismePanel);
+        wrapInJPanel(changeModeSymbolButton, null, graphismePanel);
+        wrapInJPanel(changeModeTexturedButton, null, graphismePanel);
 
         addFillerPanel(graphismePanel);
 
-        JButton saveChanges = new JButton("Confirmer");
+        JButton saveChanges = new JButton("Quitter");
         saveChanges.setPreferredSize(new Dimension(150, 50));
         saveChanges.addActionListener(buttonListener);
         saveChanges.setActionCommand("confirmed_settings");
@@ -148,15 +158,15 @@ public class SettingsPanel extends JPanel {
             container.add(filler);
         }
     }
-    
+
     private void wrapInJPanel(Component c, GridBagConstraints elemGBC,
-    JPanel container) {
+            JPanel container) {
         JPanel wraper = new JPanel(new GridBagLayout());
         container.add(wraper);
         wraper.add(c, elemGBC);
     }
-    
-    public void loadPanel(){
+
+    public void loadPanel() {
         tabbedPanel.setSelectedIndex(2);
     }
 

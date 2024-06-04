@@ -88,7 +88,7 @@ public class TextEntryPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String text = textField.getText();
-                gui.eventsToModel.add(new Action(ActionType.SAVE, text));
+                gui.getEventsToView().add(new Action(ActionType.SAVE, text));
                 gui.removeAllFromOverlay();
                 gui.setGlassPanelVisible(true);
                 if (hexGlow != null) {

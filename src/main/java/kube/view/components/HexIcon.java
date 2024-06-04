@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.image.RescaleOp;
+import kube.configuration.Config;
+
 
 import kube.configuration.ResourceLoader;
 import kube.model.ModelColor;
@@ -94,21 +96,22 @@ public class HexIcon extends Icon {
         if (color == null) {
             return "hexaInvisible";
         }
+        String mode = Config.getMode();
         switch (color) {
             case WHITE:
-                return "hexaWhiteTextured";
+                return "hexaWhite"+mode;
             case NATURAL:
-                return "hexaBrownTextured";
+                return "hexaBrown"+mode;
             case RED:
-                return "hexaRedTextured";
+                return "hexaRed"+mode;
             case GREEN:
-                return "hexaGreenTextured";
+                return "hexaGreen"+mode;
             case BLUE:
-                return "hexaBlueTextured";
+                return "hexaBlue"+mode;
             case YELLOW:
-                return "hexaYellowTextured";
+                return "hexaYellow"+mode;
             case BLACK:
-                return "hexaBlackTextured";
+                return "hexaBlack"+mode;
             case EMPTY:
                 return "hexaWire";
             default:

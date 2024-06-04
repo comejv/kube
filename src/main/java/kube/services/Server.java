@@ -6,6 +6,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import kube.configuration.Config;
 
 public class Server extends Network {
 
@@ -16,23 +20,39 @@ public class Server extends Network {
     private ServerSocket serverSocket;
     private Socket clientSocket;
 
+    private ExecutorService executorService;
+    private Thread acceptThread;
+
     /**********
      * CONSTRUCTOR
      **********/
 
-    /** 
+    /**
      * Constructor of the class Server
      * 
      * @param port the port
      */
-    public Server(int port) throws IOException {    
+    public Server(int port) throws IOException {
         try {
             init(port);
+            setWaitingForConnection(true);
         } catch (IOException e) {
             throw new IOException("Could not initialize the server.");
         }
     }
-    
+
+    /*
+     * Constructor of the class Server that finds a free port
+     */
+    public Server() throws IOException {
+        try {
+            init(0);
+            setWaitingForConnection(true);
+        } catch (IOException e) {
+            throw new IOException("Could not initialize the server.");
+        }
+    }
+
     /**********
      * INITIALIZATION
      **********/
@@ -40,19 +60,35 @@ public class Server extends Network {
     /**
      * Initialize the server
      * 
-     * @param port the port
+     * @param port the port, if port = 0, the server will find a free port
      */
     public final void init(int port) throws IOException {
         try {
             setServerSocket(new ServerSocket(port));
-            setClientSocket(getServerSocket().accept());
-            setOut(new ObjectOutputStream(getClientSocket().getOutputStream()));
-            setIn(new ObjectInputStream(getClientSocket().getInputStream()));
+            setClientSocket(null);
+            setOut(null);
+            setIn(null);
+
+            executorService = Executors.newSingleThreadExecutor();
+            acceptThread = new Thread(() -> {
+                try {
+                    setClientSocket(getServerSocket().accept());
+                    Config.debug("Client connected on port " + getPort() + ".");
+                    setOut(new ObjectOutputStream(getClientSocket().getOutputStream()));
+                    setIn(new ObjectInputStream(getClientSocket().getInputStream()));
+                } catch (IOException e) {
+                    Config.error("Could not accept the client.");
+                    e.printStackTrace();
+                }
+                Config.debug("Connection " + getClientSocket().getInetAddress().getHostAddress() + " on port "
+                        + getClientSocket().getPort() + " accepted.");
+            });
+            executorService.submit(acceptThread);
         } catch (IOException e) {
             throw new IOException("Could not listen on port: " + port + ".");
         }
     }
-    
+
     /**********
      * SETTERS
      **********/
@@ -77,36 +113,41 @@ public class Server extends Network {
         return clientSocket;
     }
 
+    public int getPort() {
+        return getServerSocket().getLocalPort();
+    }
+
     /**********
      * METHODS
      **********/
 
     /**
-     * Connect to the server
+     * Is client connected to the server ?
      * 
-     * @param ip the IP address
+     * @param ip   the IP address
      * @param port the port
      * @return true if the connection is successful, false otherwise
      */
     @Override
     public boolean connect(String ip, int port) {
-        return clientSocket.isConnected();
+        return !(clientSocket == null) && clientSocket.isConnected();
     }
 
     /**
-     * Disconnect from the server
+     * Close client socket.
      * 
      * @return true if the disconnection is successful, false otherwise
      */
     @Override
     public boolean disconnect() {
-        
+
         try {
             getOut().close();
             getIn().close();
             getClientSocket().close();
             getServerSocket().close();
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
+            Config.error("Failed to close connexion", e);
             return false;
         }
 

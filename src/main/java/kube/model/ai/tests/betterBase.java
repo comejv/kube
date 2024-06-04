@@ -1,4 +1,4 @@
-package kube.model.ai;
+package kube.model.ai.tests;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,6 +9,7 @@ import java.util.Random;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.Player;
+import kube.model.ai.MiniMaxAI;
 import kube.model.Kube;
 
 public class betterBase extends MiniMaxAI {
