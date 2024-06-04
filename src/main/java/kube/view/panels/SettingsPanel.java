@@ -162,6 +162,14 @@ public class SettingsPanel extends JPanel {
         });
 
         audioPanel.add(volume);
+
+        JButton saveChanges = new JButton("Quitter");
+        saveChanges.setPreferredSize(new Dimension(150, 50));
+        saveChanges.addActionListener(buttonListener);
+        saveChanges.setActionCommand("confirmed_settings");
+        GridBagConstraints elemGBC = new GridBagConstraints();
+        elemGBC.anchor = GridBagConstraints.SOUTHEAST;
+        wrapInJPanel(saveChanges, elemGBC, audioPanel);
     }
 
     private JPanel createTab(String name) {

@@ -13,8 +13,12 @@ import kube.configuration.ResourceLoader;
 
 public class Sounds {
     public static void playSound(String s) {
+        if (Config.isMute()) {
+            return;
+        }
         Clip clip;
         try {
+            Config.debug("Played ", s);
             AudioInputStream audioStream = AudioSystem
                     .getAudioInputStream(ResourceLoader.getResourceAsStream("sounds/" + s + ".wav"));
             clip = AudioSystem.getClip();
