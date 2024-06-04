@@ -1,5 +1,9 @@
 package kube.configuration;
 
+import kube.model.Game;
+
+import kube.view.Music;
+
 public class Config {
 
     /**********
@@ -10,6 +14,8 @@ public class Config {
     public static final boolean SHOW_BORDERS = false;
     public static final String SAVING_PATH_DIRECTORY = "saves/";
     public static final String SAVING_FILE_EXTENSION = ".ser";
+    public static final String TEXTURED_MODE = "Textured";
+    public static final String SYMBOL_MODE = "Symbol";
 
     public static final int INIT_WIDTH = 1600;
     public static final int INIT_HEIGHT = 900;
@@ -19,12 +25,18 @@ public class Config {
      **********/
 
     private static String language = "fr_FR";
+    private static String mode = TEXTURED_MODE;
     private static double UIScale = 1;
+    private static boolean musicMute = true;
+    private static boolean soundMute = true;
 
-    private static boolean mute = true;
+    private static String serverAddress;
+    private static int serverPort;
+
+    private static Music music;
 
     /**********
-     * CONFIGURATION SETTER
+     * CONFIGURATION SETTERS
      **********/
 
     public static void setLanguage(String lang) {
@@ -35,20 +47,61 @@ public class Config {
         UIScale = size;
     }
 
+    public static void setMode(String str) {
+        mode = str;
+    }
+
     public static void resetUIScale() {
         UIScale = 1;
     }
 
+    public static void setHostIP(String address) {
+        serverAddress = address;
+    }
+
+    public static void setHostPort(int port) {
+        serverPort = port;
+    }
+
+    public static void setMusic(Music m) {
+        music = m;
+    }
+
+    public static void setSoundMute(boolean b) {
+        soundMute = b;
+    }
+
+    public static void setMusicMute(boolean b) {
+        musicMute = b;
+        if (!isMusicMute()) {
+            music.play();
+        } else {
+            music.stop();
+        }
+    }
+
     /**********
-     * CONFIGURATION GETTER
+     * CONFIGURATION GETTERS
      **********/
 
     public static String getLanguage() {
         return language;
     }
 
+    public static String getMode() {
+        return mode;
+    }
+
     public static double getUIScale() {
         return UIScale;
+    }
+
+    public static String getHostIP() {
+        return serverAddress;
+    }
+
+    public static int getHostPort() {
+        return serverPort;
     }
 
     /**********
@@ -65,19 +118,21 @@ public class Config {
     }
 
     /**
-     * Check if the program is currently muted
+     * Check if the music is currently muted
      * 
      * @return true if the program is muted, false otherwise
      */
-    public static boolean isMute() {
-        return mute;
+    public static boolean isMusicMute() {
+        return musicMute;
     }
 
     /**
-     * Toggle the mute state
+     * Check if the sound effects are currently muted
+     * 
+     * @return true if the program is muted, false otherwise
      */
-    public static void toggleMute() {
-        mute = !mute;
+    public static boolean isSoundMute() {
+        return soundMute;
     }
 
     /**
@@ -121,6 +176,30 @@ public class Config {
             }
 
             System.out.println();
+        }
+    }
+
+    /**
+     * Toggle all sounds
+     */
+    public static void toggleSounds() {
+        if (soundMute) {
+            setSoundMute(false);
+        } else {
+            setSoundMute(true);
+        }
+    }
+
+    /**
+     * Toggle music
+     */
+    public static void toggleMusic() {
+        if (musicMute) {
+            setMusicMute(false);
+            music.play();
+        } else {
+            setMusicMute(true);
+            music.stop();
         }
     }
 }

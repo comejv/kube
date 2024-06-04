@@ -22,6 +22,7 @@ import javax.swing.border.TitledBorder;
 
 import kube.configuration.Config;
 import kube.controller.graphical.Phase2Controller;
+import kube.model.Game;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Player;
@@ -52,21 +53,18 @@ public class SecondPhasePanel extends JPanel {
     private JPanel leftWhiteDrop;
     private JPanel rightwhiteDrop;
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
-    private JButton undoButton, redoButton;
-    private Dimension oldSize;
-    private JButton pauseAi, sugAIButton;
-
-    private HexGlow animationHexGlow;
-    private PanelGlow animationPanelGlow;
-    // TODO : set hex in middle of pyra not actionable
+    private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton, loadButton;
+    private int gameType;
+    public HexGlow animationHexGlow;
+    public PanelGlow animationPanelGlow;
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
         this.k3 = k3;
         this.controller = controller;
         this.animationHexGlow = new HexGlow();
-        this.animationPanelGlow = new PanelGlow();
-        int k3BaseSize = k3.getK3().getBaseSize();
+        this.animationPanelGlow = new PanelGlow(k3);
+        int k3BaseSize = k3.getMountain().getBaseSize();
         int playerBaseSize = k3.getP1().getMountain().getBaseSize();
         k3Panels = new JPanel[k3BaseSize][k3BaseSize];
         p1Panels = new JPanel[playerBaseSize][playerBaseSize];
@@ -95,8 +93,32 @@ public class SecondPhasePanel extends JPanel {
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 15, 20, 15);
         add(gamePanel, gbc);
+    }
 
-        oldSize = getSize();
+    public void resetPanel() {
+        setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        // EAST
+        JPanel eastPane = createEastPanel(controller);
+        gbc.gridy = 0;
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(20, 5, 20, 5);
+        add(eastPane, gbc);
+        gamePanel = gamePanel();
+        gamePanel.setBackground(GUIColors.TEXT.toColor());
+        gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.insets = new Insets(20, 15, 20, 15);
+        add(gamePanel, gbc);
+        updateAll();
     }
 
     private JPanel createEastPanel(Phase2Controller a) {
@@ -127,11 +149,26 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugAIButton, gbc);
 
+        saveButton = new Buttons.GamePhaseButton("Sauvegarder");
+        saveButton.setActionCommand("save");
+        saveButton.addMouseListener(a);
+        gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(saveButton, gbc);
+
+        loadButton = new Buttons.GamePhaseButton("Charger");
+        loadButton.setActionCommand("load");
+        loadButton.addMouseListener(a);
+        loadButton.setEnabled(true);
+        gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(loadButton, gbc);
+
         pauseAi = new Buttons.GamePhaseButton("Pause Kubot");
         pauseAi.setVisible(false);
         pauseAi.setActionCommand("pauseAI");
         pauseAi.addMouseListener(a);
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(pauseAi, gbc);
 
@@ -139,19 +176,19 @@ public class SecondPhasePanel extends JPanel {
         undoButton.setActionCommand("undo");
         undoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         panel.add(undoButton, gbc);
 
         redoButton = new Buttons.GamePhaseButton("Rejouer le coup");
         redoButton.setActionCommand("redo");
         redoButton.addMouseListener(a);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         panel.add(redoButton, gbc);
 
         JScrollPane histo = getHisto();
         histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(histo, gbc);
@@ -182,7 +219,7 @@ public class SecondPhasePanel extends JPanel {
             HexIcon hex = (HexIcon) c;
             hex.setActionable(false);
         }
-        if (k3.getCurrentPlayer().isAI()) {
+        if (k3.getCurrentPlayer().isAI() || (gameType != Game.LOCAL && k3.getCurrentPlayer().getId() != gameType)) {
             return; // Do not set actionnable to true if it's the ai turn
         }
 
@@ -202,13 +239,13 @@ public class SecondPhasePanel extends JPanel {
         ArrayList<HexIcon> hexToGlow = new ArrayList<>();
         ArrayList<ModelColor> playableColors = new ArrayList<>();
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
-            if (k3.getK3().compatible(c).size() > 0) {
+            if (k3.getMountain().compatible(c).size() > 0) {
                 playableColors.add(c);
             }
         }
         for (Point p : player.getMountain().removable()) {
             HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
-            if (playableColors.contains(hex.getColor())) {
+            if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
                 hex.setActionable(true);
                 hexToGlow.add(hex);
             }
@@ -216,7 +253,7 @@ public class SecondPhasePanel extends JPanel {
         for (Component c : additionnals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
-                if (playableColors.contains(hex.getColor())) {
+                if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
                     hex.setActionable(true);
                     hexToGlow.add(hex);
                 }
@@ -303,6 +340,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void update(Action a) {
+        gameType = k3.getGameType();
         sugAIButton.setEnabled(false);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
@@ -346,13 +384,13 @@ public class SecondPhasePanel extends JPanel {
         updateText();
         updateVisible();
         updatePanelGlow(false);
-        if (k3.getHistory().canUndo()) {
+        if (k3.getHistory().canUndo() && gameType == Game.LOCAL) {
             undoButton.setEnabled(true);
         }
-        if (k3.getHistory().canRedo()) {
+        if (k3.getHistory().canRedo() && gameType == Game.LOCAL) {
             redoButton.setEnabled(true);
         }
-        if (a.getType() != ActionType.UNDO && k3.getPenality()) {
+        if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenality()) {
             penalityMessage();
         }
         if (!k3.getCurrentPlayer().isAI()) {
@@ -361,17 +399,50 @@ public class SecondPhasePanel extends JPanel {
     }
 
     private void updateText() {
-        if (k3.getPenality()) {
-            gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    k3.getCurrentPlayer().getName() + " : volez une pièce à votre adversaire",
-                    TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+        if (gameType == Game.LOCAL) {
+            if (k3.getPenality()) {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                k3.getCurrentPlayer().getName() + " : volez une pièce à votre adversaire",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            } else {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                k3.getCurrentPlayer().getName() + " : jouez sur la montagne commune",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            }
+        } else if (gameType != k3.getCurrentPlayer().getId()) {
+            if (k3.getPenality()) {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "L'autre joueur doit vous voler une pièce",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            } else {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "L'autre joueur doit jouer sur la montagne commune",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            }
         } else {
-            gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    k3.getCurrentPlayer().getName() + " : jouez sur la montagne commune",
-                    TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            if (k3.getPenality()) {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "A vous de voler une pièce à l'autre joueur",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            } else {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "A vous de jouer sur la montagne commune",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            }
         }
+
     }
 
     private JScrollPane getHisto() {
@@ -405,6 +476,9 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateAll() {
+        gameType = k3.getGameType();
+        pauseAi.setText("Pause Kubot");
+        pauseAi.setActionCommand("pauseAI");
         Player[] toUpdate = { null, k3.getP1(), k3.getP2() };
         for (Player p : toUpdate) {
             for (int i = 0; i < (p == null ? k3.getBaseSize() : p.getMountain().getBaseSize()); i++) {
@@ -413,6 +487,7 @@ public class SecondPhasePanel extends JPanel {
                 }
             }
         }
+        loadButton.setEnabled(gameType == Game.LOCAL);
         sugAIButton.setEnabled(!k3.getCurrentPlayer().isAI());
         updateHisto();
         updateAdditionnals(k3.getP1());
@@ -433,7 +508,7 @@ public class SecondPhasePanel extends JPanel {
         ModelColor c;
         JPanel panel;
         if (p == null) {
-            c = k3.getK3().getCase(pos);
+            c = k3.getMountain().getCase(pos);
             panel = k3Panels[pos.x][pos.y];
         } else if (p == k3.getP1()) {
             c = p.getMountain().getCase(pos);
@@ -499,7 +574,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         gamePanel.add(p2, gbc);
 
-        base = initMountain(-1, k3.getK3().getBaseSize(), null);
+        base = initMountain(-1, k3.getMountain().getBaseSize(), null);
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 1;
@@ -530,14 +605,16 @@ public class SecondPhasePanel extends JPanel {
             lineHexa.setLayout(new GridLayout(1, i));
             lineHexa.setOpaque(false);
             if (p == null) {
-                /*if (i == 8) {
+
+                if (i == 8) {
                     leftWhiteDrop = new JPanel();
                     leftWhiteDrop.setOpaque(false);
                     HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
                     leftWhiteDrop.add(hex);
+                    leftWhiteDrop.setVisible(false);
                     lineHexa.add(leftWhiteDrop);
                 }
-                */
+
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 HexIcon hex = new HexIcon(null, false, p);
@@ -564,18 +641,15 @@ public class SecondPhasePanel extends JPanel {
                 hexa.add(new HexIcon(null, false, p));
                 k3invisibles[i - 1] = hexa;
                 lineHexa.add(hexa);
-                /*if (i == 8) {
+                if (i == 8) {
                     rightwhiteDrop = new JPanel();
-                    rightwhiteDrop.setBorder(
-                            BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                                    "Passer", TitledBorder.CENTER, TitledBorder.TOP,
-                                    new Font("Jomhuria", Font.PLAIN, 20), GUIColors.ACCENT.toColor()));
                     rightwhiteDrop.setOpaque(false);
                     HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
                     rightwhiteDrop.add(hex);
+                    rightwhiteDrop.setVisible(false);
                     lineHexa.add(rightwhiteDrop);
                 }
-                */
+
             }
             gbc.gridx = 0;
             gbc.gridy = i;
@@ -589,26 +663,31 @@ public class SecondPhasePanel extends JPanel {
         switch (a.getType()) {
             case DND_START:
                 HexIcon hex = (HexIcon) a.getData();
+                updatePanelGlow(true);
                 if (hex == null) {
                     updateVisible();
                 } else if (k3.getPenality()) {
                     updateAdditionnals(k3.getCurrentPlayer(), true);
                 } else {
                     if (hex.getColor() != ModelColor.WHITE) {
-                        for (Point p : k3.getK3().compatible(hex.getColor())) {
+                        for (Point p : k3.getMountain().compatible(hex.getColor())) {
                             HexIcon h = (HexIcon) k3Panels[p.x][p.y].getComponent(0);
                             h.setVisible(true);
                         }
                     } else {
-                        HexIcon h = (HexIcon) k3Panels[0][0].getComponent(0);
-                        h.setVisible(true);
+                        if (k3.getCurrentPlayer() == k3.getP1()) {
+                            leftWhiteDrop.setVisible(true);
+                        } else {
+                            rightwhiteDrop.setVisible(true);
+                        }
                     }
                 }
-                updatePanelGlow(true);
                 break;
             case DND_STOP:
                 updateVisible();
                 updatePanelGlow(false);
+                leftWhiteDrop.setVisible(false);
+                rightwhiteDrop.setVisible(false);
                 break;
             default:
                 break;
@@ -696,71 +775,83 @@ public class SecondPhasePanel extends JPanel {
         transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
         gui.addToOverlay(transparentPanel);
+        boolean aiAlreadyPaused = pauseAi.getText() == "Reprendre Kubot";
         new Message(transparentPanel, "Pénalité à l'avantage du " + k3.getCurrentPlayer().getName(), gui,
-                animationHexGlow);
+                animationHexGlow, false, aiAlreadyPaused);
     }
 
     public void winMessage(Action a) {
         Player winner = (Player) a.getData();
-        TransparentPanel transparentPanel = new TransparentPanel("");
-        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
-        transparentPanel.setVisible(false);
-        gui.addToOverlay(transparentPanel);
-        new Message(transparentPanel, "Victoire du " + winner.getName(), gui, animationHexGlow);
+        winPanel panel = new winPanel();
+        panel.setPreferredSize(gui.getMainFrame().getSize());
+        panel.setVisible(false);
+        gui.addToOverlay(panel);
+        new winMsg(panel, gui, "Victoire du " + winner.getName(), controller);
+        revalidate();
         repaint();
     }
 
     public void updateHexSize() {
         Dimension newSize = this.getSize();
         // if (isSignificantChange(oldSize, newSize)) {
-            // Update the static size of HexIcon based on new size
-            int newHexSize = calculateNewHexSize(newSize);
-            HexIcon.setStaticSize(newHexSize);
-            JPanel panel;
-            HexIcon h;
-            // Loop through panels and update hex size
-            for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    panel = p1Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.removeAll();
-                    panel.add(h);
-                    panel = p2Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.removeAll();
-                    panel.add(h);
-                }
-            }
-            for (int i = 0; i < k3Panels.length; i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    panel = k3Panels[i][j];
-                    h = (HexIcon) panel.getComponents()[0];
-                    h.updateSize();
-                    panel.removeAll();
-                    panel.add(h);
-                }
-            }
-            for (Component c : p1Additionnals.getComponents()) {
-                h = (HexIcon) c;
+        // Update the static size of HexIcon based on new size
+        int newHexSize = calculateNewHexSize(newSize);
+        HexIcon.setStaticSize(newHexSize);
+        JPanel panel;
+        HexIcon h;
+        // Loop through panels and update hex size
+        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                panel = p1Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
                 h.updateSize();
-            }
-            for (Component c : p2Additionnals.getComponents()) {
-                h = (HexIcon) c;
+                panel.removeAll();
+                panel.add(h);
+                panel = p2Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
                 h.updateSize();
+                panel.removeAll();
+                panel.add(h);
             }
+        }
+        for (int i = 0; i < k3Panels.length; i++) {
+            for (int j = 0; j < i + 1; j++) {
+                panel = k3Panels[i][j];
+                h = (HexIcon) panel.getComponent(0);
+                h.updateSize();
+                panel.removeAll();
+                panel.add(h);
+            }
+        }
+        for (Component c : p1Additionnals.getComponents()) {
+            h = (HexIcon) c;
+            h.updateSize();
+        }
+        for (Component c : p2Additionnals.getComponents()) {
+            h = (HexIcon) c;
+            h.updateSize();
+        }
+        try {
+            h = (HexIcon) leftWhiteDrop.getComponent(0);
+            h.updateSize();
+            leftWhiteDrop.removeAll();
+            leftWhiteDrop.setBorder(null);
 
-            // Update the old size to the new size
-            oldSize = newSize;
-            revalidate();
-            repaint();
-        // }
-    }
+            leftWhiteDrop.add(h);
 
-    private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
-        int threshold = 100;
-        return Math.abs(newSize.height - oldSize.height) > threshold;
+            h = (HexIcon) rightwhiteDrop.getComponent(0);
+            h.updateSize();
+            rightwhiteDrop.removeAll();
+            rightwhiteDrop.setBorder(null);
+
+            rightwhiteDrop.add(h);
+        } catch (Exception e) {
+            Config.debug("leftWhiteDrop or rightwhiteDrop doesn't exist");
+        }
+        // Update the old size to the new size
+        revalidate();
+        repaint();
+        gui.getOverlay().repaint();
     }
 
     private int calculateNewHexSize(Dimension newSize) {

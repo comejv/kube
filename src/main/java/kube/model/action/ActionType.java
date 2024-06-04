@@ -28,6 +28,8 @@ public enum ActionType {
     PRINT_LOADED,
     PRINT_SAVED,
     PRINT_WRONG_FILE_NAME,
+    PRINT_INVALID_SAVE,
+    PRINT_INVALID_ADDRESS,
 
     // --- MODEL ---
 
@@ -70,6 +72,9 @@ public enum ActionType {
     PRINT_WAITING_RESPONSE,
     CONNECTION_CLOSED,
 
+    // --- NETWORK ---
+    STOP_NETWORK,
+    
     /**********
      * GUI
      **********/
@@ -89,20 +94,28 @@ public enum ActionType {
     SETTINGS,
     CONFIRMED_SETTINGS,
     RETURN_TO_MENU,
+    RETURN_TO_GAME,
     DND_START,
     DND_STOP,
     UPDATE_HEX_SIZE,
+    HOST,
+    JOIN,
+    SERVER_ERROR,
+    REFRESH_CONNEXION,
 
     // --- Menu ---
 
-    PLAY_LOCAL,
-    PLAY_ONLINE,
+    START_LOCAL,
+    START_ONLINE,
     RULES,
     QUIT,
     VOLUME,
     NEXT_RULE,
     PREVIOUS_RULE,
     END_RULE,
+    END_OVERLAY_MENU,
+    LOAD_FILE_SELECTED,
+    LOAD_PANEL,
 
     /**********
      * UNUSED

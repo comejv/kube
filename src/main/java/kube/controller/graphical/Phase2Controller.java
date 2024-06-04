@@ -39,15 +39,18 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
                 toModel.add(new Action(ActionType.MOVE_NUMBER, 0));
                 break;
             case "undo":
+                toModel.add(new Action(ActionType.AI_PAUSE, true));
                 toModel.add(new Action(ActionType.UNDO));
                 break;
             case "redo":
+                toModel.add(new Action(ActionType.AI_PAUSE, true));
                 toModel.add(new Action(ActionType.REDO));
                 break;
             case "quit":
-                toModel.add(new Action(ActionType.SAVE, ""));
-                toModel.add(new Action(ActionType.RESET));
                 toView.add(new Action(ActionType.RETURN_TO_MENU));
+                break;
+            case "return":
+                toView.add(new Action(ActionType.RETURN_TO_GAME));
                 break;
             case "pauseAI":
                 toModel.add(new Action(ActionType.AI_PAUSE, true));
@@ -58,8 +61,16 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
                 toView.add(new Action(ActionType.AI_PAUSE, false));
                 break;
             case "auto":
-                Config.debug("AI MOVE SEND");
                 toModel.add(new Action(ActionType.AI_MOVE));
+                break;
+            case "save":
+                toModel.add(new Action(ActionType.AI_PAUSE, true));
+                toView.add(new Action(ActionType.AI_PAUSE, true));
+                toView.add(new Action(ActionType.SAVE, 2));
+                break;
+            case "load":
+                toModel.add(new Action(ActionType.AI_PAUSE, true));
+                toView.add(new Action(ActionType.LOAD_PANEL));
                 break;
             default:
                 break;
@@ -69,9 +80,12 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
     public void mouseClicked(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof JButton) {
-            ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
-                    ((JButton) source).getActionCommand());
-            actionPerformed(evt);
+            JButton b = (JButton) source;
+            if (b.isEnabled()) {
+                ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
+                        ((JButton) source).getActionCommand());
+                actionPerformed(evt);
+            }
         }
     }
 

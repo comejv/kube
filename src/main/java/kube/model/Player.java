@@ -1,8 +1,5 @@
 package kube.model;
 
-// Import model classes
-import kube.model.ai.MiniMaxAI;
-
 // Import java classes
 import java.awt.Point;
 import java.io.Serializable;
@@ -10,6 +7,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Objects;
+
+import kube.model.ai.MiniMaxAI;
 
 public class Player implements Serializable {
 
@@ -174,7 +173,7 @@ public class Player implements Serializable {
 
         if (getIsMountainValidated()) {
             throw new UnsupportedOperationException(
-                    "Forbidden operation, the player has already validate his building");
+                    "Forbidden operation, the player has already validated his building");
         }
 
         ModelColor mountainColor;
@@ -474,9 +473,7 @@ public class Player implements Serializable {
     public Player clone() {
         Player p = new Player(getId());
         p.setAdditionals(new ArrayList<>(getAdditionals()));
-        if (!getIsMountainValidated()) {
-            p.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
-        }
+        p.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));
         p.setName(getName());
         p.setUsedPiece(new HashMap<>(getUsedPiece()));
         p.setMountain(getMountain().clone());

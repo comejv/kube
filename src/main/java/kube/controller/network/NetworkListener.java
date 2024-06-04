@@ -1,5 +1,6 @@
 package kube.controller.network;
 
+import kube.configuration.Config;
 // Import kube classes
 import kube.model.action.Action;
 import kube.model.action.ActionType;
@@ -17,6 +18,7 @@ public class NetworkListener implements Runnable {
 
     Network network;
     Queue<Action> networkToModel;
+    Queue<Action> networkToView;
 
     /**********
      * CONSTRUCTOR
@@ -26,11 +28,13 @@ public class NetworkListener implements Runnable {
      * Constructor of the class
      * 
      * @param network        the network object
-     * @param networkToModel the queue of actions to send to the model
+     * @param networkToModel the queue of actions to send to the model*
+     * @param networkToView the queue of actions to send to the view
      */
-    public NetworkListener(Network network, Queue<Action> networkToModel) {
+    public NetworkListener(Network network, Queue<Action> networkToModel, Queue<Action> networkToView) {
         this.network = network;
         this.networkToModel = networkToModel;
+        this.networkToView = networkToView;
     }
 
     /**********
@@ -42,11 +46,17 @@ public class NetworkListener implements Runnable {
         while (true) {
             try {
                 Action action = network.receive();
+                Config.debug("Network received", action);
                 if (action != null) {
+                    action.setFromNetwork(true);
                     networkToModel.add(action);
+                } else {
+                    break;
                 }
             } catch (IOException e) {
-                networkToModel.add(new Action(ActionType.CONNECTION_CLOSED, e));
+                Action action = new Action(ActionType.RESET);
+                networkToModel.add(action);
+                break;
             }
         }
     }

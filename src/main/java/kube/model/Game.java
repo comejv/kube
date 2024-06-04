@@ -2,9 +2,11 @@ package kube.model;
 
 // Import model classes
 import kube.configuration.Config;
+import kube.model.action.Action;
 import kube.model.action.*;
 import kube.model.action.move.Move;
-import kube.model.ai.moveSetHeuristique;
+import kube.model.ai.ExpertAI;
+import kube.model.ai.MiniMaxAI;
 import kube.model.ai.utilsAI;
 
 // Import java class
@@ -14,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.InvalidObjectException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
@@ -31,9 +35,10 @@ public class Game implements Runnable {
     public static final int RESET_EXIT = 0;
     public static final int NORMAL_EXIT = 1;
 
-    public static final int CLASSIC_START = 0;
-    public static final int LOAD_START = 1;
-    public static final int LOAD_ERROR = 2;
+    public static final int CLASSIC_START = 1;
+    public static final int LOAD_START = 2;
+    public static final int LOAD_ERROR = 3;
+    public static final int ERROR_START = 4;
 
     public static final int PORT = 1234;
 
@@ -84,7 +89,7 @@ public class Game implements Runnable {
         while (true) {
             int startType;
             startType = waitStartGame();
-            if (startType == LOAD_ERROR) {
+            if (startType == LOAD_ERROR || startType == RESET_EXIT) {
                 continue;
             }
             localGame(startType);
@@ -107,35 +112,63 @@ public class Game implements Runnable {
 
         action = eventsToModel.remove();
 
-        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD) {
+        while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD &&
+                action.getType() != ActionType.RESET && action.getType() != ActionType.START_ONLINE) {
+            Config.debug("Reception de ", action);
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             action = eventsToModel.remove();
         }
 
-        if (action.getType() == ActionType.START) {
-            // Start a new game
-            start = (Start) action.getData();
-            if (start == null) {
+        switch (action.getType()) {
+            case START_ONLINE:
+                Boolean isHost = (Boolean) action.getData();
                 k3.init();
-            } else {
-                k3.init(start.getAIJ1(), start.getAIJ2());
-            }
-            eventsToView.add(new Action(ActionType.VALIDATE, true));
-            return CLASSIC_START;
-        } else {
-            // Load a saved game
-            filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData() + Config.SAVING_FILE_EXTENSION;
-            file = new File(filePath);
-            try {
-                fis = new FileInputStream(file);
-                ois = new ObjectInputStream(fis);
-                k3.init((Kube) ois.readObject());
-                ois.close();
-                return LOAD_START;
-            } catch (Exception e) {
-                eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
-                return LOAD_ERROR;
-            }
+                if (isHost) {
+                    setGameType(HOST);
+                } else {
+                    setGameType(JOIN);
+                }
+                k3.setGameType(getGameType());
+                return CLASSIC_START;
+            case START:
+                setGameType(LOCAL);
+                k3.setGameType(getGameType());
+                // Start a new game
+                start = (Start) action.getData();
+                if (start == null) {
+                    k3.init();
+                } else {
+                    k3.init(start.getAIJ1(), start.getAIJ2());
+                }
+                eventsToView.add(new Action(ActionType.VALIDATE, true));
+                return CLASSIC_START;
+            case LOAD:
+                setGameType(LOCAL);
+                // Load a saved game
+                filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData();
+                file = new File(filePath);
+                try {
+                    fis = new FileInputStream(file);
+                    ois = new ObjectInputStream(fis);
+                    k3.init((Kube) ois.readObject());
+                    ois.close();
+                    Config.debug("initilized game");
+                    eventsToView.add(new Action(ActionType.VALIDATE, true));
+                    return LOAD_START;
+                } catch (ClassNotFoundException | InvalidClassException | InvalidObjectException e) {
+                    Config.error(e);
+                    eventsToView.add(new Action(ActionType.PRINT_INVALID_SAVE));
+                    return LOAD_ERROR;
+                } catch (IOException e) {
+                    Config.error(e);
+                    eventsToView.add(new Action(ActionType.PRINT_WRONG_FILE_NAME));
+                    return LOAD_ERROR;
+                }
+            case RESET:
+                return RESET_EXIT;
+            default:
+                eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                return ERROR_START;
         }
     }
 
@@ -147,17 +180,31 @@ public class Game implements Runnable {
      */
     public void localGame(int startType) {
         if (startType == CLASSIC_START) {
-            initPhase();
+            if (initPhase() == RESET_EXIT) {
+                eventsToView.add(new Action(ActionType.RESET));
+                if (getGameType() != LOCAL) {
+                    eventsToNetwork.add(new Action(ActionType.STOP_NETWORK));
+                }
+                return;
+            }
         }
         if (startType == CLASSIC_START ||
                 (startType == LOAD_START && k3.getPhase() == Kube.PREPARATION_PHASE)) {
             if (constructionPhase() == RESET_EXIT) {
+                eventsToView.add(new Action(ActionType.RESET));
+                if (getGameType() != LOCAL) {
+                    eventsToNetwork.add(new Action(ActionType.STOP_NETWORK));
+                }
                 return;
             }
             setFirstPlayer();
             eventsToView.add(new Action(ActionType.PRINT_STATE));
         }
         if (gamePhase() == RESET_EXIT) {
+            eventsToView.add(new Action(ActionType.RESET));
+            if (getGameType() != LOCAL) {
+                eventsToNetwork.add(new Action(ActionType.STOP_NETWORK));
+            }
             return;
         }
     }
@@ -167,34 +214,46 @@ public class Game implements Runnable {
      * 
      * @return void
      */
-    public void initPhase() {
+    public int initPhase() {
         Action action;
         switch (getGameType()) {
             case HOST:
-                eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getK3().clone()));
+                eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getMountain().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP1().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP2().clone()));
                 k3.setCurrentPlayer(k3.getP1());
+                eventsToView.add(new Action(ActionType.VALIDATE, true));
                 break;
             case JOIN:
                 while ((action = eventsToModel.remove()).getType() != ActionType.INIT_K3) {
+                    if (action.getType() == ActionType.RESET) {
+                        return RESET_EXIT;
+                    }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
-                k3.setK3((Mountain) action.getData());
+                k3.setMountain((Mountain) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
+                    if (action.getType() == ActionType.RESET) {
+                        return RESET_EXIT;
+                    }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setP1((Player) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
+                    if (action.getType() == ActionType.RESET) {
+                        return RESET_EXIT;
+                    }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setP2((Player) action.getData());
                 k3.setCurrentPlayer(k3.getP2());
+                eventsToView.add(new Action(ActionType.VALIDATE, true));
                 break;
             case LOCAL:
                 k3.setCurrentPlayer(k3.getP1());
                 break;
         }
+        return NORMAL_EXIT;
     }
 
     /**
@@ -205,13 +264,15 @@ public class Game implements Runnable {
     public int constructionPhase() {
         switch (getGameType()) {
             case HOST:
-                constructionPhasePlayer(k3.getP1());
-                waitConstruction(k3.getP2());
-                break;
+                if (constructionPhasePlayer(k3.getP1()) == RESET_EXIT) {
+                    return RESET_EXIT;
+                }
+                return waitConstruction(k3.getP2());
             case JOIN:
-                constructionPhasePlayer(k3.getP2());
-                waitConstruction(k3.getP1());
-                break;
+                if (constructionPhasePlayer(k3.getP2()) == RESET_EXIT) {
+                    return RESET_EXIT;
+                }
+                return waitConstruction(k3.getP1());
             case LOCAL:
                 if (constructionPhasePlayer(k3.getP1()) == RESET_EXIT) {
                     return RESET_EXIT;
@@ -222,6 +283,7 @@ public class Game implements Runnable {
                 break;
         }
         return NORMAL_EXIT;
+
     }
 
     /**
@@ -243,7 +305,7 @@ public class Game implements Runnable {
         while (!player.getIsMountainValidated()) {
 
             action = eventsToModel.remove();
-
+            Config.debug("Phase de construction, reception de", action);
             switch (action.getType()) {
                 case AI_MOVE:
                     constructionPhaseAIsuggestion(player);
@@ -267,7 +329,8 @@ public class Game implements Runnable {
                     break;
                 case VALIDATE:
                     // Reception of the other player mountain
-                    if (getGameType() != LOCAL && action.getPlayerId() != getGameType()) {
+                    if (getGameType() != LOCAL && action.getFromNetwork()) {
+                        Config.debug((Player) action.getData());
                         if (getGameType() == JOIN) {
                             k3.setP1((Player) action.getData());
                         } else {
@@ -277,12 +340,14 @@ public class Game implements Runnable {
                         isValidated = k3.getCurrentPlayer().validateBuilding();
                         if (isValidated && getGameType() != LOCAL) {
                             eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
+                        } else if (isValidated) {
+                            eventsToView.add(new Action(ActionType.VALIDATE, isValidated));
                         }
                         k3.updatePhase();
-                        eventsToView.add(new Action(ActionType.VALIDATE, isValidated));
                     }
                     break;
                 case SAVE:
+                    Config.debug("Save");
                     save(action.getData().toString());
                     break;
                 case RESET:
@@ -311,11 +376,6 @@ public class Game implements Runnable {
             case HOST:
                 k3.setCurrentPlayer(k3.getRandomPlayer());
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getCurrentPlayer()));
-                if (k3.getCurrentPlayer().getId() == HOST) {
-                    eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
-                } else {
-                    eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                }
                 waitAcknowledge();
                 break;
             case JOIN:
@@ -324,11 +384,6 @@ public class Game implements Runnable {
                 }
                 firstPlayer = (Player) action.getData();
                 k3.setCurrentPlayer(k3.getPlayerById(firstPlayer.getId()));
-                if (k3.getCurrentPlayer().getId() == JOIN) {
-                    eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
-                } else {
-                    eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                }
                 acknowledge(true);
                 break;
             case LOCAL:
@@ -345,12 +400,25 @@ public class Game implements Runnable {
     public int gamePhase() {
         Boolean AIpause = false;
         Action action;
+        // Instant loose case
+        if (!k3.canCurrentPlayerPlay()) {
+            eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
+            if (k3.getCurrentPlayer() == k3.getP1()) {
+                eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
+            } else {
+                eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
+            }
+        }
+
         while (true) {
 
             while (!k3.canCurrentPlayerPlay()) {
                 action = eventsToModel.remove();
+                Config.debug(action, action.getFromNetwork());
                 switch (action.getType()) {
                     case UNDO:
+                        AIpause = true;
+                        eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                         undo();
                         break;
                     case SAVE:
@@ -367,7 +435,6 @@ public class Game implements Runnable {
             }
 
             while (k3.canCurrentPlayerPlay()) {
-                Config.debug("AIpause", AIpause, eventsToModel.peak());
                 if (!eventsToModel.isEmpty() && eventsToModel.peak().getType() == ActionType.AI_PAUSE) {
                     action = eventsToModel.remove();
                     AIpause = (Boolean) action.getData();
@@ -383,16 +450,24 @@ public class Game implements Runnable {
                     }
                 } else {
                     action = eventsToModel.remove();
+                    Config.debug(action, action.getFromNetwork());
                     switch (action.getType()) {
                         case MOVE:
                         case MOVE_NUMBER:
                         case CREATE_MOVE:
+                            if (k3.getCurrentPlayer().isAI()) {
+                                break;
+                            }
                             playMove(action);
                             break;
                         case UNDO:
+                            AIpause = true;
+                            eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                             undo();
                             break;
                         case REDO:
+                            AIpause = true;
+                            eventsToView.add(new Action(ActionType.AI_PAUSE, true));
                             redo();
                             break;
                         case SAVE:
@@ -404,13 +479,16 @@ public class Game implements Runnable {
                             AIpause = (Boolean) action.getData();
                             break;
                         case AI_MOVE:
-                            k3.getCurrentPlayer().setAI(new moveSetHeuristique(50));
+                            if (k3.getCurrentPlayer().isAI()) {
+                                break;
+                            }
+                            k3.getCurrentPlayer().setAI(new ExpertAI(50));
                             k3.getCurrentPlayer().getAI().setPlayerId(k3.getCurrentPlayer().getId());
                             Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
                             playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
                             break;
                         default:
-                            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION, action.getData()));
+                            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                             break;
                     }
                 }
@@ -514,10 +592,8 @@ public class Game implements Runnable {
                 break;
             case HOST:
             case JOIN:
-                if (action.getPlayerId() == getGameType() && action.getPlayerId() != k3.getCurrentPlayer().getId()) {
-                    eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                } else if (action.getPlayerId() != getGameType()) {
-                    // Move from the outside
+                if (action.getFromNetwork() && k3.getCurrentPlayer() != k3.getPlayerById(getGameType())) {
+                    Config.debug("Move from the outside");
                     isValidMove = k3.playMove(move);
                     acknowledge(isValidMove);
                     if (isValidMove) {
@@ -526,14 +602,11 @@ public class Game implements Runnable {
                     } else {
                         eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
-                } else {
-                    // Local move
+                } else if (!action.getFromNetwork() && k3.getCurrentPlayer() == k3.getPlayerById(getGameType())) {
+                    Config.debug("Sent move to network");
                     eventsToNetwork.add(new Action(ActionType.MOVE, move));
                     if (waitAcknowledge() && k3.playMove(move)) {
                         eventsToView.add(new Action(ActionType.MOVE, move));
-                        if (k3.getCurrentPlayer().getId() != getGameType()) {
-                            eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
-                        }
                     } else {
                         eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
@@ -584,11 +657,11 @@ public class Game implements Runnable {
                 player.removeFromMountainToAvailableToBuild(i, j);
             }
         }
-
-        player.setAI(new moveSetHeuristique());
+        MiniMaxAI oldAI = player.getAI();
+        player.setAI(new ExpertAI());
         player.getAI().setPlayerId(player.getId());
         player.getAI().constructionPhase(k3);
-        player.setAI(null);
+        player.setAI(oldAI);
     }
 
     /**
@@ -597,26 +670,29 @@ public class Game implements Runnable {
      * @param player the player
      * @return void
      */
-    public void waitConstruction(Player player) {
+    public int waitConstruction(Player player) {
 
         Action action;
 
         while (k3.getPhase() == Kube.PREPARATION_PHASE) {
-
             eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
             action = eventsToModel.remove();
-
-            if (action.getType() == ActionType.VALIDATE && action.getPlayerId() == player.getId()) {
+            if (action.getType() == ActionType.VALIDATE && action.getFromNetwork()) {
                 if (getGameType() == HOST) {
                     k3.setP2((Player) action.getData());
                 } else {
                     k3.setP1((Player) action.getData());
                 }
                 k3.updatePhase();
+            } else if (action.getType() == ActionType.RESET) {
+                return RESET_EXIT;
             } else {
                 eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
             }
+            eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
         }
+        eventsToView.add(new Action(ActionType.VALIDATE, true));
+        return NORMAL_EXIT;
     }
 
     /**
@@ -637,8 +713,6 @@ public class Game implements Runnable {
     public boolean waitAcknowledge() {
 
         Action a;
-
-        eventsToView.add(new Action(ActionType.PRINT_WAITING_RESPONSE));
 
         while ((a = eventsToModel.remove()).getType() != ActionType.ACKNOWLEDGEMENT) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));

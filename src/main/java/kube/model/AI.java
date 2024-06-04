@@ -1,11 +1,10 @@
 package kube.model;
 
-// Import model class
-import kube.model.ai.MiniMaxAI;
-
 // Import java classes
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import kube.model.ai.MiniMaxAI;
 
 public class AI extends Player {
 
@@ -43,7 +42,7 @@ public class AI extends Player {
     @Override
     public AI clone() {
         AI copy;
-        copy = new AI(getId(), getAI().clone());
+        copy = new AI(getId(), getAI());
         copy.setAdditionals(new ArrayList<>(getAdditionals()));
         if (!getIsMountainValidated()) {
             copy.setAvailableToBuild(new HashMap<>(getAvailableToBuild()));

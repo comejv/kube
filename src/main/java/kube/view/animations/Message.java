@@ -19,13 +19,15 @@ public class Message implements ActionListener {
     private HexGlow hexGlow;
     private boolean firstTimeStable;
     private GUI gui;
-
+    private boolean aiAlreadyPaused;
     public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow) {
-        this(panel, text, gui, hexGlow, false);
+        this(panel, text, gui, hexGlow, false, false);
     }
 
-    public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow, boolean onlyDecreasing) {
-        gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, true));
+    public Message(TransparentPanel panel, String text, GUI gui, HexGlow hexGlow, boolean onlyDecreasing, boolean aiAlreadyPaused) {
+        if (!aiAlreadyPaused){
+            gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, true));
+        }
         if (onlyDecreasing) {
             opacity = 1;
             increasingState = 0;
@@ -38,12 +40,15 @@ public class Message implements ActionListener {
             decresingState = 20;
         }
         state = 0;
+        this.aiAlreadyPaused = aiAlreadyPaused;
         this.panel = panel;
         this.firstTimeStable = true;
         this.timer = new Timer(2000 / (increasingState + stableState + decresingState), this);
         this.hexGlow = hexGlow;
         this.gui = gui;
-        hexGlow.getTimer().stop();
+        if (hexGlow != null){
+            hexGlow.getTimer().stop();
+        }
         panel.setText(text);
         panel.setVisible(true);
         timer.start();
@@ -60,8 +65,12 @@ public class Message implements ActionListener {
         } else if (state >= decresingState + stableState + increasingState) {
             panel.setVisible(false);
             gui.removeAllFromOverlay();
-            hexGlow.getTimer().restart();
-            gui.eventsToModel.add(new Action(ActionType.AI_PAUSE, false));
+            if (hexGlow != null){
+                hexGlow.getTimer().restart();
+            }
+            if (!aiAlreadyPaused){
+                gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, false));
+            }
             timer.stop();
         } else {
             if (!firstTimeStable) {

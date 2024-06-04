@@ -1,12 +1,11 @@
 package kube.services;
 
 // Import model class
-import kube.model.action.Action;
-
-// Import java classes
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+
+import kube.model.action.Action;
 
 public abstract class Network {
 
@@ -14,14 +13,14 @@ public abstract class Network {
      * ATTRIBUTES
      **********/
 
-    @SuppressWarnings("unused")
     private String ip;
 
-    @SuppressWarnings("unused")
     private int port;
 
     private ObjectOutputStream out;
     private ObjectInputStream in;
+
+    private boolean waiting = false;
 
     /**********
      * SETTERS
@@ -43,6 +42,10 @@ public abstract class Network {
         this.in = in;
     }
 
+    public final void setWaitingForConnection(boolean waiting) {
+        this.waiting = waiting;
+    }
+
     /**********
      * GETTERS
      **********/
@@ -53,6 +56,14 @@ public abstract class Network {
 
     public ObjectInputStream getIn() {
         return in;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getIp() {
+        return ip;
     }
 
     /**********
@@ -66,7 +77,7 @@ public abstract class Network {
      * @param port the port
      * @return true if the connection is successful, false otherwise
      */
-    public abstract boolean connect(String ip, int port);
+    public abstract boolean connect(String ip, int port) throws IOException;
 
     /**
      * Disconnect from the server
@@ -118,5 +129,9 @@ public abstract class Network {
         } catch (ClassNotFoundException e) {
             return null;
         }
+    }
+
+    public boolean waitingForConnection() {
+        return waiting;
     }
 }

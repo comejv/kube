@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import javax.swing.Timer;
 import kube.view.components.HexIcon;
-import kube.configuration.Config;
 
 public class HexGlow implements ActionListener {
     private Timer timer;
@@ -29,14 +28,14 @@ public class HexGlow implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         state = state + 1;
         if (state < 25) {
-            brightness += 0.015f;
+            brightness += 0.02f;
         } else if (state < 50) {
-            brightness -= 0.015f;
+            brightness -= 0.02f;
         } else {
             brightness = 1;
             state = 0;
         }
-        if (toRedraw != null){
+        if (toRedraw != null) {
             for (HexIcon hex : toRedraw) {
                 hex.setBrightness(brightness);
                 hex.repaint();
@@ -44,7 +43,7 @@ public class HexGlow implements ActionListener {
         }
     }
 
-    public Timer getTimer(){
+    public Timer getTimer() {
         return timer;
     }
 

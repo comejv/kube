@@ -7,8 +7,11 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
-import kube.model.ai.moveSetHeuristique;
-import kube.model.ai.randomAI;
+import kube.model.ai.EasyAI;
+import kube.model.ai.ExpertAI;
+import kube.model.ai.HardAI;
+import kube.model.ai.MediumAI;
+import kube.model.ai.tests.*;
 
 // Import java classes
 import java.awt.Point;
@@ -54,7 +57,7 @@ public class Simulation implements Runnable {
      * METHODS
      **********/
 
-    /** 
+    /**
      * Main method of the program (simulation of games between two AI)
      * 
      * @param args the arguments
@@ -65,15 +68,15 @@ public class Simulation implements Runnable {
         Simulation s;
         Thread[] threads;
 
-        nbGames = 100;
+        nbGames = 1000;
+        nbThreads = 8;
 
         try {
             nbGames = Integer.parseInt(args[0]);
         } catch (Exception e) {
-            System.out.println("Nombre de parties par défaut: 100");
+            System.out.println("Nombre de parties par défaut: " + nbGames);
         }
 
-        nbThreads = 8;
         s = new Simulation(nbGames);
 
         s.winJ1 = 0;
@@ -179,19 +182,23 @@ public class Simulation implements Runnable {
     synchronized void incrnGamesFinished() {
         nGamesFinished++;
     }
-    
+
     private void aiTrainingGames() throws Exception {
         Kube k = new Kube(true);
         while (getnGamesFinished() < getNbGames()) {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new moveSetHeuristique(50), new randomAI(50));
+            k.init(new EasyAI(50), new MediumAI(50));
             k.getP1().getAI().constructionPhase(k);
+            k.getP1().validateBuilding();
             k.updatePhase();
             k.getP2().getAI().constructionPhase(k);
+            k.getP2().validateBuilding();
             k.updatePhase();
             // Phsae 2
+            // System.out.println(k.getP1());
+            // System.out.println(k.getP2());
             k.setCurrentPlayer(k.getRandomPlayer());
             while (k.canCurrentPlayerPlay()) {
                 Move move = k.getCurrentPlayer().getAI().nextMove(k);
@@ -276,7 +283,7 @@ public class Simulation implements Runnable {
         float availaibleSum = 0;
         for (int i = 0; i < nTest; i++) {
             Kube k = new Kube();
-            Mountain m = k.getK3();
+            Mountain m = k.getMountain();
             k.fillBag();
             k.fillBase();
             availaibleSum += randomAdd(m);
@@ -367,9 +374,9 @@ public class Simulation implements Runnable {
             m.setCase(8, 6, ModelColor.GREEN);
             m.setCase(8, 7, ModelColor.GREEN);
             m.setCase(8, 8, ModelColor.BLUE);
-            k.setK3(m);
+            k.setMountain(m);
             // Init the first IA
-            k.setP1(new AI(1, new moveSetHeuristique(30)));
+            k.setP1(new AI(1, new ExpertAI(30)));
 
             Mountain iaMountain = new Mountain(6);
 
@@ -409,7 +416,7 @@ public class Simulation implements Runnable {
             k.updatePhase();
             // Init the second IA
 
-            k.setP2(new AI(2, new moveSetHeuristique(30)));
+            k.setP2(new AI(2, new ExpertAI(30)));
             HashMap<ModelColor, Integer> bag = new HashMap<>();
             bag.put(ModelColor.RED, 3);
             bag.put(ModelColor.BLUE, 4);

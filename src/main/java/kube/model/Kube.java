@@ -1,7 +1,5 @@
 package kube.model;
 
-// Import model classes
-import kube.model.ai.MiniMaxAI;
 import kube.model.action.move.Move;
 import kube.model.action.move.MoveAA;
 import kube.model.action.move.MoveAM;
@@ -9,6 +7,7 @@ import kube.model.action.move.MoveAW;
 import kube.model.action.move.MoveMA;
 import kube.model.action.move.MoveMM;
 import kube.model.action.move.MoveMW;
+import kube.model.ai.MiniMaxAI;
 
 // Import java classes
 import java.io.Serializable;
@@ -45,9 +44,9 @@ public class Kube implements Serializable {
     private boolean penality;
     private History history;
     private int baseSize, phase;
-    private Mountain k3;
+    private Mountain mountain;
     private Move lastMovePlayed;
-
+    private transient int gameType;
     /**********
      * CONSTRUCTOR
      **********/
@@ -128,7 +127,7 @@ public class Kube implements Serializable {
 
         setBaseSize(9);
         setPhase(PREPARATION_PHASE);
-        setK3(new Mountain(getBaseSize()));
+        setMountain(new Mountain(getBaseSize()));
         setBag(new ArrayList<>());
         fillBag(random);
         fillBase();
@@ -199,7 +198,7 @@ public class Kube implements Serializable {
         getHistory().setUndone(new CopyOnWriteArrayList<>(kube.getHistory().getUndone()));
 
         setBaseSize(kube.getBaseSize());
-        setK3(kube.getK3().clone());
+        setMountain(kube.getMountain().clone());
         setPhase(kube.getPhase());
         setLastMovePlayed(kube.getLastMovePlayed());
     }
@@ -220,8 +219,8 @@ public class Kube implements Serializable {
         history = h;
     }
 
-    public final void setK3(Mountain m) {
-        k3 = m;
+    public final void setMountain(Mountain m) {
+        mountain = m;
     }
 
     public final void setP1(Player p) {
@@ -256,6 +255,10 @@ public class Kube implements Serializable {
         player.getMountain().setCase(x, y, color);
     }
 
+    public void setGameType(int gameType){
+        this.gameType = gameType;
+    }
+
     /**********
      * GETTERS
      **********/
@@ -272,8 +275,8 @@ public class Kube implements Serializable {
         return history;
     }
 
-    public Mountain getK3() {
-        return k3;
+    public Mountain getMountain() {
+        return mountain;
     }
 
     public Player getP1() {
@@ -329,6 +332,11 @@ public class Kube implements Serializable {
             return getP2();
         }
     }
+
+    public int getGameType(){
+        return gameType;
+    }
+
 
     /**********
      * PREPARATION PHASE METHODS
@@ -408,7 +416,7 @@ public class Kube implements Serializable {
 
         // Fill the base with the 9 first cubes of the bag
         for (int y = 0; y < baseSize; y++) {
-            k3.setCase(baseSize - 1, y, bag.remove(0));
+            mountain.setCase(baseSize - 1, y, bag.remove(0));
         }
     }
 
@@ -542,7 +550,7 @@ public class Kube implements Serializable {
         // Catching if the move is a MoveMM or MoveAM (placinf on k3)
         else if (move.isFromAdditionals() || move.isClassicMove()) {
             // Checking if the cube is compatible with the base
-            cubeCompatible = getK3().compatible(move.getColor()).contains(move.getTo()) && !getPenality();
+            cubeCompatible = getMountain().compatible(move.getColor()).contains(move.getTo()) && !getPenality();
         } else {
             // Should never happen cause we are checking all type of the move
             throw new IllegalArgumentException();
@@ -616,9 +624,9 @@ public class Kube implements Serializable {
         else if (move.isFromAdditionals()) {
             // Applying the move
             player.getAdditionals().remove(color);
-            getK3().setCase(move.getTo().x, move.getTo().y, color);
+            getMountain().setCase(move.getTo().x, move.getTo().y, color);
             // Check whether the move results in a penalty
-            if (getK3().isPenality(move.getTo())) {
+            if (getMountain().isPenality(move.getTo())) {
                 setPenality(true);
             }
         }
@@ -627,9 +635,9 @@ public class Kube implements Serializable {
         else if (move.isClassicMove()) {
             // Applying the move
             player.removeFromMountain(move.getFrom().x, move.getFrom().y);
-            getK3().setCase(move.getTo().x, move.getTo().y, color);
+            getMountain().setCase(move.getTo().x, move.getTo().y, color);
             // Check whether the move results in a penalty
-            if (getK3().isPenality(move.getTo())) {
+            if (getMountain().isPenality(move.getTo())) {
                 setPenality(true);
             }
         }
@@ -736,7 +744,7 @@ public class Kube implements Serializable {
             // Cancel the move
             am = (MoveAM) move;
             player.addToAdditionals(am.getColor());
-            k3.remove(am.getTo());
+            mountain.remove(am.getTo());
             setPenality(false);
         }
         // Catching if the move is a MoveMM (placing a cube from player's mountain on
@@ -745,7 +753,7 @@ public class Kube implements Serializable {
             // Cancel the move
             mm = (MoveMM) move;
             setPlayerCase(player, mm.getFrom(), mm.getColor());
-            k3.remove(mm.getTo());
+            mountain.remove(mm.getTo());
             setPenality(false);
         }
 
@@ -892,7 +900,7 @@ public class Kube implements Serializable {
                 mw = new MoveMW(start);
                 moves.add(mw);
             } else {
-                for (Point arr : getK3().compatible(cMountain)) {
+                for (Point arr : getMountain().compatible(cMountain)) {
                     mm = new MoveMM(start, arr, cMountain);
                     moves.add(mm);
                 }
@@ -905,7 +913,7 @@ public class Kube implements Serializable {
                 aw = new MoveAW();
                 moves.add(aw);
             } else {
-                for (Point arr : getK3().compatible(cAdditionals)) {
+                for (Point arr : getMountain().compatible(cAdditionals)) {
                     am = new MoveAM(arr, cAdditionals);
                     moves.add(am);
                 }
@@ -1031,13 +1039,13 @@ public class Kube implements Serializable {
 
         samePlayerOne = getP1().equals(k.getP1());
         samePlayerTwo = getP2().equals(k.getP2());
-        sameK3 = getK3().equals(k.getK3());
+        sameK3 = getMountain().equals(k.getMountain());
         return samePlayerOne && samePlayerTwo && sameK3;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getP1(), getP2(), getK3(), getCurrentPlayer());
+        return Objects.hash(getP1(), getP2(), getMountain(), getCurrentPlayer());
     }
 
     @Override
@@ -1059,7 +1067,7 @@ public class Kube implements Serializable {
         kopy.setPenality(getPenality());
         kopy.setBag(new ArrayList<>(getBag()));
         kopy.setPhase(getPhase());
-        kopy.setK3(getK3().clone());
+        kopy.setMountain(getMountain().clone());
         return kopy;
     }
 }

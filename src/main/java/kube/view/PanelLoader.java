@@ -1,49 +1,106 @@
 package kube.view;
 
-import javax.swing.JPanel;
-
-import kube.controller.graphical.GUIControllers;
+// Import kube classes
+import kube.controller.graphical.GUIControllerManager;
 import kube.model.Kube;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 import kube.view.panels.FirstPhasePanel;
 import kube.view.panels.SecondPhasePanel;
 
-public class PanelLoader implements Runnable {
-    // TODO : refactor this class to make it more readable
-    GUI gui;
-    String panelName;
-    GUIControllers controllers;
-    Kube k3;
-    Queue<Action> eventsToView;
-    Queue<Action> eventsToModel;
+// Import java class
+import javax.swing.JPanel;
 
-    PanelLoader(GUI gui, String panelName, Kube k3, GUIControllers controller, Queue<Action> eventsToView,
+public class PanelLoader implements Runnable {
+
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    private GUI gui;
+    private String panelName;
+    private GUIControllerManager controllerManager;
+    private Kube k3;
+    private Queue<Action> eventsToView, eventsToModel;
+
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor for PanelLoader class
+     * 
+     * @param gui               the GUI object
+     * @param panelName         the name of the panel
+     * @param k3                the Kube object
+     * @param controllerManager the GUIControllers object
+     * @param eventsToView      the queue of actions to view
+     * @param eventsToModel     the queue of actions to model
+     */
+    public PanelLoader(GUI gui, String panelName, Kube k3, GUIControllerManager controllerManager, Queue<Action> eventsToView,
             Queue<Action> eventsToModel) {
         this.gui = gui;
         this.panelName = panelName;
-        this.controllers = controller;
+        this.controllerManager = controllerManager;
         this.k3 = k3;
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
     }
 
+    /**********
+     * GETTERS
+     **********/
+
+    public final GUI getGui() {
+        return gui;
+    }
+
+    public final String getPanelName() {
+        return panelName;
+    }
+
+    public final GUIControllerManager getControllerManager() {
+        return controllerManager;
+    }
+
+    public final Kube getK3() {
+        return k3;
+    }
+
+    public final Queue<Action> getEventsToView() {
+        return eventsToView;
+    }
+
+    public final Queue<Action> getEventsToModel() {
+        return eventsToModel;
+    }
+
+    /**********
+     * METHODS
+     **********/
+
+    @Override
     public void run() {
+
         JPanel panel;
+
         switch (panelName) {
             case GUI.PHASE1:
-                panel = new FirstPhasePanel(gui, k3, controllers.getPhase1Controller(), eventsToView, eventsToModel);
+                panel = new FirstPhasePanel(getGui(), getK3(), getControllerManager().getPhase1Controller(),
+                        getEventsToView());
                 break;
             case GUI.PHASE2:
-                panel = new SecondPhasePanel(gui, k3, controllers.getPhase2Controller());
+                panel = new SecondPhasePanel(getGui(), getK3(), getControllerManager().getPhase2Controller());
                 break;
             default:
                 panel = null;
                 break;
         }
-        gui.setPanel(panelName, panel);
-        synchronized (gui) {
-            gui.notify();
+
+        getGui().setPanel(getPanelName(), panel);
+
+        synchronized (getGui()) {
+            getGui().notify();
         }
     }
 }

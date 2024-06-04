@@ -1,6 +1,7 @@
 package kube.model.ai;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import kube.model.ModelColor;
@@ -42,5 +43,7 @@ public class utilsAI {
                 player.getMountain().setCase(i, j, colArr.remove(r.nextInt(colArr.size())));
             }
         }
+
+
     }
 }

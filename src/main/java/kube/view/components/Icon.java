@@ -78,7 +78,7 @@ public class Icon extends JLabel {
         return img;
     }
 
-    protected void setImage(BufferedImage img) {
+    public void setImage(BufferedImage img) {
         this.img = img;
     }
 

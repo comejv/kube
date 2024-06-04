@@ -1,7 +1,9 @@
 package kube.controller.network;
 
+import kube.configuration.Config;
 // Import kube classes
 import kube.model.action.Action;
+import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.services.Network;
 
@@ -29,6 +31,9 @@ public class NetworkSender implements Runnable {
     public NetworkSender(Network network, Queue<Action> modelToNetwork, int player) {
         this.network = network;
         this.modelToNetwork = modelToNetwork;
+        while (!modelToNetwork.isEmpty()){
+            modelToNetwork.remove();
+        }
         this.player = player;
     }
 
@@ -38,8 +43,12 @@ public class NetworkSender implements Runnable {
 
     @Override
     public void run() {
+        Config.debug("NetWork sender started");
         while (true) {
             Action action = modelToNetwork.remove();
+            if (action.getType() == ActionType.STOP_NETWORK) {
+                break;
+            }
             if (action != null) {
                 action.setPlayer(player);
                 network.send(action);
