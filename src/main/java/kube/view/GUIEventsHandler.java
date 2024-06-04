@@ -3,19 +3,19 @@ package kube.view;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 
+import javax.swing.Timer;
+
 import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.*;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.betterConstructV2;
-import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
 import kube.view.panels.LoadingSavePanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
-import kube.view.panels.SettingsPanel;
 
 public class GUIEventsHandler implements Runnable {
     // TODO : refactor this class to make it more readable
@@ -132,6 +132,15 @@ public class GUIEventsHandler implements Runnable {
                     overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
                     rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.previousRule();
+                    break;
+                case END_RULE:
+                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    rulesPanel = (RulesPanel) overlay.getComponent(0);
+                    for (Timer timer : rulesPanel.getAnimatedRuleTimer()) {
+                        timer.stop();
+                    }
+                    gui.removeAllFromOverlay();
+                    gui.setGlassPanelVisible(false);
                     break;
                 case END_OVERLAY_MENU:
                     gui.removeAllFromOverlay();

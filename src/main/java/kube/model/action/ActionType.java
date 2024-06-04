@@ -102,6 +102,7 @@ public enum ActionType {
     VOLUME,
     NEXT_RULE,
     PREVIOUS_RULE,
+    END_RULE,
     END_OVERLAY_MENU,
     LOAD_FILE_SELECTED,
     LOAD_PANEL,

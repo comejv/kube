@@ -29,4 +29,8 @@ public class AnimatedRule implements ActionListener {
         currentFrame = (currentFrame + 1) %4;
         frames[currentFrame].setVisible(true);
     }
+
+    public Timer getTimer() {
+        return timer;
+    }
 }

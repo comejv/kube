@@ -8,6 +8,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import javax.swing.ImageIcon;
@@ -16,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 import kube.view.GUI;
 import kube.view.GUIColors;
@@ -23,6 +25,8 @@ import kube.view.animations.AnimatedRule;
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
+import kube.model.ModelColor;
+import kube.view.components.HexIcon;
 import kube.view.components.Buttons.RulesButton;
 
 public class RulesPanel extends JPanel {
@@ -33,6 +37,7 @@ public class RulesPanel extends JPanel {
     private int height;
     private MenuController buttonListener;
     private JPanel cardPanel;
+    private ArrayList<Timer> animatedRuleTimer;
     private JTextArea[] textAreas;
     private RulePanel[] rulePanels;
     private int currentRuleNb;
@@ -54,6 +59,7 @@ public class RulesPanel extends JPanel {
         setBackground(GUIColors.ACCENT.toColor());
 
         int[] rulesWithAnimation = {1, 2, 3};
+        animatedRuleTimer = new ArrayList<>();
         setRulesWithAnimation(rulesWithAnimation);
         setCurrentRuleNb(0);
         
@@ -113,6 +119,7 @@ public class RulesPanel extends JPanel {
         for (int i = 1; i < TOTAL_RULE_NB; i++) {
             rulePanel = new RulePanel();
             rulePanel.addAnimation(i);
+            rulePanel.addImage(i);
             rulePanel.addTextArea(i);
             rulePanel.addNextButton(i);
             rulePanel.addPreviousButton(i);
@@ -177,7 +184,48 @@ public class RulesPanel extends JPanel {
                 elemGBC.gridy = 1;
                 elemGBC.anchor = GridBagConstraints.CENTER;
                 elemGBC.fill = GridBagConstraints.BOTH;
-                add(new AnimationPanel(ruleNb, gui));
+                AnimationPanel animationPanel = new AnimationPanel(ruleNb, gui);
+                animatedRuleTimer.add(animationPanel.getAnimation().getTimer());
+                add(animationPanel);
+            }
+        }
+
+        private void addImage(int ruleNb){
+            if (ruleNb > 4) {
+                int imgWidth = gui.getMainFrame().getWidth() / 10;
+                int imgHeigth = gui.getMainFrame().getWidth() / 10;
+                HexIcon nat = new HexIcon(ModelColor.NATURAL);
+                nat.resizeIcon(imgWidth, imgHeigth);
+                HexIcon white = new HexIcon(ModelColor.WHITE);
+                white.resizeIcon(imgWidth, imgHeigth);
+                GridBagConstraints elemGBC = new GridBagConstraints();
+                elemGBC.gridx = 0;
+                elemGBC.gridy = 1;
+                elemGBC.anchor = GridBagConstraints.CENTER;
+                elemGBC.fill = GridBagConstraints.BOTH;
+                switch (ruleNb) {
+                    case 5:
+                        JPanel imagePanel = new JPanel(new GridBagLayout());
+                        imagePanel.setBackground(new Color(0,0,0,0));
+                        add(imagePanel, elemGBC);
+                        elemGBC = new GridBagConstraints();
+                        elemGBC.gridx = 0;
+                        elemGBC.anchor = GridBagConstraints.CENTER;
+                        imagePanel.add(white, elemGBC);
+                        elemGBC = new GridBagConstraints();
+                        elemGBC.gridx = 1;
+                        elemGBC.anchor = GridBagConstraints.CENTER;
+                        imagePanel.add(nat, elemGBC);
+                        break;
+                    case 6:
+                        add(white, elemGBC);
+                        break;
+                    case 7:
+                        add(nat, elemGBC);
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         
@@ -218,11 +266,16 @@ public class RulesPanel extends JPanel {
         }
     }
 
+    public ArrayList<Timer> getAnimatedRuleTimer() {
+        return animatedRuleTimer;
+    }
+
     public class AnimationPanel extends JPanel{
 
         private JLabel[] frames;
         private int updatedWidth;
         private int updatedHeight;
+        private AnimatedRule animation;
 
         private AnimationPanel(int ruleNb, GUI gui){
             frames = new JLabel[4];
@@ -239,11 +292,15 @@ public class RulesPanel extends JPanel {
                 frames[i] = frame;
                 add(frame);
             }
-            new AnimatedRule(ruleNb, this);
+            animation = new AnimatedRule(ruleNb, this);
         }
 
         public JLabel[] getFrames(){
             return frames;
+        }
+
+        public AnimatedRule getAnimation() {
+            return animation;
         }
     } 
 }
