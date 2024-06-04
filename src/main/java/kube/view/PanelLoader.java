@@ -87,7 +87,7 @@ public class PanelLoader implements Runnable {
         switch (panelName) {
             case GUI.PHASE1:
                 panel = new FirstPhasePanel(getGui(), getK3(), getControllerManager().getPhase1Controller(),
-                        getEventsToView(), getEventsToModel());
+                        getEventsToView());
                 break;
             case GUI.PHASE2:
                 panel = new SecondPhasePanel(getGui(), getK3(), getControllerManager().getPhase2Controller());

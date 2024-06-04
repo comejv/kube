@@ -1,5 +1,6 @@
 package kube.view.panels;
 
+// Import kube classes
 import kube.configuration.Config;
 import kube.controller.graphical.Phase1Controller;
 import kube.model.Kube;
@@ -16,63 +17,80 @@ import kube.view.animations.Message;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
+// Import java classes
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.awt.*;
-
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
-/*
- * This class extends JPanel and creates the GUI for the first phase of the game.
- */
 public class FirstPhasePanel extends JPanel {
-    public HexGlow animationGlow;
-    private Kube k3;
+
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    private HexGlow animationGlow;
+    private Kube kube;
     private Phase1Controller controller;
     private GUI gui;
     private JPanel constructPanel, piecesPanel, gamePanel, topPanel, opponentPanel;
     private HashMap<ModelColor, JLabel> sidePanels, opponentPiecesPanel;
-    private JPanel[][] mountainPanels; // TODO : rename symbol to fix typo
+    private JPanel[][] mountainPanels;
     private HashMap<String, JButton> buttonsMap;
-    private Dimension oldSize;
-    private Queue<Action> eventsToModel;
     private HashMap<ModelColor, Integer> p1Pieces;
 
-    public FirstPhasePanel(GUI gui, Kube k3, Phase1Controller controller, Queue<Action> eventsToView,
-            Queue<Action> eventsToModel) {
-        this.eventsToModel = eventsToModel;
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor of the FirstPhasePanel
+     * 
+     * @param gui          the GUI object
+     * @param kube         the Kube object
+     * @param controller   the controller
+     * @param eventsToView the queue of actions to view
+     */
+    public FirstPhasePanel(GUI gui, Kube kube, Phase1Controller controller, Queue<Action> eventsToView) {
+
+        JPanel mainPanel, sidePanel, buttonsPanel;
+        GridBagConstraints gbc;
+
         this.gui = gui;
-        this.k3 = k3;
+        this.kube = kube;
         this.controller = controller;
+
         setLayout(new BorderLayout());
         setBackground(GUIColors.GAME_BG.toColor());
-        addComponentListener(controller);
+        addComponentListener(getController());
 
         // Create the main panel that holds other components
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
         mainPanel.setBackground(GUIColors.GAME_BG.toColor());
 
-        JPanel sidePanel = new JPanel();
+        sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
         sidePanel.setOpaque(false);
+
         // Create buttons panel and game panel
-        JPanel buttonsPanel = initButtons();
+        buttonsPanel = initButtons();
         buttonsPanel.setBackground(GUIColors.GAME_BG.toColor());
-        GridBagConstraints gbc = new GridBagConstraints();
+        gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 0;
         gbc.fill = GridBagConstraints.BOTH;
         sidePanel.add(buttonsPanel, gbc);
 
-        // Panel opponentPanel = opponentsPieces();
         opponentsPieces();
-        opponentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
-                new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
+        getOppenentPanel()
+                .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                        " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
+                        new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
+
         gbc = new GridBagConstraints();
         gbc.gridy = 1;
         gbc.gridx = 0;
@@ -83,7 +101,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridwidth = 1;
         gbc.insets = new Insets(20, 0, 20, 0);
 
-        sidePanel.add(opponentPanel, gbc);
+        sidePanel.add(getOppenentPanel(), gbc);
 
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -94,7 +112,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.insets = new Insets(0, 10, 0, 10);
         mainPanel.add(sidePanel, gbc);
 
-        JPanel gamePanel = createGamePanel();
+        setGamePanel(createGamePanel());
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 0;
@@ -104,18 +122,137 @@ public class FirstPhasePanel extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 20, 20, 20);
-        mainPanel.add(gamePanel, gbc);
+        mainPanel.add(getGamePanel(), gbc);
 
         // Add main panel to the layered pane
         add(mainPanel);
 
         animationGlow = new HexGlow();
-        this.oldSize = getSize();
     }
 
-    public void resetPanel(){
+    /**********
+     * SETTERS
+     **********/
+
+    private final void setAnimationGlow(HexGlow animationGlow) {
+        this.animationGlow = animationGlow;
+    }
+
+    private final void setConstructPanel(JPanel constructPanel) {
+        this.constructPanel = constructPanel;
+    }
+
+    private final void setPiecesPanel(JPanel piecesPanel) {
+        this.piecesPanel = piecesPanel;
+    }
+
+    private final void setGamePanel(JPanel gamePanel) {
+        this.gamePanel = gamePanel;
+    }
+
+    private final void setTopPanel(JPanel topPanel) {
+        this.topPanel = topPanel;
+    }
+
+    private final void setOppenentPanel(JPanel opponentPanel) {
+        this.opponentPanel = opponentPanel;
+    }
+
+    private final void setSidePanels(HashMap<ModelColor, JLabel> sidePanels) {
+        this.sidePanels = sidePanels;
+    }
+
+    private final void setOppenentPiecesPanel(HashMap<ModelColor, JLabel> opponentPiecesPanel) {
+        this.opponentPiecesPanel = opponentPiecesPanel;
+    }
+
+    private final void setMountainPanels(JPanel[][] mountainPanels) {
+        this.mountainPanels = mountainPanels;
+    }
+
+    private final void setButtonMap(HashMap<String, JButton> buttonsMap) {
+        this.buttonsMap = buttonsMap;
+    }
+
+    private final void setP1Pieces(HashMap<ModelColor, Integer> p1Pieces) {
+        this.p1Pieces = p1Pieces;
+    }
+
+    /**********
+     * GETTERS
+     **********/
+
+    public HexGlow getAnimationGlow() {
+        return animationGlow;
+    }
+
+    public Kube getKube() {
+        return kube;
+    }
+
+    public Phase1Controller getController() {
+        return controller;
+    }
+
+    public GUI getGui() {
+        return gui;
+    }
+
+    public JPanel getConstructPanel() {
+        return constructPanel;
+    }
+
+    public JPanel getPiecesPanel() {
+        return piecesPanel;
+    }
+
+    public JPanel getGamePanel() {
+        return gamePanel;
+    }
+
+    public JPanel getTopPanel() {
+        return topPanel;
+    }
+
+    public JPanel getOppenentPanel() {
+        return opponentPanel;
+    }
+
+    public HashMap<ModelColor, JLabel> getSidePanels() {
+        return sidePanels;
+    }
+
+    public HashMap<ModelColor, JLabel> getOpponentPiecesPanel() {
+        return opponentPiecesPanel;
+    }
+
+    public JPanel[][] getMountainPanels() {
+        return mountainPanels;
+    }
+
+    public HashMap<String, JButton> getButtonsMap() {
+        return buttonsMap;
+    }
+
+    public HashMap<ModelColor, Integer> getP1Pieces() {
+        return p1Pieces;
+    }
+
+    /**********
+     * METHODS
+     **********/
+
+    /**
+     * Reset the panel to its initial state
+     * 
+     * @return void
+     */
+    public void resetPanel() {
+
+        JPanel mainPanel;
+
         // Create the main panel that holds other components
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
         mainPanel.setBackground(GUIColors.GAME_BG.toColor());
@@ -132,11 +269,11 @@ public class FirstPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.BOTH;
         sidePanel.add(buttonsPanel, gbc);
 
-        // Panel opponentPanel = opponentsPieces();
         opponentsPieces();
-        opponentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
-                new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
+        getOppenentPanel()
+                .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                        " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
+                        new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
         gbc = new GridBagConstraints();
         gbc.gridy = 1;
         gbc.gridx = 0;
@@ -147,7 +284,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridwidth = 1;
         gbc.insets = new Insets(20, 0, 20, 0);
 
-        sidePanel.add(opponentPanel, gbc);
+        sidePanel.add(getOppenentPanel(), gbc);
 
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
@@ -158,7 +295,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.insets = new Insets(0, 10, 0, 10);
         mainPanel.add(sidePanel, gbc);
 
-        JPanel gamePanel = createGamePanel();
+        setGamePanel(createGamePanel());
         gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.gridx = 0;
@@ -168,44 +305,45 @@ public class FirstPhasePanel extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 20, 20, 20);
-        mainPanel.add(gamePanel, gbc);
+        mainPanel.add(getGamePanel(), gbc);
 
         // Add main panel to the layered pane
         add(mainPanel);
 
-        animationGlow = new HexGlow();
-        this.oldSize = getSize();
+        setAnimationGlow(new HexGlow());
         updateAll(true);
     }
 
     private JPanel createGamePanel() {
-        gamePanel = new JPanel();
-        gamePanel.setLayout(new BorderLayout());
+        setGamePanel(new JPanel());
+        getGamePanel().setLayout(new BorderLayout());
 
         // TOP BAR - GAME BASE
-        topPanel = new JPanel();
-        topPanel.setBackground(GUIColors.GAME_BG_DARK.toColor());
+        setTopPanel(new JPanel());
+        getTopPanel().setBackground(GUIColors.GAME_BG_DARK.toColor());
         JLabel baseLabel = new JLabel("Base Centrale: ");
         baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         baseLabel.setForeground(GUIColors.TEXT.toColor());
-        topPanel.add(baseLabel);
-        for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
-            topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false, 1.5));
+        getTopPanel().add(baseLabel);
+        for (int i = 0; i < getKube().getMountain().getBaseSize(); i++) {
+            getTopPanel().add(new HexIcon(getKube().getMountain().getCase(getKube().getMountain().getBaseSize() - 1, i),
+                    false, 1.5));
         }
 
-        gamePanel.add(topPanel, BorderLayout.NORTH);
+        getGamePanel().add(getTopPanel(), BorderLayout.NORTH);
         // CENTER - CONSTRUCTION OF PLAYER MOUNTAIN
         initGrid();
-        gamePanel.add(constructPanel, BorderLayout.CENTER);
+        getGamePanel().add(getConstructPanel(), BorderLayout.CENTER);
         // SIDE BAR - PIECES AVAILABLE
 
         initSide();
-        gamePanel.add(piecesPanel, BorderLayout.EAST);
-        return gamePanel;
+        getGamePanel().add(getPiecesPanel(), BorderLayout.EAST);
+        return getGamePanel();
     }
 
     private JPanel initButtons() {
-        buttonsMap = new HashMap<>();
+
+        setButtonMap(new HashMap<>());
         JPanel buttons = new JPanel();
         buttons.setLayout(new GridBagLayout());
         buttons.setPreferredSize(new Dimension(Config.INIT_WIDTH / 5, Config.INIT_HEIGHT / 2));
@@ -213,8 +351,8 @@ public class FirstPhasePanel extends JPanel {
 
         JButton quitButton = new Buttons.GamePhaseButton("Quitter la partie");
         quitButton.setActionCommand("quit");
-        quitButton.addMouseListener(controller);
-        buttonsMap.put("Quit", quitButton);
+        quitButton.addMouseListener(getController());
+        getButtonsMap().put("Quit", quitButton);
         GridBagConstraints elemGBC = new GridBagConstraints();
         elemGBC.gridy = 0;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
@@ -222,8 +360,8 @@ public class FirstPhasePanel extends JPanel {
 
         JButton optButton = new Buttons.GamePhaseButton("Paramètres");
         optButton.setActionCommand("settings");
-        optButton.addMouseListener(controller);
-        buttonsMap.put("Option", optButton);
+        optButton.addMouseListener(getController());
+        getButtonsMap().put("Option", optButton);
         elemGBC = new GridBagConstraints();
         elemGBC.gridy = 1;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
@@ -231,8 +369,8 @@ public class FirstPhasePanel extends JPanel {
 
         JButton sugIaButton = new Buttons.GamePhaseButton("Construction auto");
         sugIaButton.setActionCommand("AI");
-        sugIaButton.addMouseListener(controller);
-        buttonsMap.put("AI", sugIaButton);
+        sugIaButton.addMouseListener(getController());
+        getButtonsMap().put("AI", sugIaButton);
         elemGBC = new GridBagConstraints();
         elemGBC.gridy = 2;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
@@ -241,8 +379,8 @@ public class FirstPhasePanel extends JPanel {
         JButton validerButton = new Buttons.GamePhaseButton("Valider");
         validerButton.setEnabled(false);
         validerButton.setActionCommand("validate");
-        validerButton.addMouseListener(controller);
-        buttonsMap.put("Validate", validerButton);
+        validerButton.addMouseListener(getController());
+        getButtonsMap().put("Validate", validerButton);
         elemGBC = new GridBagConstraints();
         elemGBC.gridy = 3;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
@@ -251,8 +389,8 @@ public class FirstPhasePanel extends JPanel {
         JButton saveButton = new Buttons.GamePhaseButton("Sauvegarder");
         saveButton.setEnabled(true);
         saveButton.setActionCommand("save");
-        saveButton.addMouseListener(controller);
-        buttonsMap.put("Save", saveButton);
+        saveButton.addMouseListener(getController());
+        getButtonsMap().put("Save", saveButton);
         elemGBC = new GridBagConstraints();
         elemGBC.gridy = 4;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
@@ -261,8 +399,8 @@ public class FirstPhasePanel extends JPanel {
         JButton loadButton = new Buttons.GamePhaseButton("Charger");
         loadButton.setEnabled(true);
         loadButton.setActionCommand("load");
-        loadButton.addMouseListener(controller);
-        buttonsMap.put("Load", loadButton);
+        loadButton.addMouseListener(getController());
+        getButtonsMap().put("Load", loadButton);
         elemGBC = new GridBagConstraints();
         elemGBC.gridy = 5;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
@@ -272,11 +410,11 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void initGrid() {
-        mountainPanels = new JPanel[6][6];
-        constructPanel = new JPanel();
+        setMountainPanels(new JPanel[6][6]);
+        setConstructPanel(new JPanel());
 
-        constructPanel.setOpaque(false);
-        constructPanel.setLayout(new GridBagLayout());
+        getConstructPanel().setOpaque(false);
+        getConstructPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
         for (int i = 1; i <= 6; i++) {
@@ -285,26 +423,26 @@ public class FirstPhasePanel extends JPanel {
             lineHexa.setOpaque(false);
             for (int j = 0; j < i; j++) {
                 JPanel hexPanel = new JPanel();
-                HexIcon hex = new HexIcon(k3.getPlayerCase(k3.getCurrentPlayer(), i - 1, j), false, 2);
+                HexIcon hex = new HexIcon(getKube().getPlayerCase(getKube().getCurrentPlayer(), i - 1, j), false, 2);
                 hex.setPosition(new Point(i - 1, j));
                 hexPanel.add(hex);
                 lineHexa.add(hexPanel);
-                mountainPanels[i - 1][j] = hexPanel;
+                getMountainPanels()[i - 1][j] = hexPanel;
             }
             gbc.gridx = 0;
             gbc.gridy = i;
             // gbc.anchor = GridBagConstraints.CENTER;
-            constructPanel.add(lineHexa, gbc);
+            getConstructPanel().add(lineHexa, gbc);
         }
-        constructPanel.revalidate();
-        constructPanel.repaint();
+        getConstructPanel().revalidate();
+        getConstructPanel().repaint();
     }
 
     public void opponentsPieces() {
-        opponentPanel = new JPanel();
-        opponentPiecesPanel = new HashMap<>();
-        opponentPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
-        opponentPanel.setLayout(new GridBagLayout());
+        setOppenentPanel(new JPanel());
+        setOppenentPiecesPanel(new HashMap<>());
+        getOppenentPanel().setBackground(GUIColors.TEXT_HOVER.toColor());
+        getOppenentPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -326,8 +464,8 @@ public class FirstPhasePanel extends JPanel {
                 x = 0;
                 y++;
             }
-            opponentPanel.add(mini, gbc);
-            opponentPiecesPanel.put(c, numOfPieces); // add to hashmap for later update
+            getOppenentPanel().add(mini, gbc);
+            getOpponentPiecesPanel().put(c, numOfPieces); // add to hashmap for later update
         }
         JPanel jokers = new JPanel();
         jokers.setLayout(new GridBagLayout());
@@ -347,7 +485,7 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         jokers.add(mini, gbc);
-        opponentPiecesPanel.put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
+        getOpponentPiecesPanel().put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
 
         // White
         mini = new JPanel();
@@ -359,22 +497,23 @@ public class FirstPhasePanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 0;
         jokers.add(mini, gbc);
-        opponentPiecesPanel.put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
+        getOpponentPiecesPanel().put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
 
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        opponentPanel.add(jokers, gbc);
+        getOppenentPanel().add(jokers, gbc);
 
-        opponentPanel.revalidate();
-        opponentPanel.repaint();
+        getOppenentPanel().revalidate();
+        getOppenentPanel().repaint();
     }
 
     public void initSide() {
-        piecesPanel = new JPanel();
-        sidePanels = new HashMap<>();
-        piecesPanel.setBackground(GUIColors.TEXT_HOVER.toColor());
-        piecesPanel.setLayout(new GridBagLayout());
+
+        setPiecesPanel(new JPanel());
+        setSidePanels(new HashMap<>());
+        getPiecesPanel().setBackground(GUIColors.TEXT_HOVER.toColor());
+        getPiecesPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -387,7 +526,7 @@ public class FirstPhasePanel extends JPanel {
         for (ModelColor c : ModelColor.getAllColored()) {
             mini = new JPanel();
             mini.setOpaque(false);
-            numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
+            numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(c);
             numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
             actionable = numberOfPieces > 0;
@@ -400,8 +539,8 @@ public class FirstPhasePanel extends JPanel {
                 x = 0;
                 y++;
             }
-            piecesPanel.add(mini, gbc);
-            sidePanels.put(c, numOfPieces); // add to hashmap for later update
+            getPiecesPanel().add(mini, gbc);
+            getSidePanels().put(c, numOfPieces); // add to hashmap for later update
         }
         JPanel jokers = new JPanel();
         jokers.setOpaque(false);
@@ -413,39 +552,39 @@ public class FirstPhasePanel extends JPanel {
         // White
         mini = new JPanel();
         mini.setOpaque(false);
-        numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(ModelColor.WHITE);
+        numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(ModelColor.WHITE);
         numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         actionable = numberOfPieces > 0;
         mini.add(new HexIcon(ModelColor.WHITE, actionable, 1.5));
         mini.add(numOfPieces);
         jokers.add(mini);
-        sidePanels.put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
+        getSidePanels().put(ModelColor.WHITE, numOfPieces); // add to hashmap for later update
 
         // White
         mini = new JPanel();
         mini.setOpaque(false);
-        numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(ModelColor.NATURAL);
+        numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(ModelColor.NATURAL);
         numOfPieces = new JLabel("x" + numberOfPieces);
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
         actionable = numberOfPieces > 0;
         mini.add(new HexIcon(ModelColor.NATURAL, actionable, 1.5));
         mini.add(numOfPieces);
         jokers.add(mini);
-        sidePanels.put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
+        getSidePanels().put(ModelColor.NATURAL, numOfPieces); // add to hashmap for later update
 
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.gridwidth = 2;
-        piecesPanel.add(jokers, gbc);
+        getPiecesPanel().add(jokers, gbc);
 
-        piecesPanel.revalidate();
-        piecesPanel.repaint();
+        getPiecesPanel().revalidate();
+        getPiecesPanel().repaint();
     }
 
     public void updateButton() {
-        JButton validateButton = buttonsMap.get("Validate");
-        if (k3.getCurrentPlayer().isMountainFull()) {
+        JButton validateButton = getButtonsMap().get("Validate");
+        if (getKube().getCurrentPlayer().isMountainFull()) {
             validateButton.setEnabled(true);
         } else {
             validateButton.setEnabled(false);
@@ -457,11 +596,11 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateGrid(Point pos) {
-        ModelColor c = k3.getPlayerCase(k3.getCurrentPlayer(), pos.x, pos.y);
+        ModelColor c = getKube().getPlayerCase(getKube().getCurrentPlayer(), pos.x, pos.y);
         boolean actionable = c != ModelColor.EMPTY;
         HexIcon hex = new HexIcon(c, actionable, 2);
         hex.setPosition(pos);
-        JPanel panel = mountainPanels[pos.x][pos.y];
+        JPanel panel = getMountainPanels()[pos.x][pos.y];
         panel.removeAll();
         panel.add(hex);
         panel.revalidate();
@@ -469,31 +608,31 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateSide(ModelColor c) {
-        JLabel lab = sidePanels.get(c);
-        int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(c);
+        JLabel lab = getSidePanels().get(c);
+        int numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(c);
         lab.setText("x" + numberOfPieces);
         lab.repaint();
     }
 
     public void updateOpponent() {
-        if (k3.getCurrentPlayer() == k3.getP1()) {
-            p1Pieces = new HashMap<>(k3.getP1().getAvailableToBuild());
-            for (int i = 0; i < k3.getP1().getMountain().getBaseSize(); i++) {
+        if (getKube().getCurrentPlayer() == getKube().getP1()) {
+            setP1Pieces(new HashMap<>(getKube().getP1().getAvailableToBuild()));
+            for (int i = 0; i < getKube().getP1().getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {
-                    ModelColor c = k3.getP1().getMountain().getCase(i, j);
+                    ModelColor c = getKube().getP1().getMountain().getCase(i, j);
                     if (c != ModelColor.EMPTY) {
-                        p1Pieces.put(c, p1Pieces.get(c) + 1);
+                        getP1Pieces().put(c, getP1Pieces().get(c) + 1);
                     }
                 }
             }
         }
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
-            JLabel label = opponentPiecesPanel.get(c);
+            JLabel label = getOpponentPiecesPanel().get(c);
             int numberOfPieces = 0;
-            if (k3.getCurrentPlayer() == k3.getP1()) {
-                numberOfPieces = k3.getP2().getAvailableToBuild().get(c);
+            if (getKube().getCurrentPlayer() == getKube().getP1()) {
+                numberOfPieces = getKube().getP2().getAvailableToBuild().get(c);
             } else {
-                numberOfPieces = p1Pieces.get(c);
+                numberOfPieces = getP1Pieces().get(c);
             }
             label.setText("x" + numberOfPieces);
             label.repaint();
@@ -504,33 +643,34 @@ public class FirstPhasePanel extends JPanel {
     public void updateAll(Boolean firstUpdate) {
         updateOpponent();
         if (firstUpdate) {
-            if (k3.getCurrentPlayer() == k3.getP1()) {
-                topPanel.removeAll();
+            if (getKube().getCurrentPlayer() == getKube().getP1()) {
+                getTopPanel().removeAll();
                 JLabel baseLabel = new JLabel("Base Centrale: ");
                 baseLabel.setFont(new Font("Jomhuria", Font.PLAIN, 30));
                 baseLabel.setForeground(GUIColors.TEXT.toColor());
-                topPanel.add(baseLabel);
-                for (int i = 0; i < k3.getK3().getBaseSize(); i++) {
-                    topPanel.add(new HexIcon(k3.getK3().getCase(k3.getK3().getBaseSize() - 1, i), false, 1.5));
+                getTopPanel().add(baseLabel);
+                for (int i = 0; i < getKube().getMountain().getBaseSize(); i++) {
+                    getTopPanel().add(new HexIcon(
+                            getKube().getMountain().getCase(getKube().getMountain().getBaseSize() - 1, i), false, 1.5));
                 }
             }
         }
-        constructPanel.setBorder(
+        getConstructPanel().setBorder(
                 BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                        "Au tour de " + k3.getCurrentPlayer().getName() + " de construire sa montagne",
+                        "Au tour de " + getKube().getCurrentPlayer().getName() + " de construire sa montagne",
                         TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
-        buttonsMap.get("AI").setEnabled(false);
-        buttonsMap.get("Validate").setEnabled(false);
+        getButtonsMap().get("AI").setEnabled(false);
+        getButtonsMap().get("Validate").setEnabled(false);
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             updateSide(c);
         }
-        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+        for (int i = 0; i < getKube().getCurrentPlayer().getMountain().getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 updateGrid(i, j);
             }
         }
-        buttonsMap.get("AI").setEnabled(true);
+        getButtonsMap().get("AI").setEnabled(true);
         updateButton();
         updateActionnable();
     }
@@ -560,7 +700,7 @@ public class FirstPhasePanel extends JPanel {
                 for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
                     updateSide(c);
                 }
-                for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+                for (int i = 0; i < getKube().getCurrentPlayer().getMountain().getBaseSize(); i++) {
                     for (int j = 0; j < i + 1; j++) {
                         updateGrid(i, j);
                     }
@@ -574,23 +714,23 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void setWaitingButton() {
-        for (JButton b : buttonsMap.values()) {
+        for (JButton b : getButtonsMap().values()) {
             b.setEnabled(false);
         }
-        buttonsMap.get("Validate").setText("Validation en cours");
+        getButtonsMap().get("Validate").setText("Validation en cours");
     }
 
     public void resetButtonValue() {
-        buttonsMap.get("Quit").setText("Quitter la partie");
-        buttonsMap.get("Quit").setEnabled(true);
-        buttonsMap.get("Option").setText("Paramètres");
-        buttonsMap.get("Option").setEnabled(true);
-        buttonsMap.get("AI").setText("Construction auto");
-        buttonsMap.get("AI").setEnabled(true);
-        buttonsMap.get("Validate").setText("Valider");
-        buttonsMap.get("Validate").setEnabled(false);
-        buttonsMap.get("Save").setText("Sauvegarder");
-        buttonsMap.get("Save").setEnabled(true);
+        getButtonsMap().get("Quit").setText("Quitter la partie");
+        getButtonsMap().get("Quit").setEnabled(true);
+        getButtonsMap().get("Option").setText("Paramètres");
+        getButtonsMap().get("Option").setEnabled(true);
+        getButtonsMap().get("AI").setText("Construction auto");
+        getButtonsMap().get("AI").setEnabled(true);
+        getButtonsMap().get("Validate").setText("Valider");
+        getButtonsMap().get("Validate").setEnabled(false);
+        getButtonsMap().get("Save").setText("Sauvegarder");
+        getButtonsMap().get("Save").setEnabled(true);
     }
 
     // TODO : remove ?
@@ -600,9 +740,9 @@ public class FirstPhasePanel extends JPanel {
 
     public void updateActionnable() {
         ArrayList<HexIcon> toGlow = new ArrayList<>();
-        for (JLabel pan : sidePanels.values()) {
+        for (JLabel pan : getSidePanels().values()) {
             HexIcon hex = (HexIcon) pan.getParent().getComponent(0);
-            int numberOfPieces = k3.getCurrentPlayer().getAvailableToBuild().get(hex.getColor());
+            int numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(hex.getColor());
             if (numberOfPieces > 0) {
                 hex.setActionable(true);
                 toGlow.add(hex);
@@ -610,7 +750,7 @@ public class FirstPhasePanel extends JPanel {
                 hex.setActionable(false);
             }
         }
-        animationGlow.setToRedraw(toGlow);
+        getAnimationGlow().setToRedraw(toGlow);
     }
 
     public void updateHexSize() {
@@ -623,9 +763,9 @@ public class FirstPhasePanel extends JPanel {
         JPanel panel;
         HexIcon h;
         // Loop through panels and update hex size
-        for (int i = 0; i < k3.getCurrentPlayer().getMountain().getBaseSize(); i++) {
+        for (int i = 0; i < getKube().getCurrentPlayer().getMountain().getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
-                panel = mountainPanels[i][j];
+                panel = getMountainPanels()[i][j];
                 h = (HexIcon) panel.getComponents()[0];
                 h.updateSize();
                 panel.removeAll();
@@ -633,7 +773,7 @@ public class FirstPhasePanel extends JPanel {
             }
         }
 
-        for (JLabel pan : sidePanels.values()) {
+        for (JLabel pan : getSidePanels().values()) {
             JPanel p = (JPanel) pan.getParent();
             h = (HexIcon) p.getComponents()[0];
             JLabel lab = (JLabel) p.getComponents()[1];
@@ -643,7 +783,7 @@ public class FirstPhasePanel extends JPanel {
             p.add(lab);
         }
 
-        for (JLabel pan : opponentPiecesPanel.values()) {
+        for (JLabel pan : getOpponentPiecesPanel().values()) {
             JPanel p = (JPanel) pan.getParent();
             h = (HexIcon) p.getComponents()[0];
             JLabel lab = (JLabel) p.getComponents()[1];
@@ -654,11 +794,10 @@ public class FirstPhasePanel extends JPanel {
         }
 
         // Update the old size to the new size
-        oldSize = newSize;
 
         revalidate();
         repaint();
-        gui.getOverlay().repaint();
+        getGui().getOverlay().repaint();
     }
 
     // private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
@@ -678,14 +817,14 @@ public class FirstPhasePanel extends JPanel {
 
     public void buildMessage() {
         TransparentPanel transparentPanel = new TransparentPanel("");
-        transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
+        transparentPanel.setPreferredSize(getGui().getMainFrame().getSize());
         transparentPanel.setVisible(false);
-        gui.addToOverlay(transparentPanel);
+        getGui().addToOverlay(transparentPanel);
         new Message(transparentPanel,
-                k3.getCurrentPlayer().getName() + " preparez votre montagne !",
-                gui,
-                animationGlow,
-                k3.getCurrentPlayer() == k3.getP1(), false);
+                getKube().getCurrentPlayer().getName() + " preparez votre montagne !",
+                getGui(),
+                getAnimationGlow(),
+                getKube().getCurrentPlayer() == getKube().getP1(), false);
     }
 
 }

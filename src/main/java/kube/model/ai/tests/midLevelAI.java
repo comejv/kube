@@ -78,7 +78,7 @@ public class midLevelAI extends MiniMaxAI {
             probabilities.put(c, 0f);
         }
         for (int i = 0; i < baseSize; i++) {
-            ModelColor c = k3.getK3().getCase(baseSize - 1, i);
+            ModelColor c = k3.getMountain().getCase(baseSize - 1, i);
             probabilities.put(c, probabilities.get(c) + (float) 1 / baseSize);
         }
         for (ModelColor c : ModelColor.getAllColored()) {

@@ -184,7 +184,7 @@ public class Game implements Runnable {
         Action action;
         switch (getGameType()) {
             case HOST:
-                eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getK3().clone()));
+                eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getMountain().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP1().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP2().clone()));
                 k3.setCurrentPlayer(k3.getP1());
@@ -193,7 +193,7 @@ public class Game implements Runnable {
                 while ((action = eventsToModel.remove()).getType() != ActionType.INIT_K3) {
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
-                k3.setK3((Mountain) action.getData());
+                k3.setMountain((Mountain) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }

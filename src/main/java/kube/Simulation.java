@@ -283,7 +283,7 @@ public class Simulation implements Runnable {
         float availaibleSum = 0;
         for (int i = 0; i < nTest; i++) {
             Kube k = new Kube();
-            Mountain m = k.getK3();
+            Mountain m = k.getMountain();
             k.fillBag();
             k.fillBase();
             availaibleSum += randomAdd(m);
@@ -374,7 +374,7 @@ public class Simulation implements Runnable {
             m.setCase(8, 6, ModelColor.GREEN);
             m.setCase(8, 7, ModelColor.GREEN);
             m.setCase(8, 8, ModelColor.BLUE);
-            k.setK3(m);
+            k.setMountain(m);
             // Init the first IA
             k.setP1(new AI(1, new ExpertAI(30)));
 
