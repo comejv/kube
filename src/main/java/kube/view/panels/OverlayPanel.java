@@ -1,7 +1,6 @@
 package kube.view.panels;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
@@ -9,15 +8,17 @@ import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
 import kube.controller.graphical.MenuController;
 import kube.model.action.ActionType;
 import kube.view.GUI;
 
 public class OverlayPanel extends JPanel{
 
+    private GUI gui;
+
     public OverlayPanel(GUI gui, MenuController buttonListener, ActionType action){
 
+        this.gui = gui;
         setLayout(new GridBagLayout());
         setPreferredSize(gui.getMainFrame().getSize());
         setBackground(new Color(0, 0, 0, 150));
@@ -30,7 +31,7 @@ public class OverlayPanel extends JPanel{
                 add(new SettingsPanel(gui, buttonListener), center);
                 break;
             case LOAD_PANEL:
-                add(new LoadPanel(gui, buttonListener), center);
+                add(new LoadingSavePanel(gui, buttonListener), center);
                 break;
             case RULES:
                 add(new RulesPanel(gui, buttonListener), center);

@@ -1,22 +1,6 @@
 package kube.view;
 
-import java.io.IOException;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.GraphicsEnvironment;
-import java.awt.event.MouseAdapter;
-
-import javax.swing.BorderFactory;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.*;
-import javax.swing.UnsupportedLookAndFeelException;
-
+// Import Java classes
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.Phase1DnD;
@@ -29,30 +13,75 @@ import kube.view.animations.HexGlow;
 import kube.view.animations.PanelGlow;
 import kube.view.panels.*;
 
-public class GUI extends Thread {
-    // TODO : refactor this class to make it more readable
+// Import Java classes
+import java.io.IOException;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.awt.event.MouseAdapter;
+import javax.swing.BorderFactory;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.*;
+import javax.swing.UnsupportedLookAndFeelException;
+
+public class GUI implements Runnable {
+
+    /**********
+     * CONSTANTS
+     **********/
+
     public final static String MENU = "MENU";
     public final static String PHASE1 = "PHASE1";
     public final static String PHASE2 = "PHASE2";
+    public final static String FONT_PATH = "fonts/Jomhuria-Regular.ttf";
+
+    /**********
+     * ATTRIBUTES
+     **********/
+
+    private volatile SecondPhasePanel secondPhasePanel;
+    private volatile FirstPhasePanel firstPhasePanel;
 
     private MainFrame mF;
     private GUIControllers controllers;
     private Kube k3;
-
-    private volatile FirstPhasePanel firstPhasePanel;
-    private volatile SecondPhasePanel secondPhasePanel;
     private Thread loaderThread;
-    private Queue<Action> eventsToView;
-    public Queue<Action> eventsToModel;
+    public Queue<Action> eventsToView, eventsToModel;
     public MenuPanel mP;
 
+    /**********
+     * CONSTRUCTOR
+     **********/
+
+    /**
+     * Constructor for the GUI class
+     * 
+     * @param k3            the Kube object
+     * @param controllers   the GUIControllers object
+     * @param eventsToView  the Queue of Action to send to the view
+     * @param eventsToModel the Queue of Action to send to the model
+     */
     public GUI(Kube k3, GUIControllers controllers, Queue<Action> eventsToView, Queue<Action> eventsToModel) {
+
+        boolean nimbusFound;
+        GraphicsEnvironment ge;
+        Font font;
+
         this.eventsToView = eventsToView;
         this.eventsToModel = eventsToModel;
         this.controllers = controllers;
         this.k3 = k3;
+
+
         try {
-            boolean nimbusFound = false;
+            nimbusFound = false;
+
             for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
                     UIManager.setLookAndFeel(info.getClassName());
@@ -61,23 +90,24 @@ public class GUI extends Thread {
                     break;
                 }
             }
+
             if (!nimbusFound) {
                 UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 Config.debug("Set Look and Feel to system.");
             }
-        } catch (UnsupportedLookAndFeelException | ClassNotFoundException | InstantiationException
-                | IllegalAccessException e) {
+        } catch (UnsupportedLookAndFeelException | ClassNotFoundException
+                | InstantiationException | IllegalAccessException e) {
             Config.error("Can't set look and feel : " + e);
         }
 
+
         try {
-            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            Font font = Font.createFont(Font.TRUETYPE_FONT,
-                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
+            ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            font = Font.createFont(Font.TRUETYPE_FONT,
+                    ResourceLoader.getResourceAsStream(FONT_PATH));
             ge.registerFont(font);
             ge.getAvailableFontFamilyNames();
         } catch (IOException | FontFormatException e) {
-            Config.debug("Error : ");
             Config.error("Could not load buttons font, using default.");
         }
 
@@ -86,12 +116,17 @@ public class GUI extends Thread {
         SwingUtilities.invokeLater(this);
     }
 
+    /**********
+     * METHODS
+     **********/
+
+    @Override
     public void run() {
+
         // Disable optimized drawing
         System.setProperty("sun.java2d.opengl", "true");
-        // new MainFrame
+
         mF = new MainFrame();
-        // add menu pannel
         mP = new MenuPanel(this, controllers.getMenuController());
         mF.addPanel(mP, MENU);
 
@@ -107,13 +142,26 @@ public class GUI extends Thread {
         createGlassPane();
     }
 
+    /**
+     * Show a panel
+     * 
+     * @param panelName the name of the panel to show
+     * @return void
+     */
     public void showPanel(String panelName) {
         waitPanel(panelName);
         mF.showPanel(panelName);
     }
 
+    /**
+     * Update the panel according to the model
+     * 
+     * @return void
+     */
     public void updatePanel() {
+
         switch (k3.getPhase()) {
+
             case Kube.PREPARATION_PHASE:
                 setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
                 firstPhasePanel.buildMessage();
@@ -135,7 +183,16 @@ public class GUI extends Thread {
         }
     }
 
+    /**
+     * Load a panel according to its name
+     * 
+     * @param panelName the name of the panel to load
+     * @return void
+     */
     public void loadPanel(String panelName) {
+
+        PanelLoader loader;
+
         switch (panelName) {
             case GUI.PHASE1:
             case GUI.PHASE2:
@@ -147,12 +204,20 @@ public class GUI extends Thread {
             default:
                 break;
         }
-        PanelLoader loader = new PanelLoader(this, panelName, k3, controllers, eventsToView, eventsToModel);
+
+        loader = new PanelLoader(this, panelName, k3, controllers, eventsToView, eventsToModel);
         loaderThread = new Thread(loader);
         loaderThread.start();
     }
 
+    /**
+     * Wait for a panel to load
+     * 
+     * @param panelName the name of the panel to wait for
+     * @return void
+     */
     public synchronized void waitPanel(String panelName) {
+
         switch (panelName) {
             case GUI.PHASE1:
             case GUI.PHASE2:
@@ -171,9 +236,15 @@ public class GUI extends Thread {
                 Config.error("Waiting for non existent panel " + panelName);
                 break;
         }
+
         Config.debug("Panel ", panelName, " finished loading");
     }
 
+    /**
+     * Get the overlay panel
+     * 
+     * @return JPanel the overlay panel
+     */
     public JPanel getOverlay() {
         return mF.getOverlay();
     }

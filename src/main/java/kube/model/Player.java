@@ -174,7 +174,7 @@ public class Player implements Serializable {
 
         if (getIsMountainValidated()) {
             throw new UnsupportedOperationException(
-                    "Forbidden operation, the player has already validate his building");
+                    "Forbidden operation, the player has already validated his building");
         }
 
         ModelColor mountainColor;

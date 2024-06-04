@@ -58,8 +58,7 @@ public class betterConstruct extends MiniMaxAI {
 
     @Override
     public int evaluation(Kube k, Player p) {
-        return p.getPlayableColors().size() + p.getAdditionals().size();
-    }
+        return k.moveSet(p).size() + p.getAdditionals().size() - p.getWhiteUsed();    }
 
     @Override
     public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {

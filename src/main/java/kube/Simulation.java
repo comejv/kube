@@ -193,11 +193,15 @@ public class Simulation implements Runnable {
             k.init(new testThomas2(50), new testThomas(50));
             k.getP1().getAI().constructionPhase(k);
             k.getP1().validateBuilding();
+            k.getP1().validateBuilding();
             k.updatePhase();
             k.getP2().getAI().constructionPhase(k);
             k.getP2().validateBuilding();
+            k.getP2().validateBuilding();
             k.updatePhase();
             // Phsae 2
+            // System.out.println(k.getP1());
+            // System.out.println(k.getP2());
             k.setCurrentPlayer(k.getRandomPlayer());
             while (k.canCurrentPlayerPlay()) {
                 Move move = k.getCurrentPlayer().getAI().nextMove(k);

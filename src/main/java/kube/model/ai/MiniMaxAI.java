@@ -2,6 +2,7 @@ package kube.model.ai;
 
 // Import model classes
 import kube.model.Kube;
+import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.move.Move;
 
@@ -163,7 +164,7 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
     }
 
     /**
-     * Fill the mountain with random cubes
+     * Fill the mountain
      * 
      * @return void
      */
@@ -238,18 +239,18 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
                     return -1;
                 }
                 kube.unPlay();
-                // Noeud max 
+                // Noeud max
                 if (player == getPlayer(kube)) {
                     bestScore = Math.max(score, bestScore);
                     alpha = Math.max(score, alpha);
-                    if (beta <= alpha){
+                    if (beta <= alpha) {
                         break;
                     }
-                // Noeud min
+                    // Noeud min
                 } else {
                     bestScore = Math.min(score, bestScore);
                     beta = Math.min(score, beta);
-                    if (beta <= alpha){
+                    if (beta <= alpha) {
                         break;
                     }
                 }

@@ -12,7 +12,7 @@ import kube.model.ai.moveSetHeuristique;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
-import kube.view.panels.LoadPanel;
+import kube.view.panels.LoadingSavePanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
 import kube.view.panels.SettingsPanel;
@@ -177,7 +177,7 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case LOAD_FILE_SELECTED:
                     OverlayPanel op = (OverlayPanel) gui.getOverlay().getComponent(0);
-                    LoadPanel lp = (LoadPanel) op.getComponent(0);
+                    LoadingSavePanel lp = (LoadingSavePanel) op.getComponent(0);
                     lp.enableLoadButton();
                     lp.enableDeleteButton();
                     break;
