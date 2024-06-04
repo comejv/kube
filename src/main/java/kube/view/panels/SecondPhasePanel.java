@@ -57,7 +57,6 @@ public class SecondPhasePanel extends JPanel {
 
     public HexGlow animationHexGlow;
     public PanelGlow animationPanelGlow;
-    // TODO : set hex in middle of pyra not actionable
 
     public SecondPhasePanel(GUI gui, Kube k3, Phase2Controller controller) {
         this.gui = gui;
@@ -98,7 +97,7 @@ public class SecondPhasePanel extends JPanel {
         oldSize = getSize();
     }
 
-    public void resetPanel(){
+    public void resetPanel() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         // EAST
@@ -125,7 +124,6 @@ public class SecondPhasePanel extends JPanel {
         oldSize = getSize();
         updateAll();
     }
-
 
     private JPanel createEastPanel(Phase2Controller a) {
         JPanel panel = new JPanel();
