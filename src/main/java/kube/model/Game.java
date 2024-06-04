@@ -419,7 +419,7 @@ public class Game implements Runnable {
                     case UNDO:
                         AIpause = true;
                         eventsToView.add(new Action(ActionType.AI_PAUSE, true));
-                        undo();
+                        undo(action);
                         break;
                     case SAVE:
                         save(action.getData().toString());
@@ -463,7 +463,7 @@ public class Game implements Runnable {
                         case UNDO:
                             AIpause = true;
                             eventsToView.add(new Action(ActionType.AI_PAUSE, true));
-                            undo();
+                            undo(action);
                             break;
                         case REDO:
                             AIpause = true;
@@ -620,11 +620,40 @@ public class Game implements Runnable {
      * 
      * @return void
      */
-    public void undo() {
-        if (k3.getHistory().canUndo() && k3.unPlay()) {
-            eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
-        } else {
-            eventsToView.add(new Action(ActionType.UNDO, null));
+    public void undo(Action action) {
+        Boolean canUndo = k3.getHistory().canUndo();
+        switch (getGameType()) {
+            case LOCAL:
+                if (canUndo && k3.unPlay()) {
+                    eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
+                } else {
+                    eventsToView.add(new Action(ActionType.UNDO, null));
+                }
+                break;
+            case HOST:
+            case JOIN:
+                Move lastMoveDone = k3.getHistory().getDone().get(k3.getHistory().getDone().size() - 1);
+                if (action.getFromNetwork() && k3.getCurrentPlayer() == k3.getPlayerById(getGameType())) {
+                    Move toUndo = (Move) action.getData();
+                    acknowledge(canUndo && toUndo == lastMoveDone);
+                    if (canUndo && toUndo == lastMoveDone) {
+                        Config.debug("Unplay the move ", toUndo);
+                        k3.unPlay();
+                        eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
+                    } else {
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                    }
+                } else if (!action.getFromNetwork() && k3.getCurrentPlayer() != k3.getPlayerById(getGameType())) {
+                    Config.debug("Sent undo to network");
+                    eventsToNetwork.add(new Action(ActionType.UNDO, lastMoveDone));
+                    Config.debug("Move to undo send: ", lastMoveDone);
+                    if (waitAcknowledge() && k3.unPlay()) {
+                        eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
+                    } else {
+                        eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+                    }
+                }
+                break;
         }
     }
 
@@ -634,8 +663,7 @@ public class Game implements Runnable {
      * @return void
      */
     public void redo() {
-
-        if (k3.getHistory().canRedo() && k3.rePlay()) {
+        if (k3.getHistory().canRedo() && k3.rePlay() && getGameType() == LOCAL) {
             eventsToView.add(new Action(ActionType.REDO, k3.getLastMovePlayed()));
         } else {
             eventsToView.add(new Action(ActionType.REDO, null));
@@ -715,7 +743,7 @@ public class Game implements Runnable {
         Action a;
 
         while ((a = eventsToModel.remove()).getType() != ActionType.ACKNOWLEDGEMENT) {
-            eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
+            return false;
         }
         return (boolean) a.getData();
     }
