@@ -6,7 +6,12 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
@@ -44,12 +49,13 @@ public class SettingsPanel extends JPanel {
 
         addGraphismePanel();
         addAudioTab();
+        addCreditsTab();
 
         setVisible(true);
     }
 
     private void addGraphismePanel() {
-        JPanel graphismePanel = createTab("Graphisme");
+        JPanel graphismePanel = createTab("Vidéo");
         graphismePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -238,6 +244,45 @@ public class SettingsPanel extends JPanel {
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.SOUTHEAST;
         audioPanel.add(saveChanges, gbc);
+    }
+
+    private void addCreditsTab() {
+        JPanel creditsPanel = createTab("Credits");
+        creditsPanel.setLayout(new BorderLayout());
+
+        JEditorPane creditsPane = new JEditorPane();
+        creditsPane.setContentType("text/html");
+        creditsPane.setEditable(false);
+
+        String creditsContent = ResourceLoader.getText("credits");
+        creditsPane.setText(creditsContent);
+
+        creditsPane.addHyperlinkListener(new HyperlinkListener() {
+            @Override
+            public void hyperlinkUpdate(HyperlinkEvent e) {
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    try {
+                        Desktop.getDesktop().browse(e.getURL().toURI());
+                    } catch (UnsupportedOperationException err) {
+                        gui.showError("Impossible d'ouvrir le lien",
+                                "Nous n'avons pas réussi à ouvrir le lien dans un navigateur. Vous pouvez trouver les liens sur notre page github : github.com/comejv/kube dans le README ou le fichier credits.txt");
+                    } catch (URISyntaxException | IOException err) {
+                        gui.showError("Impossible d'ouvrir le lien",
+                                "Le lien est mal formatté ou inaccessible, impossible de l'ouvrir.");
+                    }
+                }
+            }
+        });
+
+        JScrollPane scrollPane = new JScrollPane(creditsPane);
+        creditsPanel.add(scrollPane, BorderLayout.CENTER);
+
+        JButton saveChanges = new JButton("Quitter");
+        saveChanges.setPreferredSize(new Dimension(150, 30));
+        saveChanges.addActionListener(buttonListener);
+        saveChanges.setActionCommand("confirmed_settings");
+
+        creditsPanel.add(saveChanges, BorderLayout.SOUTH);
     }
 
     private JPanel createTab(String name) {
