@@ -1,5 +1,9 @@
 package kube;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
+import kube.configuration.Config;
 // Import kube classes
 import kube.configuration.ResourceLoader;
 import kube.controller.graphical.GUIControllers;
@@ -20,7 +24,7 @@ public class Main {
 
         new ResourceLoader();
         Kube kube = new Kube();
-        
+
         Queue<Action> eventsToModel = new Queue<>();
         Queue<Action> eventsToView = new Queue<>();
         Queue<Action> eventsToNetwork = new Queue<>();
@@ -31,7 +35,7 @@ public class Main {
 
         modelThread.start();
 
-        GUIControllers controllers = new GUIControllers(eventsToView, eventsToModel);
+        GUIControllers controllers = new GUIControllers(eventsToView, eventsToModel, eventsToNetwork);
         new GUI(kube, controllers, eventsToView, eventsToModel);
     }
 }

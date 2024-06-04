@@ -14,6 +14,7 @@ import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
 import kube.view.panels.LoadingSavePanel;
+import kube.view.panels.MenuPanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
 
@@ -21,6 +22,10 @@ import kube.view.panels.RulesPanel;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import javax.swing.Timer;
+import java.awt.Cursor;
+import java.awt.event.MouseAdapter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class GUIEventsHandler implements Runnable {
 
@@ -148,13 +153,16 @@ public class GUIEventsHandler implements Runnable {
                     }
                     gui.winMessage(action);
                     break;
+                case PRINT_INVALID_ADDRESS:
+                    gui.showError("Connexion impossible",
+                            "Impossible de se connecter à l'hôte, veuillez vérifier l'adresse et le port.");
+                    break;
                 // MENU
-                case START:
-                    p1 = (SelectPlayerButton) gui.mP.player1;
-                    p2 = (SelectPlayerButton) gui.mP.player2;
-                    iaJ1 = null;
-                    iaJ2 = null;
-                    
+                case START_LOCAL:
+                    MenuPanel menu = (MenuPanel) gui.getPanel(GUI.MENU);
+                    p1 = (SelectPlayerButton) menu.player1;
+                    p2 = (SelectPlayerButton) menu.player2;
+
                     switch (p1.buttonValue) {
                         case 0:
                             iaJ1 = null;
@@ -172,9 +180,9 @@ public class GUIEventsHandler implements Runnable {
                             iaJ1 = new ExpertAI();
                             break;
                         default:
+                            iaJ1 = null;
                             break;
                     }
-
                     switch (p2.buttonValue) {
                         case 0:
                             iaJ2 = null;
@@ -192,18 +200,18 @@ public class GUIEventsHandler implements Runnable {
                             iaJ2 = new ExpertAI();
                             break;
                         default:
+                            iaJ2 = null;
                             break;
                     }
-
                     eventsToModel.add(new Action(ActionType.START, new Start(iaJ1, iaJ2)));
-
                     gui.setGlassPanelVisible(true);
                     break;
-                case PLAY_LOCAL:
-                    // TODO : maybe tell model about it ?
+                case START_ONLINE:
+                    Config.debug("Starting online game");
                     break;
-                case PLAY_ONLINE:
-                    // TODO : maybe tell model about it ?
+                case HOST:
+                    MenuPanel mp = (MenuPanel) gui.getPanel(GUI.MENU);
+                    mp.showHostMenu();
                     break;
                 case RULES:
                     menuController = gui.getControllers().getMenuController();
@@ -245,6 +253,10 @@ public class GUIEventsHandler implements Runnable {
                     gui.removeAllFromOverlay();
                     gui.setGlassPaneController(getSavedGlassPaneController());
                     break;
+                case REFRESH_CONNEXION:
+                    gui.enableHostStartButton((boolean) action.getData());
+                    break;
+                // FIRST PHASE
                 case VALIDATE:
                     gui.updatePanel();
                     break;

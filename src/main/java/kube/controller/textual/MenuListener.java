@@ -1,7 +1,9 @@
 package kube.controller.textual;
 
+import java.io.IOException;
 import java.util.Scanner;
 
+import kube.configuration.Config;
 import kube.controller.network.NetworkListener;
 import kube.controller.network.NetworkSender;
 import kube.model.Game;
@@ -11,14 +13,13 @@ import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Start;
 import kube.model.ai.moveSetHeuristique;
-import kube.model.ai.randomAI;
 import kube.services.Client;
 import kube.services.Network;
 import kube.services.Server;
 
 public class MenuListener implements Runnable {
 
-    private static final int PORT = 1234;
+    private static final int PORT = 36933;
 
     Queue<Action> eventsToView;
     Queue<Action> eventsToModel;
@@ -74,6 +75,14 @@ public class MenuListener implements Runnable {
                     eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
                     return;
                 }
+                while (network.getOut()==null){
+                    try {
+                        Thread.sleep(50);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                Config.debug("Connection established");
                 eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ETABLISHED));
                 type = Game.HOST;
             } else {
@@ -83,7 +92,6 @@ public class MenuListener implements Runnable {
             }
             eventsToNetwork = new Queue<>();
             controller = new CommandListener(eventsToModel, eventsToView, eventsToNetwork, type, scanner);
-            networkSender = new NetworkSender(network, eventsToNetwork, type);
             networkSender = new NetworkSender(network, eventsToNetwork, type);
             networkListener = new NetworkListener(network, eventsToModel);
 
@@ -155,12 +163,18 @@ public class MenuListener implements Runnable {
         Network network = new Client();
         eventsToView.add(new Action(ActionType.PRINT_ASK_IP));
         s = scanner.nextLine();
-        if (!network.connect(s, PORT)) {
+        try {
+            if (!network.connect(s, PORT)) {
+                eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                return askIP();
+            } else {
+                eventsToView.add(new Action(ActionType.PRINT_START));
+                return network;
+            }
+        } catch (IOException e) {
             eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
             return askIP();
-        } else {
-            eventsToView.add(new Action(ActionType.PRINT_START));
-            return network;
         }
+        
     }
 }

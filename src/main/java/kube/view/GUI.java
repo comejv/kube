@@ -44,15 +44,15 @@ public class GUI implements Runnable {
      * ATTRIBUTES
      **********/
 
+    private MenuPanel menuPanel;
     private volatile SecondPhasePanel secondPhasePanel;
     private volatile FirstPhasePanel firstPhasePanel;
 
-    private MainFrame mF;
+    private MainFrame mainFrame;
     private GUIControllers controllers;
     private Kube k3;
     private Thread loaderThread;
     public Queue<Action> eventsToView, eventsToModel;
-    public MenuPanel mP;
 
     /**********
      * CONSTRUCTOR
@@ -118,23 +118,23 @@ public class GUI implements Runnable {
      **********/
 
     public void setGlassPanelVisible(boolean b) {
-        mF.getGlassPane().setVisible(b);
+        getMainFrame().getGlassPane().setVisible(b);
     }
 
     protected void setPanel(String panelName, JPanel panel) {
 
         switch (panelName) {
-            case GUI.PHASE1:
+            case PHASE1:
                 firstPhasePanel = (FirstPhasePanel) panel;
                 break;
-            case GUI.PHASE2:
+            case PHASE2:
                 secondPhasePanel = (SecondPhasePanel) panel;
                 break;
             default:
                 break;
         }
 
-        mF.addPanel(panel, panelName);
+        getMainFrame().addPanel(panel, panelName);
     }
 
     /**********
@@ -142,7 +142,7 @@ public class GUI implements Runnable {
      **********/
 
     public MainFrame getMainFrame() {
-        return mF;
+        return mainFrame;
     }
 
     public Kube getKube() {
@@ -150,11 +150,11 @@ public class GUI implements Runnable {
     }
 
     public JPanel getContentPane() {
-        return mF.getFramePanel();
+        return getMainFrame().getFramePanel();
     }
 
     public Component getOverlayComponent() {
-        return mF.getOverlayComponent();
+        return getMainFrame().getOverlayComponent();
     }
 
     public MouseAdapter getCurrentListener() {
@@ -172,9 +172,11 @@ public class GUI implements Runnable {
     public JPanel getPanel(String panelName) {
 
         switch (panelName) {
-            case GUI.PHASE1:
+            case MENU:
+                return menuPanel;
+            case PHASE1:
                 return firstPhasePanel;
-            case GUI.PHASE2:
+            case PHASE2:
                 return secondPhasePanel;
             default:
                 return null;
@@ -182,11 +184,11 @@ public class GUI implements Runnable {
     }
 
     public void setGlassPaneController(MouseAdapter ma) {
-        mF.setGlassPaneController(ma);
+        getMainFrame().setGlassPaneController(ma);
     }
 
     public Phase1DnD getGlassPaneController() {
-        if (mF.getGlassPane().getMouseListeners() == null) {
+        if (getMainFrame().getGlassPane().getMouseListeners() == null) {
             return null;
         } else {
             return new Phase1DnD(eventsToView, eventsToModel);
@@ -194,7 +196,7 @@ public class GUI implements Runnable {
     }
 
     public JPanel getOverlay() {
-        return mF.getOverlay();
+        return getMainFrame().getOverlay();
     }
 
     /**********
@@ -263,7 +265,7 @@ public class GUI implements Runnable {
      */
     public void showPanel(String panelName) {
         waitPanel(panelName);
-        mF.showPanel(panelName);
+        getMainFrame().showPanel(panelName);
     }
 
     /**
@@ -330,16 +332,16 @@ public class GUI implements Runnable {
         // Disable optimized drawing
         System.setProperty("sun.java2d.opengl", "true");
 
-        mF = new MainFrame();
-        mP = new MenuPanel(this, controllers.getMenuController());
-        mF.addPanel(mP, MENU);
+        mainFrame = new MainFrame();
+        menuPanel = new MenuPanel(this, controllers.getMenuController());
+        getMainFrame().addPanel(getPanel(MENU), MENU);
 
         if (Config.SHOW_BORDERS) {
-            showAllBorders(mF);
+            showAllBorders(getMainFrame());
         }
 
-        mF.repaint();
-        mF.setFrameVisible(true);
+        getMainFrame().repaint();
+        getMainFrame().setFrameVisible(true);
         loadPanel(PHASE1);
 
         // After repaint start loading next panel
@@ -359,7 +361,7 @@ public class GUI implements Runnable {
                 setGlassPaneController(new Phase1DnD(eventsToView, eventsToModel));
                 firstPhasePanel.buildMessage();
                 firstPhasePanel.updateAll(true);
-                mF.showPanel(PHASE1);
+                getMainFrame().showPanel(PHASE1);
                 setGlassPanelVisible(true);
                 loadPanel(PHASE2);
                 break;
@@ -370,7 +372,7 @@ public class GUI implements Runnable {
                 waitPanel(PHASE2);
                 secondPhasePanel.startMessage();
                 secondPhasePanel.updateAll();
-                mF.showPanel(PHASE2);
+                getMainFrame().showPanel(PHASE2);
                 setGlassPanelVisible(true);
                 firstPhasePanel.resetButtonValue();
                 break;
@@ -388,8 +390,8 @@ public class GUI implements Runnable {
         PanelLoader loader;
 
         switch (panelName) {
-            case GUI.PHASE1:
-            case GUI.PHASE2:
+            case PHASE1:
+            case PHASE2:
                 if (getPanel(panelName) != null) {
                     Config.debug("Panel ", panelName, " already loaded");
                     return;
@@ -413,8 +415,8 @@ public class GUI implements Runnable {
     public synchronized void waitPanel(String panelName) {
 
         switch (panelName) {
-            case GUI.PHASE1:
-            case GUI.PHASE2:
+            case PHASE1:
+            case PHASE2:
                 try {
                     while (getPanel(panelName) == null) {
                         wait();
@@ -423,7 +425,7 @@ public class GUI implements Runnable {
                     Config.error("Interrupted loading");
                 }
                 break;
-            case GUI.MENU:
+            case MENU:
                 // Do nothing, menu always loaded
                 break;
             default:
@@ -441,7 +443,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void addToOverlay(Component p) {
-        mF.addToOverlay(p);
+        getMainFrame().addToOverlay(p);
     }
 
     /**
@@ -451,7 +453,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void removeAllFromOverlay() {
-        mF.removeAllFromOverlay();
+        getMainFrame().removeAllFromOverlay();
     }
 
     /**
@@ -460,7 +462,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void createGlassPane() {
-        mF.createGlassPane();
+        getMainFrame().createGlassPane();
     }
 
     /**
@@ -469,7 +471,7 @@ public class GUI implements Runnable {
      * @param factor the factor to increment the scale with
      */
     public void incrementUIScale(double factor) {
-        mF.incrementUIScale(factor);
+        getMainFrame().incrementUIScale(factor);
     }
 
     /**
@@ -478,7 +480,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void resetUIScale() {
-        mF.resetUIScale();
+        getMainFrame().resetUIScale();
     }
 
     /**
@@ -541,5 +543,10 @@ public class GUI implements Runnable {
         savePanel = new TextEntryPanel(this, hexGlow, panGlow);
         savePanel.setPreferredSize(getMainFrame().getSize());
         addToOverlay(savePanel);
+    }
+
+    public void enableHostStartButton(boolean b) {
+        MenuPanel p = (MenuPanel) getPanel(MENU);
+        p.enableHostStartButton(b);
     }
 }

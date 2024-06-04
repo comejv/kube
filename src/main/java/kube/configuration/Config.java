@@ -1,5 +1,7 @@
 package kube.configuration;
 
+import java.net.InetAddress;
+
 public class Config {
 
     /**********
@@ -22,6 +24,9 @@ public class Config {
     private static double UIScale = 1;
 
     private static boolean mute = true;
+    
+    private static String serverAddress;
+    private static int serverPort;
 
     /**********
      * CONFIGURATION SETTER
@@ -39,6 +44,14 @@ public class Config {
         UIScale = 1;
     }
 
+    public static void setHostIP(String address) {
+        serverAddress = address;
+    }
+
+    public static void setHostPort(int port) {
+        serverPort = port;
+    }
+
     /**********
      * CONFIGURATION GETTER
      **********/
@@ -49,6 +62,14 @@ public class Config {
 
     public static double getUIScale() {
         return UIScale;
+    }
+
+    public static String getHostIP() {
+        return serverAddress;
+    }
+
+    public static int getHostPort() {
+        return serverPort;
     }
 
     /**********
