@@ -89,6 +89,7 @@ public enum ActionType {
     SETTINGS,
     CONFIRMED_SETTINGS,
     RETURN_TO_MENU,
+    RETURN_TO_GAME,
     DND_START,
     DND_STOP,
     UPDATE_HEX_SIZE,

@@ -15,7 +15,7 @@ public class AnimatedRule implements ActionListener {
     private JLabel[] frames;
     private int currentFrame;
 
-    public AnimatedRule (int ruleNb, RulesPanel.AnimationPanel animationPanel){
+    public AnimatedRule(int ruleNb, RulesPanel.AnimationPanel animationPanel) {
         currentFrame = 0;
         frames = animationPanel.getFrames();
         timer = new Timer(500, this);
@@ -24,9 +24,8 @@ public class AnimatedRule implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        Config.debug(currentFrame);
         frames[currentFrame].setVisible(false);
-        currentFrame = (currentFrame + 1) %4;
+        currentFrame = (currentFrame + 1) % 4;
         frames[currentFrame].setVisible(true);
     }
 

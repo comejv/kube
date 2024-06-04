@@ -39,7 +39,6 @@ public class GUI implements Runnable {
     public final static String MENU = "MENU";
     public final static String PHASE1 = "PHASE1";
     public final static String PHASE2 = "PHASE2";
-    public final static String FONT_PATH = "fonts/Jomhuria-Regular.ttf";
 
     /**********
      * ATTRIBUTES
@@ -104,7 +103,7 @@ public class GUI implements Runnable {
         try {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             font = Font.createFont(Font.TRUETYPE_FONT,
-                    ResourceLoader.getResourceAsStream(FONT_PATH));
+                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
             ge.registerFont(font);
             ge.getAvailableFontFamilyNames();
         } catch (IOException | FontFormatException e) {
@@ -114,6 +113,214 @@ public class GUI implements Runnable {
         new Thread(new GUIEventsHandler(this, eventsToView, eventsToModel)).start();
 
         SwingUtilities.invokeLater(this);
+    }
+
+    /**********
+     * SETTERS
+     **********/
+
+    public void setGlassPanelVisible(boolean b) {
+        mF.getGlassPane().setVisible(b);
+    }
+
+    protected void setPanel(String panelName, JPanel panel) {
+
+        switch (panelName) {
+            case GUI.PHASE1:
+                firstPhasePanel = (FirstPhasePanel) panel;
+                break;
+            case GUI.PHASE2:
+                secondPhasePanel = (SecondPhasePanel) panel;
+                break;
+            default:
+                break;
+        }
+
+        mF.addPanel(panel, panelName);
+    }
+
+    /**********
+     * GETTERS
+     **********/
+
+    public MainFrame getMainFrame() {
+        return mF;
+    }
+    
+    public Kube getKube() {
+        return k3;
+    }
+
+    public JPanel getContentPane() {
+        return mF.getFramePanel();
+    }
+
+    public Component getOverlayComponent() {
+        return mF.getOverlayComponent();
+    }
+
+    public MouseAdapter getCurrentListener() {
+        return getMainFrame().getCurrentListener();
+    }
+
+    public MouseAdapter getDefaultGlassPaneController() {
+        return getMainFrame().getDefaultGlassPaneController();
+    }
+
+    public GUIControllers getControllers() {
+        return controllers;
+    }
+
+    public JPanel getPanel(String panelName) {
+
+        switch (panelName) {
+            case GUI.PHASE1:
+                return firstPhasePanel;
+            case GUI.PHASE2:
+                return secondPhasePanel;
+            default:
+                return null;
+        }
+    }
+
+    public void setGlassPaneController(MouseAdapter ma) {
+        mF.setGlassPaneController(ma);
+    }
+
+    public Phase1DnD getGlassPaneController() {
+        if (mF.getGlassPane().getMouseListeners() == null) {
+            return null;
+        } else {
+            return new Phase1DnD(eventsToView, eventsToModel);
+        }
+    }
+
+
+    public JPanel getOverlay() {
+        return mF.getOverlay();
+    }
+
+    /**********
+     * UPDATERS
+     **********/
+
+    /**
+     * Update the first panel
+     * 
+     * @param action the action to update the panel with
+     */
+    public void updateFirstPanel(Action action) {
+        firstPhasePanel.update(action);
+    }
+
+    /**
+     * Update the second panel
+     * 
+     * @param action the action to update the panel with
+     */
+    public void updateSecondPanel(Action action) {
+        secondPhasePanel.update(action);
+    }
+
+    /**
+     * Update the drag and drop
+     * 
+     * @param action the action to update the drag and drop with
+     */
+    public void updateDnd(Action action) {
+        if (k3.getPhase() == Kube.PREPARATION_PHASE) {
+            firstPhasePanel.updateDnd(action);
+        } else {
+            secondPhasePanel.updateDnd(action);
+        }
+    }
+
+    /**
+     * Update the hexagones size
+     * 
+     * @return void
+     */
+    public void updateHexSize() {
+        switch (k3.getPhase()) {
+            case Kube.PREPARATION_PHASE:
+                firstPhasePanel.updateHexSize();
+                break;
+            case Kube.GAME_PHASE:
+                secondPhasePanel.updateHexSize();
+                break;
+            default:
+                Config.error("Unimplemented kube's phase for resize");
+                break;
+        }
+    }
+
+    /**********
+     * HELPERS
+     **********/
+
+    /**
+     * Show a panel
+     * 
+     * @param panelName the name of the panel to show
+     * @return void
+     */
+    public void showPanel(String panelName) {
+        waitPanel(panelName);
+        mF.showPanel(panelName);
+    }
+
+    /**
+     * Show all borders
+     * 
+     * @param container the container to show the borders of
+     * @return void
+     */
+    private void showAllBorders(Container container) {
+
+        for (Component comp : container.getComponents()) {
+            if (comp instanceof Container) {
+                showAllBorders((Container) comp);
+            }
+            if (comp instanceof JPanel) {
+                ((JPanel) comp).setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+        }
+    }
+
+    /**
+     * Show a warning message
+     * 
+     * @param title   the title of the message
+     * @param message the message to show
+     * @return void
+     */
+    public void showWarning(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    /**
+     * Show an error message
+     * 
+     * @param title   the title of the message
+     * @param message the message to show
+     * @return void
+     */
+    public void showError(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Show an information message
+     * 
+     * @param title   the title of the message
+     * @param message the message to show
+     * @return void
+     */
+    public void showInfo(String title, String message) {
+        JOptionPane.showMessageDialog(null, message, title,
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**********
@@ -140,17 +347,6 @@ public class GUI implements Runnable {
 
         // After repaint start loading next panel
         createGlassPane();
-    }
-
-    /**
-     * Show a panel
-     * 
-     * @param panelName the name of the panel to show
-     * @return void
-     */
-    public void showPanel(String panelName) {
-        waitPanel(panelName);
-        mF.showPanel(panelName);
     }
 
     /**
@@ -241,176 +437,86 @@ public class GUI implements Runnable {
     }
 
     /**
-     * Get the overlay panel
+     * Add a component to the overlay
      * 
-     * @return JPanel the overlay panel
+     * @param p the component to add
+     * @return void
      */
-    public JPanel getOverlay() {
-        return mF.getOverlay();
-    }
-
     public void addToOverlay(Component p) {
         mF.addToOverlay(p);
     }
 
+    /**
+     * Remove all components from the overlay
+     * 
+     * @param p the component to remove
+     * @return void
+     */
     public void removeAllFromOverlay() {
         mF.removeAllFromOverlay();
     }
 
-    public JPanel getContentPane() {
-        return mF.getFramePanel();
-    }
-
-    public Component getOverlayComponent() {
-        return mF.getOverlayComponent();
-    }
-
-    public MouseAdapter getCurrentListener() {
-        return getMainFrame().getCurrentListener();
-    }
-
-    public MouseAdapter getDefaultGlassPaneController() {
-        return getMainFrame().getDefaultGlassPaneController();
-    }
-
-    public GUIControllers getControllers() {
-        return controllers;
-    }
-
-    protected void setPanel(String panelName, JPanel panel) {
-        switch (panelName) {
-            case GUI.PHASE1:
-                firstPhasePanel = (FirstPhasePanel) panel;
-                break;
-
-            case GUI.PHASE2:
-                secondPhasePanel = (SecondPhasePanel) panel;
-                break;
-
-            default:
-                break;
-        }
-        mF.addPanel(panel, panelName);
-    }
-
+    /**
+     * Create a glass pane
+     * 
+     * @return void
+     */
     public void createGlassPane() {
         mF.createGlassPane();
     }
 
-    public void setGlassPaneController(MouseAdapter ma) {
-        mF.setGlassPaneController(ma);
-    }
-
-    public Phase1DnD getGlassPaneController() {
-        if (mF.getGlassPane().getMouseListeners() == null) {
-            return null;
-        } else {
-            return new Phase1DnD(eventsToView, eventsToModel);
-        }
-    }
-
-    public void setGlassPanelVisible(boolean b) {
-        mF.getGlassPane().setVisible(b);
-    }
-
-    private void showAllBorders(Container container) {
-        for (Component comp : container.getComponents()) {
-            if (comp instanceof Container) {
-                showAllBorders((Container) comp);
-            }
-            if (comp instanceof JPanel) {
-                ((JPanel) comp).setBorder(BorderFactory.createLineBorder(Color.red));
-            }
-        }
-    }
-
-    public void showWarning(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title,
-                JOptionPane.WARNING_MESSAGE);
-    }
-
-    public void showError(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title,
-                JOptionPane.ERROR_MESSAGE);
-    }
-
-    public void showInfo(String title, String message) {
-        JOptionPane.showMessageDialog(null, message, title,
-                JOptionPane.INFORMATION_MESSAGE);
-    }
-
-    public void updateFirstPanel(Action a) {
-        firstPhasePanel.update(a);
-    }
-
-    public void updateSecondPanel(Action a) {
-        secondPhasePanel.update(a);
-    }
-
-    public JPanel getPanel(String panelName) {
-        switch (panelName) {
-            case GUI.PHASE1:
-                return firstPhasePanel;
-            case GUI.PHASE2:
-                return secondPhasePanel;
-            default:
-                return null;
-        }
-    }
-
-    public MainFrame getMainFrame() {
-        return mF;
-    }
-
-    public Kube getKube() {
-        return k3;
-    }
-
-    public void updateDnd(Action a) {
-        if (k3.getPhase() == Kube.PREPARATION_PHASE) {
-            firstPhasePanel.updateDnd(a);
-        } else {
-            secondPhasePanel.updateDnd(a);
-        }
-    }
-
+    /**
+     * Increment the UI scale
+     * 
+     * @param factor the factor to increment the scale with
+     */
     public void incrementUIScale(double factor) {
         mF.incrementUIScale(factor);
     }
-
+    
+    /**
+     * Reset the UI scale
+     * 
+     * @return void
+     */
     public void resetUIScale() {
         mF.resetUIScale();
     }
-
-    public void winMessage(Action a) {
-        secondPhasePanel.winMessage(a);
+    
+    /**
+     * Display the win message
+     * 
+     * @param action the action to display the message with
+     * @return void
+     */
+    public void winMessage(Action action) {
+        secondPhasePanel.winMessage(action);
     }
 
-    public void updateHexSize() {
-        switch (k3.getPhase()) {
-            case Kube.PREPARATION_PHASE:
-                firstPhasePanel.updateHexSize();
-                break;
-            case Kube.GAME_PHASE:
-                secondPhasePanel.updateHexSize();
-                break;
-            default:
-                Config.error("Unimplemented game phase for resize");
-                break;
-        }
-    }
+    /**
+     * Display the save message
+     * 
+     * @param action the action to save
+     * @return void
+     */
+    public void save(Action action) {
 
-    public void save(Action a) {
+        HexGlow hexGlow;
+        PanelGlow panGlow;
+        TextEntryPanel savePanel;
+
         setGlassPanelVisible(false);
-        HexGlow hexGlow = null;
-        PanelGlow panGlow = null;
-        if ((Integer) a.getData() == 1) {
+        hexGlow = null;
+        panGlow = null;
+
+        if ((Integer) action.getData() == 1) {
             hexGlow = firstPhasePanel.animationGlow;
-        } else if ((Integer) a.getData() == 2) {
+        } else if ((Integer) action.getData() == 2) {
             hexGlow = secondPhasePanel.animationHexGlow;
             panGlow = secondPhasePanel.animationPanelGlow;
         }
-        TextEntryPanel savePanel = new TextEntryPanel(this, hexGlow, panGlow);
+
+        savePanel = new TextEntryPanel(this, hexGlow, panGlow);
         savePanel.setPreferredSize(getMainFrame().getSize());
         addToOverlay(savePanel);
     }

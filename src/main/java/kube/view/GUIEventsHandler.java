@@ -36,6 +36,7 @@ public class GUIEventsHandler implements Runnable {
     public void run() {
         while (true) {
             Action action = eventsToView.remove();
+            Config.debug("View receive : ", action);
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -59,11 +60,9 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case SET_HEX_HOVERED:
                     h = (HexIcon) action.getData();
-                    Config.debug("Hovering hex");
                     if (h.isActionable()) {
                         h.setHovered(true);
                         gui.getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                        Config.debug("Hex is actionable");
                     }
                     break;
                 case SET_HEX_PRESSED:
@@ -73,9 +72,13 @@ public class GUIEventsHandler implements Runnable {
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
-                    gui.setGlassPanelVisible(false);
                     gui.setGlassPaneController(null);
+                    gui.removeAllFromOverlay();
                     gui.showPanel(GUI.MENU);
+                    break;
+                case RETURN_TO_GAME:
+                    gui.setGlassPaneController(null);
+                    gui.removeAllFromOverlay();
                     break;
                 case QUIT:
                     System.exit(0);
@@ -92,6 +95,13 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
+                    while (gui.getOverlay().getComponentCount() > 0){
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
                     gui.winMessage(action);
                     break;
                 // MENU

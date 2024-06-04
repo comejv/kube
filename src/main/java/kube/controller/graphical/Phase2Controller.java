@@ -50,6 +50,9 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
                 toModel.add(new Action(ActionType.RESET));
                 toView.add(new Action(ActionType.RETURN_TO_MENU));
                 break;
+            case "return":
+                toView.add(new Action(ActionType.RETURN_TO_GAME));
+                break;
             case "pauseAI":
                 toModel.add(new Action(ActionType.AI_PAUSE, true));
                 toView.add(new Action(ActionType.AI_PAUSE, true));
@@ -68,7 +71,7 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
                 toView.add(new Action(ActionType.SAVE, 2));
                 break;
             case "load":
-            toModel.add(new Action(ActionType.AI_PAUSE, true));
+                toModel.add(new Action(ActionType.AI_PAUSE, true));
                 toView.add(new Action(ActionType.LOAD_PANEL));
                 break;
             default:
@@ -79,9 +82,13 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
     public void mouseClicked(MouseEvent e) {
         Object source = e.getSource();
         if (source instanceof JButton) {
-            ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
-                    ((JButton) source).getActionCommand());
-            actionPerformed(evt);
+            JButton b = (JButton) source;
+            if (b.isEnabled()) {
+                Config.debug("Click on enabled button");
+                ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
+                        ((JButton) source).getActionCommand());
+                actionPerformed(evt);
+            }
         }
     }
 

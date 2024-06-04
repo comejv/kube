@@ -358,6 +358,16 @@ public class Game implements Runnable {
     public int gamePhase() {
         Boolean AIpause = false;
         Action action;
+        // Instant loose case
+        if (!k3.canCurrentPlayerPlay()) {
+            eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
+            if (k3.getCurrentPlayer() == k3.getP1()) {
+                eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP2()));
+            } else {
+                eventsToView.add(new Action(ActionType.PRINT_WIN_MESSAGE, k3.getP1()));
+            }
+        }
+
         while (true) {
 
             while (!k3.canCurrentPlayerPlay()) {
@@ -401,6 +411,9 @@ public class Game implements Runnable {
                         case MOVE:
                         case MOVE_NUMBER:
                         case CREATE_MOVE:
+                            if (k3.getCurrentPlayer().isAI()) {
+                                break;
+                            }
                             playMove(action);
                             break;
                         case UNDO:
@@ -422,6 +435,9 @@ public class Game implements Runnable {
                             AIpause = (Boolean) action.getData();
                             break;
                         case AI_MOVE:
+                            if (k3.getCurrentPlayer().isAI()) {
+                                break;
+                            }
                             k3.getCurrentPlayer().setAI(new betterConstructV2(50));
                             k3.getCurrentPlayer().getAI().setPlayerId(k3.getCurrentPlayer().getId());
                             Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
