@@ -14,19 +14,15 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.CreateMove;
 import kube.model.action.Queue;
+import kube.view.Sounds;
 import kube.view.components.HexIcon;
 import kube.view.panels.GlassPanel;
 
 public class Phase2DnD extends Phase1DnD {
     // TODO : refactor this class to make it more readable
-    private Queue<Action> toView;
-    private Queue<Action> toModel;
-    private Component component;
 
     public Phase2DnD(Queue<Action> eventsToView, Queue<Action> eventsToModel) {
         super(eventsToView, eventsToModel);
-        toView = eventsToView;
-        toModel = eventsToModel;
     }
 
     @Override
@@ -43,11 +39,12 @@ public class Phase2DnD extends Phase1DnD {
             Point posTo = hex.getPosition();
             Player playerTo = hex.getPlayer();
             if (hex.getColor() == ModelColor.EMPTY && playerFrom != playerTo) {
-                toModel.add(new Action(ActionType.CREATE_MOVE,
+                getToModel().add(new Action(ActionType.CREATE_MOVE,
                         new CreateMove(posFrom, playerFrom, posTo, playerTo, g.getColor())));
+                Sounds.playSound("build");
             }
         }
-        toView.add(new Action(ActionType.DND_STOP));
+        getToView().add(new Action(ActionType.DND_STOP));
         g.setCursor(Cursor.getDefaultCursor());
         g.clear();
     }
