@@ -7,15 +7,11 @@ import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.action.move.Move;
-import kube.model.ai.betterConstructV2;
-import kube.model.ai.moveSetHeuristique;
-import kube.model.ai.randomAI;
-import kube.model.ai.simpleHeuristique;
-import kube.model.ai.testThomas;
 import kube.model.ai.EasyAI;
 import kube.model.ai.ExpertAI;
 import kube.model.ai.HardAI;
 import kube.model.ai.MediumAI;
+import kube.model.ai.tests.*;
 
 // Import java classes
 import java.awt.Point;
@@ -61,7 +57,7 @@ public class Simulation implements Runnable {
      * METHODS
      **********/
 
-    /** 
+    /**
      * Main method of the program (simulation of games between two AI)
      * 
      * @param args the arguments
@@ -186,7 +182,7 @@ public class Simulation implements Runnable {
     synchronized void incrnGamesFinished() {
         nGamesFinished++;
     }
-    
+
     private void aiTrainingGames() throws Exception {
         Kube k = new Kube(true);
         while (getnGamesFinished() < getNbGames()) {
@@ -380,7 +376,7 @@ public class Simulation implements Runnable {
             m.setCase(8, 8, ModelColor.BLUE);
             k.setK3(m);
             // Init the first IA
-            k.setP1(new AI(1, new moveSetHeuristique(30)));
+            k.setP1(new AI(1, new ExpertAI(30)));
 
             Mountain iaMountain = new Mountain(6);
 
@@ -420,7 +416,7 @@ public class Simulation implements Runnable {
             k.updatePhase();
             // Init the second IA
 
-            k.setP2(new AI(2, new moveSetHeuristique(30)));
+            k.setP2(new AI(2, new ExpertAI(30)));
             HashMap<ModelColor, Integer> bag = new HashMap<>();
             bag.put(ModelColor.RED, 3);
             bag.put(ModelColor.BLUE, 4);

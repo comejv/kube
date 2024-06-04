@@ -1,4 +1,4 @@
-package kube.model.ai;
+package kube.model.ai.tests;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,12 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Player;
-import kube.model.Kube;
 import kube.model.action.move.Move;
+import kube.model.ai.MiniMaxAI;
 
-public class betterConstruct extends MiniMaxAI {
+public class midLevelAI extends MiniMaxAI {
 
     // TODO: refactor
 
@@ -24,20 +25,20 @@ public class betterConstruct extends MiniMaxAI {
      * CONSTRUCTORS
      **********/
 
-    public betterConstruct(int time, Random r) {
+    public midLevelAI(int time, Random r) {
         super(time, r);
     }
 
-    public betterConstruct(int time, int seed) {
+    public midLevelAI(int time, int seed) {
         super(time, seed);
 
     }
 
-    public betterConstruct(int time) {
+    public midLevelAI(int time) {
         super(time);
     }
 
-    public betterConstruct() {
+    public midLevelAI() {
         super();
     }
 
@@ -58,7 +59,8 @@ public class betterConstruct extends MiniMaxAI {
 
     @Override
     public int evaluation(Kube k, Player p) {
-        return k.moveSet(p).size() + p.getAdditionals().size() - p.getWhiteUsed();    }
+        return p.getPlayableColors().size() + p.getAdditionals().size();
+    }
 
     @Override
     public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
@@ -71,25 +73,13 @@ public class betterConstruct extends MiniMaxAI {
 
     private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
         int baseSize = k3.getBaseSize();
-        float nEmplacements = 0f;
         probabilities = new HashMap<>();
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             probabilities.put(c, 0f);
         }
-        for (int i = 1; i < baseSize; i++) {
-            ModelColor c1 = k3.getK3().getCase(baseSize - 1, i);
-            ModelColor c2 = k3.getK3().getCase(baseSize - 1, i - 1);
-            if (c1 != c2) {
-                probabilities.put(c1, probabilities.get(c1) + 1);
-                probabilities.put(c2, probabilities.get(c2) + 1);
-                nEmplacements += 2;
-            } else {
-                probabilities.put(c1, probabilities.get(c1) + 1);
-                nEmplacements += 1;
-            }
-        }
-        for (ModelColor c : ModelColor.getAllColored()) {
-            probabilities.put(c, probabilities.get(c) / nEmplacements);
+        for (int i = 0; i < baseSize; i++) {
+            ModelColor c = k3.getK3().getCase(baseSize - 1, i);
+            probabilities.put(c, probabilities.get(c) + (float) 1 / baseSize);
         }
         for (ModelColor c : ModelColor.getAllColored()) {
             redistributeProbs(c, k3);

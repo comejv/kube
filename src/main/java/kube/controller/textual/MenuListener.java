@@ -12,7 +12,7 @@ import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.model.action.Start;
-import kube.model.ai.moveSetHeuristique;
+import kube.model.ai.ExpertAI;
 import kube.services.Client;
 import kube.services.Network;
 import kube.services.Server;
@@ -50,11 +50,11 @@ public class MenuListener implements Runnable {
             Start s = new Start();
             switch (nb) {
                 case 0:
-                    s.setAIJ1(new moveSetHeuristique());
-                    s.setAIJ2(new moveSetHeuristique());
+                    s.setAIJ1(new ExpertAI());
+                    s.setAIJ2(new ExpertAI());
                     break;
                 case 1:
-                    s.setAIJ1(new moveSetHeuristique());
+                    s.setAIJ1(new ExpertAI());
                     break;
                 case 2:
                     break;
@@ -75,7 +75,7 @@ public class MenuListener implements Runnable {
                     eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
                     return;
                 }
-                while (network.getOut()==null){
+                while (network.getOut() == null) {
                     try {
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
@@ -175,6 +175,6 @@ public class MenuListener implements Runnable {
             eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
             return askIP();
         }
-        
+
     }
 }
