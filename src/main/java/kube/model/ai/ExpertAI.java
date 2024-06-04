@@ -15,7 +15,7 @@ import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 
-public class testThomas2 extends MiniMaxAI {
+public class ExpertAI extends MiniMaxAI {
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;
@@ -25,20 +25,20 @@ public class testThomas2 extends MiniMaxAI {
      * CONSTRUCTORS
      **********/
 
-    public testThomas2(int time, Random r) {
+    public ExpertAI(int time, Random r) {
         super(time, r);
     }
 
-    public testThomas2(int time, int seed) {
+    public ExpertAI(int time, int seed) {
         super(time, seed);
 
     }
 
-    public testThomas2(int time) {
+    public ExpertAI(int time) {
         super(time);
     }
 
-    public testThomas2() {
+    public ExpertAI() {
         super();
     }
 
@@ -87,11 +87,14 @@ public class testThomas2 extends MiniMaxAI {
     @Override
     public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
         if (movesMap == null || movesMap.size() == 0) {
-            ArrayList<Move> moves = k3.moveSet();
+            ArrayList<Move> moves = k3.moveSet();   
             return moves.get(getRandom().nextInt(moves.size()));
         }
-        return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
+        List<Map.Entry<Move, Integer>> entries = new ArrayList<>(movesMap.entrySet());
+        Collections.sort(entries, (e1, e2) -> Integer.compare(e1.getValue(), e2.getValue()));
+        return entries.get(entries.size() - 1).getKey();
     }
+
 
     private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
         int baseSize = k3.getBaseSize();
@@ -119,8 +122,11 @@ public class testThomas2 extends MiniMaxAI {
             redistributeProbs(k3, c);
         }
         for (ModelColor c : probabilities.keySet()) {
-            float diff = ((float) (getPlayer(k3).getAvailableToBuild().get(c) + 1) / (float) (ennemyPieces.get(c) + 1));
-            probabilities.put(c, probabilities.get(c) * diff);
+            if (getPlayer(k3).getAvailableToBuild().get(c) > (ennemyPieces.get(c))){
+                probabilities.put(c, probabilities.get(c) * 2);
+            } else {
+                probabilities.put(c, probabilities.get(c) / 2);
+            }
         }
         return probabilities;
     }

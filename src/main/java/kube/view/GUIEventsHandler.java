@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.*;
+import kube.model.ai.ExpertAI;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.betterConstructV2;
 import kube.model.ai.moveSetHeuristique;
@@ -36,7 +37,6 @@ public class GUIEventsHandler implements Runnable {
     public void run() {
         while (true) {
             Action action = eventsToView.remove();
-            Config.debug("View receive : ", action);
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -112,12 +112,12 @@ public class GUIEventsHandler implements Runnable {
                     if (p1.buttonValue == 0) {
                         iaJ1 = null;
                     } else {
-                        iaJ1 = new betterConstructV2();
+                        iaJ1 = new ExpertAI();
                     }
                     if (p2.buttonValue == 0) {
                         iaJ2 = null;
                     } else {
-                        iaJ2 = new betterConstructV2();
+                        iaJ2 = new ExpertAI();
                     }
                     eventsToModel.add(new Action(ActionType.START,
                             new Start(iaJ1, iaJ2)));

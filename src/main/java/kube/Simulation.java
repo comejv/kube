@@ -12,7 +12,10 @@ import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.randomAI;
 import kube.model.ai.simpleHeuristique;
 import kube.model.ai.testThomas;
-import kube.model.ai.testThomas2;
+import kube.model.ai.EasyAI;
+import kube.model.ai.ExpertAI;
+import kube.model.ai.HardAI;
+import kube.model.ai.MediumAI;
 
 // Import java classes
 import java.awt.Point;
@@ -190,13 +193,11 @@ public class Simulation implements Runnable {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new testThomas2(50), new testThomas(50));
+            k.init(new EasyAI(50), new MediumAI(50));
             k.getP1().getAI().constructionPhase(k);
-            k.getP1().validateBuilding();
             k.getP1().validateBuilding();
             k.updatePhase();
             k.getP2().getAI().constructionPhase(k);
-            k.getP2().validateBuilding();
             k.getP2().validateBuilding();
             k.updatePhase();
             // Phsae 2

@@ -62,7 +62,6 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
                 toView.add(new Action(ActionType.AI_PAUSE, false));
                 break;
             case "auto":
-                Config.debug("AI MOVE SEND");
                 toModel.add(new Action(ActionType.AI_MOVE));
                 break;
             case "save":
@@ -84,7 +83,6 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
         if (source instanceof JButton) {
             JButton b = (JButton) source;
             if (b.isEnabled()) {
-                Config.debug("Click on enabled button");
                 ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
                         ((JButton) source).getActionCommand());
                 actionPerformed(evt);

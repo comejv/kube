@@ -4,6 +4,8 @@ package kube.model;
 import kube.configuration.Config;
 import kube.model.action.*;
 import kube.model.action.move.Move;
+import kube.model.ai.ExpertAI;
+import kube.model.ai.MiniMaxAI;
 import kube.model.ai.betterConstructV2;
 import kube.model.ai.moveSetHeuristique;
 import kube.model.ai.utilsAI;
@@ -438,7 +440,7 @@ public class Game implements Runnable {
                             if (k3.getCurrentPlayer().isAI()) {
                                 break;
                             }
-                            k3.getCurrentPlayer().setAI(new betterConstructV2(50));
+                            k3.getCurrentPlayer().setAI(new ExpertAI(50));
                             k3.getCurrentPlayer().getAI().setPlayerId(k3.getCurrentPlayer().getId());
                             Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
                             playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
@@ -618,11 +620,11 @@ public class Game implements Runnable {
                 player.removeFromMountainToAvailableToBuild(i, j);
             }
         }
-
-        player.setAI(new betterConstructV2());
+        MiniMaxAI oldAI = player.getAI();
+        player.setAI(new ExpertAI());
         player.getAI().setPlayerId(player.getId());
         player.getAI().constructionPhase(k3);
-        player.setAI(null);
+        player.setAI(oldAI);
     }
 
     /**
