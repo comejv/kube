@@ -64,7 +64,7 @@ public class SecondPhasePanel extends JPanel {
         this.k3 = k3;
         this.controller = controller;
         this.animationHexGlow = new HexGlow();
-        this.animationPanelGlow = new PanelGlow();
+        this.animationPanelGlow = new PanelGlow(k3);
         int k3BaseSize = k3.getK3().getBaseSize();
         int playerBaseSize = k3.getP1().getMountain().getBaseSize();
         k3Panels = new JPanel[k3BaseSize][k3BaseSize];

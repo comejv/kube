@@ -2,7 +2,7 @@ package kube;
 
 // Import kube classes
 import kube.configuration.ResourceLoader;
-import kube.controller.graphical.GUIControllers;
+import kube.controller.graphical.GUIControllerManager;
 import kube.model.Game;
 import kube.model.Kube;
 import kube.model.action.Action;
@@ -31,7 +31,7 @@ public class Main {
 
         modelThread.start();
 
-        GUIControllers controllers = new GUIControllers(eventsToView, eventsToModel);
+        GUIControllerManager controllers = new GUIControllerManager(eventsToView, eventsToModel);
         new GUI(kube, controllers, eventsToView, eventsToModel);
     }
 }
