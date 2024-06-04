@@ -113,6 +113,71 @@ public class FirstPhasePanel extends JPanel {
         this.oldSize = getSize();
     }
 
+    public void resetPanel(){
+        // Create the main panel that holds other components
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
+        mainPanel.setBackground(GUIColors.GAME_BG.toColor());
+
+        JPanel sidePanel = new JPanel();
+        sidePanel.setLayout(new GridBagLayout());
+        sidePanel.setOpaque(false);
+        // Create buttons panel and game panel
+        JPanel buttonsPanel = initButtons();
+        buttonsPanel.setBackground(GUIColors.GAME_BG.toColor());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        sidePanel.add(buttonsPanel, gbc);
+
+        // Panel opponentPanel = opponentsPieces();
+        opponentsPieces();
+        opponentPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                " Pièces de l'adversaire", TitledBorder.CENTER, TitledBorder.TOP,
+                new Font("Jomhuria", Font.PLAIN, 35), GUIColors.ACCENT.toColor()));
+        gbc = new GridBagConstraints();
+        gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty = 1;
+        gbc.weightx = 1;
+        gbc.gridheight = 2;
+        gbc.gridwidth = 1;
+        gbc.insets = new Insets(20, 0, 20, 0);
+
+        sidePanel.add(opponentPanel, gbc);
+
+        gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.gridx = 2;
+        gbc.gridwidth = 2;
+        gbc.anchor = GridBagConstraints.NORTHEAST;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0, 10, 0, 10);
+        mainPanel.add(sidePanel, gbc);
+
+        JPanel gamePanel = createGamePanel();
+        gbc = new GridBagConstraints();
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.insets = new Insets(20, 20, 20, 20);
+        mainPanel.add(gamePanel, gbc);
+
+        // Add main panel to the layered pane
+        add(mainPanel);
+
+        animationGlow = new HexGlow();
+        this.oldSize = getSize();
+        updateAll(true);
+    }
+
     private JPanel createGamePanel() {
         gamePanel = new JPanel();
         gamePanel.setLayout(new BorderLayout());

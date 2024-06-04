@@ -21,8 +21,8 @@ public class Config {
      **********/
 
     private static String language = "fr_FR";
+    private static String mode ="Symbol";
     private static double UIScale = 1;
-
     private static boolean mute = true;
     
     private static String serverAddress;
@@ -38,6 +38,9 @@ public class Config {
 
     public static void setUIScale(double size) {
         UIScale = size;
+    }
+    public static  void setMode(String str){
+        mode = str;
     }
 
     public static void resetUIScale() {
@@ -59,6 +62,10 @@ public class Config {
     public static String getLanguage() {
         return language;
     }
+    public static String getMode() {
+        return mode;
+    }
+
 
     public static double getUIScale() {
         return UIScale;
