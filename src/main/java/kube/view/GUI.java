@@ -590,4 +590,12 @@ public class GUI implements Runnable {
         menuPanel = (MenuPanel) getPanel(MENU);
         menuPanel.enableHostStartButton(b);
     }
+
+    public void changeMode(String mode) {
+        Config.setMode(mode);
+        firstPhasePanel.removeAll();
+        firstPhasePanel.resetPanel();
+        secondPhasePanel.removeAll();
+        secondPhasePanel.resetPanel();
+    }
 }
