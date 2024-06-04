@@ -110,7 +110,7 @@ public class ResourceLoader {
      * @return the buffered image
      */
     public static BufferedImage getBufferedImage(String fileName) {
-        
+
         String imgPath;
         InputStream in;
 
@@ -122,7 +122,8 @@ public class ResourceLoader {
                 return ImageIO.read(in);
             }
             Config.debug("Attempting to use placeholder for image...");
-            in = ResourceLoader.class.getClassLoader().getResourceAsStream(IMAGE_FOLDER + NOT_FIND_FILE + IMAGE_EXTENSION);
+            in = ResourceLoader.class.getClassLoader()
+                    .getResourceAsStream(IMAGE_FOLDER + NOT_FIND_FILE + IMAGE_EXTENSION);
             if (in != null) {
                 return ImageIO.read(in);
             }
@@ -148,13 +149,16 @@ public class ResourceLoader {
         String result, folder, relativePath;
         BufferedReader buf;
         InputStream resource;
-
-        folder = fileName.equals("credits") ? "" : TEXT_FOLDER + Config.getLanguage();
-        relativePath = folder + "/" + fileName + TEXT_EXTENSION;
+        if (fileName.equals("credits")) {
+            relativePath = fileName;
+        } else {
+            folder = TEXT_FOLDER + Config.getLanguage();
+            relativePath = folder + "/" + fileName + TEXT_EXTENSION;
+        }
         resource = getResourceAsStream(relativePath);
 
         if (resource == null) {
-            resource = getResourceAsStream(TEXT_FOLDER + "notFound" + TEXT_EXTENSION);
+            return new String("ERROR : Text " + fileName + " not found");
         }
 
         buf = new BufferedReader(new InputStreamReader(resource));
