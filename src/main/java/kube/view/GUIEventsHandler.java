@@ -287,8 +287,17 @@ public class GUIEventsHandler implements Runnable {
                     getGUI().updateFirstPanel(action);
                     break;
                 case MOVE:
+                    Sounds.playSound("build");
+                    getGUI().updateSecondPanel(action);
+                    break;
                 case UNDO:
+                    Sounds.playSound("remove");
+                    getGUI().updateSecondPanel(action);
+                    break;
                 case REDO:
+                    Sounds.playSound("build");
+                    getGUI().updateSecondPanel(action);
+                    break;
                 case AI_PAUSE:
                     getGUI().updateSecondPanel(action);
                     break;
