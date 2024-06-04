@@ -9,7 +9,6 @@ import kube.model.ai.ExpertAI;
 import kube.model.ai.HardAI;
 import kube.model.ai.MediumAI;
 import kube.model.ai.MiniMaxAI;
-import kube.model.ai.tests.betterConstructV2;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
@@ -22,10 +21,6 @@ import kube.view.panels.RulesPanel;
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import javax.swing.Timer;
-import java.awt.Cursor;
-import java.awt.event.MouseAdapter;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class GUIEventsHandler implements Runnable {
 
@@ -70,6 +65,18 @@ public class GUIEventsHandler implements Runnable {
         return savedGlassPaneController;
     }
 
+    public Queue<Action> getEventsToView() {
+        return eventsToView;
+    }
+
+    public Queue<Action> getEventsToModel() {
+        return eventsToModel;
+    }
+
+    public GUI getGUI() {
+        return gui;
+    }
+
     /**********
      * RUN METHOD
      **********/
@@ -89,7 +96,7 @@ public class GUIEventsHandler implements Runnable {
 
         while (true) {
 
-            action = eventsToView.remove();
+            action = getEventsToView().remove();
             switch (action.getType()) {
                 // GLOBAL
                 case SET_BUTTON_DEFAULT:
@@ -108,14 +115,14 @@ public class GUIEventsHandler implements Runnable {
                     h = (HexIcon) action.getData();
                     if (h.isActionable()) {
                         h.setDefault();
-                        gui.getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                        getGUI().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
                     }
                     break;
                 case SET_HEX_HOVERED:
                     h = (HexIcon) action.getData();
                     if (h.isActionable()) {
                         h.setHovered(true);
-                        gui.getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                        getGUI().getMainFrame().setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                     }
                     break;
                 case SET_HEX_PRESSED:
@@ -125,12 +132,12 @@ public class GUIEventsHandler implements Runnable {
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
                 case RETURN_TO_MENU:
-                    gui.setGlassPaneController(null);
-                    gui.removeAllFromOverlay();
-                    gui.showPanel(GUI.MENU);
+                    getGUI().setGlassPaneController(null);
+                    getGUI().removeAllFromOverlay();
+                    getGUI().showPanel(getGUI().MENU);
                     break;
                 case RETURN_TO_GAME:
-                    gui.removeAllFromOverlay();
+                    getGUI().removeAllFromOverlay();
                     break;
                 case QUIT:
                     System.exit(0);
@@ -139,26 +146,26 @@ public class GUIEventsHandler implements Runnable {
                     Config.debug("Forbidden action : " + action.getData());
                     message = (String) action.getData() == null ? "You can't do that now."
                             : (String) action.getData();
-                    gui.showError("Forbidden action", message);
+                    getGUI().showError("Forbidden action", message);
                     break;
                 case PRINT_NOT_YOUR_TURN:
                     Config.debug("Not your turn");
-                    gui.showWarning("Not your turn", "It's not your turn yet.");
+                    getGUI().showWarning("Not your turn", "It's not your turn yet.");
                     break;
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
-                    while (gui.getOverlay().getComponentCount() > 0) {
+                    while (getGUI().getOverlay().getComponentCount() > 0) {
                         System.out.print(""); // IDK why but doesn't work whithout, nice java
                     }
-                    gui.winMessage(action);
+                    getGUI().winMessage(action);
                     break;
                 case PRINT_INVALID_ADDRESS:
-                    gui.showError("Connexion impossible",
+                    getGUI().showError("Connexion impossible",
                             "Impossible de se connecter à l'hôte, veuillez vérifier l'adresse et le port.");
                     break;
                 // MENU
                 case START_LOCAL:
-                    MenuPanel menu = (MenuPanel) gui.getPanel(GUI.MENU);
+                    MenuPanel menu = (MenuPanel) getGUI().getPanel(getGUI().MENU);
                     p1 = (SelectPlayerButton) menu.player1;
                     p2 = (SelectPlayerButton) menu.player2;
                     iaJ1 = null;
@@ -204,100 +211,100 @@ public class GUIEventsHandler implements Runnable {
                             iaJ2 = null;
                             break;
                     }
-                    eventsToModel.add(new Action(ActionType.START, new Start(iaJ1, iaJ2)));
-                    gui.setGlassPanelVisible(true);
+                    getEventsToModel().add(new Action(ActionType.START, new Start(iaJ1, iaJ2)));
+                    getGUI().setGlassPanelVisible(true);
                     break;
                 case START_ONLINE:
                     Config.debug("Starting online game");
                     break;
                 case HOST:
-                    MenuPanel mp = (MenuPanel) gui.getPanel(GUI.MENU);
+                    MenuPanel mp = (MenuPanel) getGUI().getPanel(getGUI().MENU);
                     mp.showHostMenu();
                     break;
                 case RULES:
-                    menuController = gui.getControllerManager().getMenuController();
-                    gui.addToOverlay(new OverlayPanel(gui, menuController, action.getType()));
-                    gui.setGlassPanelVisible(true);
+                    menuController = getGUI().getControllerManager().getMenuController();
+                    getGUI().addToOverlay(new OverlayPanel(gui, menuController, action.getType()));
+                    getGUI().setGlassPanelVisible(true);
                     break;
                 case END_RULE:
-                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    overlay = (OverlayPanel) getGUI().getOverlay().getComponent(0);
                     rulesPanel = (RulesPanel) overlay.getComponent(0);
                     for (Timer timer : rulesPanel.getAnimatedRuleTimer()) {
                         timer.stop();
                     }
-                    gui.removeAllFromOverlay();
-                    gui.setGlassPanelVisible(false);
+                    getGUI().removeAllFromOverlay();
+                    getGUI().setGlassPanelVisible(false);
                     break;
                 case NEXT_RULE:
-                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    overlay = (OverlayPanel) getGUI().getOverlay().getComponent(0);
                     rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.nextRule();
                     break;
                 case PREVIOUS_RULE:
-                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    overlay = (OverlayPanel) getGUI().getOverlay().getComponent(0);
                     rulesPanel = (RulesPanel) overlay.getComponent(0);
                     rulesPanel.previousRule();
                     break;
                 case END_OVERLAY_MENU:
-                    gui.removeAllFromOverlay();
-                    gui.setGlassPanelVisible(false);
+                    getGUI().removeAllFromOverlay();
+                    getGUI().setGlassPanelVisible(false);
                     break;
                 case SETTINGS:
-                    menuController = gui.getControllerManager().getMenuController();
+                    menuController = getGUI().getControllerManager().getMenuController();
                     settings = new OverlayPanel(gui, menuController, action.getType());
-                    gui.addToOverlay(settings);
-                    setSavedGlassPaneController(gui.getCurrentListener());
-                    gui.setGlassPaneController(gui.getDefaultGlassPaneController());
-                    gui.setGlassPanelVisible(true);
+                    getGUI().addToOverlay(settings);
+                    setSavedGlassPaneController(getGUI().getCurrentListener());
+                    getGUI().setGlassPaneController(getGUI().getDefaultGlassPaneController());
+                    getGUI().setGlassPanelVisible(true);
                     break;
                 case CONFIRMED_SETTINGS:
-                    gui.removeAllFromOverlay();
-                    gui.setGlassPaneController(getSavedGlassPaneController());
+                    getGUI().removeAllFromOverlay();
+                    getGUI().setGlassPaneController(getSavedGlassPaneController());
                     break;
                 case REFRESH_CONNEXION:
-                    gui.enableHostStartButton((boolean) action.getData());
+                    getGUI().enableHostStartButton((boolean) action.getData());
                     break;
                 // FIRST PHASE
                 case VALIDATE:
-                    gui.updatePanel();
+                    getGUI().updatePanel();
                     break;
                 case DND_START:
                 case DND_STOP:
-                    gui.updateDnd(action);
+                    getGUI().updateDnd(action);
                     break;
                 case BUILD:
                 case REMOVE:
                 case SWAP:
                 case AI_MOVE:
-                    gui.updateFirstPanel(action);
+                    getGUI().updateFirstPanel(action);
                     break;
                 case MOVE:
                 case UNDO:
                 case REDO:
                 case AI_PAUSE:
-                    gui.updateSecondPanel(action);
+                    getGUI().updateSecondPanel(action);
                     break;
                 case LOAD_PANEL:
-                    menuController = gui.getControllerManager().getMenuController();
+                    menuController = getGUI().getControllerManager().getMenuController();
                     loadMenu = new OverlayPanel(gui, menuController, action.getType());
-                    gui.addToOverlay(loadMenu);
-                    setSavedGlassPaneController(gui.getCurrentListener());
-                    gui.setGlassPaneController(gui.getDefaultGlassPaneController());
-                    gui.setGlassPanelVisible(true);
+                    getGUI().addToOverlay(loadMenu);
+                    setSavedGlassPaneController(getGUI().getCurrentListener());
+                    getGUI().setGlassPaneController(getGUI().getDefaultGlassPaneController());
+                    getGUI().setGlassPanelVisible(true);
                     break;
                 case LOAD_FILE_SELECTED:
-                    overlay = (OverlayPanel) gui.getOverlay().getComponent(0);
+                    overlay = (OverlayPanel) getGUI().getOverlay().getComponent(0);
                     loadingSavePanel = (LoadingSavePanel) overlay.getComponent(0);
                     loadingSavePanel.enableLoadButton();
                     loadingSavePanel.enableDeleteButton();
                     break;
                 case UPDATE_HEX_SIZE:
-                    gui.updateHexSize();
+                    getGUI().updateHexSize();
                     break;
                 case PRINT_STATE:
                     break;
                 case SAVE:
-                    gui.save(action);
+                    getGUI().save(action);
                     break;
                 default:
                     Config.debug("Unrecognized action : " + action);
