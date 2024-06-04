@@ -53,7 +53,7 @@ public class RulesPanel extends JPanel {
         setPreferredSize(new Dimension(width, height));
         setBackground(GUIColors.ACCENT.toColor());
 
-        int[] rulesWithAnimation = {1, 3};
+        int[] rulesWithAnimation = {1, 2, 3};
         setRulesWithAnimation(rulesWithAnimation);
         setCurrentRuleNb(0);
         
@@ -112,6 +112,7 @@ public class RulesPanel extends JPanel {
         cardPanel.add(rulePanels[0]);
         for (int i = 1; i < TOTAL_RULE_NB; i++) {
             rulePanel = new RulePanel();
+            rulePanel.addAnimation(i);
             rulePanel.addTextArea(i);
             rulePanel.addNextButton(i);
             rulePanel.addPreviousButton(i);
@@ -120,7 +121,6 @@ public class RulesPanel extends JPanel {
             cardPanel.add(rulePanels[i]);
             rulePanel.setVisible(true);
         }
-        rulePanels[1].addAnimation(1);
     }
     
     public void nextRule() {
@@ -226,8 +226,8 @@ public class RulesPanel extends JPanel {
 
         private AnimationPanel(int ruleNb, GUI gui){
             frames = new JLabel[4];
-            updatedWidth = Math.round(gui.getMainFrame().getWidth() / 2.25f);
-            updatedHeight = Math.round(gui.getMainFrame().getHeight() / 2.25f);
+            updatedWidth = Math.round(gui.getMainFrame().getWidth() / 2.5f);
+            updatedHeight = Math.round(gui.getMainFrame().getHeight() / 2.5f);
             for (int i = 0; i < 4; i++) {
                 Image image = ResourceLoader.getBufferedImage("animations/animation" + ruleNb + i);
                 Image resized = image.getScaledInstance(updatedWidth, updatedHeight, Image.SCALE_SMOOTH);
