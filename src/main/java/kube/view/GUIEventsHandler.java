@@ -96,7 +96,11 @@ public class GUIEventsHandler implements Runnable {
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
                     while (gui.getOverlay().getComponentCount() > 0){
-                        System.out.print(""); // IDK why but doesn't work whithout, nice java
+                        try {
+                            Thread.sleep(50);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                     gui.winMessage(action);
                     break;
