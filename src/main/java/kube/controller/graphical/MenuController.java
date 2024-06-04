@@ -46,6 +46,9 @@ public class MenuController implements ActionListener, MouseListener {
             case "previousRule":
                 toView.add(new Action(ActionType.PREVIOUS_RULE));
                 break;
+            case "endRule":
+                toView.add(new Action(ActionType.END_RULE));
+                break;
             case "quit":
                 toView.add(new Action(ActionType.QUIT));
                 break;
@@ -58,7 +61,6 @@ public class MenuController implements ActionListener, MouseListener {
             case "confirmed_settings":
                 toView.add(new Action(ActionType.CONFIRMED_SETTINGS));
                 break;
-            case "endRule":
             case "return":
                 toView.add(new Action(ActionType.END_OVERLAY_MENU));
                 break;

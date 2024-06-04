@@ -419,6 +419,8 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateAll() {
+        pauseAi.setText("Pause Kubot");
+        pauseAi.setActionCommand("pauseAI");
         Player[] toUpdate = { null, k3.getP1(), k3.getP2() };
         for (Player p : toUpdate) {
             for (int i = 0; i < (p == null ? k3.getBaseSize() : p.getMountain().getBaseSize()); i++) {

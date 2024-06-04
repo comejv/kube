@@ -39,7 +39,6 @@ public class GUI implements Runnable {
     public final static String MENU = "MENU";
     public final static String PHASE1 = "PHASE1";
     public final static String PHASE2 = "PHASE2";
-    public final static String FONT_PATH = "fonts/Jomhuria-Regular.ttf";
 
     /**********
      * ATTRIBUTES
@@ -102,7 +101,7 @@ public class GUI implements Runnable {
         try {
             ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             font = Font.createFont(Font.TRUETYPE_FONT,
-                    ResourceLoader.getResourceAsStream(FONT_PATH));
+                    ResourceLoader.getResourceAsStream("fonts/Jomhuria-Regular.ttf"));
             ge.registerFont(font);
             ge.getAvailableFontFamilyNames();
         } catch (IOException | FontFormatException e) {
