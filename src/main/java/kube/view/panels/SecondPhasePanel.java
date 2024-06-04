@@ -54,7 +54,6 @@ public class SecondPhasePanel extends JPanel {
     private JPanel rightwhiteDrop;
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
     private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton, loadButton;
-    private Dimension oldSize;
     private int gameType;
     public HexGlow animationHexGlow;
     public PanelGlow animationPanelGlow;
@@ -94,8 +93,6 @@ public class SecondPhasePanel extends JPanel {
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 15, 20, 15);
         add(gamePanel, gbc);
-
-        oldSize = getSize();
     }
 
     public void resetPanel() {
@@ -121,8 +118,6 @@ public class SecondPhasePanel extends JPanel {
         gbc.weighty = 1;
         gbc.insets = new Insets(20, 15, 20, 15);
         add(gamePanel, gbc);
-
-        oldSize = getSize();
         updateAll();
     }
 
@@ -854,15 +849,9 @@ public class SecondPhasePanel extends JPanel {
             Config.debug("leftWhiteDrop or rightwhiteDrop doesn't exist");
         }
         // Update the old size to the new size
-        oldSize = newSize;
         revalidate();
         repaint();
         gui.getOverlay().repaint();
-    }
-
-    private boolean isSignificantChange(Dimension oldSize, Dimension newSize) {
-        int threshold = 100;
-        return Math.abs(newSize.height - oldSize.height) > threshold;
     }
 
     private int calculateNewHexSize(Dimension newSize) {
