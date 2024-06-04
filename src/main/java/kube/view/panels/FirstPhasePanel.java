@@ -257,6 +257,8 @@ public class FirstPhasePanel extends JPanel {
         mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
         mainPanel.setBackground(GUIColors.GAME_BG.toColor());
 
+        // TODO : continue the refactoring
+
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
         sidePanel.setOpaque(false);
