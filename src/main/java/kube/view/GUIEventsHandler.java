@@ -7,7 +7,10 @@ import javax.swing.Timer;
 
 import kube.configuration.Config;
 import kube.model.action.*;
+import kube.model.ai.EasyAI;
 import kube.model.ai.ExpertAI;
+import kube.model.ai.HardAI;
+import kube.model.ai.MediumAI;
 import kube.model.ai.MiniMaxAI;
 import kube.model.ai.betterConstructV2;
 import kube.view.components.HexIcon;
@@ -145,19 +148,46 @@ public class GUIEventsHandler implements Runnable {
                 case START:
                     p1 = (SelectPlayerButton) gui.mP.player1;
                     p2 = (SelectPlayerButton) gui.mP.player2;
-
-                    if (p1.buttonValue == 0) {
-                        iaJ1 = null;
-                    } else {
-                        iaJ1 = new ExpertAI();
+                    iaJ1 = null;
+                    iaJ2 = null;
+                    switch (p1.buttonValue) {
+                        case 0:
+                            iaJ1 = null;
+                            break;
+                        case 1:
+                            iaJ1 = new EasyAI();
+                            break;
+                        case 2:
+                            iaJ1 = new MediumAI();
+                            break;
+                        case 3:
+                            iaJ1 = new HardAI();
+                            break;
+                        case 4:
+                            iaJ1 = new ExpertAI();
+                            break;
+                        default:
+                            break;
                     }
-
-                    if (p2.buttonValue == 0) {
-                        iaJ2 = null;
-                    } else {
-                        iaJ2 = new ExpertAI();
+                    switch (p2.buttonValue) {
+                        case 0:
+                            iaJ2 = null;
+                            break;
+                        case 1:
+                            iaJ2 = new EasyAI();
+                            break;
+                        case 2:
+                            iaJ2 = new MediumAI();
+                            break;
+                        case 3:
+                            iaJ2 = new HardAI();
+                            break;
+                        case 4:
+                            iaJ2 = new ExpertAI();
+                            break;
+                        default:
+                            break;
                     }
-                    
                     eventsToModel.add(new Action(ActionType.START,
                             new Start(iaJ1, iaJ2)));
 
