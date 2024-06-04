@@ -125,7 +125,6 @@ public class GUIEventsHandler implements Runnable {
                     gui.showPanel(GUI.MENU);
                     break;
                 case RETURN_TO_GAME:
-                    gui.setGlassPaneController(null);
                     gui.removeAllFromOverlay();
                     break;
                 case QUIT:
