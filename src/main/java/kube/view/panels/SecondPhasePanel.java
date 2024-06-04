@@ -22,6 +22,7 @@ import javax.swing.border.TitledBorder;
 
 import kube.configuration.Config;
 import kube.controller.graphical.Phase2Controller;
+import kube.model.Game;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.Player;
@@ -52,9 +53,9 @@ public class SecondPhasePanel extends JPanel {
     private JPanel leftWhiteDrop;
     private JPanel rightwhiteDrop;
     public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
-    private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton;
+    private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton, loadButton;
     private Dimension oldSize;
-
+    private int gameType;
     public HexGlow animationHexGlow;
     public PanelGlow animationPanelGlow;
 
@@ -160,7 +161,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(saveButton, gbc);
 
-        JButton loadButton = new Buttons.GamePhaseButton("Charger");
+        loadButton = new Buttons.GamePhaseButton("Charger");
         loadButton.setActionCommand("load");
         loadButton.addMouseListener(a);
         loadButton.setEnabled(true);
@@ -223,7 +224,7 @@ public class SecondPhasePanel extends JPanel {
             HexIcon hex = (HexIcon) c;
             hex.setActionable(false);
         }
-        if (k3.getCurrentPlayer().isAI()) {
+        if (k3.getCurrentPlayer().isAI() || (gameType != Game.LOCAL && k3.getCurrentPlayer().getId() != gameType)) {
             return; // Do not set actionnable to true if it's the ai turn
         }
 
@@ -344,6 +345,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void update(Action a) {
+        gameType = k3.getGameType();
         sugAIButton.setEnabled(false);
         undoButton.setEnabled(false);
         redoButton.setEnabled(false);
@@ -387,10 +389,10 @@ public class SecondPhasePanel extends JPanel {
         updateText();
         updateVisible();
         updatePanelGlow(false);
-        if (k3.getHistory().canUndo()) {
+        if (k3.getHistory().canUndo() && gameType == Game.LOCAL) {
             undoButton.setEnabled(true);
         }
-        if (k3.getHistory().canRedo()) {
+        if (k3.getHistory().canRedo() && gameType == Game.LOCAL) {
             redoButton.setEnabled(true);
         }
         if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenality()) {
@@ -402,17 +404,50 @@ public class SecondPhasePanel extends JPanel {
     }
 
     private void updateText() {
-        if (k3.getPenality()) {
-            gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    k3.getCurrentPlayer().getName() + " : volez une pièce à votre adversaire",
-                    TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+        if (gameType == Game.LOCAL) {
+            if (k3.getPenality()) {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                k3.getCurrentPlayer().getName() + " : volez une pièce à votre adversaire",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            } else {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                k3.getCurrentPlayer().getName() + " : jouez sur la montagne commune",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            }
+        } else if (gameType != k3.getCurrentPlayer().getId()) {
+            if (k3.getPenality()) {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "L'autre joueur doit vous voler une pièce",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            } else {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "L'autre joueur doit jouer sur la montagne commune",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            }
         } else {
-            gamePanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
-                    k3.getCurrentPlayer().getName() + " : jouez sur la montagne commune",
-                    TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            if (k3.getPenality()) {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "A vous de voler une pièce à l'autre joueur",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            } else {
+                gamePanel.setBorder(
+                        BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
+                                "A vous de jouer sur la montagne commune",
+                                TitledBorder.CENTER, TitledBorder.TOP,
+                                new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
+            }
         }
+
     }
 
     private JScrollPane getHisto() {
@@ -446,6 +481,7 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void updateAll() {
+        gameType = k3.getGameType();
         pauseAi.setText("Pause Kubot");
         pauseAi.setActionCommand("pauseAI");
         Player[] toUpdate = { null, k3.getP1(), k3.getP2() };
@@ -456,6 +492,7 @@ public class SecondPhasePanel extends JPanel {
                 }
             }
         }
+        loadButton.setEnabled(gameType == Game.LOCAL);
         sugAIButton.setEnabled(!k3.getCurrentPlayer().isAI());
         updateHisto();
         updateAdditionnals(k3.getP1());

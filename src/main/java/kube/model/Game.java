@@ -2,6 +2,7 @@ package kube.model;
 
 // Import model classes
 import kube.configuration.Config;
+import kube.model.action.Action;
 import kube.model.action.*;
 import kube.model.action.move.Move;
 import kube.model.ai.ExpertAI;
@@ -120,15 +121,17 @@ public class Game implements Runnable {
         switch (action.getType()) {
             case START_ONLINE:
                 Boolean isHost = (Boolean) action.getData();
+                k3.init();
                 if (isHost) {
                     setGameType(HOST);
                 } else {
                     setGameType(JOIN);
                 }
-                Config.debug("Start online reçu !");
+                k3.setGameType(getGameType());
                 return CLASSIC_START;
             case START:
                 setGameType(LOCAL);
+                k3.setGameType(getGameType());
                 // Start a new game
                 start = (Start) action.getData();
                 if (start == null) {
@@ -161,7 +164,9 @@ public class Game implements Runnable {
                     return LOAD_ERROR;
                 }
             case RESET:
-                Config.debug("Received RESET action");
+                if (action.getFromNetwork()) {
+                    eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                }
                 return RESET_EXIT;
             default:
                 eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -178,6 +183,7 @@ public class Game implements Runnable {
     public void localGame(int startType) {
         if (startType == CLASSIC_START) {
             if (initPhase() == RESET_EXIT) {
+                eventsToView.add(new Action(ActionType.RESET));
                 if (getGameType() != LOCAL) {
                     eventsToNetwork.add(new Action(ActionType.STOP_NETWORK));
                 }
@@ -187,6 +193,7 @@ public class Game implements Runnable {
         if (startType == CLASSIC_START ||
                 (startType == LOAD_START && k3.getPhase() == Kube.PREPARATION_PHASE)) {
             if (constructionPhase() == RESET_EXIT) {
+                eventsToView.add(new Action(ActionType.RESET));
                 if (getGameType() != LOCAL) {
                     eventsToNetwork.add(new Action(ActionType.STOP_NETWORK));
                 }
@@ -196,6 +203,7 @@ public class Game implements Runnable {
             eventsToView.add(new Action(ActionType.PRINT_STATE));
         }
         if (gamePhase() == RESET_EXIT) {
+            eventsToView.add(new Action(ActionType.RESET));
             if (getGameType() != LOCAL) {
                 eventsToNetwork.add(new Action(ActionType.STOP_NETWORK));
             }
@@ -212,18 +220,18 @@ public class Game implements Runnable {
         Action action;
         switch (getGameType()) {
             case HOST:
-                Config.debug("Debut envoie data initialisation");
                 eventsToNetwork.add(new Action(ActionType.INIT_K3, k3.getMountain().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP1().clone()));
                 eventsToNetwork.add(new Action(ActionType.PLAYER_DATA, k3.getP2().clone()));
                 k3.setCurrentPlayer(k3.getP1());
                 eventsToView.add(new Action(ActionType.VALIDATE, true));
-                Config.debug("Fin envoie data initialisation");
                 break;
             case JOIN:
-                Config.debug("Debut reception data initialisation");
                 while ((action = eventsToModel.remove()).getType() != ActionType.INIT_K3) {
                     if (action.getType() == ActionType.RESET) {
+                        if (action.getFromNetwork()) {
+                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                        }
                         return RESET_EXIT;
                     }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -231,6 +239,9 @@ public class Game implements Runnable {
                 k3.setMountain((Mountain) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     if (action.getType() == ActionType.RESET) {
+                        if (action.getFromNetwork()) {
+                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                        }
                         return RESET_EXIT;
                     }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -238,13 +249,15 @@ public class Game implements Runnable {
                 k3.setP1((Player) action.getData());
                 while ((action = eventsToModel.remove()).getType() != ActionType.PLAYER_DATA) {
                     if (action.getType() == ActionType.RESET) {
+                        if (action.getFromNetwork()) {
+                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                        }
                         return RESET_EXIT;
                     }
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
                 k3.setP2((Player) action.getData());
                 k3.setCurrentPlayer(k3.getP2());
-                Config.debug("Fin reception data initialisation");
                 eventsToView.add(new Action(ActionType.VALIDATE, true));
                 break;
             case LOCAL:
@@ -303,7 +316,7 @@ public class Game implements Runnable {
         while (!player.getIsMountainValidated()) {
 
             action = eventsToModel.remove();
-
+            Config.debug("Phase de construction, reception de", action);
             switch (action.getType()) {
                 case AI_MOVE:
                     constructionPhaseAIsuggestion(player);
@@ -328,7 +341,6 @@ public class Game implements Runnable {
                 case VALIDATE:
                     // Reception of the other player mountain
                     if (getGameType() != LOCAL && action.getFromNetwork()) {
-                        Config.debug("Reception d'une validation externe");
                         Config.debug((Player) action.getData());
                         if (getGameType() == JOIN) {
                             k3.setP1((Player) action.getData());
@@ -338,7 +350,6 @@ public class Game implements Runnable {
                     } else {
                         isValidated = k3.getCurrentPlayer().validateBuilding();
                         if (isValidated && getGameType() != LOCAL) {
-                            Config.debug("Envoie d'une validation");
                             eventsToNetwork.add(new Action(ActionType.VALIDATE, k3.getCurrentPlayer().clone()));
                         } else if (isValidated) {
                             eventsToView.add(new Action(ActionType.VALIDATE, isValidated));
@@ -351,6 +362,9 @@ public class Game implements Runnable {
                     save(action.getData().toString());
                     break;
                 case RESET:
+                    if (action.getFromNetwork()) {
+                        eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                    }
                     return RESET_EXIT;
                 case AI_PAUSE:
                     break;
@@ -414,6 +428,7 @@ public class Game implements Runnable {
 
             while (!k3.canCurrentPlayerPlay()) {
                 action = eventsToModel.remove();
+                Config.debug(action, action.getFromNetwork());
                 switch (action.getType()) {
                     case UNDO:
                         AIpause = true;
@@ -424,6 +439,9 @@ public class Game implements Runnable {
                         save(action.getData().toString());
                         break;
                     case RESET:
+                        if (action.getFromNetwork()) {
+                            eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                        }
                         return RESET_EXIT;
                     case AI_PAUSE:
                         AIpause = (Boolean) action.getData();
@@ -449,6 +467,7 @@ public class Game implements Runnable {
                     }
                 } else {
                     action = eventsToModel.remove();
+                    Config.debug(action, action.getFromNetwork());
                     switch (action.getType()) {
                         case MOVE:
                         case MOVE_NUMBER:
@@ -472,6 +491,9 @@ public class Game implements Runnable {
                             save(action.getData().toString());
                             break;
                         case RESET:
+                            if (action.getFromNetwork()) {
+                                eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                            }
                             return RESET_EXIT;
                         case AI_PAUSE:
                             AIpause = (Boolean) action.getData();
@@ -600,7 +622,7 @@ public class Game implements Runnable {
                     } else {
                         eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
-                } else if (!action.getFromNetwork() && k3.getCurrentPlayer() != k3.getPlayerById(getGameType())) {
+                } else if (!action.getFromNetwork() && k3.getCurrentPlayer() == k3.getPlayerById(getGameType())) {
                     Config.debug("Sent move to network");
                     eventsToNetwork.add(new Action(ActionType.MOVE, move));
                     if (waitAcknowledge() && k3.playMove(move)) {
@@ -673,7 +695,6 @@ public class Game implements Runnable {
         Action action;
 
         while (k3.getPhase() == Kube.PREPARATION_PHASE) {
-            Config.debug("Début attente construction");
             eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
             action = eventsToModel.remove();
             if (action.getType() == ActionType.VALIDATE && action.getFromNetwork()) {
@@ -684,13 +705,15 @@ public class Game implements Runnable {
                 }
                 k3.updatePhase();
             } else if (action.getType() == ActionType.RESET) {
+                if (action.getFromNetwork()) {
+                    eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
+                }
                 return RESET_EXIT;
             } else {
                 eventsToView.add(new Action(ActionType.PRINT_NOT_YOUR_TURN));
             }
             eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
         }
-        Config.debug("Fin attente construction");
         eventsToView.add(new Action(ActionType.VALIDATE, true));
         return NORMAL_EXIT;
     }
@@ -713,8 +736,6 @@ public class Game implements Runnable {
     public boolean waitAcknowledge() {
 
         Action a;
-
-        eventsToView.add(new Action(ActionType.PRINT_WAITING_RESPONSE));
 
         while ((a = eventsToModel.remove()).getType() != ActionType.ACKNOWLEDGEMENT) {
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));

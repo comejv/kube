@@ -10,12 +10,14 @@ import kube.model.ai.HardAI;
 import kube.model.ai.MediumAI;
 import kube.model.ai.MiniMaxAI;
 import kube.view.components.HexIcon;
+import kube.view.animations.Message;
 import kube.view.components.Buttons.ButtonIcon;
 import kube.view.components.Buttons.SelectPlayerButton;
 import kube.view.panels.LoadingSavePanel;
 import kube.view.panels.MenuPanel;
 import kube.view.panels.OverlayPanel;
 import kube.view.panels.RulesPanel;
+import kube.view.panels.TransparentPanel;
 
 // Import java classes
 import java.awt.Cursor;
@@ -34,7 +36,7 @@ public class GUIEventsHandler implements Runnable {
     private Queue<Action> eventsToView, eventsToModel;
     private MouseAdapter savedGlassPaneController;
     private GUI gui;
-
+    private TransparentPanel transparentPanel;
     /**********
      * CONSTRUCTOR
      **********/
@@ -96,7 +98,8 @@ public class GUIEventsHandler implements Runnable {
         LoadingSavePanel loadingSavePanel;
         MenuController menuController;
         HexIcon h;
-
+        ActionEvent event;
+        MenuPanel menuPanel;
         while (true) {
 
             action = getEventsToView().remove();
@@ -134,6 +137,15 @@ public class GUIEventsHandler implements Runnable {
                 case SET_HEX_RELEASED:
                     ((HexIcon) action.getData()).setPressed(false);
                     break;
+                case RESET:
+                    menuPanel = (MenuPanel) getGUI().getPanel(GUI.MENU);
+                    menuPanel.getButtonsLayout().show(menuPanel.getButtonsPanel(), "start");
+                    getGUI().setGlassPaneController(null);
+                    getGUI().removeAllFromOverlay();
+                    getGUI().showPanel(GUI.MENU);
+                    event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "returnHost");
+                    menuPanel.getButtonListener().actionPerformed(event);
+                    break;
                 case RETURN_TO_MENU:
                     if (getGUI().askForConfirmation("Abandonner la partie",
                             "Êtes-vous sûr de vouloir quitter la partie ?")) {
@@ -160,8 +172,13 @@ public class GUIEventsHandler implements Runnable {
                             "Please select another save file, this one is invalid, too old or corrupted.");
                     break;
                 case PRINT_NOT_YOUR_TURN:
-                    Config.debug("Not your turn");
-                    getGUI().showWarning("Not your turn", "It's not your turn yet.");
+                    transparentPanel = new TransparentPanel("En attente de l'adversaire");
+                    transparentPanel.setPreferredSize(getGUI().getMainFrame().getSize());
+                    transparentPanel.setOpacity(0.8f);
+                    getGUI().addToOverlay(transparentPanel);
+                    break;
+                case ITS_YOUR_TURN:
+                    getGUI().removeAllFromOverlay();
                     break;
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
@@ -171,8 +188,8 @@ public class GUIEventsHandler implements Runnable {
                     getGUI().winMessage(action);
                     break;
                 case PRINT_CONNECTION_ETABLISHED:
-                    ActionEvent event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "startOnline");
-                    MenuPanel menuPanel = (MenuPanel) getGUI().getPanel(GUI.MENU);
+                    event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "startOnline");
+                    menuPanel = (MenuPanel) getGUI().getPanel(GUI.MENU);
                     menuPanel.getButtonListener().actionPerformed(event);
                     break;
                 case PRINT_INVALID_ADDRESS:
@@ -229,6 +246,17 @@ public class GUIEventsHandler implements Runnable {
                     }
                     getEventsToModel().add(new Action(ActionType.START, new Start(iaJ1, iaJ2)));
                     getGUI().setGlassPanelVisible(true);
+                    break;
+                case PRINT_CONNECTION_ERROR:
+                    transparentPanel = new TransparentPanel("");
+                    transparentPanel.setPreferredSize(getGUI().getMainFrame().getSize());
+                    transparentPanel.setVisible(false);
+                    getGUI().addToOverlay(transparentPanel);
+                    new Message(transparentPanel,
+                            "Erreur de connexion",
+                            getGUI(),
+                            null,
+                            false, false);
                     break;
                 case START_ONLINE:
                     Config.debug("Starting online game");

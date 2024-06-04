@@ -398,4 +398,12 @@ public class MenuPanel extends JPanel {
     public MenuController getButtonListener(){
         return buttonListener;
     }
+
+    public CardLayout getButtonsLayout(){
+        return buttonsLayout;
+    }
+
+    public JPanel getButtonsPanel(){
+        return buttonsPanel;
+    }
 }

@@ -46,7 +46,9 @@ public class Message implements ActionListener {
         this.timer = new Timer(2000 / (increasingState + stableState + decresingState), this);
         this.hexGlow = hexGlow;
         this.gui = gui;
-        hexGlow.getTimer().stop();
+        if (hexGlow != null){
+            hexGlow.getTimer().stop();
+        }
         panel.setText(text);
         panel.setVisible(true);
         timer.start();
@@ -63,7 +65,9 @@ public class Message implements ActionListener {
         } else if (state >= decresingState + stableState + increasingState) {
             panel.setVisible(false);
             gui.removeAllFromOverlay();
-            hexGlow.getTimer().restart();
+            if (hexGlow != null){
+                hexGlow.getTimer().restart();
+            }
             if (!aiAlreadyPaused){
                 gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, false));
             }

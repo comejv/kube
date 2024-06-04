@@ -46,7 +46,7 @@ public class Kube implements Serializable {
     private int baseSize, phase;
     private Mountain mountain;
     private Move lastMovePlayed;
-
+    private transient int gameType;
     /**********
      * CONSTRUCTOR
      **********/
@@ -255,6 +255,10 @@ public class Kube implements Serializable {
         player.getMountain().setCase(x, y, color);
     }
 
+    public void setGameType(int gameType){
+        this.gameType = gameType;
+    }
+
     /**********
      * GETTERS
      **********/
@@ -328,6 +332,11 @@ public class Kube implements Serializable {
             return getP2();
         }
     }
+
+    public int getGameType(){
+        return gameType;
+    }
+
 
     /**********
      * PREPARATION PHASE METHODS

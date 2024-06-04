@@ -31,6 +31,9 @@ public class NetworkSender implements Runnable {
     public NetworkSender(Network network, Queue<Action> modelToNetwork, int player) {
         this.network = network;
         this.modelToNetwork = modelToNetwork;
+        while (!modelToNetwork.isEmpty()){
+            modelToNetwork.remove();
+        }
         this.player = player;
     }
 
@@ -47,7 +50,6 @@ public class NetworkSender implements Runnable {
                 break;
             }
             if (action != null) {
-                Config.debug("Envoie de ", action);
                 action.setPlayer(player);
                 network.send(action);
             }

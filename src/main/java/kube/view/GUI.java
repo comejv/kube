@@ -568,9 +568,9 @@ public class GUI implements Runnable {
         hexGlow = null;
         panGlow = null;
 
-        if ((Integer) action.getData() == 1) {
+        if (k3.getPhase() == Kube.PREPARATION_PHASE) {
             hexGlow = getFirstPhasePanel().getAnimationGlow();
-        } else if ((Integer) action.getData() == 2) {
+        } else if (k3.getPhase() == Kube.GAME_PHASE) {
             hexGlow = getSecondPhasePanel().animationHexGlow;
             panGlow = getSecondPhasePanel().animationPanelGlow;
         }

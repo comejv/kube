@@ -3,6 +3,7 @@ package kube.view.panels;
 // Import kube classes
 import kube.configuration.Config;
 import kube.controller.graphical.Phase1Controller;
+import kube.model.Game;
 import kube.model.Kube;
 import kube.model.ModelColor;
 import kube.model.action.Queue;
@@ -40,7 +41,8 @@ public class FirstPhasePanel extends JPanel {
     private JPanel[][] mountainPanels;
     private HashMap<String, JButton> buttonsMap;
     private HashMap<ModelColor, Integer> p1Pieces;
-
+    private JButton loadButton, validateButton;
+    private int gameType;
     /**********
      * CONSTRUCTOR
      **********/
@@ -376,15 +378,15 @@ public class FirstPhasePanel extends JPanel {
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
         buttons.add(sugIaButton, elemGBC);
 
-        JButton validerButton = new Buttons.GamePhaseButton("Valider");
-        validerButton.setEnabled(false);
-        validerButton.setActionCommand("validate");
-        validerButton.addMouseListener(getController());
-        getButtonsMap().put("Validate", validerButton);
+        validateButton = new Buttons.GamePhaseButton("Valider");
+        validateButton.setEnabled(false);
+        validateButton.setActionCommand("validate");
+        validateButton.addMouseListener(getController());
+        getButtonsMap().put("Validate", validateButton);
         elemGBC = new GridBagConstraints();
         elemGBC.gridy = 3;
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
-        buttons.add(validerButton, elemGBC);
+        buttons.add(validateButton, elemGBC);
 
         JButton saveButton = new Buttons.GamePhaseButton("Sauvegarder");
         saveButton.setEnabled(true);
@@ -396,8 +398,8 @@ public class FirstPhasePanel extends JPanel {
         elemGBC.fill = GridBagConstraints.HORIZONTAL;
         buttons.add(saveButton, elemGBC);
 
-        JButton loadButton = new Buttons.GamePhaseButton("Charger");
-        loadButton.setEnabled(true);
+        loadButton = new Buttons.GamePhaseButton("Charger");
+        loadButton.setEnabled(false);
         loadButton.setActionCommand("load");
         loadButton.addMouseListener(getController());
         getButtonsMap().put("Load", loadButton);
@@ -583,12 +585,9 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateButton() {
-        JButton validateButton = getButtonsMap().get("Validate");
-        if (getKube().getCurrentPlayer().isMountainFull()) {
-            validateButton.setEnabled(true);
-        } else {
-            validateButton.setEnabled(false);
-        }
+        getButtonsMap().get("AI").setEnabled(true);
+        validateButton.setEnabled(getKube().getCurrentPlayer().isMountainFull());
+        loadButton.setEnabled(gameType == Game.LOCAL);
     }
 
     public void updateGrid(int i, int j) {
@@ -653,6 +652,9 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void updateAll(Boolean firstUpdate) {
+        gameType = kube.getGameType();
+        getButtonsMap().get("AI").setEnabled(false);
+        getButtonsMap().get("Validate").setEnabled(false);
         updateOpponent();
         if (firstUpdate) {
             if (getKube().getCurrentPlayer() == getKube().getP1()) {
@@ -672,8 +674,7 @@ public class FirstPhasePanel extends JPanel {
                         "Au tour de " + getKube().getCurrentPlayer().getName() + " de construire sa montagne",
                         TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 60), GUIColors.ACCENT.toColor()));
-        getButtonsMap().get("AI").setEnabled(false);
-        getButtonsMap().get("Validate").setEnabled(false);
+        
         for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
             updateSide(c);
         }
@@ -682,12 +683,12 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(i, j);
             }
         }
-        getButtonsMap().get("AI").setEnabled(true);
         updateButton();
         updateActionnable();
     }
 
     public void update(Action a) {
+        gameType = kube.getGameType();
         switch (a.getType()) {
             case BUILD:
                 Build b = (Build) a.getData();

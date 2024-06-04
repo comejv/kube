@@ -35,8 +35,8 @@ public class Phase1Controller implements ActionListener, MouseListener, Componen
                 toView.add(new Action(ActionType.SETTINGS));
                 break;
             case "quit":
-                toView.add(new Action(ActionType.RETURN_TO_MENU));
-                break;
+            toView.add(new Action(ActionType.RETURN_TO_MENU));
+            break;
             case "AI":
                 toModel.add(new Action(ActionType.AI_MOVE));
                 break;
@@ -56,7 +56,6 @@ public class Phase1Controller implements ActionListener, MouseListener, Componen
         if (source instanceof JButton) {
             JButton b = (JButton) source;
             if (b.isEnabled()) {
-                Config.debug("Click on enabled button");
                 ActionEvent evt = new ActionEvent(source, ActionEvent.ACTION_PERFORMED,
                         ((JButton) source).getActionCommand());
                 actionPerformed(evt);

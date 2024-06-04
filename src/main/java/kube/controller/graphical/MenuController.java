@@ -71,8 +71,14 @@ public class MenuController implements ActionListener, MouseListener {
                 }
                 break;
             case "returnHost":
+            if (network != null) {
                 toNetwork.add(new Action(ActionType.STOP_NETWORK));
-                ((Server) network).disconnect();
+                if (network.isServer()) {
+                    ((Server) network).disconnect();
+                } else {
+                    ((Client) network).disconnect();
+                }
+            }
                 break;
             case "refreshConnexion":
                 toView.add(new Action(ActionType.REFRESH_CONNEXION, ((Server) network).connect(null, 0)));
@@ -96,7 +102,6 @@ public class MenuController implements ActionListener, MouseListener {
                     networkSenderThread.start();
                     toModel.add(new Action(ActionType.START_ONLINE, true));
                 } else {
-                    Config.debug("Le client se connecte");
                     try {
                         if (!network.connect(Config.getHostIP(), Config.getHostPort())) {
                             Config.debug(Config.getHostIP(), Config.getHostPort());
@@ -114,7 +119,6 @@ public class MenuController implements ActionListener, MouseListener {
                     networkListenerThread.start();
                     networkSenderThread.start();
                     toModel.add(new Action(ActionType.START_ONLINE, false));
-                    Config.debug("Le client est prêt");
                 }
                 // toView.add(new Action(ActionType.START_ONLINE));
                 break;

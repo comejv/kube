@@ -46,12 +46,13 @@ public class NetworkListener implements Runnable {
                 if (action != null) {
                     action.setFromNetwork(true);
                     networkToModel.add(action);
+                } else {
+                    break;
                 }
             } catch (IOException e) {
                 Action action = new Action(ActionType.RESET);
                 action.setFromNetwork(true);
                 networkToModel.add(action);
-                Config.debug("Closing listener.");
                 break;
             }
         }
