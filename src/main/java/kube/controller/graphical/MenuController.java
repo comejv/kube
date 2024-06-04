@@ -170,7 +170,6 @@ public class MenuController implements ActionListener, MouseListener {
                     break;
                 case "volume":
                     Config.toggleSounds();
-                    toView.add(new Action(ActionType.VOLUME));
                     break;
                 default:
                     Config.error("Unrecognised buttonIcon action.");

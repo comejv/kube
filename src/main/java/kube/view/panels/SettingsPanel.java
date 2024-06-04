@@ -8,6 +8,9 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -17,9 +20,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
 
 import kube.configuration.Config;
+import kube.configuration.ResourceLoader;
 import kube.controller.graphical.MenuController;
 import kube.view.GUI;
 import kube.view.GUIColors;
+import kube.view.components.Icon;
+import kube.view.components.Buttons.ButtonIcon;
 
 public class SettingsPanel extends JPanel {
 
@@ -51,9 +57,7 @@ public class SettingsPanel extends JPanel {
         add(tabbedPanel, elemGBC);
 
         addGraphismePanel();
-
-        JPanel audioPanel = createTab("Audio");
-        addFillerPanel(audioPanel);
+        addAudioTab();
 
         setVisible(true);
     }
@@ -135,6 +139,31 @@ public class SettingsPanel extends JPanel {
         wrapInJPanel(saveChanges, elemGBC, graphismePanel);
     }
 
+    private void addAudioTab() {
+        JPanel audioPanel = createTab("Audio");
+        audioPanel.setLayout(new GridBagLayout());
+
+        // Volume
+        Icon volumeOnImg = new Icon(ResourceLoader.getBufferedImage("volume"));
+        volumeOnImg.resizeIcon(100, 100);
+        volumeOnImg.recolor(GUIColors.ACCENT);
+        Icon volumeOffImg = new Icon(ResourceLoader.getBufferedImage("mute"));
+        volumeOffImg.resizeIcon(100, 100);
+        volumeOffImg.recolor(GUIColors.ACCENT);
+
+        BufferedImage volumeImg = Config.isMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+        ButtonIcon volume = new ButtonIcon("volume", volumeImg, buttonListener);
+        volume.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                BufferedImage volumeImg = Config.isMute() ? volumeOnImg.getImage() : volumeOffImg.getImage();
+                volume.setImage(volumeImg);
+            }
+        });
+
+        audioPanel.add(volume);
+    }
+
     private JPanel createTab(String name) {
         JPanel newPanel = new JPanel(new GridLayout(4, 2));
 
@@ -159,8 +188,7 @@ public class SettingsPanel extends JPanel {
         }
     }
 
-    private void wrapInJPanel(Component c, GridBagConstraints elemGBC,
-            JPanel container) {
+    private void wrapInJPanel(Component c, GridBagConstraints elemGBC, JPanel container) {
         JPanel wraper = new JPanel(new GridBagLayout());
         container.add(wraper);
         wraper.add(c, elemGBC);
