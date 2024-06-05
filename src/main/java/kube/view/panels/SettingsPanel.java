@@ -55,7 +55,7 @@ public class SettingsPanel extends JPanel {
     }
 
     private void addGraphicsPanel() {
-        JPanel graphicsPanel = createTab("Vidéo");
+        JPanel graphicsPanel = createTab("Graphismes");
         graphicsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -101,42 +101,6 @@ public class SettingsPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 0;
         graphicsPanel.add(resolutionManager, gbc);
-
-        // UI Scale
-        JLabel uiScaleLabel = new JLabel("Changer la taille de l'interface:");
-        JButton enlargeButton = new JButton("+");
-        enlargeButton.setPreferredSize(new Dimension(50, 30));
-        enlargeButton.addActionListener(e -> gui.incrementUIScale(1.1));
-
-        JButton shrinkButton = new JButton("-");
-        shrinkButton.setPreferredSize(new Dimension(50, 30));
-        shrinkButton.addActionListener(e -> gui.incrementUIScale(0.9));
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        graphicsPanel.add(uiScaleLabel, gbc);
-
-        JPanel uiScalePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        uiScalePanel.add(enlargeButton);
-        uiScalePanel.add(shrinkButton);
-
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        graphicsPanel.add(uiScalePanel, gbc);
-
-        // Reset Button
-        JLabel resetLabel = new JLabel("Réinitialiser l'interface");
-        JButton resetButton = new JButton("Reset");
-        resetButton.setPreferredSize(new Dimension(100, 30));
-        resetButton.addActionListener(e -> gui.resetUIScale());
-
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        graphicsPanel.add(resetLabel, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridy = 2;
-        graphicsPanel.add(resetButton, gbc);
 
         // Accessibility and Textured Mode Toggle
         JLabel accessibilityModeLabel = new JLabel("Activer le mode accessibilité:");
