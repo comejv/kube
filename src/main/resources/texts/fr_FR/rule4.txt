@@ -1,1 +1,1 @@
-Lorsque que vous jouez une pièce sur deux pièces de même couleur, vous recevez une pénalité. Dans ce cas, votre adversaire doit prendre l'une de vos pièces « accessibles » et doit l’ajouter à sa réserve de « supplémentaires ».
+Lorsque que vous jouez une pièce sur deux pièces de même couleur, vous recevez une pénalité. Dans ce cas, votre adversaire doit prendre l'un de vos pièces « jouables » et l’ajouter à sa réserve de pièces « supplémentaires ».

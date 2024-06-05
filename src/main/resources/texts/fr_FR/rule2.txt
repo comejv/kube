@@ -1,2 +1,2 @@
-Lors de la première phase, vous devez construire une pyramide à partir des pièces qui vous sont données. 
-Cette pyramide constituera votre réserve de pièces pour la seconde phase.
+Lors de la première phase, vous devez construire votre montagne à partir des pièces qui vous sont données. 
+Cette montagne constituera votre réserve de pièces pour la seconde phase.
