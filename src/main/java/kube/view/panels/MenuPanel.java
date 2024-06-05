@@ -79,6 +79,7 @@ public class MenuPanel extends JPanel {
         // Game title
         JLabel title = new JLabel("KUBE", SwingConstants.CENTER);
         title.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 6)));
+        title.setForeground(GUIColors.ACCENT.toColor());
 
         GridBagConstraints elemGBC = new GridBagConstraints();
         elemGBC.gridx = 1;

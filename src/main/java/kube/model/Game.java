@@ -479,7 +479,7 @@ public class Game implements Runnable {
                             AIpause = (Boolean) action.getData();
                             break;
                         case AI_MOVE:
-                            if (k3.getCurrentPlayer().isAI()) {
+                            if (k3.getCurrentPlayer().isAI() || (getGameType() != LOCAL && k3.getCurrentPlayer().getId() != getGameType())) {
                                 break;
                             }
                             k3.getCurrentPlayer().setAI(new ExpertAI(50));

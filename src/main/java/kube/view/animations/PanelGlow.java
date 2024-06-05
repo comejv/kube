@@ -13,6 +13,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import kube.model.Kube;
+import kube.view.GUIColors;
 
 public class PanelGlow implements ActionListener {
     private Timer timer;
@@ -57,7 +58,7 @@ public class PanelGlow implements ActionListener {
                     LineBorder line = new LineBorder(col, 10);
                     TitledBorder title = BorderFactory.createTitledBorder(line,
                             "Pieces additionnelles du " + toGlow.get(pan), TitledBorder.CENTER, TitledBorder.TOP,
-                            new Font("Jomhuria", Font.PLAIN, 40));
+                            new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor());
                     pan.setBorder(title);
                 } else {
                     pan.setBorder(BorderFactory.createLineBorder(col, 10));

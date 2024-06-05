@@ -145,14 +145,14 @@ public class SecondPhasePanel extends JPanel {
         sugAIButton = new Buttons.GamePhaseButton("Coup auto");
         sugAIButton.setActionCommand("auto");
         sugAIButton.addMouseListener(a);
-        gbc.gridy = 2;
+        gbc.gridy = 5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugAIButton, gbc);
 
         saveButton = new Buttons.GamePhaseButton("Sauvegarder");
         saveButton.setActionCommand("save");
         saveButton.addMouseListener(a);
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(saveButton, gbc);
 
@@ -160,7 +160,7 @@ public class SecondPhasePanel extends JPanel {
         loadButton.setActionCommand("load");
         loadButton.addMouseListener(a);
         loadButton.setEnabled(true);
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(loadButton, gbc);
 
@@ -188,7 +188,7 @@ public class SecondPhasePanel extends JPanel {
 
         JScrollPane histo = getHisto();
         histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(histo, gbc);
@@ -395,7 +395,8 @@ public class SecondPhasePanel extends JPanel {
         if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenality()) {
             penalityMessage();
         }
-        if (!k3.getCurrentPlayer().isAI()) {
+        if (!k3.getCurrentPlayer().isAI()
+                && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() == k3.getGameType())) {
             sugAIButton.setEnabled(true);
         }
     }
@@ -490,7 +491,12 @@ public class SecondPhasePanel extends JPanel {
             }
         }
         loadButton.setEnabled(gameType == Game.LOCAL);
-        sugAIButton.setEnabled(!k3.getCurrentPlayer().isAI());
+        if (!k3.getCurrentPlayer().isAI()
+                && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() == k3.getGameType())) {
+            sugAIButton.setEnabled(true);
+        } else {
+            sugAIButton.setEnabled(false);
+        }
         updateHisto();
         updateAdditionnals(k3.getP1());
         updateAdditionnals(k3.getP2());
@@ -747,7 +753,7 @@ public class SecondPhasePanel extends JPanel {
             LineBorder line = new LineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 10);
             TitledBorder title = BorderFactory.createTitledBorder(line,
                     "Pieces additionnelles du " + k3.getP1().getName(), TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 40));
+                    new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor());
             p1Additionnals.setBorder(title);
             p1Additionnals.repaint();
         }
@@ -756,7 +762,7 @@ public class SecondPhasePanel extends JPanel {
             LineBorder line = new LineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 10);
             TitledBorder title = BorderFactory.createTitledBorder(line,
                     "Pieces additionnelles du " + k3.getP2().getName(), TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 40));
+                    new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor());
             p2Additionnals.setBorder(title);
             p2Additionnals.repaint();
         }

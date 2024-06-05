@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -8,7 +7,6 @@ import java.awt.GridBagLayout;
 import java.io.File;
 import java.util.Arrays;
 
-import javax.swing.BorderFactory;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -23,12 +21,16 @@ public class LoadingSavePanel extends JPanel {
     private int width;
     private int height;
     private JList<String> fileList;
+    private MenuController buttonListener;
 
     public LoadingSavePanel(GUI gui, MenuController buttonListener) {
 
-        File folder = new File("saves/");
-        File[] listOfFiles = folder.listFiles((dir, name) -> name.endsWith(".ser"));
-        String[] fileNames = Arrays.stream(listOfFiles).map(File::getName).toArray(String[]::new);
+        this.buttonListener = buttonListener;
+
+        init(gui);
+    }
+
+    public void init(GUI gui) {
 
         setLayout(new GridBagLayout());
 
@@ -37,28 +39,10 @@ public class LoadingSavePanel extends JPanel {
 
         setPreferredSize(new Dimension(width, height));
         
-        GridBagConstraints scrollPanelGBC = new GridBagConstraints();
-        scrollPanelGBC.gridy = 0;
-        scrollPanelGBC.gridx = 0;
-        scrollPanelGBC.gridheight = 3;
-        scrollPanelGBC.weightx = 1;
-        scrollPanelGBC.weighty = 1;
-        scrollPanelGBC.fill = GridBagConstraints.BOTH;
-
-        fileList = new JList<>(fileNames);
-        fileList.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 15)));
-
-        fileList.setName("fileList");
-        fileList.addMouseListener(buttonListener);
-
-        JScrollPane scrollPane = new JScrollPane(fileList);
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.red));
-
-        add(scrollPane, scrollPanelGBC);
+        updateList();
 
         JPanel buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new GridBagLayout());
-        buttonsPanel.setBorder(BorderFactory.createLineBorder(Color.red));
         GridBagConstraints buttonPanelGBC = new GridBagConstraints();
         buttonPanelGBC.gridx = 1;
         buttonPanelGBC.gridy = 1;
@@ -96,6 +80,33 @@ public class LoadingSavePanel extends JPanel {
         buttonsPanel.add(returnButton, buttonGBC);
 
         add(buttonsPanel, buttonPanelGBC);
+    }
+
+    public void updateList() {
+
+        File folder = new File(Config.SAVING_PATH_DIRECTORY);
+        File[] listOfFiles = folder.listFiles((dir, name) -> name.endsWith(Config.SAVING_FILE_EXTENSION));
+        String[] fileNames = Arrays.stream(listOfFiles).map(File::getName).toArray(String[]::new);
+
+        GridBagConstraints scrollPanelGBC = new GridBagConstraints();
+        scrollPanelGBC.gridy = 0;
+        scrollPanelGBC.gridx = 0;
+        scrollPanelGBC.gridheight = 3;
+        scrollPanelGBC.weightx = 1;
+        scrollPanelGBC.weighty = 1;
+        scrollPanelGBC.fill = GridBagConstraints.BOTH;
+
+        fileList = new JList<>(fileNames);
+        fileList.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 15)));
+
+        fileList.setName("fileList");
+        fileList.addMouseListener(buttonListener);
+
+        JScrollPane scrollPane = new JScrollPane(fileList);
+
+        add(scrollPane, scrollPanelGBC);
+        revalidate();
+        repaint();
     }
 
     public void enableLoadButton() {
