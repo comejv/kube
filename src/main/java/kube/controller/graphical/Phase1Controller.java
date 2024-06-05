@@ -10,14 +10,13 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
-import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
 import kube.view.components.Buttons.ButtonIcon;
 
 public class Phase1Controller implements ActionListener, MouseListener, ComponentListener {
-    // TODO : refactor this class to make it more readable
+
     private Queue<Action> toView;
     private Queue<Action> toModel;
 

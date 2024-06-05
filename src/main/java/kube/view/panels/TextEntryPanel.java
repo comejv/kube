@@ -23,12 +23,8 @@ public class TextEntryPanel extends JPanel {
     private Font panelFont;
     private JLabel label;
     private String currentDateAndTime;
-    private HexGlow hexGlow;
-    private PanelGlow panGlow;
 
     public TextEntryPanel(GUI gui, HexGlow hexGlow, PanelGlow panGlow) {
-        this.hexGlow = hexGlow;
-        this.panGlow = panGlow;
         if (hexGlow != null) {
             hexGlow.getTimer().stop();
         }

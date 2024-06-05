@@ -1,7 +1,5 @@
 package kube.configuration;
 
-import kube.model.Game;
-
 import kube.view.Music;
 
 public class Config {

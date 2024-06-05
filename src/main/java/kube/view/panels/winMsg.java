@@ -13,15 +13,9 @@ import kube.view.GUIColors;
 import kube.view.components.Buttons;
 
 public class winMsg {
-    private winPanel panel;
-    private GUI gui;
-    private Phase2Controller controller;
 
     public winMsg(winPanel panel, GUI gui,String text, Phase2Controller controller) {
         gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, true));
-        this.panel = panel;
-        this.gui = gui;
-        this.controller=controller;
 
         panel.setVisible(true);
         panel.setOpacity(1);

@@ -1,3 +1,2 @@
-Le jeu se déroule en 2 phases.
-
-Le but du jeu est de faire en sorte que votre adversaire ne puisse plus jouer de coups lors de la seconde phase. 
+Le jeu se déroule en deux phases. 
+But du jeu : Être le dernier joueur capable de placer une pièce sur la montagne commune lors de la seconde phase. Le jeu se termine lorsqu’un des joueurs ne peut plus placer de pièces selon les règles suivantes. 

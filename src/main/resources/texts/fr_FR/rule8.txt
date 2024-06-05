@@ -1,1 +1,1 @@
-Les naturels n'ont pas de contraintes de terrain (ils peuvent cependant provoquer une pénalité). N'importe quelle pièce peut être jouée par dessus.
+Les naturels peuvent être joués de partout sur la montagne commune (ils peuvent cependant provoquer une pénalité). N'importe quelle couleur peut être jouée par dessus. 

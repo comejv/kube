@@ -1,6 +1,5 @@
 package kube.model.action;
 
-import kube.configuration.Config;
 import kube.model.ai.MiniMaxAI;
 
 public class Start {
