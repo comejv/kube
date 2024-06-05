@@ -357,6 +357,7 @@ public class GUIEventsHandler implements Runnable {
                     getGUI().updateFirstPanel(action);
                     break;
                 case MOVE:
+                case AUTO_MOVE:
                     Sounds.playSound("build");
                     getGUI().updateSecondPanel(action);
                     break;

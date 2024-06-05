@@ -1,7 +1,6 @@
 package kube.controller.graphical;
 
 // Import kube classes
-import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 
@@ -29,7 +28,6 @@ public class GUIControllerManager {
     public GUIControllerManager(Queue<Action> toView, Queue<Action> toModel, Queue<Action> toNetwork) {
         menuController = new MenuController(toView, toModel, toNetwork);
         phase1Controller = new Phase1Controller(toView, toModel);
-        Config.debug("GUIControllers: Phase1Controller created : ", phase1Controller);
         phase2Controller = new Phase2Controller(toView, toModel);
     }
 

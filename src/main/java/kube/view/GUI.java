@@ -485,6 +485,7 @@ public class GUI implements Runnable {
      * @return void
      */
     public void removeAllFromOverlay() {
+        Config.debug("Empty overlay");
         getMainFrame().removeAllFromOverlay();
     }
 

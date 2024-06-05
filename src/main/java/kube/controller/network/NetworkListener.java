@@ -1,6 +1,5 @@
 package kube.controller.network;
 
-import kube.configuration.Config;
 // Import kube classes
 import kube.model.action.Action;
 import kube.model.action.ActionType;
@@ -46,7 +45,6 @@ public class NetworkListener implements Runnable {
         while (true) {
             try {
                 Action action = network.receive();
-                Config.debug("Network received", action);
                 if (action != null) {
                     action.setFromNetwork(true);
                     networkToModel.add(action);

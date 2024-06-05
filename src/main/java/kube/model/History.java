@@ -4,7 +4,6 @@ package kube.model;
 import kube.model.action.move.Move;
 
 // Import java classes
-import java.awt.Point;
 import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
