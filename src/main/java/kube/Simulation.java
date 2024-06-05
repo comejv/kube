@@ -193,7 +193,7 @@ public class Simulation implements Runnable {
             k.getP2().getAI().constructionPhase(k);
             k.getP2().validateBuilding();
             k.updatePhase();
-            // Phsae 2
+            // Phase 2
             // System.out.println(k.getP1());
             // System.out.println(k.getP2());
             k.setCurrentPlayer(k.getRandomPlayer());
@@ -281,16 +281,16 @@ public class Simulation implements Runnable {
     @SuppressWarnings("unused")
     private void simulateNumberOfSlotAvailable() {
         float nTest = 1000;
-        float availaibleSum = 0;
+        float availableSum = 0;
         for (int i = 0; i < nTest; i++) {
             Kube k = new Kube();
             Mountain m = k.getMountain();
             k.fillBag();
             k.fillBase();
-            availaibleSum += randomAdd(m);
+            availableSum += randomAdd(m);
         }
         System.out
-                .println("Au total, sur " + (int) nTest + " simulations, il y a eu en moyenne " + availaibleSum / nTest
+                .println("Au total, sur " + (int) nTest + " simulations, il y a eu en moyenne " + availableSum / nTest
                         + " cases disponible à chaque coup");
     }
 
@@ -309,7 +309,7 @@ public class Simulation implements Runnable {
                 + " pieces retirable à chaque coup");
     }
 
-    // A method to fill a moutain with random colors + 2 white and 2 natural
+    // A method to fill a mountain with random colors + 2 white and 2 natural
     private void randomFillMountain(Mountain m, ArrayList<ModelColor> bag) {
         ModelColor c;
         int n_white = 2, n_natural = 2;

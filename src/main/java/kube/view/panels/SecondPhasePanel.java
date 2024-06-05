@@ -49,10 +49,10 @@ public class SecondPhasePanel extends JPanel {
     private JPanel[][] k3Panels;
     private JPanel[][] p1Panels;
     private JPanel[][] p2Panels;
-    private JPanel[] k3invisibles;
+    private JPanel[] k3Invisibles;
     private JPanel leftWhiteDrop;
-    private JPanel rightwhiteDrop;
-    public JPanel gamePanel, p1Additionnals, p2Additionnals, p1, p2, base;
+    private JPanel rightWhiteDrop;
+    public JPanel gamePanel, p1Additionals, p2Additionals, p1, p2, base;
     private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton, loadButton;
     private int gameType;
     public HexGlow animationHexGlow;
@@ -195,8 +195,8 @@ public class SecondPhasePanel extends JPanel {
         return panel;
     }
 
-    public void updateActionnable() {
-        // Reset all actionnable to false
+    public void updateActionable() {
+        // Reset all actionable to false
         for (int i = 0; i < k3Panels.length; i++) {
             for (int j = 0; j < i + 1; j++) {
                 HexIcon hex = (HexIcon) k3Panels[i][j].getComponent(0);
@@ -211,30 +211,30 @@ public class SecondPhasePanel extends JPanel {
                 hex.setActionable(false);
             }
         }
-        for (Component c : p1Additionnals.getComponents()) {
+        for (Component c : p1Additionals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             hex.setActionable(false);
         }
-        for (Component c : p2Additionnals.getComponents()) {
+        for (Component c : p2Additionals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             hex.setActionable(false);
         }
         if (k3.getCurrentPlayer().isAI() || (gameType != Game.LOCAL && k3.getCurrentPlayer().getId() != gameType)) {
-            return; // Do not set actionnable to true if it's the ai turn
+            return; // Do not set actionable to true if it's the AI turn
         }
 
-        JPanel[][] moutainPan = null;
-        JPanel additionnals;
+        JPanel[][] mountainPan = null;
+        JPanel additionals;
         Player player;
-        if ((k3.getCurrentPlayer() == k3.getP1() && !k3.getPenality())
-                || (k3.getCurrentPlayer() == k3.getP2() && k3.getPenality())) {
+        if ((k3.getCurrentPlayer() == k3.getP1() && !k3.getPenalty())
+                || (k3.getCurrentPlayer() == k3.getP2() && k3.getPenalty())) {
             player = k3.getP1();
-            moutainPan = p1Panels;
-            additionnals = p1Additionnals;
+            mountainPan = p1Panels;
+            additionals = p1Additionals;
         } else {
             player = k3.getP2();
-            moutainPan = p2Panels;
-            additionnals = p2Additionnals;
+            mountainPan = p2Panels;
+            additionals = p2Additionals;
         }
         ArrayList<HexIcon> hexToGlow = new ArrayList<>();
         ArrayList<ModelColor> playableColors = new ArrayList<>();
@@ -244,16 +244,16 @@ public class SecondPhasePanel extends JPanel {
             }
         }
         for (Point p : player.getMountain().removable()) {
-            HexIcon hex = (HexIcon) moutainPan[p.x][p.y].getComponent(0);
-            if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
+            HexIcon hex = (HexIcon) mountainPan[p.x][p.y].getComponent(0);
+            if (hex.getColor() == ModelColor.WHITE || k3.getPenalty() || playableColors.contains(hex.getColor())) {
                 hex.setActionable(true);
                 hexToGlow.add(hex);
             }
         }
-        for (Component c : additionnals.getComponents()) {
+        for (Component c : additionals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() != ModelColor.EMPTY) {
-                if (hex.getColor() == ModelColor.WHITE || k3.getPenality() || playableColors.contains(hex.getColor())) {
+                if (hex.getColor() == ModelColor.WHITE || k3.getPenalty() || playableColors.contains(hex.getColor())) {
                     hex.setActionable(true);
                     hexToGlow.add(hex);
                 }
@@ -280,18 +280,18 @@ public class SecondPhasePanel extends JPanel {
                     }
                 }
                 if (pan == k3Panels && i > 0) {
-                    HexIcon hex = (HexIcon) k3invisibles[i - 1].getComponent(0);
+                    HexIcon hex = (HexIcon) k3Invisibles[i - 1].getComponent(0);
                     hex.setVisible(atLeastOneNotEmpty);
                 }
             }
         }
-        for (Component c : p1Additionnals.getComponents()) {
+        for (Component c : p1Additionals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() == ModelColor.EMPTY) {
                 hex.setVisible(false);
             }
         }
-        for (Component c : p2Additionnals.getComponents()) {
+        for (Component c : p2Additionals.getComponents()) {
             HexIcon hex = (HexIcon) c;
             if (hex.getColor() == ModelColor.EMPTY) {
                 hex.setVisible(false);
@@ -299,44 +299,44 @@ public class SecondPhasePanel extends JPanel {
         }
     }
 
-    public void updateAdditionnals(Player p) {
-        updateAdditionnals(p, false);
+    public void updateAdditionals(Player p) {
+        updateAdditionals(p, false);
     }
 
-    public void updateAdditionnals(Player p, boolean addWire) {
-        JPanel additionnalsPanel = null;
+    public void updateAdditionals(Player p, boolean addWire) {
+        JPanel additionalsPanel = null;
         if (p == k3.getP1()) {
-            additionnalsPanel = p1Additionnals;
+            additionalsPanel = p1Additionals;
         } else {
-            additionnalsPanel = p2Additionnals;
+            additionalsPanel = p2Additionals;
         }
-        additionnalsPanel.removeAll();
+        additionalsPanel.removeAll();
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
         HexIcon hex = new HexIcon(null, false, p);
         hex.setVisible(true);
-        additionnalsPanel.add(hex, gbc);
+        additionalsPanel.add(hex, gbc);
 
         int n = 0;
         for (ModelColor c : p.getAdditionals()) {
             if (n > 5) {
                 gbc.gridy = 1;
             }
-            additionnalsPanel.add(new HexIcon(c, false, p), gbc);
+            additionalsPanel.add(new HexIcon(c, false, p), gbc);
             n++;
         }
 
         gbc.gridy = 0;
         hex = new HexIcon(null, false, p);
         hex.setVisible(true);
-        additionnalsPanel.add(hex, gbc);
+        additionalsPanel.add(hex, gbc);
 
         if (addWire) {
-            additionnalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
+            additionalsPanel.add(new HexIcon(ModelColor.EMPTY, false, p), gbc);
         }
-        additionnalsPanel.revalidate();
-        additionnalsPanel.repaint();
+        additionalsPanel.revalidate();
+        additionalsPanel.repaint();
     }
 
     public void update(Action a) {
@@ -351,35 +351,35 @@ public class SecondPhasePanel extends JPanel {
         } else {
             Move move = (Move) a.getData();
             if (move instanceof MoveAA) {
-                updateAdditionnals(k3.getP1());
-                updateAdditionnals(k3.getP2());
-                updateMoutain(k3.getP1(), new Point(0, 0));
-                updateMoutain(k3.getP2(), new Point(0, 0));
+                updateAdditionals(k3.getP1());
+                updateAdditionals(k3.getP2());
+                updateMountain(k3.getP1(), new Point(0, 0));
+                updateMountain(k3.getP2(), new Point(0, 0));
             } else if (move instanceof MoveAM) {
                 MoveAM am = (MoveAM) move;
-                updateAdditionnals(am.getPlayer());
-                updateMoutain(null, am.getTo());
+                updateAdditionals(am.getPlayer());
+                updateMountain(null, am.getTo());
             } else if (move instanceof MoveAW) {
                 MoveAW aw = (MoveAW) move;
-                updateAdditionnals(aw.getPlayer());
+                updateAdditionals(aw.getPlayer());
             } else if (move instanceof MoveMA) {
                 MoveMA ma = (MoveMA) move;
-                updateAdditionnals(ma.getPlayer());
+                updateAdditionals(ma.getPlayer());
                 if (ma.getPlayer() == k3.getP1()) {
-                    updateMoutain(k3.getP2(), ma.getFrom());
+                    updateMountain(k3.getP2(), ma.getFrom());
                 } else {
-                    updateMoutain(k3.getP1(), ma.getFrom());
+                    updateMountain(k3.getP1(), ma.getFrom());
                 }
             } else if (move instanceof MoveMM) {
                 MoveMM mm = (MoveMM) move;
-                updateMoutain(mm.getPlayer(), mm.getFrom());
-                updateMoutain(null, mm.getTo());
+                updateMountain(mm.getPlayer(), mm.getFrom());
+                updateMountain(null, mm.getTo());
             } else if (move instanceof MoveMW) {
                 MoveMW mw = (MoveMW) move;
-                updateMoutain(mw.getPlayer(), mw.getFrom());
+                updateMountain(mw.getPlayer(), mw.getFrom());
             }
         }
-        updateActionnable();
+        updateActionable();
         updateHisto();
         updateText();
         updateVisible();
@@ -392,8 +392,8 @@ public class SecondPhasePanel extends JPanel {
         if (k3.getHistory().canRedo() && gameType == Game.LOCAL) {
             redoButton.setEnabled(true);
         }
-        if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenality()) {
-            penalityMessage();
+        if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenalty()) {
+            penaltyMessage();
         }
         if (!k3.getCurrentPlayer().isAI()
                 && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() == k3.getGameType())) {
@@ -403,7 +403,7 @@ public class SecondPhasePanel extends JPanel {
 
     private void updateText() {
         if (gameType == Game.LOCAL) {
-            if (k3.getPenality()) {
+            if (k3.getPenalty()) {
                 gamePanel.setBorder(
                         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                                 k3.getCurrentPlayer().getName() + " : volez une pièce à votre adversaire",
@@ -417,7 +417,7 @@ public class SecondPhasePanel extends JPanel {
                                 new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
             }
         } else if (gameType != k3.getCurrentPlayer().getId()) {
-            if (k3.getPenality()) {
+            if (k3.getPenalty()) {
                 gamePanel.setBorder(
                         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                                 "L'adversaire doit vous voler une pièce",
@@ -431,7 +431,7 @@ public class SecondPhasePanel extends JPanel {
                                 new Font("Jomhuria", Font.PLAIN, 70), GUIColors.ACCENT.toColor()));
             }
         } else {
-            if (k3.getPenality()) {
+            if (k3.getPenalty()) {
                 gamePanel.setBorder(
                         BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                                 "A vous de voler une pièce à l'adversaire",
@@ -486,7 +486,7 @@ public class SecondPhasePanel extends JPanel {
         for (Player p : toUpdate) {
             for (int i = 0; i < (p == null ? k3.getBaseSize() : p.getMountain().getBaseSize()); i++) {
                 for (int j = 0; j < i + 1; j++) {
-                    updateMoutain(p, i, j);
+                    updateMountain(p, i, j);
                 }
             }
         }
@@ -498,9 +498,9 @@ public class SecondPhasePanel extends JPanel {
             sugAIButton.setEnabled(false);
         }
         updateHisto();
-        updateAdditionnals(k3.getP1());
-        updateAdditionnals(k3.getP2());
-        updateActionnable();
+        updateAdditionals(k3.getP1());
+        updateAdditionals(k3.getP2());
+        updateActionable();
         updateText();
         updateVisible();
         updatePanelGlow(false);
@@ -508,11 +508,11 @@ public class SecondPhasePanel extends JPanel {
         redoButton.setEnabled(false);
     }
 
-    public void updateMoutain(Player p, int i, int j) {
-        updateMoutain(p, new Point(i, j));
+    public void updateMountain(Player p, int i, int j) {
+        updateMountain(p, new Point(i, j));
     }
 
-    public void updateMoutain(Player p, Point pos) {
+    public void updateMountain(Player p, Point pos) {
         ModelColor c;
         JPanel panel;
         if (p == null) {
@@ -538,10 +538,10 @@ public class SecondPhasePanel extends JPanel {
         gamePanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
-        p1Additionnals = new JPanel();
-        p1Additionnals.setOpaque(false);
-        p1Additionnals.setLayout(new GridBagLayout());
-        p1Additionnals
+        p1Additionals = new JPanel();
+        p1Additionals.setOpaque(false);
+        p1Additionals.setLayout(new GridBagLayout());
+        p1Additionals
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Pieces additionnelles du Joueur 1 ", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
@@ -550,12 +550,12 @@ public class SecondPhasePanel extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p1Additionnals, gbc);
+        gamePanel.add(p1Additionals, gbc);
 
-        p2Additionnals = new JPanel();
-        p2Additionnals.setOpaque(false);
-        p2Additionnals.setLayout(new GridBagLayout());
-        p2Additionnals
+        p2Additionals = new JPanel();
+        p2Additionals.setOpaque(false);
+        p2Additionals.setLayout(new GridBagLayout());
+        p2Additionals
                 .setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED),
                         "Pieces additionnelles du Joueur 2 ", TitledBorder.CENTER, TitledBorder.TOP,
                         new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor()));
@@ -564,7 +564,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.weightx = 1;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.BOTH;
-        gamePanel.add(p2Additionnals, gbc);
+        gamePanel.add(p2Additionals, gbc);
 
         p1 = initMountain(0, k3.getP1().getMountain().getBaseSize(), k3.getP1());
         gbc.gridx = 0;
@@ -598,7 +598,7 @@ public class SecondPhasePanel extends JPanel {
 
     private JPanel initMountain(int rowMissing, int base, Player p) {
         if (p == null) {
-            k3invisibles = new JPanel[9];
+            k3Invisibles = new JPanel[9];
         }
         JPanel constructPanel = new JPanel();
         constructPanel.setOpaque(false);
@@ -647,15 +647,15 @@ public class SecondPhasePanel extends JPanel {
                 JPanel hexa = new JPanel();
                 hexa.setOpaque(false);
                 hexa.add(new HexIcon(null, false, p));
-                k3invisibles[i - 1] = hexa;
+                k3Invisibles[i - 1] = hexa;
                 lineHexa.add(hexa);
                 if (i == 8) {
-                    rightwhiteDrop = new JPanel();
-                    rightwhiteDrop.setOpaque(false);
+                    rightWhiteDrop = new JPanel();
+                    rightWhiteDrop.setOpaque(false);
                     HexIcon hex = new HexIcon(ModelColor.EMPTY, false, p);
-                    rightwhiteDrop.add(hex);
-                    rightwhiteDrop.setVisible(false);
-                    lineHexa.add(rightwhiteDrop);
+                    rightWhiteDrop.add(hex);
+                    rightWhiteDrop.setVisible(false);
+                    lineHexa.add(rightWhiteDrop);
                 }
 
             }
@@ -674,8 +674,8 @@ public class SecondPhasePanel extends JPanel {
                 updatePanelGlow(true);
                 if (hex == null) {
                     updateVisible();
-                } else if (k3.getPenality()) {
-                    updateAdditionnals(k3.getCurrentPlayer(), true);
+                } else if (k3.getPenalty()) {
+                    updateAdditionals(k3.getCurrentPlayer(), true);
                 } else {
                     if (hex.getColor() != ModelColor.WHITE) {
                         for (Point p : k3.getMountain().compatible(hex.getColor())) {
@@ -686,7 +686,7 @@ public class SecondPhasePanel extends JPanel {
                         if (k3.getCurrentPlayer() == k3.getP1()) {
                             leftWhiteDrop.setVisible(true);
                         } else {
-                            rightwhiteDrop.setVisible(true);
+                            rightWhiteDrop.setVisible(true);
                         }
                     }
                 }
@@ -695,7 +695,7 @@ public class SecondPhasePanel extends JPanel {
                 updateVisible();
                 updatePanelGlow(false);
                 leftWhiteDrop.setVisible(false);
-                rightwhiteDrop.setVisible(false);
+                rightWhiteDrop.setVisible(false);
                 break;
             default:
                 break;
@@ -705,22 +705,22 @@ public class SecondPhasePanel extends JPanel {
 
     private void updatePanelGlow(boolean isDragging) {
         HashMap<JPanel, String> glowPan = new HashMap<>();
-        if (k3.getPenality()) {
+        if (k3.getPenalty()) {
             if (isDragging) {
                 if (k3.getCurrentPlayer() == k3.getP1()) {
-                    glowPan.put(p1Additionnals, k3.getP1().getName());
+                    glowPan.put(p1Additionals, k3.getP1().getName());
                 } else {
-                    glowPan.put(p2Additionnals, k3.getP2().getName());
+                    glowPan.put(p2Additionals, k3.getP2().getName());
                 }
             } else {
                 if (k3.getCurrentPlayer() == k3.getP1()) {
                     if (k3.getP2().getAdditionals().size() > 0) {
-                        glowPan.put(p2Additionnals, k3.getP2().getName());
+                        glowPan.put(p2Additionals, k3.getP2().getName());
                     }
                     glowPan.put(p2, "");
                 } else {
                     if (k3.getP1().getAdditionals().size() > 0) {
-                        glowPan.put(p1Additionnals, k3.getP1().getName());
+                        glowPan.put(p1Additionals, k3.getP1().getName());
                     }
                     glowPan.put(p1, "");
                 }
@@ -731,12 +731,12 @@ public class SecondPhasePanel extends JPanel {
             } else {
                 if (k3.getCurrentPlayer() == k3.getP1()) {
                     if (k3.getP1().getAdditionals().size() > 0) {
-                        glowPan.put(p1Additionnals, k3.getP1().getName());
+                        glowPan.put(p1Additionals, k3.getP1().getName());
                     }
                     glowPan.put(p1, "");
                 } else {
                     if (k3.getP2().getAdditionals().size() > 0) {
-                        glowPan.put(p2Additionnals, k3.getP2().getName());
+                        glowPan.put(p2Additionals, k3.getP2().getName());
                     }
                     glowPan.put(p2, "");
                 }
@@ -749,22 +749,22 @@ public class SecondPhasePanel extends JPanel {
                 pan.repaint();
             }
         }
-        if (!glowPan.keySet().contains(p1Additionnals)) {
+        if (!glowPan.keySet().contains(p1Additionals)) {
             LineBorder line = new LineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 10);
             TitledBorder title = BorderFactory.createTitledBorder(line,
                     "Pieces additionnelles du " + k3.getP1().getName(), TitledBorder.CENTER, TitledBorder.TOP,
                     new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor());
-            p1Additionnals.setBorder(title);
-            p1Additionnals.repaint();
+            p1Additionals.setBorder(title);
+            p1Additionals.repaint();
         }
 
-        if (!glowPan.keySet().contains(p2Additionnals)) {
+        if (!glowPan.keySet().contains(p2Additionals)) {
             LineBorder line = new LineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 10);
             TitledBorder title = BorderFactory.createTitledBorder(line,
                     "Pieces additionnelles du " + k3.getP2().getName(), TitledBorder.CENTER, TitledBorder.TOP,
                     new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor());
-            p2Additionnals.setBorder(title);
-            p2Additionnals.repaint();
+            p2Additionals.setBorder(title);
+            p2Additionals.repaint();
         }
 
         if (!glowPan.keySet().contains(p1)) {
@@ -799,7 +799,7 @@ public class SecondPhasePanel extends JPanel {
         }
     }
 
-    public void penalityMessage() {
+    public void penaltyMessage() {
         TransparentPanel transparentPanel = new TransparentPanel("", true);
         transparentPanel.setPreferredSize(gui.getMainFrame().getSize());
         transparentPanel.setVisible(false);
@@ -867,11 +867,11 @@ public class SecondPhasePanel extends JPanel {
                 panel.add(h);
             }
         }
-        for (Component c : p1Additionnals.getComponents()) {
+        for (Component c : p1Additionals.getComponents()) {
             h = (HexIcon) c;
             h.updateSize();
         }
-        for (Component c : p2Additionnals.getComponents()) {
+        for (Component c : p2Additionals.getComponents()) {
             h = (HexIcon) c;
             h.updateSize();
         }
@@ -883,14 +883,14 @@ public class SecondPhasePanel extends JPanel {
 
             leftWhiteDrop.add(h);
 
-            h = (HexIcon) rightwhiteDrop.getComponent(0);
+            h = (HexIcon) rightWhiteDrop.getComponent(0);
             h.updateSize();
-            rightwhiteDrop.removeAll();
-            rightwhiteDrop.setBorder(null);
+            rightWhiteDrop.removeAll();
+            rightWhiteDrop.setBorder(null);
 
-            rightwhiteDrop.add(h);
+            rightWhiteDrop.add(h);
         } catch (Exception e) {
-            Config.debug("leftWhiteDrop or rightwhiteDrop doesn't exist");
+            Config.debug("leftWhiteDrop or rightWhiteDrop doesn't exist");
         }
         // Update the old size to the new size
         revalidate();

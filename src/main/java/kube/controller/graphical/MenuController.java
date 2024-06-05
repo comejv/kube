@@ -113,7 +113,7 @@ public class MenuController implements ActionListener, MouseListener {
                         Config.error(e.getMessage());
                         break;
                     }
-                    Config.debug("Connection etablished");
+                    Config.debug("Connection established");
                     networkListenerThread = new Thread(networkListener);
                     networkSenderThread = new Thread(networkSender);
                     networkListenerThread.start();

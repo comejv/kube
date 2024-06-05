@@ -160,7 +160,7 @@ public class FirstPhasePanel extends JPanel {
         this.topPanel = topPanel;
     }
 
-    private final void setOppenentPanel(JPanel opponentPanel) {
+    private final void setOpponentPanel(JPanel opponentPanel) {
         this.opponentPanel = opponentPanel;
     }
 
@@ -168,7 +168,7 @@ public class FirstPhasePanel extends JPanel {
         this.sidePanels = sidePanels;
     }
 
-    private final void setOppenentPiecesPanel(HashMap<ModelColor, JLabel> opponentPiecesPanel) {
+    private final void setOpponentPiecesPanel(HashMap<ModelColor, JLabel> opponentPiecesPanel) {
         this.opponentPiecesPanel = opponentPiecesPanel;
     }
 
@@ -445,8 +445,8 @@ public class FirstPhasePanel extends JPanel {
     }
 
     public void opponentsPieces() {
-        setOppenentPanel(new JPanel());
-        setOppenentPiecesPanel(new HashMap<>());
+        setOpponentPanel(new JPanel());
+        setOpponentPiecesPanel(new HashMap<>());
         getOpponentPanel().setBackground(GUIColors.TEXT_HOVER.toColor());
         getOpponentPanel().setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -716,7 +716,7 @@ public class FirstPhasePanel extends JPanel {
             }
         }
         updateButton();
-        updateActionnable();
+        updateActionable();
     }
 
     public void update(Action a) {
@@ -741,7 +741,7 @@ public class FirstPhasePanel extends JPanel {
                 updateGrid(s.getTo());
                 break;
             case AI_MOVE:
-                updateActionnable();
+                updateActionable();
                 for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
                     updateSide(c);
                 }
@@ -754,7 +754,7 @@ public class FirstPhasePanel extends JPanel {
             default:
                 break;
         }
-        updateActionnable();
+        updateActionable();
         updateButton();
     }
 
@@ -781,7 +781,7 @@ public class FirstPhasePanel extends JPanel {
     public void updateDnd(Action a) {
     }
 
-    public void updateActionnable() {
+    public void updateActionable() {
         ArrayList<HexIcon> toGlow = new ArrayList<>();
         for (JLabel pan : getSidePanels().values()) {
             HexIcon hex = (HexIcon) pan.getParent().getComponent(0);

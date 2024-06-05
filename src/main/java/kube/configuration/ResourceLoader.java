@@ -132,7 +132,7 @@ public class ResourceLoader {
             System.exit(1);
         }
 
-        Config.error("While handling missing resource " + imgPath + " new error occured :");
+        Config.error("While handling missing resource " + imgPath + " new error occurred :");
         Config.error("Missing required resource images/notFound.png");
         System.exit(1);
         return null; // should never happen
@@ -149,7 +149,7 @@ public class ResourceLoader {
         String result, folder, relativePath;
         BufferedReader buf;
         InputStream resource;
-        if (fileName.equals("credits")) {
+        if (fileName.equals("credits.html")) {
             relativePath = fileName;
         } else {
             folder = TEXT_FOLDER + Config.getLanguage();

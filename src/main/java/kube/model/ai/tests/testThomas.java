@@ -17,9 +17,9 @@ import kube.model.ai.MiniMaxAI;
 
 public class testThomas extends MiniMaxAI {
     ArrayList<ModelColor> colors;
-    ArrayList<Float> cumulativesProbabilities;
+    ArrayList<Float> cumulativeProbabilities;
     HashMap<ModelColor, Float> probabilities;
-    HashMap<ModelColor, Integer> ennemyPieces;
+    HashMap<ModelColor, Integer> enemyPieces;
 
     /**********
      * CONSTRUCTORS
@@ -46,30 +46,30 @@ public class testThomas extends MiniMaxAI {
      * METHODS
      **********/
 
-    public HashMap<ModelColor, Integer> getEnnemyPieces(Kube k3) {
+    public HashMap<ModelColor, Integer> getEnemyPieces(Kube k3) {
         Player p;
         if (getPlayer(k3) == k3.getP1()) {
             p = k3.getP2();
         } else {
             p = k3.getP1();
         }
-        ennemyPieces = new HashMap<>(p.getAvailableToBuild());
+        enemyPieces = new HashMap<>(p.getAvailableToBuild());
         for (int i = 0; i < p.getMountain().getBaseSize(); i++) {
             for (int j = 0; j < i + 1; j++) {
                 ModelColor c = p.getMountain().getCase(i, j);
                 if (c != ModelColor.EMPTY) {
-                    ennemyPieces.put(c, ennemyPieces.get(c) + 1);
+                    enemyPieces.put(c, enemyPieces.get(c) + 1);
                 }
             }
         }
-        return ennemyPieces;
+        return enemyPieces;
     }
 
     @Override
     public void constructionPhase(Kube k3) {
-        getEnnemyPieces(k3);
+        getEnemyPieces(k3);
         Point startPoint;
-        getBaseRepartiton(k3);
+        getBaseRepartition(k3);
         setJokers(k3, getRandom());
         while (!getPlayer(k3).isMountainFull()) {
             ModelColor c = getColorBasedOnProbabilities();
@@ -93,7 +93,7 @@ public class testThomas extends MiniMaxAI {
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
 
-    private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
+    private HashMap<ModelColor, Float> getBaseRepartition(Kube k3) {
         int baseSize = k3.getBaseSize();
         float nEmplacements = 0f;
         probabilities = new HashMap<>();
@@ -119,7 +119,7 @@ public class testThomas extends MiniMaxAI {
             redistributeProbs(k3, c);
         }
         for (ModelColor c : probabilities.keySet()) {
-            if (ennemyPieces.get(c) > getPlayer(k3).getAvailableToBuild().get(c)){
+            if (enemyPieces.get(c) > getPlayer(k3).getAvailableToBuild().get(c)){
                 probabilities.put(c, probabilities.get(c) / 2);
             } else {
                 probabilities.put(c, probabilities.get(c) * 2);

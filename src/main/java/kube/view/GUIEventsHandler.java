@@ -211,7 +211,7 @@ public class GUIEventsHandler implements Runnable {
                     }
                     getGUI().winMessage(action);
                     break;
-                case PRINT_CONNECTION_ETABLISHED:
+                case PRINT_CONNECTION_ESTABLISHED:
                     event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "startOnline");
                     menuPanel = (MenuPanel) getGUI().getPanel(GUI.MENU);
                     menuPanel.getButtonListener().actionPerformed(event);

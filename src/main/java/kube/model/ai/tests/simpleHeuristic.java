@@ -1,5 +1,6 @@
 package kube.model.ai.tests;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,76 +9,95 @@ import java.util.Map;
 import java.util.Random;
 
 import kube.model.ModelColor;
+import kube.model.Mountain;
 import kube.model.Player;
-import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 import kube.model.ai.MiniMaxAI;
 
-public class moveSetHeuristique extends MiniMaxAI {
-
+public class simpleHeuristic extends MiniMaxAI {
     ArrayList<ModelColor> colors;
-    ArrayList<Float> cumulativesProbabilities;
+    ArrayList<Float> cumulativeProbabilities;
     HashMap<ModelColor, Float> probabilities;
+    HashMap<ModelColor, Integer> enemyPieces;
 
     /**********
      * CONSTRUCTORS
      **********/
 
-    public moveSetHeuristique(int time, Random r) {
+    public simpleHeuristic(int time, Random r) {
         super(time, r);
     }
 
-    public moveSetHeuristique(int time, int seed) {
+    public simpleHeuristic(int time, int seed) {
         super(time, seed);
 
     }
 
-    public moveSetHeuristique(int time) {
+    public simpleHeuristic(int time) {
         super(time);
     }
 
-    public moveSetHeuristique() {
+    public simpleHeuristic() {
         super();
     }
 
     /**********
      * METHODS
      **********/
-    @Override
-    public void constructionPhase(Kube k3) {
-        if (!getPlayer(k3).getIsMountainValidated()) {
-            getBaseRepartiton(k3);
-            for (int i = 0; i < getPlayer(k3).getMountain().getBaseSize(); i++) {
-                for (int j = 0; j < i + 1; j++) {
-                    ModelColor c = getColorBasedOnProbabilities();
-                    getPlayer(k3).addToMountainFromAvailableToBuild(i, j, c);
-                    redistributeProbs(c, k3);
+
+    public HashMap<ModelColor, Integer> getEnemyPieces(Kube k3) {
+        Player p;
+        if (getPlayer(k3) == k3.getP1()) {
+            p = k3.getP2();
+        } else {
+            p = k3.getP1();
+        }
+        enemyPieces = new HashMap<>(p.getAvailableToBuild());
+        for (int i = 0; i < p.getMountain().getBaseSize(); i++) {
+            for (int j = 0; j < i + 1; j++) {
+                ModelColor c = p.getMountain().getCase(i, j);
+                if (c != ModelColor.EMPTY) {
+                    enemyPieces.put(c, enemyPieces.get(c) + 1);
                 }
             }
+        }
+        return enemyPieces;
+    }
+
+    @Override
+    public void constructionPhase(Kube k3) {
+        getEnemyPieces(k3);
+        Point startPoint;
+        getBaseRepartition(k3);
+        setJokers(k3, getRandom());
+        while (!getPlayer(k3).isMountainFull()) {
+            ModelColor c = getColorBasedOnProbabilities();
+            startPoint = getStartPoint(k3);
+            getPlayer(k3).addToMountainFromAvailableToBuild(startPoint, c);
+            redistributeProbs(k3, c);
         }
     }
 
     @Override
     public int evaluation(Kube k, Player p) {
-        return k.moveSet(p).size() + p.getAdditionals().size() - p.getWhiteUsed();
+        return k.moveSet(p).size();
     }
 
     @Override
     public Move selectMove(HashMap<Move, Integer> movesMap, Kube k3) {
         if (movesMap == null || movesMap.size() == 0) {
-            Config.debug("movesMap is null or empty, movesMap:", movesMap);
             ArrayList<Move> moves = k3.moveSet();
             return moves.get(getRandom().nextInt(moves.size()));
         }
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
 
-    private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
+    private HashMap<ModelColor, Float> getBaseRepartition(Kube k3) {
         int baseSize = k3.getBaseSize();
         float nEmplacements = 0f;
         probabilities = new HashMap<>();
-        for (ModelColor c : ModelColor.getAllColoredAndJokers()) {
+        for (ModelColor c : ModelColor.getAllColored()) {
             probabilities.put(c, 0f);
         }
         for (int i = 1; i < baseSize; i++) {
@@ -96,12 +116,12 @@ public class moveSetHeuristique extends MiniMaxAI {
             probabilities.put(c, probabilities.get(c) / nEmplacements);
         }
         for (ModelColor c : ModelColor.getAllColored()) {
-            redistributeProbs(c, k3);
+            redistributeProbs(k3, c);
         }
         return probabilities;
     }
 
-    private void redistributeProbs(ModelColor c, Kube k3) {
+    private void redistributeProbs(Kube k3, ModelColor c) {
         if (getPlayer(k3).getAvailableToBuild().get(c) == 0) {
             float probs = probabilities.get(c);
             probabilities.remove(c);
@@ -122,5 +142,37 @@ public class moveSetHeuristique extends MiniMaxAI {
             }
         }
         return entryList.get(entryList.size() - 1).getKey();
+    }
+
+    private void setJokers(Kube k3, Random r) {
+        ArrayList<ModelColor> jokers = new ArrayList<>();
+        Player p = getPlayer(k3);
+        jokers.add(ModelColor.NATURAL);
+        jokers.add(ModelColor.WHITE);
+        jokers.add(ModelColor.NATURAL);
+        jokers.add(ModelColor.WHITE);
+
+        Collections.shuffle(jokers, r);
+
+        p.addToMountainFromAvailableToBuild(3, r.nextInt(4), jokers.remove(0));
+        p.addToMountainFromAvailableToBuild(4, r.nextInt(2), jokers.remove(0));
+        p.addToMountainFromAvailableToBuild(4, r.nextInt(2) + 2, jokers.remove(0));
+        if (r.nextInt(2) == 0) {
+            p.addToMountainFromAvailableToBuild(5, r.nextInt(2), jokers.remove(0));
+        } else {
+            p.addToMountainFromAvailableToBuild(5, r.nextInt(2), jokers.remove(0));
+        }
+    }
+
+    private Point getStartPoint(Kube k3) {
+        Mountain m = getPlayer(k3).getMountain();
+        for (int i = 0; i < m.getBaseSize(); i++) {
+            for (int j = 0; j <= i; j++) {
+                if (m.getCase(i, j) == ModelColor.EMPTY) {
+                    return new Point(i, j);
+                }
+            }
+        }
+        return null;
     }
 }

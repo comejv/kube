@@ -289,9 +289,9 @@ public class MountainTest {
         m.setCase(4, 3, ModelColor.NATURAL);
         m.setCase(4, 4, ModelColor.NATURAL);
 
-        assertFalse(m.isPenality(3, 0));
-        assertTrue(m.isPenality(3, 1));
-        assertFalse(m.isPenality(3, 2));
-        assertTrue(m.isPenality(3, 3));
+        assertFalse(m.isPenalty(3, 0));
+        assertTrue(m.isPenalty(3, 1));
+        assertFalse(m.isPenalty(3, 2));
+        assertTrue(m.isPenalty(3, 3));
     }
 }

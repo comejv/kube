@@ -268,7 +268,7 @@ public class GUI implements Runnable {
     }
 
     /**
-     * Update the hexagones size
+     * Update the hexagons size
      * 
      * @return void
      */
@@ -530,7 +530,7 @@ public class GUI implements Runnable {
      *
      * @param title   title of the Window
      * @param message message to display
-     * @return boolean whether or not the user confirmed the action
+     * @return boolean whether the user confirmed the action
      */
     public boolean askForConfirmation(String title, String message) {
 
@@ -582,7 +582,7 @@ public class GUI implements Runnable {
     /**
      * Enable the host start button
      * 
-     * @param b whether or not to enable the button
+     * @param b whether to enable the button
      */
     public void enableHostStartButton(boolean b) {
         MenuPanel menuPanel;

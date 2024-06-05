@@ -47,16 +47,16 @@ public class SettingsPanel extends JPanel {
         tabbedPanel.setBackground(GUIColors.ACCENT.toColor());
         add(tabbedPanel, BorderLayout.CENTER);
 
-        addGraphismePanel();
+        addGraphicsPanel();
         addAudioTab();
         addCreditsTab();
 
         setVisible(true);
     }
 
-    private void addGraphismePanel() {
-        JPanel graphismePanel = createTab("Vidéo");
-        graphismePanel.setLayout(new GridBagLayout());
+    private void addGraphicsPanel() {
+        JPanel graphicsPanel = createTab("Graphismes");
+        graphicsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -96,11 +96,11 @@ public class SettingsPanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        graphismePanel.add(resolutionLabel, gbc);
+        graphicsPanel.add(resolutionLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        graphismePanel.add(resolutionManager, gbc);
+        graphicsPanel.add(resolutionManager, gbc);
 
         // Accessibility and Textured Mode Toggle
         JLabel accessibilityModeLabel = new JLabel("Activer le mode accessibilité:");
@@ -125,11 +125,11 @@ public class SettingsPanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        graphismePanel.add(accessibilityModeLabel, gbc);
+        graphicsPanel.add(accessibilityModeLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        graphismePanel.add(accessibilityToggleButton, gbc);
+        graphicsPanel.add(accessibilityToggleButton, gbc);
 
         // Quit Button
         JButton saveChanges = new JButton("Quitter");
@@ -140,7 +140,7 @@ public class SettingsPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.SOUTHEAST;
-        graphismePanel.add(saveChanges, gbc);
+        graphicsPanel.add(saveChanges, gbc);
     }
 
     private void addAudioTab() {
@@ -218,7 +218,7 @@ public class SettingsPanel extends JPanel {
         creditsPane.setContentType("text/html");
         creditsPane.setEditable(false);
 
-        String creditsContent = ResourceLoader.getText("credits");
+        String creditsContent = ResourceLoader.getText("credits.html");
         creditsPane.setText(creditsContent);
 
         creditsPane.addHyperlinkListener(new HyperlinkListener() {
