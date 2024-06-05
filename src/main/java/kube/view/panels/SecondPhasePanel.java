@@ -145,14 +145,14 @@ public class SecondPhasePanel extends JPanel {
         sugAIButton = new Buttons.GamePhaseButton("Coup auto");
         sugAIButton.setActionCommand("auto");
         sugAIButton.addMouseListener(a);
-        gbc.gridy = 2;
+        gbc.gridy = 5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(sugAIButton, gbc);
 
         saveButton = new Buttons.GamePhaseButton("Sauvegarder");
         saveButton.setActionCommand("save");
         saveButton.addMouseListener(a);
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(saveButton, gbc);
 
@@ -160,7 +160,7 @@ public class SecondPhasePanel extends JPanel {
         loadButton.setActionCommand("load");
         loadButton.addMouseListener(a);
         loadButton.setEnabled(true);
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(loadButton, gbc);
 
@@ -188,7 +188,7 @@ public class SecondPhasePanel extends JPanel {
 
         JScrollPane histo = getHisto();
         histo.setMinimumSize(new Dimension(Config.INIT_WIDTH / 7, Config.INIT_HEIGHT));
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         gbc.weighty = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(histo, gbc);

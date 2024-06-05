@@ -189,7 +189,7 @@ public class Simulation implements Runnable {
             // Phase 1
             ArrayList<Integer> horizonReachedJ1 = new ArrayList<>();
             ArrayList<Integer> horizonReachedJ2 = new ArrayList<>();
-            k.init(new EasyAI(50), new MediumAI(50));
+            k.init(new EasyAI(50), new ExpertAI(50));
             k.getP1().getAI().constructionPhase(k);
             k.getP1().validateBuilding();
             k.updatePhase();
