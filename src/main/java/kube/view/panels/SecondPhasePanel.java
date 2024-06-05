@@ -467,12 +467,12 @@ public class SecondPhasePanel extends JPanel {
         StringBuilder htmlContent = new StringBuilder();
 
         for (int i = 0; i < k3.getHistory().getUndone().size(); i++) {
-            htmlContent.append("<font color = 'gray'>").append(k3.getHistory().getUndone().get(i).toHTML())
-                    .append("</font><br>");
+            htmlContent.append("<p><font color = 'gray'>").append(k3.getHistory().getUndone().get(i).toHTML())
+                    .append("</font></p>");
         }
 
         for (int i = k3.getHistory().getDone().size(); i > 0; i--) {
-            htmlContent.append(k3.getHistory().getDone().get(i - 1).toHTML()).append("<br>");
+            htmlContent.append("<p>").append(k3.getHistory().getDone().get(i - 1).toHTML()).append("</p>");
         }
         editorPane.setText(htmlContent.toString());
         editorPane.repaint();
