@@ -49,6 +49,7 @@ public enum ActionType {
     AI_MOVE,
     AI_PAUSE,
     CREATE_MOVE,
+    DELETE,
 
     /**********
      * SERVICES
@@ -102,6 +103,7 @@ public enum ActionType {
     JOIN,
     SERVER_ERROR,
     REFRESH_CONNEXION,
+    DELETE_SELECTED_SAVE,
 
     // --- Menu ---
 
