@@ -138,7 +138,7 @@ public class SettingsPanel extends JPanel {
         saveChanges.setActionCommand("confirmed_settings");
 
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.SOUTHEAST;
         graphismePanel.add(saveChanges, gbc);
     }
