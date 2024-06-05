@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -21,11 +20,11 @@ import kube.model.action.Queue;
 import kube.services.Client;
 import kube.services.Network;
 import kube.services.Server;
-import kube.view.GUI;
+
 import kube.view.components.Buttons.ButtonIcon;
 
 public class MenuController implements ActionListener, MouseListener {
-    // TODO : refactor this class to make it more readable
+
     Queue<Action> toView;
     Queue<Action> toModel;
     String selectedFile;
@@ -45,8 +44,6 @@ public class MenuController implements ActionListener, MouseListener {
     }
 
     public void actionPerformed(ActionEvent evt) {
-
-        File file;
         
         switch (evt.getActionCommand()) {
             case "local":

@@ -9,12 +9,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JLabel;
 
-import kube.configuration.Config;
 import kube.view.HSL;
 
 public class Icon extends JLabel {
 
-    // TODO : refactor this class to make it more readable
     private BufferedImage originalImage;
     private BufferedImage img;
     private HSL color;

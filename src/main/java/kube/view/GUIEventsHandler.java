@@ -91,7 +91,6 @@ public class GUIEventsHandler implements Runnable {
     public void run() {
 
         Action action;
-        String message;
         SelectPlayerButton p1, p2;
         MiniMaxAI iaJ1, iaJ2;
         OverlayPanel overlay, loadMenu, settings;
@@ -187,9 +186,6 @@ public class GUIEventsHandler implements Runnable {
                     break;
                 case PRINT_FORBIDDEN_ACTION:
                     Config.debug("Forbidden action : " + action.getData());
-                    message = (String) action.getData() == null ? "You can't do that now."
-                            : (String) action.getData();
-                    // getGUI().showError("Forbidden action", message);
                     break;
                 case PRINT_INVALID_SAVE:
                     getGUI().showError("Invalid save file",

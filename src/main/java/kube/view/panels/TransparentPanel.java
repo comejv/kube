@@ -10,7 +10,6 @@ import kube.configuration.ResourceLoader;
 import kube.view.GUIColors;
 
 public class TransparentPanel extends JPanel {
-    private String overlayText;
     private float opacity;
     private String text;
     private Image backgroundImage, scaledBackground;

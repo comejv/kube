@@ -31,7 +31,6 @@ import kube.view.components.HexIcon;
 import kube.view.components.Buttons.RulesButton;
 
 public class RulesPanel extends JPanel {
-    // TODO : refactor this class to make it more readables
 
     private GUI gui;
     private int width;
@@ -313,7 +312,6 @@ public class RulesPanel extends JPanel {
 
     public class AnimationPanel extends JPanel {
 
-        private GUI animGui;
         private JLabel[] frames;
         private int initialWidth;
         private int updatedWidth;
@@ -321,7 +319,6 @@ public class RulesPanel extends JPanel {
         private AnimatedRule animation;
 
         private AnimationPanel(int ruleNb, GUI gui) {
-            animGui = gui;
             frames = new JLabel[4];
             updatedWidth = Math.round(gui.getMainFrame().getWidth() / 2.66f);
             for (int i = 0; i < 4; i++) {
