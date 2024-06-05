@@ -270,6 +270,7 @@ public class RulesPanel extends JPanel {
 
         private void addNextButton(int ruleNb) {
             JButton next = new RulesButton("Suivant");
+            next.setForeground(GUIColors.TEXT.toColor());
             GridBagConstraints elemGBC = new GridBagConstraints();
             elemGBC.gridx = 0;
             elemGBC.gridy = 3;
@@ -291,6 +292,7 @@ public class RulesPanel extends JPanel {
         private void addPreviousButton(int ruleNb) {
             if (ruleNb != 0) {
                 JButton previous = new RulesButton("Précédent");
+                previous.setForeground(GUIColors.TEXT.toColor());
                 GridBagConstraints elemGBC = new GridBagConstraints();
                 elemGBC.gridx = 0;
                 elemGBC.gridy = 3;
