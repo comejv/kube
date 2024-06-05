@@ -83,7 +83,7 @@ public class MoveAM extends Move {
 
     @Override
     public String toHTML() {
-        String s = getPlayer().getName() +
+        String s = "<bold>" + getPlayer().getName() + "</bold>"+
                 " pose depuis les additionels " +
                 getColor().forDisplayHTML() +
                 " vers la " + (6 - to.x);

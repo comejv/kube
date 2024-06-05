@@ -84,7 +84,7 @@ public class MoveMA extends Move {
 
     @Override
     public String toHTML() {
-        String s = getPlayer().getName() + " recupere dans ses additionels " +
+        String s = "<bold>" + getPlayer().getName() + "</bold>"+ " recupere dans ses additionels " +
                 getColor().forDisplayHTML() +
                 " depuis la " + (6 - getFrom().x);
         if (getFrom().x == 5) {

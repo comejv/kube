@@ -47,7 +47,7 @@ public class MoveAW extends Move {
 
     @Override
     public String toHTML() {
-        return getPlayer().getName() + " passe son tour depuis les additionels " +
+        return "<bold>"+getPlayer().getName()+"</bold>" + " passe son tour depuis les additionels " +
                 getColor().forDisplayHTML();
     }
 }

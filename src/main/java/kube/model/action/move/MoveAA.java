@@ -49,7 +49,7 @@ public class MoveAA extends Move {
 
     @Override
     public String toHTML() {
-        return getPlayer().getName() + " prends dans les additionels " +
+        return "<bold>" + getPlayer().getName() + "</bold>" + " prends dans les additionels " +
                 getColor().forDisplayHTML();
     }
 }
