@@ -87,6 +87,7 @@ public class MenuController implements ActionListener, MouseListener {
                         toView.add(new Action(ActionType.PRINT_CONNECTION_ERROR));
                     }
                 }
+                network = null;
             }
                 break;
             case "refreshConnexion":

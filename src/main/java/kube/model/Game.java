@@ -144,6 +144,7 @@ public class Game implements Runnable {
                 return CLASSIC_START;
             case LOAD:
                 setGameType(LOCAL);
+                k3.setGameType(getGameType());
                 // Load a saved game
                 filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData();
                 file = new File(filePath);
