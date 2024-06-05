@@ -21,7 +21,7 @@ public class Player implements Serializable {
     private Mountain mountain;
     private boolean isMountainValidated;
     private ArrayList<ModelColor> additionals;
-    private HashMap<ModelColor, Integer> avalaibleToBuild, usedPiece;
+    private HashMap<ModelColor, Integer> availableToBuild, usedPiece;
     private MiniMaxAI ai;
 
     /***********
@@ -62,8 +62,8 @@ public class Player implements Serializable {
         this.additionals = additionals;
     }
 
-    public final void setAvailableToBuild(HashMap<ModelColor, Integer> avalaibleToBuild) {
-        this.avalaibleToBuild = avalaibleToBuild;
+    public final void setAvailableToBuild(HashMap<ModelColor, Integer> availableToBuild) {
+        this.availableToBuild = availableToBuild;
     }
 
     public final void setIsMountainValidated(boolean isMountainValidated) {
@@ -106,7 +106,7 @@ public class Player implements Serializable {
     }
 
     public HashMap<ModelColor, Integer> getAvailableToBuild() {
-        return this.avalaibleToBuild;
+        return this.availableToBuild;
     }
 
     public boolean getIsMountainValidated() {
@@ -249,7 +249,7 @@ public class Player implements Serializable {
     }
 
     /**
-     * Validdates the building of the player if the mountain is full
+     * Validates the building of the player if the mountain is full
      *
      * @return true if the building has been validated, false otherwise
      */

@@ -41,7 +41,7 @@ public class Kube implements Serializable {
 
     private Player p1, p2, currentPlayer;
     private ArrayList<ModelColor> bag;
-    private boolean penality;
+    private boolean penalty;
     private History history;
     private int baseSize, phase;
     private Mountain mountain;
@@ -132,7 +132,7 @@ public class Kube implements Serializable {
         fillBag(random);
         fillBase();
         setHistory(new History());
-        setPenality(false);
+        setPenalty(false);
 
         if (typeAI1 != null) {
             setP1(new AI(ID_PLAYER_1, typeAI1));
@@ -191,7 +191,7 @@ public class Kube implements Serializable {
         }
 
         setBag(new ArrayList<>(kube.getBag()));
-        setPenality(kube.getPenality());
+        setPenalty(kube.getPenalty());
 
         setHistory(new History());
         getHistory().setDone(new CopyOnWriteArrayList<>(kube.getHistory().getDone()));
@@ -235,8 +235,8 @@ public class Kube implements Serializable {
         phase = p;
     }
 
-    public final void setPenality(boolean p) {
-        penality = p;
+    public final void setPenalty(boolean p) {
+        penalty = p;
     }
 
     public final void setBaseSize(int b) {
@@ -287,8 +287,8 @@ public class Kube implements Serializable {
         return p2;
     }
 
-    public boolean getPenality() {
-        return penality;
+    public boolean getPenalty() {
+        return penalty;
     }
 
     public int getBaseSize() {
@@ -344,7 +344,7 @@ public class Kube implements Serializable {
 
     /**
      * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
-     * 9 first cubes have 4 differents colors
+     * 9 first cubes have 4 different colors
      * 
      * @return void
      * @throws UnsupportedOperationException if the phase is not the preparation
@@ -356,7 +356,7 @@ public class Kube implements Serializable {
 
     /**
      * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
-     * 9 first cubes have 4 differents colors
+     * 9 first cubes have 4 different colors
      * 
      * @param random the random object to shuffle the bag
      * @return void
@@ -378,7 +378,7 @@ public class Kube implements Serializable {
             }
         }
         try {
-            // Shuffle the bag until the 9 first cubes have 4 differents colors
+            // Shuffle the bag until the 9 first cubes have 4 different colors
             while (new HashSet<>(bag.subList(0, 9)).size() < 4) {
                 Collections.shuffle(bag, random);
             }
@@ -389,7 +389,7 @@ public class Kube implements Serializable {
 
     /**
      * Fill the bag with nCubePerColor cubes of each color, shuffle the bag util the
-     * 9 first cubes have 4 differents colors
+     * 9 first cubes have 4 different colors
      * 
      * @param seed the seed to shuffle the bag
      * @return void
@@ -497,21 +497,21 @@ public class Kube implements Serializable {
         cubeRemovable = false;
         cubeCompatible = false;
 
-        // Get the premvious player
+        // Get the previous player
         if (player == getP1()) {
             previousPlayer = getP2();
         } else {
             previousPlayer = getP1();
         }
 
-        // Catching if the move is a MoveAA (penality from the previousPlayer's
+        // Catching if the move is a MoveAA (penalty from the previousPlayer's
         // additionals)
         if (move.isToAdditionals() && move.isFromAdditionals()) {
             // Checking if the cube is in the nextPlayer's additionals
             additionals = previousPlayer.getAdditionals();
             cubeRemovable = additionals.contains(move.getColor());
         }
-        // Catching if the move is a MoveMA (penality from the previousPlayer's
+        // Catching if the move is a MoveMA (penalty from the previousPlayer's
         // mountain)
         else if (move.isToAdditionals()) {
             // Checking if the cube is in the nextPlayer's mountain and if it is the same
@@ -527,32 +527,32 @@ public class Kube implements Serializable {
             additionals = player.getAdditionals();
             cubeRemovable = additionals.contains(move.getColor());
         }
-        // Catching if the move is a MoveMW or a MM (placing from player's mountain)
+        // Catching if the move is a MoveMW or an MM (placing from player's mountain)
         else if (move.isWhite() || move.isClassicMove()) {
             // Checking if the cube is in the player's mountain and if it is the same color
             accessible = getPlayerRemovable(player).contains(move.getFrom());
             sameColor = getPlayerCase(player, move.getFrom()) == move.getColor();
             cubeRemovable = accessible && sameColor;
         } else {
-            // Should never happen cause we are checking all type of the move
+            // Should never happen because we are checking all type of the move
             throw new IllegalArgumentException();
         }
 
         // Catching if the move is a MoveMW or MoveAW (placing a white cube)
         if (move.isWhite()) {
-            cubeCompatible = !getPenality();
+            cubeCompatible = !getPenalty();
         }
-        // Catching if the move is a MoveAA or MoveMA (penality)
+        // Catching if the move is a MoveAA or MoveMA (penalty)
         else if (move.isToAdditionals()) {
-            // Checking if a penality is in progress
-            cubeCompatible = getPenality();
+            // Checking if a penalty is in progress
+            cubeCompatible = getPenalty();
         }
-        // Catching if the move is a MoveMM or MoveAM (placinf on k3)
+        // Catching if the move is a MoveMM or MoveAM (placing on k3)
         else if (move.isFromAdditionals() || move.isClassicMove()) {
             // Checking if the cube is compatible with the base
-            cubeCompatible = getMountain().compatible(move.getColor()).contains(move.getTo()) && !getPenality();
+            cubeCompatible = getMountain().compatible(move.getColor()).contains(move.getTo()) && !getPenalty();
         } else {
-            // Should never happen cause we are checking all type of the move
+            // Should never happen because we are checking all type of the move
             throw new IllegalArgumentException();
         }
 
@@ -593,20 +593,20 @@ public class Kube implements Serializable {
             return false;
         }
 
-        // Catching if the move is a MoveAA (penality from the previousPlayer's
+        // Catching if the move is a MoveAA (penalty from the previousPlayer's
         // additionals)
         if (move.isToAdditionals() && move.isFromAdditionals()) {
             // Applying the move
             previousPlayer.getAdditionals().remove(color);
             player.addToAdditionals(color);
-            setPenality(false);
+            setPenalty(false);
         }
-        // Catching if the move is a MoveMA (penality from previousPlayer's mountain)
+        // Catching if the move is a MoveMA (penalty from previousPlayer's mountain)
         else if (move.isToAdditionals() && !move.isFromAdditionals()) {
             // Applying the move
             previousPlayer.removeFromMountain(move.getFrom().x, move.getFrom().y);
             player.addToAdditionals(color);
-            setPenality(false);
+            setPenalty(false);
         }
         // Catching if the move is a MoveAW (placing a white cube from self additionals)
         else if (move.isWhite() && move.isFromAdditionals()) {
@@ -626,8 +626,8 @@ public class Kube implements Serializable {
             player.getAdditionals().remove(color);
             getMountain().setCase(move.getTo().x, move.getTo().y, color);
             // Check whether the move results in a penalty
-            if (getMountain().isPenality(move.getTo())) {
-                setPenality(true);
+            if (getMountain().isPenalty(move.getTo())) {
+                setPenalty(true);
             }
         }
         // Catching if the move is a MoveMM (Placing a cube from player's mountain on
@@ -637,15 +637,15 @@ public class Kube implements Serializable {
             player.removeFromMountain(move.getFrom().x, move.getFrom().y);
             getMountain().setCase(move.getTo().x, move.getTo().y, color);
             // Check whether the move results in a penalty
-            if (getMountain().isPenality(move.getTo())) {
-                setPenality(true);
+            if (getMountain().isPenalty(move.getTo())) {
+                setPenalty(true);
             }
         }
 
         // Set the player of the move
         move.setPlayer(player);
 
-        // If the move is not a penality, set the next player
+        // If the move is not a penalty, set the next player
         if (!move.isToAdditionals()) {
             player.addUsedPiece(move.getColor());
             nextPlayer();
@@ -707,23 +707,23 @@ public class Kube implements Serializable {
             previousPlayer = getP1();
         }
 
-        // Catching if the move is a MoveAA (penality from the previousPlayer's
+        // Catching if the move is a MoveAA (penalty from the previousPlayer's
         // additionals)
         if (move.isToAdditionals() && move.isFromAdditionals()) {
             // Cancel the move
             aa = (MoveAA) move;
             player.getAdditionals().remove(aa.getColor());
             previousPlayer.addToAdditionals(aa.getColor());
-            setPenality(true);
+            setPenalty(true);
         }
-        // Catching if the move is a MoveMA (penality from the previousPlayer's
+        // Catching if the move is a MoveMA (penalty from the previousPlayer's
         // mountain)
         else if (move.isToAdditionals() && !move.isFromAdditionals()) {
             // Cancel the move
             ma = (MoveMA) move;
             player.getAdditionals().remove(ma.getColor());
             setPlayerCase(previousPlayer, ma.getFrom(), ma.getColor());
-            setPenality(true);
+            setPenalty(true);
         }
         // Catching if the move is a MoveAW (placing a white cube from player's
         // additionals)
@@ -745,7 +745,7 @@ public class Kube implements Serializable {
             am = (MoveAM) move;
             player.addToAdditionals(am.getColor());
             mountain.remove(am.getTo());
-            setPenality(false);
+            setPenalty(false);
         }
         // Catching if the move is a MoveMM (placing a cube from player's mountain on
         // the k3)
@@ -754,7 +754,7 @@ public class Kube implements Serializable {
             mm = (MoveMM) move;
             setPlayerCase(player, mm.getFrom(), mm.getColor());
             mountain.remove(mm.getTo());
-            setPenality(false);
+            setPenalty(false);
         }
 
         if (!move.isToAdditionals()) {
@@ -794,7 +794,7 @@ public class Kube implements Serializable {
     }
 
     /**
-     * Re play the last move that has been unplayed
+     * Re-play the last move that has been unplayed
      * 
      * @return true if the move is replayed, false otherwise
      * @throws UnsupportedOperationException if the phase is not the game phase
@@ -806,7 +806,7 @@ public class Kube implements Serializable {
             throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
-        // Re play the last move that has been unplayed
+        // Re-play the last move that has been unplayed
         if (getHistory().canRedo()) {
             return playMoveWithoutHistory(getHistory().redoMove());
         }
@@ -815,13 +815,13 @@ public class Kube implements Serializable {
     }
 
     /**
-     * Return the list of moves that can be played as a penality by the
+     * Return the list of moves that can be played as a penalty by the
      * currentPlayer
      * 
-     * @return the list of moves that can be played as a penality
+     * @return the list of moves that can be played as a penalty
      * @throws UnsupportedOperationException if the phase is not the game phase
      */
-    private ArrayList<Move> penalitySet(Player player) throws UnsupportedOperationException {
+    private ArrayList<Move> penaltySet(Player player) throws UnsupportedOperationException {
 
         ArrayList<Move> moves;
         Player previousPlayer;
@@ -886,9 +886,9 @@ public class Kube implements Serializable {
             throw new UnsupportedOperationException(NOT_IN_GAME_PHASE);
         }
 
-        // If a penality is in progress, return the penality set
-        if (getPenality()) {
-            return penalitySet(p);
+        // If a penalty is in progress, return the penalty set
+        if (getPenalty()) {
+            return penaltySet(p);
         }
 
         moves = new ArrayList<>();
@@ -990,7 +990,7 @@ public class Kube implements Serializable {
      * @return the move created
      */
     public Move createMove(Point from, Player playerFrom, Point to, Player playerTo, ModelColor color) {
-        // Penality
+        // Penalty
         if (playerFrom != null && playerTo != null) {
             if (from == null) {
                 return new MoveAA(color);
@@ -1001,7 +1001,7 @@ public class Kube implements Serializable {
         // Classic moves
         if (playerFrom != null && playerTo == null) {
             if (from == null) {
-                // Move from additionnals
+                // Move from additionals
                 if (color == ModelColor.WHITE) {
                     return new MoveAW();
                 } else {
@@ -1064,7 +1064,7 @@ public class Kube implements Serializable {
             kopy.setCurrentPlayer(kopy.getP2());
         }
 
-        kopy.setPenality(getPenality());
+        kopy.setPenalty(getPenalty());
         kopy.setBag(new ArrayList<>(getBag()));
         kopy.setPhase(getPhase());
         kopy.setMountain(getMountain().clone());

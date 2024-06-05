@@ -16,7 +16,7 @@ public class Mountain implements Serializable {
     private int baseSize;
 
     /**********
-     * CONSTUCTOR
+     * CONSTRUCTOR
      **********/
 
     /**
@@ -181,23 +181,23 @@ public class Mountain implements Serializable {
     }
 
     /**
-     * Return if the given position creates a penality on the mountain
+     * Return if the given position creates a penalty on the mountain
      * 
      * @param position the position to check
-     * @return true if the position creates a penality, false otherwise
+     * @return true if the position creates a penalty, false otherwise
      */
-    public boolean isPenality(Point position) {
-        return isPenality(position.x, position.y);
+    public boolean isPenalty(Point position) {
+        return isPenalty(position.x, position.y);
     }
 
     /**
-     * Return if the given position creates a penality on the mountain
+     * Return if the given position creates a penalty on the mountain
      * 
      * @param x the x position to check
      * @param y the y position to check
-     * @return true if the position creates a penality, false otherwise
+     * @return true if the position creates a penalty, false otherwise
      */
-    public boolean isPenality(int x, int y) {
+    public boolean isPenalty(int x, int y) {
         return getCase(x + 1, y) == getCase(x + 1, y + 1);
     }
 
