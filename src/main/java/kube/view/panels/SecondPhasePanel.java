@@ -341,66 +341,108 @@ public class SecondPhasePanel extends JPanel {
     }
 
     public void update(Action a) {
-        gameType = k3.getGameType();
-        sugAIButton.setEnabled(false);
-        undoButton.setEnabled(false);
-        redoButton.setEnabled(false);
-        if (a.getType() == ActionType.AI_PAUSE) {
-            Boolean pause = (Boolean) a.getData();
-            pauseAi.setText(pause ? "Reprendre Kubot" : "Pause Kubot");
-            pauseAi.setActionCommand(pause ? "stoppauseAI" : "pauseAI");
-        } else {
-            Move move = (Move) a.getData();
-            if (move instanceof MoveAA) {
-                updateAdditionals(k3.getP1());
-                updateAdditionals(k3.getP2());
-                updateMountain(k3.getP1(), new Point(0, 0));
-                updateMountain(k3.getP2(), new Point(0, 0));
-            } else if (move instanceof MoveAM) {
-                MoveAM am = (MoveAM) move;
-                updateAdditionals(am.getPlayer());
-                updateMountain(null, am.getTo());
-            } else if (move instanceof MoveAW) {
-                MoveAW aw = (MoveAW) move;
-                updateAdditionals(aw.getPlayer());
-            } else if (move instanceof MoveMA) {
-                MoveMA ma = (MoveMA) move;
-                updateAdditionals(ma.getPlayer());
-                if (ma.getPlayer() == k3.getP1()) {
-                    updateMountain(k3.getP2(), ma.getFrom());
-                } else {
-                    updateMountain(k3.getP1(), ma.getFrom());
+        try {
+            Point from, to;
+            gameType = k3.getGameType();
+            sugAIButton.setEnabled(false);
+            undoButton.setEnabled(false);
+            redoButton.setEnabled(false);
+            if (a.getType() == ActionType.AI_PAUSE) {
+                Boolean pause = (Boolean) a.getData();
+                pauseAi.setText(pause ? "Reprendre Kubot" : "Pause Kubot");
+                pauseAi.setActionCommand(pause ? "stoppauseAI" : "pauseAI");
+            } else {
+                pauseAi.setEnabled(false);
+                Move move = (Move) a.getData();
+                if (move instanceof MoveAA) {
+                    if (move.getPlayer() == k3.getP1()) {
+                        from = p2Additionals.getComponent(0).getLocationOnScreen();
+                        to = p1Additionals.getComponent(0).getLocationOnScreen();
+                    } else {
+                        from = p1Additionals.getComponent(0).getLocationOnScreen();
+                        to = p2Additionals.getComponent(0).getLocationOnScreen();
+                    }
+                    moveAnimation(move.getColor(), from, to, move.getPlayer(), a);
+                    updateAdditionals(k3.getP1());
+                    updateAdditionals(k3.getP2());
+                    updateMountain(k3.getP1(), new Point(0, 0));
+                    updateMountain(k3.getP2(), new Point(0, 0));
+                } else if (move instanceof MoveAM) {
+                    MoveAM am = (MoveAM) move;
+                    if (move.getPlayer() == k3.getP1()) {
+                        from = p1Additionals.getComponent(0).getLocationOnScreen();
+                    } else {
+                        from = p2Additionals.getComponent(0).getLocationOnScreen();
+                    }
+                    to = k3Panels[move.getTo().x][move.getTo().y].getLocationOnScreen();
+                    moveAnimation(move.getColor(), from, to, move.getPlayer(), a);
+                    updateAdditionals(am.getPlayer());
+                    updateMountain(null, am.getTo());
+                } else if (move instanceof MoveAW) {
+                    MoveAW aw = (MoveAW) move;
+                    if (move.getPlayer() == k3.getP1()) {
+                        from = p1Additionals.getComponent(0).getLocationOnScreen();
+                        to = leftWhiteDrop.getLocationOnScreen();
+                    } else {
+                        from = p2Additionals.getComponent(0).getLocationOnScreen();
+                        to = rightWhiteDrop.getLocationOnScreen();
+                    }
+                    moveAnimation(move.getColor(), from, to, move.getPlayer(), a);
+                    updateAdditionals(aw.getPlayer());
+                } else if (move instanceof MoveMA) {
+                    MoveMA ma = (MoveMA) move;
+                    if (move.getPlayer() == k3.getP1()) {
+                        from = p2Panels[move.getFrom().x][move.getFrom().y].getLocationOnScreen();
+                        to = p1Additionals.getComponent(0).getLocationOnScreen();
+                    } else {
+                        from = p1Panels[move.getFrom().x][move.getFrom().y].getLocationOnScreen();
+                        to = p2Additionals.getComponent(0).getLocationOnScreen();
+                    }
+                    moveAnimation(move.getColor(), from, to, move.getPlayer(), a);
+                    updateAdditionals(ma.getPlayer());
+                    if (ma.getPlayer() == k3.getP1()) {
+                        updateMountain(k3.getP2(), ma.getFrom());
+                    } else {
+                        updateMountain(k3.getP1(), ma.getFrom());
+                    }
+                } else if (move instanceof MoveMM) {
+                    MoveMM mm = (MoveMM) move;
+                    if (mm.getPlayer() == k3.getP1()) {
+                        from = p1Panels[move.getFrom().x][move.getFrom().y].getLocationOnScreen();
+                    } else {
+                        from = p2Panels[move.getFrom().x][move.getFrom().y].getLocationOnScreen();
+                    }
+                    to = k3Panels[move.getTo().x][move.getTo().y].getLocationOnScreen();
+                    moveAnimation(mm.getColor(), from, to, mm.getPlayer(), a);
+                    updateMountain(mm.getPlayer(), mm.getFrom());
+                    updateMountain(null, mm.getTo());
+                } else if (move instanceof MoveMW) {
+                    MoveMW mw = (MoveMW) move;
+                    updateMountain(mw.getPlayer(), mw.getFrom());
                 }
-            } else if (move instanceof MoveMM) {
-                MoveMM mm = (MoveMM) move;
-                Point from = p1Panels[move.getFrom().x][move.getFrom().y].getLocationOnScreen();
-                Point to = k3Panels[move.getTo().x][move.getTo().y].getLocationOnScreen();
-                new fakeDnD(mm.getColor(), from, to, gui);
-                updateMountain(mm.getPlayer(), mm.getFrom());
-                updateMountain(null, mm.getTo());
-            } else if (move instanceof MoveMW) {
-                MoveMW mw = (MoveMW) move;
-                updateMountain(mw.getPlayer(), mw.getFrom());
             }
-        }
-        updateActionable();
-        updateHisto();
-        updateText();
-        updateVisible();
-        updatePanelGlow(false);
-        if (k3.getHistory().canUndo()
-                && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() != k3.getGameType())) {
-            undoButton.setEnabled(true);
-        }
-        if (k3.getHistory().canRedo() && gameType == Game.LOCAL) {
-            redoButton.setEnabled(true);
-        }
-        if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenalty()) {
-            penaltyMessage();
-        }
-        if (!k3.getCurrentPlayer().isAI()
-                && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() == k3.getGameType())) {
-            sugAIButton.setEnabled(true);
+            updateActionable();
+            updateHisto();
+            updateText();
+            updateVisible();
+            updatePanelGlow(false);
+            if (k3.getHistory().canUndo()
+                    && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() != k3.getGameType())) {
+                undoButton.setEnabled(true);
+            }
+            if (k3.getHistory().canRedo() && gameType == Game.LOCAL) {
+                redoButton.setEnabled(true);
+            }
+            if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenalty()) {
+                penaltyMessage();
+            }
+            if (!k3.getCurrentPlayer().isAI()
+                    && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() == k3.getGameType())) {
+                sugAIButton.setEnabled(true);
+            }
+            pauseAi.setEnabled(true);
+        } catch (Exception e) {
+            Config.debug("Trying to animate a thing which isn't load");
         }
     }
 
@@ -909,5 +951,20 @@ public class SecondPhasePanel extends JPanel {
             return 20;
         }
         return Math.max(newHexSize, 20);
+    }
+
+    private void moveAnimation(ModelColor c, Point from, Point to, Player p, Action action) {
+        Object lock = new Object();
+        if (action.getType() == ActionType.MOVE || action.getType() == ActionType.AI_MOVE &&  (p.isAI() || (gameType != Game.LOCAL && gameType != p.getId()))) {
+            new fakeDnD(c, from, to, gui, lock);
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 }

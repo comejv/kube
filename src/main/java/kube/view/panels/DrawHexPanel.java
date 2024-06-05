@@ -31,7 +31,6 @@ public class DrawHexPanel extends JPanel {
             Point panelLocation = getLocationOnScreen();
             int x = point.x - panelLocation.x;
             int y = point.y - panelLocation.y;
-            Config.debug("Paint !", x, y);
             Graphics2D g2d = (Graphics2D) g.create();
             g2d.drawImage(getImage(), x,y,
                     null);
