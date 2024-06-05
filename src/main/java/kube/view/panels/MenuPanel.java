@@ -383,9 +383,7 @@ public class MenuPanel extends JPanel {
                     Config.debug("Connecting to IP: " + ip + " on port: " + port);
                     Config.setHostIP(ip);
                     Config.setHostPort(port);
-                } else {
-                    Config.debug("Addresse invalide (manque :)");
-                }
+                } 
             }
         });
 

@@ -43,7 +43,6 @@ public class NetworkSender implements Runnable {
 
     @Override
     public void run() {
-        Config.debug("NetWork sender started");
         while (true) {
             Action action = modelToNetwork.remove();
             if (action.getType() == ActionType.STOP_NETWORK) {

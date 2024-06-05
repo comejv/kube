@@ -1,5 +1,6 @@
 package kube.view.panels;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -11,24 +12,28 @@ import kube.configuration.Config;
 import kube.model.ModelColor;
 import kube.view.components.HexIcon;
 
-public class GlassPanel extends JPanel {
+public class DrawHexPanel extends JPanel {
     // TODO : refactor this class to make it more readable
     private HexIcon hex;
     private Point point;
     private ModelColor color;
 
-    public GlassPanel() {
-        setLayout(null);
+    public DrawHexPanel(Point p, HexIcon hex) {
+        this.hex = hex;
+        this.point = p;
         setOpaque(false);
-        point = new Point(0, 0);
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g); // Call the superclass method to ensure proper rendering
         if (getImage() != null) {
+            Point panelLocation = getLocationOnScreen();
+            int x = point.x - panelLocation.x;
+            int y = point.y - panelLocation.y;
+            Config.debug("Paint !", x, y);
             Graphics2D g2d = (Graphics2D) g.create();
-            g2d.drawImage(getImage(), point.x - (getImage().getWidth() / 2), point.y - (getImage().getHeight() / 2),
+            g2d.drawImage(getImage(), x,y,
                     null);
             g2d.dispose();
         }
@@ -75,7 +80,6 @@ public class GlassPanel extends JPanel {
     }
 
     public void clear() {
-        Config.debug("Clear hexicon");
         setHexIcon(null);
         repaint();
     }

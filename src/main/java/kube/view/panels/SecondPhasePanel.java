@@ -34,6 +34,7 @@ import kube.view.GUIColors;
 import kube.view.animations.HexGlow;
 import kube.view.animations.Message;
 import kube.view.animations.PanelGlow;
+import kube.view.animations.fakeDnD;
 import kube.view.components.Buttons;
 import kube.view.components.HexIcon;
 
@@ -372,6 +373,9 @@ public class SecondPhasePanel extends JPanel {
                 }
             } else if (move instanceof MoveMM) {
                 MoveMM mm = (MoveMM) move;
+                Point from = p1Panels[move.getFrom().x][move.getFrom().y].getLocationOnScreen();
+                Point to = k3Panels[move.getTo().x][move.getTo().y].getLocationOnScreen();
+                new fakeDnD(mm.getColor(), from, to, gui);
                 updateMountain(mm.getPlayer(), mm.getFrom());
                 updateMountain(null, mm.getTo());
             } else if (move instanceof MoveMW) {
@@ -384,7 +388,6 @@ public class SecondPhasePanel extends JPanel {
         updateText();
         updateVisible();
         updatePanelGlow(false);
-        Config.debug(k3.getCurrentPlayer().getId(), k3.getGameType());
         if (k3.getHistory().canUndo()
                 && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() != k3.getGameType())) {
             undoButton.setEnabled(true);

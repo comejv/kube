@@ -114,7 +114,6 @@ public class Game implements Runnable {
 
         while (action.getType() != ActionType.START && action.getType() != ActionType.LOAD &&
                 action.getType() != ActionType.RESET && action.getType() != ActionType.START_ONLINE) {
-            Config.debug("Reception de ", action);
             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
             action = eventsToModel.remove();
         }
@@ -153,7 +152,6 @@ public class Game implements Runnable {
                     ois = new ObjectInputStream(fis);
                     k3.init((Kube) ois.readObject());
                     ois.close();
-                    Config.debug("initialized game");
                     eventsToView.add(new Action(ActionType.VALIDATE, true));
                     return LOAD_START;
                 } catch (ClassNotFoundException | InvalidClassException | InvalidObjectException e) {
@@ -306,7 +304,6 @@ public class Game implements Runnable {
         while (!player.getIsMountainValidated()) {
 
             action = eventsToModel.remove();
-            Config.debug("Phase de construction, reception de", action);
             switch (action.getType()) {
                 case AI_MOVE:
                     constructionPhaseAIsuggestion(player);
@@ -331,7 +328,6 @@ public class Game implements Runnable {
                 case VALIDATE:
                     // Reception of the other player mountain
                     if (getGameType() != LOCAL && action.getFromNetwork()) {
-                        Config.debug((Player) action.getData());
                         if (getGameType() == JOIN) {
                             k3.setP1((Player) action.getData());
                         } else {
@@ -348,7 +344,6 @@ public class Game implements Runnable {
                     }
                     break;
                 case SAVE:
-                    Config.debug("Save");
                     save(action.getData().toString());
                     break;
                 case RESET:
@@ -415,7 +410,6 @@ public class Game implements Runnable {
 
             while (!k3.canCurrentPlayerPlay()) {
                 action = eventsToModel.remove();
-                Config.debug(action, action.getFromNetwork());
                 switch (action.getType()) {
                     case UNDO:
                         AIpause = true;
@@ -451,7 +445,6 @@ public class Game implements Runnable {
                     }
                 } else {
                     action = eventsToModel.remove();
-                    Config.debug(action, action.getFromNetwork());
                     switch (action.getType()) {
                         case MOVE:
                         case MOVE_NUMBER:
@@ -647,7 +640,6 @@ public class Game implements Runnable {
                 } else if (!action.getFromNetwork() && k3.getCurrentPlayer() != k3.getPlayerById(getGameType())) {
                     Config.debug("Sent undo to network");
                     eventsToNetwork.add(new Action(ActionType.UNDO, lastMoveDone));
-                    Config.debug("Move to undo send: ", lastMoveDone);
                     if (waitAcknowledge() && k3.unPlay()) {
                         eventsToView.add(new Action(ActionType.UNDO, k3.getLastMovePlayed()));
                     } else {
