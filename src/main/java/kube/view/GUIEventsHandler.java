@@ -23,6 +23,7 @@ import kube.view.panels.TransparentPanel;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.Timer;
@@ -101,6 +102,8 @@ public class GUIEventsHandler implements Runnable {
         HexIcon h;
         ActionEvent event;
         MenuPanel menuPanel;
+        File file;
+
         while (true) {
 
             action = getEventsToView().remove();
@@ -160,6 +163,21 @@ public class GUIEventsHandler implements Runnable {
                         getGUI().removeAllFromOverlay();
                         getGUI().showPanel(GUI.MENU);
                         eventsToModel.add(new Action(ActionType.RESET));
+                    }
+                    break;
+                case DELETE_SELECTED_SAVE:
+                    if (getGUI().askForConfirmation("Supprimer la sauvegarde: " + action.getData(),
+                            "Êtes-vous sûr de vouloir supprimer ce fichier de sauvegarde ?")) {
+                        file = new File(Config.SAVING_PATH_DIRECTORY + action.getData());
+                        if (file.delete()) {
+                            Config.debug("File deleted successfully");
+                        } else {
+                            Config.error("Failed to delete the file");
+                        }
+                        overlay = (OverlayPanel) getGUI().getOverlay().getComponent(0);
+                        loadingSavePanel = (LoadingSavePanel) overlay.getComponent(0);
+                        loadingSavePanel.removeAll();
+                        loadingSavePanel.init(gui);
                     }
                     break;
                 case RETURN_TO_GAME:
