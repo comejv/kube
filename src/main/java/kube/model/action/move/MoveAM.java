@@ -83,8 +83,22 @@ public class MoveAM extends Move {
 
     @Override
     public String toHTML() {
-        return "Poser depuis les additionels " +
+        String s = "<b>" + getPlayer().getName() + "</b>" +
+                " pose depuis les additionels " +
                 getColor().forDisplayHTML() +
-                ", en (" + to.x + ", " + to.y + ")";
+                " vers la " + (6 - to.x);
+        if (to.x == 5) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " colonne de la " + (to.y + 1);
+        if (to.y == 0) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " ligne";
+        return s;
     }
 }

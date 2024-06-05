@@ -20,7 +20,6 @@ public abstract class Network {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-    private boolean hasBeenConnected;
     private boolean waiting = false;
 
     /**********
@@ -48,7 +47,7 @@ public abstract class Network {
     }
 
     public void setHasBeenConnected(boolean hasBeenConnected){
-        
+
     }
 
     /**********
@@ -77,7 +76,7 @@ public abstract class Network {
 
     /**
      * Connect to the server
-     * 
+     *
      * @param ip the IP address
      * @param port the port
      * @return true if the connection is successful, false otherwise
@@ -86,7 +85,7 @@ public abstract class Network {
 
     /**
      * Disconnect from the server
-     * 
+     *
      * @return true if the disconnection is successful, false otherwise
      */
     public abstract boolean disconnect();
@@ -97,7 +96,7 @@ public abstract class Network {
 
     /**
      * Check if the current instance is a server
-     * 
+     *
      * @return false
      */
     public boolean isServer() {
@@ -106,7 +105,7 @@ public abstract class Network {
 
     /**
      * Send an action to the server
-     * 
+     *
      * @param action the action to send
      * @return true if the data is sent, false otherwise
      */

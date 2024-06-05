@@ -9,8 +9,6 @@ import java.io.Serializable;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class History implements Serializable {
-
-    // TODO : refactor this class to make it more readable
     
     /**********
      * ATTRIBUTES
@@ -146,25 +144,6 @@ public class History implements Serializable {
      */
     public boolean canRedo() {
         return getUndone().size() > 0;
-    }
-
-    /**
-     * Return a string representing the history for displaying it
-     * 
-     * @param IA true if the history is displayed for the IA, false otherwise
-     * @return a string representing the history
-     */
-    public String forDisplay() {
-        String s = "<html>";
-        for (int i = done.size() - 1; i >= 0; i--) {
-            Move m = done.get(i);
-            Player player = m.getPlayer();
-            Point position = m.getFrom();
-            s += player.getName() + " : (";
-            s += (int) (position.getX() + 1) + ", " + (int) (position.getY() + 1) + ")<br>";
-        }
-        s += "</html>";
-        return s;
     }
 
     /**********

@@ -263,8 +263,6 @@ public class FirstPhasePanel extends JPanel {
         mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
         mainPanel.setBackground(GUIColors.GAME_BG.toColor());
 
-        // TODO : continue the refactoring
-
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
         sidePanel.setOpaque(false);
@@ -463,6 +461,7 @@ public class FirstPhasePanel extends JPanel {
             mini.setOpaque(false);
             numOfPieces = new JLabel("x0");
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+            numOfPieces.setForeground(GUIColors.ACCENT.toColor());
             mini.add(new HexIcon(c, false, 1.5));
             mini.add(numOfPieces);
             gbc.gridx = x;
@@ -492,6 +491,7 @@ public class FirstPhasePanel extends JPanel {
         mini.setOpaque(false);
         numOfPieces = new JLabel("x0");
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        numOfPieces.setForeground(GUIColors.ACCENT.toColor());
         mini.add(new HexIcon(ModelColor.WHITE, false, 1.5));
         mini.add(numOfPieces);
         gbc.gridx = 0;
@@ -504,6 +504,7 @@ public class FirstPhasePanel extends JPanel {
         mini.setOpaque(false);
         numOfPieces = new JLabel("x0");
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        numOfPieces.setForeground(GUIColors.ACCENT.toColor());
         mini.add(new HexIcon(ModelColor.NATURAL, false, 1.5));
         mini.add(numOfPieces);
         gbc.gridx = 1;
@@ -541,6 +542,7 @@ public class FirstPhasePanel extends JPanel {
             numberOfPieces = getKube().getCurrentPlayer().getAvailableToBuild().get(c);
             numOfPieces = new JLabel("x" + numberOfPieces);
             numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+            numOfPieces.setForeground(GUIColors.ACCENT.toColor());
             actionable = numberOfPieces > 0;
             mini.add(new HexIcon(c, actionable, 1.5));
             mini.add(numOfPieces);
@@ -599,6 +601,7 @@ public class FirstPhasePanel extends JPanel {
 
         JLabel numOfPieces = new JLabel("x0");
         numOfPieces.setFont(new Font("Jomhuria", Font.PLAIN, 40));
+        numOfPieces.setForeground(GUIColors.ACCENT.toColor());
 
         HexIcon hexIcon = new HexIcon(color, false, 1.5);
         hexIcon.setToolTipText(tooltipText); // Set the tooltip text
@@ -780,9 +783,7 @@ public class FirstPhasePanel extends JPanel {
         getButtonsMap().get("Save").setEnabled(true);
     }
 
-    // TODO : remove ?
     public void updateDnd(Action a) {
-
     }
 
     public void updateActionable() {

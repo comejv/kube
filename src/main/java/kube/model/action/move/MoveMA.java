@@ -84,8 +84,21 @@ public class MoveMA extends Move {
 
     @Override
     public String toHTML() {
-        return "Recuperer dans ses additionels " +
+        String s = "<b>" + getPlayer().getName() + "</b>" + " recupere dans ses additionels " +
                 getColor().forDisplayHTML() +
-                " depuis (" + getFrom().x + ", " + getFrom().y + ")";
+                " depuis la " + (6 - getFrom().x);
+        if (getFrom().x == 5) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " colonne de la " + (getFrom().y + 1);
+        if (getFrom().y == 0) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " ligne";
+        return s;
     }
 }

@@ -15,7 +15,6 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 
@@ -46,8 +45,6 @@ import kube.view.components.Buttons.SelectPlayerButton;
  */
 public class MenuPanel extends JPanel {
 
-    // TODO : refactor this class to make it more readable
-    private GUI gui;
     private JButton rules;
     private CardLayout buttonsLayout;
     private JPanel buttonsPanel;
@@ -56,7 +53,6 @@ public class MenuPanel extends JPanel {
     private MenuController buttonListener;
 
     public MenuPanel(GUI gui, MenuController buttonListener) {
-        this.gui = gui;
         this.buttonListener = buttonListener;
         setLayout(new BorderLayout());
 

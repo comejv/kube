@@ -9,8 +9,6 @@ import kube.model.Mountain;
 import kube.model.action.move.Move;
 import kube.model.ai.EasyAI;
 import kube.model.ai.ExpertAI;
-import kube.model.ai.HardAI;
-import kube.model.ai.MediumAI;
 import kube.model.ai.tests.*;
 
 // Import java classes
@@ -21,11 +19,10 @@ import java.util.Random;
 
 public class Simulation implements Runnable {
 
-    // TODO : refactor the code to remove the unused methods and variables
-
     /**********
      * ATTRIBUTES
      **********/
+    @SuppressWarnings("unused")
     private int winJ1, winJ2, nbMoveJ1, nbMoveJ2, nbGames, nGamesFinished, sumHorizonJ1, sumHorizonJ2;
 
     /**********
@@ -237,6 +234,8 @@ public class Simulation implements Runnable {
     /**
      * Method to test the seeded random
      */
+
+    @SuppressWarnings("unused")
     private void testSeededRandom() {
         int seed = 180;
         Kube k = new Kube(true);
@@ -259,6 +258,7 @@ public class Simulation implements Runnable {
         System.out.println("Seed:" + seed + " " + k.getP1().getMountain().equals(k2.getP1().getMountain()));
     }
 
+    @SuppressWarnings("unused")
     private int findSeedWithEquivalentDistributionToPlayers() {
         int seed;
         Random r = new Random();
@@ -278,6 +278,7 @@ public class Simulation implements Runnable {
 
     }
 
+    @SuppressWarnings("unused")
     private void simulateNumberOfSlotAvailable() {
         float nTest = 1000;
         float availableSum = 0;
@@ -293,6 +294,7 @@ public class Simulation implements Runnable {
                         + " cases disponible à chaque coup");
     }
 
+    @SuppressWarnings("unused")
     private void simulateNumberOfCubeWithdrawable() {
         float nTest = 1000;
         float removableSum = 0;
@@ -358,6 +360,7 @@ public class Simulation implements Runnable {
 
     }
 
+    @SuppressWarnings("unused")
     private void testMountain() {
         Kube k = new Kube(true);
         k.setHistory(new History());

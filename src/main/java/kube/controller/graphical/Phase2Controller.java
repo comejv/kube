@@ -13,12 +13,11 @@ import javax.swing.SwingUtilities;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.model.action.Queue;
-import kube.view.components.HexIcon;
+
 import kube.view.components.Buttons.ButtonIcon;
-import kube.configuration.Config;
 
 public class Phase2Controller implements ActionListener, MouseListener, ComponentListener {
-    // TODO : refactor this class to make it more readable
+
     private Queue<Action> toView;
     private Queue<Action> toModel;
 
