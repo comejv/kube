@@ -395,7 +395,8 @@ public class SecondPhasePanel extends JPanel {
         if (a.getType() != ActionType.UNDO && a.getType() != ActionType.AI_PAUSE && k3.getPenality()) {
             penalityMessage();
         }
-        if (!k3.getCurrentPlayer().isAI()) {
+        if (!k3.getCurrentPlayer().isAI()
+                && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() == k3.getGameType())) {
             sugAIButton.setEnabled(true);
         }
     }
@@ -490,7 +491,12 @@ public class SecondPhasePanel extends JPanel {
             }
         }
         loadButton.setEnabled(gameType == Game.LOCAL);
-        sugAIButton.setEnabled(!k3.getCurrentPlayer().isAI());
+        if (!k3.getCurrentPlayer().isAI()
+                && (gameType == Game.LOCAL || k3.getCurrentPlayer().getId() == k3.getGameType())) {
+            sugAIButton.setEnabled(true);
+        } else {
+            sugAIButton.setEnabled(false);
+        }
         updateHisto();
         updateAdditionnals(k3.getP1());
         updateAdditionnals(k3.getP2());
