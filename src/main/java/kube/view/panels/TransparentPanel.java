@@ -7,6 +7,7 @@ import javax.swing.*;
 
 import kube.configuration.Config;
 import kube.configuration.ResourceLoader;
+import kube.view.GUIColors;
 
 public class TransparentPanel extends JPanel {
     private String overlayText;
@@ -71,7 +72,7 @@ public class TransparentPanel extends JPanel {
                 (int) getWidth(),
                 (int) rect.getHeight() + 100);
 
-        g2d.setColor(Color.BLACK); // Set the text color
+        g2d.setColor(GUIColors.ACCENT.toColor()); // Set the text color
         g2d.drawString(text, x, y);
         g2d.dispose(); // Clean up graphics context
     }

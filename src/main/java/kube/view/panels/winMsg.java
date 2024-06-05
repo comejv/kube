@@ -9,6 +9,7 @@ import kube.controller.graphical.Phase2Controller;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
 import kube.view.GUI;
+import kube.view.GUIColors;
 import kube.view.components.Buttons;
 
 public class winMsg {
@@ -32,7 +33,7 @@ public class winMsg {
         GridBagConstraints gbc = new GridBagConstraints();
 
         JLabel label1 = new JLabel(text);
-        label1.setForeground(Color.BLACK);
+        label1.setForeground(GUIColors.ACCENT.toColor());
         label1.setFont( new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT * Config.getUIScale() / 10)));
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
