@@ -955,7 +955,8 @@ public class SecondPhasePanel extends JPanel {
 
     private void moveAnimation(ModelColor c, Point from, Point to, Player p, Action action) {
         Object lock = new Object();
-        if (action.getType() == ActionType.MOVE || action.getType() == ActionType.AI_MOVE &&  (p.isAI() || (gameType != Game.LOCAL && gameType != p.getId()))) {
+        Config.debug(action);
+        if (action.getType() == ActionType.AUTO_MOVE || (action.getType() == ActionType.MOVE  &&  (p.isAI() || (gameType != Game.LOCAL && gameType != p.getId())))) {
             new fakeDnD(c, from, to, gui, lock);
             synchronized (lock) {
                 try {

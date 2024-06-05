@@ -50,7 +50,7 @@ public enum ActionType {
     AI_PAUSE,
     CREATE_MOVE,
     DELETE,
-
+    AUTO_MOVE,
     /**********
      * SERVICES
      **********/

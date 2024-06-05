@@ -479,7 +479,7 @@ public class Game implements Runnable {
                             k3.getCurrentPlayer().setAI(new ExpertAI(50));
                             k3.getCurrentPlayer().getAI().setPlayerId(k3.getCurrentPlayer().getId());
                             Move move = k3.getCurrentPlayer().getAI().nextMove(k3);
-                            playMove(new Action(ActionType.MOVE, move, k3.getCurrentPlayer().getId()));
+                            playMove(new Action(ActionType.AUTO_MOVE, move, k3.getCurrentPlayer().getId()));
                             break;
                         default:
                             eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
@@ -566,6 +566,7 @@ public class Game implements Runnable {
                         currentMove.getModelColor());
                 break;
             case MOVE:
+            case AUTO_MOVE:
             default:
                 move = (Move) action.getData();
                 break;
@@ -579,7 +580,11 @@ public class Game implements Runnable {
         switch (getGameType()) {
             case LOCAL:
                 if (k3.playMove(move)) {
-                    eventsToView.add(new Action(ActionType.MOVE, move));
+                    if (action.getType() == ActionType.AUTO_MOVE){
+                        eventsToView.add(new Action(ActionType.AUTO_MOVE, move));
+                    } else {
+                        eventsToView.add(new Action(ActionType.MOVE, move));
+                    }
                 } else {
                     eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                 }
@@ -592,7 +597,11 @@ public class Game implements Runnable {
                     acknowledge(isValidMove);
                     if (isValidMove) {
                         eventsToView.add(new Action(ActionType.ITS_YOUR_TURN));
-                        eventsToView.add(new Action(ActionType.MOVE, move));
+                        if (action.getType() == ActionType.AUTO_MOVE){
+                            eventsToView.add(new Action(ActionType.AUTO_MOVE, move));
+                        } else {
+                            eventsToView.add(new Action(ActionType.MOVE, move));
+                        }
                     } else {
                         eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
@@ -600,7 +609,11 @@ public class Game implements Runnable {
                     Config.debug("Sent move to network");
                     eventsToNetwork.add(new Action(ActionType.MOVE, move));
                     if (waitAcknowledge() && k3.playMove(move)) {
-                        eventsToView.add(new Action(ActionType.MOVE, move));
+                        if (action.getType() == ActionType.AUTO_MOVE){
+                            eventsToView.add(new Action(ActionType.AUTO_MOVE, move));
+                        } else {
+                            eventsToView.add(new Action(ActionType.MOVE, move));
+                        }
                     } else {
                         eventsToView.add(new Action(ActionType.PRINT_FORBIDDEN_ACTION));
                     }
