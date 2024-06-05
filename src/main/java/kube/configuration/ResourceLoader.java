@@ -149,7 +149,7 @@ public class ResourceLoader {
         String result, folder, relativePath;
         BufferedReader buf;
         InputStream resource;
-        if (fileName.equals("credits")) {
+        if (fileName.equals("credits.html")) {
             relativePath = fileName;
         } else {
             folder = TEXT_FOLDER + Config.getLanguage();

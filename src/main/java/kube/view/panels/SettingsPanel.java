@@ -218,7 +218,7 @@ public class SettingsPanel extends JPanel {
         creditsPane.setContentType("text/html");
         creditsPane.setEditable(false);
 
-        String creditsContent = ResourceLoader.getText("credits");
+        String creditsContent = ResourceLoader.getText("credits.html");
         creditsPane.setText(creditsContent);
 
         creditsPane.addHyperlinkListener(new HyperlinkListener() {
