@@ -35,7 +35,7 @@ public class SettingsPanel extends JPanel {
         this.gui = gui;
         this.buttonListener = buttonListener;
         tabNb = 0;
-        width = 600;
+        width = 800;
         height = 600;
 
         setLayout(new BorderLayout());
@@ -254,7 +254,7 @@ public class SettingsPanel extends JPanel {
         JLabel newLabel = new JLabel(name, SwingConstants.CENTER);
         newLabel.setFont(new Font("Jomhuria", Font.PLAIN, (int) (Config.INIT_HEIGHT / 12)));
         newLabel.setForeground(GUIColors.ACCENT.toColor());
-        newLabel.setPreferredSize(new Dimension(200, 50));
+        newLabel.setPreferredSize(new Dimension(300, 50));
         tabbedPanel.addTab(name, newPanel);
         tabbedPanel.setTabComponentAt(getTabNb(), newLabel);
         setTabNb(getTabNb() + 1);
