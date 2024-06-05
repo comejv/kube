@@ -1,7 +1,6 @@
 package kube.controller.graphical;
 
 // Import kube classes
-import kube.configuration.Config;
 import kube.model.action.Action;
 import kube.model.action.Queue;
 

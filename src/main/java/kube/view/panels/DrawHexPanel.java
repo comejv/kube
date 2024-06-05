@@ -1,6 +1,5 @@
 package kube.view.panels;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -8,12 +7,10 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
 import kube.model.ModelColor;
 import kube.view.components.HexIcon;
 
 public class DrawHexPanel extends JPanel {
-    // TODO : refactor this class to make it more readable
     private HexIcon hex;
     private Point point;
     private ModelColor color;

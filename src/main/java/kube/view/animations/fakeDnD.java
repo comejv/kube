@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.Timer;
 
-import kube.configuration.Config;
 import kube.model.ModelColor;
 import kube.model.action.Action;
 import kube.model.action.ActionType;
@@ -17,21 +16,15 @@ import kube.view.panels.DrawHexPanel;
 public class fakeDnD implements ActionListener {
     private Timer timer;
     private int state;
-    private HexIcon hex;
-    private Point from, to, decale;
+    private Point decale;
     private GUI gui;
     private DrawHexPanel hexPanel;
-    private ModelColor c;
     private int maxState;
     private Object lock;
 
     public fakeDnD(ModelColor c, Point from, Point to, GUI gui, Object lock) {
         gui.getEventsToModel().add(new Action(ActionType.AI_PAUSE, true));
-        Config.debug("Start fake DnD");
-        this.from = from;
-        this.to = to;
         this.gui = gui;
-        this.c = c;
         this.lock = lock;
         maxState = 30;
         decale = new Point((to.x - from.x) / maxState, (to.y - from.y) / maxState);

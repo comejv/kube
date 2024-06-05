@@ -1,6 +1,5 @@
 package kube.controller.network;
 
-import kube.configuration.Config;
 // Import kube classes
 import kube.model.action.Action;
 import kube.model.action.ActionType;

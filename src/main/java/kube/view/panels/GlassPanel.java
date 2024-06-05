@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
 import kube.model.ModelColor;
 import kube.view.components.HexIcon;
 
@@ -75,7 +74,6 @@ public class GlassPanel extends JPanel {
     }
 
     public void clear() {
-        Config.debug("Clear hexicon");
         setHexIcon(null);
         repaint();
     }
