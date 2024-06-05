@@ -83,7 +83,7 @@ public class Server extends Network {
                     setOut(new ObjectOutputStream(getClientSocket().getOutputStream()));
                     setIn(new ObjectInputStream(getClientSocket().getInputStream()));
                     if (eventsToView != null){
-                        eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ETABLISHED));
+                        eventsToView.add(new Action(ActionType.PRINT_CONNECTION_ESTABLISHED));
                     }
                 } catch (IOException e) {
                     Config.error("Could not accept the client.");

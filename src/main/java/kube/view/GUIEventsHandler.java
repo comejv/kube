@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.io.File;
 
-import javax.swing.JButton;
 import javax.swing.Timer;
 
 public class GUIEventsHandler implements Runnable {
@@ -216,7 +215,7 @@ public class GUIEventsHandler implements Runnable {
                     }
                     getGUI().winMessage(action);
                     break;
-                case PRINT_CONNECTION_ETABLISHED:
+                case PRINT_CONNECTION_ESTABLISHED:
                     event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "startOnline");
                     menuPanel = (MenuPanel) getGUI().getPanel(GUI.MENU);
                     menuPanel.getButtonListener().actionPerformed(event);

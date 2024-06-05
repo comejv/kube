@@ -144,6 +144,7 @@ public class Game implements Runnable {
                 return CLASSIC_START;
             case LOAD:
                 setGameType(LOCAL);
+                k3.setGameType(getGameType());
                 // Load a saved game
                 filePath = Config.SAVING_PATH_DIRECTORY + (String) action.getData();
                 file = new File(filePath);
@@ -152,7 +153,7 @@ public class Game implements Runnable {
                     ois = new ObjectInputStream(fis);
                     k3.init((Kube) ois.readObject());
                     ois.close();
-                    Config.debug("initilized game");
+                    Config.debug("initialized game");
                     eventsToView.add(new Action(ActionType.VALIDATE, true));
                     return LOAD_START;
                 } catch (ClassNotFoundException | InvalidClassException | InvalidObjectException e) {
