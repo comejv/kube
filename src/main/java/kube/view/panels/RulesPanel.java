@@ -30,7 +30,7 @@ import kube.model.ModelColor;
 import kube.view.components.HexIcon;
 import kube.view.components.Buttons.RulesButton;
 
-public class RulesPanel extends JPanel{
+public class RulesPanel extends JPanel {
     // TODO : refactor this class to make it more readables
 
     private GUI gui;
@@ -59,11 +59,11 @@ public class RulesPanel extends JPanel{
         setPreferredSize(new Dimension(width, height));
         setBackground(GUIColors.ACCENT.toColor());
 
-        int[] rulesWithAnimation = {1, 2, 3};
+        int[] rulesWithAnimation = { 1, 2, 3 };
         animatedRuleTimer = new ArrayList<>();
         setRulesWithAnimation(rulesWithAnimation);
         setCurrentRuleNb(0);
-        
+
         JLabel ruleTitle = new JLabel("REGLES", SwingConstants.CENTER);
         ruleTitle.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 6)));
         ruleTitle.setForeground(GUIColors.TEXT.toColor());
@@ -74,7 +74,7 @@ public class RulesPanel extends JPanel{
         elemGBC.weightx = 0.5;
         elemGBC.weighty = 0.1;
         add(ruleTitle, elemGBC);
-        
+
         cardPanel = new JPanel(new CardLayout());
         cardPanel.setPreferredSize(new Dimension(width, height));
         elemGBC = new GridBagConstraints();
@@ -84,23 +84,23 @@ public class RulesPanel extends JPanel{
         elemGBC.weighty = 0.9;
         elemGBC.fill = GridBagConstraints.BOTH;
         add(cardPanel, elemGBC);
-        
+
         textAreas = new JTextArea[TOTAL_RULE_NB];
         rulePanels = new RulePanel[TOTAL_RULE_NB];
         loadAllPanels();
 
         setVisible(true);
     }
-    
-    private void loadAllTexts(){
+
+    private void loadAllTexts() {
         for (int i = 0; i < TOTAL_RULE_NB; i++) {
             Config.debug("load rule nb " + i);
-            //rules are numeroted from 1 to 8, not 0 to 7 thus the +1
+            // rules are numeroted from 1 to 8, not 0 to 7 thus the +1
             JTextArea textArea = new JTextArea(ResourceLoader.getText("rule" + (i + 1)));
             textArea.setEditable(false);
             textArea.setWrapStyleWord(true);
             textArea.setLineWrap(true);
-            textArea.setFont(new Font("Jomhuria", Font.BOLD, (int) (Config.INIT_HEIGHT / 14)));
+            textArea.setFont(new Font("Jomhuria", Font.PLAIN, (int) (gui.getMainFrame().getHeight() / 18)));
             textArea.setBackground(BACKGROUND);
             textArea.setForeground(FOREGROUND);
             textArea.setOpaque(false);
@@ -109,7 +109,7 @@ public class RulesPanel extends JPanel{
         }
     }
 
-    private void loadAllPanels(){
+    private void loadAllPanels() {
         loadAllTexts();
         RulePanel rulePanel = new RulePanel();
         rulePanel.addTextArea(0);
@@ -130,7 +130,7 @@ public class RulesPanel extends JPanel{
             rulePanel.setVisible(true);
         }
     }
-    
+
     public void nextRule() {
         cardPanel.removeAll();
         setCurrentRuleNb(getCurrentRuleNb() + 1);
@@ -138,7 +138,7 @@ public class RulesPanel extends JPanel{
         cardPanel.revalidate();
         cardPanel.repaint();
     }
-    
+
     public void previousRule() {
         cardPanel.removeAll();
         setCurrentRuleNb(getCurrentRuleNb() - 1);
@@ -146,7 +146,7 @@ public class RulesPanel extends JPanel{
         cardPanel.revalidate();
         cardPanel.repaint();
     }
-    
+
     public int getCurrentRuleNb() {
         return currentRuleNb;
     }
@@ -165,7 +165,7 @@ public class RulesPanel extends JPanel{
         currentRuleNb = i % TOTAL_RULE_NB;
     }
 
-    public void setRulesWithAnimation(int[] rulesWithAnimation){
+    public void setRulesWithAnimation(int[] rulesWithAnimation) {
         for (int i : rulesWithAnimation) {
             rulesWithAnimNb.add(i);
         }
@@ -190,7 +190,7 @@ public class RulesPanel extends JPanel{
     }
 
     private class RulePanel extends JPanel {
-        
+
         private RulePanel() {
             setLayout(new GridBagLayout());
             setBackground(BACKGROUND);
@@ -206,7 +206,7 @@ public class RulesPanel extends JPanel{
             add(textAreas[ruleNb], elemGBC);
         }
 
-        private void addAnimation(int ruleNb){
+        private void addAnimation(int ruleNb) {
             if (rulesWithAnimNb.contains(ruleNb)) {
                 GridBagConstraints elemGBC = new GridBagConstraints();
                 elemGBC.gridx = 0;
@@ -219,7 +219,7 @@ public class RulesPanel extends JPanel{
             }
         }
 
-        private void addImage(int ruleNb){
+        private void addImage(int ruleNb) {
             if (ruleNb > 4) {
                 int imgWidth = gui.getMainFrame().getWidth() / 10;
                 int imgHeigth = gui.getMainFrame().getWidth() / 10;
@@ -228,14 +228,12 @@ public class RulesPanel extends JPanel{
                 HexIcon white = new HexIcon(ModelColor.WHITE);
                 white.resizeIcon(imgWidth, imgHeigth);
                 GridBagConstraints elemGBC = new GridBagConstraints();
-                elemGBC.gridx = 0;
-                elemGBC.gridy = 1;
-                elemGBC.anchor = GridBagConstraints.CENTER;
-                elemGBC.fill = GridBagConstraints.BOTH;
+
+                JPanel imagePanel;
                 switch (ruleNb) {
                     case 5:
-                        JPanel imagePanel = new JPanel(new GridBagLayout());
-                        imagePanel.setBackground(new Color(0,0,0,0));
+                        imagePanel = new JPanel(new GridBagLayout());
+                        imagePanel.setBackground(new Color(0, 0, 0, 0));
                         add(imagePanel, elemGBC);
                         elemGBC = new GridBagConstraints();
                         elemGBC.gridx = 0;
@@ -247,9 +245,21 @@ public class RulesPanel extends JPanel{
                         imagePanel.add(nat, elemGBC);
                         break;
                     case 6:
+                        imagePanel = new JPanel(new GridBagLayout());
+                        imagePanel.setBackground(new Color(0, 0, 0, 0));
+                        add(imagePanel, elemGBC);
+                        elemGBC = new GridBagConstraints();
+                        elemGBC.gridx = 0;
+                        elemGBC.anchor = GridBagConstraints.CENTER;
                         add(white, elemGBC);
                         break;
                     case 7:
+                        imagePanel = new JPanel(new GridBagLayout());
+                        imagePanel.setBackground(new Color(0, 0, 0, 0));
+                        add(imagePanel, elemGBC);
+                        elemGBC = new GridBagConstraints();
+                        elemGBC.gridx = 0;
+                        elemGBC.anchor = GridBagConstraints.CENTER;
                         add(nat, elemGBC);
                         break;
                     default:
@@ -257,7 +267,7 @@ public class RulesPanel extends JPanel{
                 }
             }
         }
-        
+
         private void addNextButton(int ruleNb) {
             JButton next = new RulesButton("Suivant");
             GridBagConstraints elemGBC = new GridBagConstraints();
@@ -268,7 +278,7 @@ public class RulesPanel extends JPanel{
             elemGBC.weighty = .5;
             elemGBC.insets = new Insets(0, 0, 20, 20);
             next.addActionListener(buttonListener);
-            //ruleNb ranges from 0 to 7
+            // ruleNb ranges from 0 to 7
             if (ruleNb == TOTAL_RULE_NB - 1) {
                 next.setText("Terminer");
                 next.setActionCommand("endRule");
@@ -277,7 +287,7 @@ public class RulesPanel extends JPanel{
             }
             add(next, elemGBC);
         }
-        
+
         private void addPreviousButton(int ruleNb) {
             if (ruleNb != 0) {
                 JButton previous = new RulesButton("Précédent");
@@ -299,7 +309,7 @@ public class RulesPanel extends JPanel{
         return animatedRuleTimer;
     }
 
-    public class AnimationPanel extends JPanel{
+    public class AnimationPanel extends JPanel {
 
         private GUI animGui;
         private JLabel[] frames;
@@ -308,7 +318,7 @@ public class RulesPanel extends JPanel{
         private double updatedHeightFactor;
         private AnimatedRule animation;
 
-        private AnimationPanel(int ruleNb, GUI gui){
+        private AnimationPanel(int ruleNb, GUI gui) {
             animGui = gui;
             frames = new JLabel[4];
             updatedWidth = Math.round(gui.getMainFrame().getWidth() / 2.66f);
@@ -320,7 +330,7 @@ public class RulesPanel extends JPanel{
                 Image resized = image.getScaledInstance(getUpdatedWidth(), updatedHeight, Image.SCALE_SMOOTH);
                 JLabel frame = new JLabel(new ImageIcon(resized));
                 frame.setPreferredSize(new Dimension(updatedWidth, updatedHeight));
-                if(i > 0){
+                if (i > 0) {
                     frame.setVisible(false);
                 }
                 frames[i] = frame;
@@ -329,7 +339,7 @@ public class RulesPanel extends JPanel{
             animation = new AnimatedRule(ruleNb, this);
         }
 
-        public JLabel[] getFrames(){
+        public JLabel[] getFrames() {
             return frames;
         }
 
@@ -356,5 +366,5 @@ public class RulesPanel extends JPanel{
         public void setUpdatedHeightFactor(double updatedHeightFactor) {
             this.updatedHeightFactor = updatedHeightFactor;
         }
-    } 
+    }
 }
