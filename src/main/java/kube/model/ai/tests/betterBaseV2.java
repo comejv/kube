@@ -50,22 +50,22 @@ public class betterBaseV2 extends MiniMaxAI {
     @Override
     public void constructionPhase(Kube k3) {
         p = getPlayer(k3);
-        getBaseRepartiton(k3);
+        getBaseRepartition(k3);
         ModelColor c;
         Integer[] startPoint;
         int[] posed = { 0, 0, 0, 0, 0, 0 };
         int a = 0;
-        int i, j, oldj;
+        int i, j, old_j;
         setJokers(getRandom());
         for (int k = 0; k < 3; k++) {
             startPoint = getStartPoint();
             i = startPoint[0];
-            oldj = j = startPoint[1];
+            old_j = j = startPoint[1];
             c = getColorBasedOnProbabilities();
             poseColor: while (p.getAvailableToBuild().get(c) > 0 && i < p.getMountain().getBaseSize()) {
-                if (oldj != i) {
+                if (old_j != i) {
                     do {
-                        j = oldj + getRandom().nextInt(2);
+                        j = old_j + getRandom().nextInt(2);
                         try {
                             if (p.getMountain().getCase(i, j) != ModelColor.EMPTY
                                     && p.getMountain().getCase(i, j + 1) != ModelColor.EMPTY) {
@@ -83,7 +83,7 @@ public class betterBaseV2 extends MiniMaxAI {
                 }
                 p.addToMountainFromAvailableToBuild(i, j, c);
                 posed[i]++;
-                oldj = j;
+                old_j = j;
                 i++;
             }
             redistributeProbs(k3, c);
@@ -106,7 +106,7 @@ public class betterBaseV2 extends MiniMaxAI {
      * @return HashMap<ModelColor, Float> of probabilities
      */
 
-    private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
+    private HashMap<ModelColor, Float> getBaseRepartition(Kube k3) {
         int baseSize = k3.getBaseSize();
         float nEmplacements = 0f;
         probabilities = new HashMap<>();
@@ -191,7 +191,7 @@ public class betterBaseV2 extends MiniMaxAI {
     }
 
     /**
-     * Get one of the color with highest probability
+     * Get one of the color with the highest probability
      * 
      * @return ModelColor based on probabilities
      */

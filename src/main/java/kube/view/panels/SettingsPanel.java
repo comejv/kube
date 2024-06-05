@@ -47,16 +47,16 @@ public class SettingsPanel extends JPanel {
         tabbedPanel.setBackground(GUIColors.ACCENT.toColor());
         add(tabbedPanel, BorderLayout.CENTER);
 
-        addGraphismePanel();
+        addGraphicsPanel();
         addAudioTab();
         addCreditsTab();
 
         setVisible(true);
     }
 
-    private void addGraphismePanel() {
-        JPanel graphismePanel = createTab("Vidéo");
-        graphismePanel.setLayout(new GridBagLayout());
+    private void addGraphicsPanel() {
+        JPanel graphicsPanel = createTab("Vidéo");
+        graphicsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -96,11 +96,47 @@ public class SettingsPanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        graphismePanel.add(resolutionLabel, gbc);
+        graphicsPanel.add(resolutionLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        graphismePanel.add(resolutionManager, gbc);
+        graphicsPanel.add(resolutionManager, gbc);
+
+        // UI Scale
+        JLabel uiScaleLabel = new JLabel("Changer la taille de l'interface:");
+        JButton enlargeButton = new JButton("+");
+        enlargeButton.setPreferredSize(new Dimension(50, 30));
+        enlargeButton.addActionListener(e -> gui.incrementUIScale(1.1));
+
+        JButton shrinkButton = new JButton("-");
+        shrinkButton.setPreferredSize(new Dimension(50, 30));
+        shrinkButton.addActionListener(e -> gui.incrementUIScale(0.9));
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        graphicsPanel.add(uiScaleLabel, gbc);
+
+        JPanel uiScalePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        uiScalePanel.add(enlargeButton);
+        uiScalePanel.add(shrinkButton);
+
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        graphicsPanel.add(uiScalePanel, gbc);
+
+        // Reset Button
+        JLabel resetLabel = new JLabel("Réinitialiser l'interface");
+        JButton resetButton = new JButton("Reset");
+        resetButton.setPreferredSize(new Dimension(100, 30));
+        resetButton.addActionListener(e -> gui.resetUIScale());
+
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        graphicsPanel.add(resetLabel, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        graphicsPanel.add(resetButton, gbc);
 
         // Accessibility and Textured Mode Toggle
         JLabel accessibilityModeLabel = new JLabel("Activer le mode accessibilité:");
@@ -125,11 +161,11 @@ public class SettingsPanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = 1;
-        graphismePanel.add(accessibilityModeLabel, gbc);
+        graphicsPanel.add(accessibilityModeLabel, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 1;
-        graphismePanel.add(accessibilityToggleButton, gbc);
+        graphicsPanel.add(accessibilityToggleButton, gbc);
 
         // Quit Button
         JButton saveChanges = new JButton("Quitter");
@@ -140,7 +176,7 @@ public class SettingsPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.SOUTHEAST;
-        graphismePanel.add(saveChanges, gbc);
+        graphicsPanel.add(saveChanges, gbc);
     }
 
     private void addAudioTab() {

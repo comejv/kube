@@ -7,14 +7,13 @@ import javax.swing.Timer;
 
 import kube.model.action.Action;
 import kube.model.action.ActionType;
-import kube.model.action.Queue;
 import kube.view.GUI;
 import kube.view.panels.TransparentPanel;
 
 public class Message implements ActionListener {
     private Timer timer;
     private float opacity;
-    private int state, increasingState, stableState, decresingState;
+    private int state, increasingState, stableState, decreasingState;
     private TransparentPanel panel;
     private HexGlow hexGlow;
     private boolean firstTimeStable;
@@ -32,18 +31,18 @@ public class Message implements ActionListener {
             opacity = 1;
             increasingState = 0;
             stableState = 20;
-            decresingState = 20;
+            decreasingState = 20;
         } else {
             opacity = 0;
             increasingState = 20;
             stableState = 40;
-            decresingState = 20;
+            decreasingState = 20;
         }
         state = 0;
         this.aiAlreadyPaused = aiAlreadyPaused;
         this.panel = panel;
         this.firstTimeStable = true;
-        this.timer = new Timer(2000 / (increasingState + stableState + decresingState), this);
+        this.timer = new Timer(2000 / (increasingState + stableState + decreasingState), this);
         this.hexGlow = hexGlow;
         this.gui = gui;
         if (hexGlow != null){
@@ -60,9 +59,9 @@ public class Message implements ActionListener {
         state++;
         if (state < increasingState) {
             opacity += 1 / (float) increasingState; // Lighten
-        } else if (state >= increasingState + stableState && state < increasingState + stableState + decresingState) {
-            opacity -= 1 / (float) decresingState; // Darken
-        } else if (state >= decresingState + stableState + increasingState) {
+        } else if (state >= increasingState + stableState && state < increasingState + stableState + decreasingState) {
+            opacity -= 1 / (float) decreasingState; // Darken
+        } else if (state >= decreasingState + stableState + increasingState) {
             panel.setVisible(false);
             gui.removeAllFromOverlay();
             if (hexGlow != null){

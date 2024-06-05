@@ -153,7 +153,7 @@ public class Game implements Runnable {
                     ois = new ObjectInputStream(fis);
                     k3.init((Kube) ois.readObject());
                     ois.close();
-                    Config.debug("initilized game");
+                    Config.debug("initialized game");
                     eventsToView.add(new Action(ActionType.VALIDATE, true));
                     return LOAD_START;
                 } catch (ClassNotFoundException | InvalidClassException | InvalidObjectException e) {

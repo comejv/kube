@@ -80,7 +80,7 @@ public abstract class Move implements Serializable {
     }
 
     /**
-     * Check if the move is to the additionals (penality)
+     * Check if the move is to the additionals (penalty)
      * 
      * @return true if the move is to the additionals, false otherwise
      */

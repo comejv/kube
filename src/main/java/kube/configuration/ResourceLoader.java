@@ -132,7 +132,7 @@ public class ResourceLoader {
             System.exit(1);
         }
 
-        Config.error("While handling missing resource " + imgPath + " new error occured :");
+        Config.error("While handling missing resource " + imgPath + " new error occurred :");
         Config.error("Missing required resource images/notFound.png");
         System.exit(1);
         return null; // should never happen

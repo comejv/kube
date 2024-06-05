@@ -49,23 +49,14 @@ public class betterBase extends MiniMaxAI {
 
     @Override
     public void constructionPhase(Kube k3) {
-        /*
-         * -On recupere la couleur la plus présente sur la base avec getBaseRepartition
-         * -On créer une colone avec cette couleur
-         * -On refait ça en démarant la colone sur la deuxieme ligne avec la deuxieme
-         * couleur la plus présente
-         * -Puis la troisieme
-         * - On remplie les trous avec les pieces restantes en ne mettant qu'un
-         * ModelColor.NATURAL ou ModeColor.WHITE par ligne
-         */
         p = getPlayer(k3);
-        getBaseRepartiton(k3);
+        getBaseRepartition(k3);
 
         ModelColor c;
         Integer[] startPoint;
         int[] posed = { 0, 0, 0, 0, 0, 0 };
         int a = 0;
-        int i, j, oldj;
+        int i, j, old_j;
 
         setJokers(getRandom());
 
@@ -73,12 +64,12 @@ public class betterBase extends MiniMaxAI {
 
             startPoint = getStartPoint();
             i = startPoint[0];
-            oldj = j = startPoint[1];
+            old_j = j = startPoint[1];
 
             c = getColorBasedOnProbabilities();
             poseColor: while (p.getAvailableToBuild().containsKey(c) && p.getAvailableToBuild().get(c) > 0 && i < p.getMountain().getBaseSize()) {
 
-                if (oldj != i) {
+                if (old_j != i) {
                     do {
                         j = getRandom().nextInt(i + 1);
                         try {
@@ -98,7 +89,7 @@ public class betterBase extends MiniMaxAI {
                 }
                 p.addToMountainFromAvailableToBuild(i, j, c);
                 posed[i]++;
-                oldj = j;
+                old_j = j;
                 i++;
             }
             redistributeProbs(k3, c);
@@ -115,7 +106,7 @@ public class betterBase extends MiniMaxAI {
         }
     }
 
-    private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
+    private HashMap<ModelColor, Float> getBaseRepartition(Kube k3) {
         int baseSize = k3.getBaseSize();
         float nEmplacements = 0f;
         probabilities = new HashMap<>();

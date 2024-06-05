@@ -2,7 +2,6 @@ package kube.model.ai;
 
 // Import model classes
 import kube.model.Kube;
-import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.move.Move;
 
@@ -177,7 +176,7 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
      * 
      * @param kube    the current state of the game
      * @param horizon the depth of the tree
-     * @return an hashmap of each move doable and it score
+     * @return a hashmap of each move doable and its score
      */
     public HashMap<Move, Integer> miniMax(Kube kube, int horizon) {
 
@@ -223,8 +222,8 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
         Player player;
 
         player = kube.getCurrentPlayer();
-        // Avoid evaluation of penality moves, because that false the game state
-        if (!kube.getPenality() && horizon <= 0 || (moves = kube.moveSet()).size() == 0) {
+        // Avoid evaluation of penalty moves, because that false the game state
+        if (!kube.getPenalty() && horizon <= 0 || (moves = kube.moveSet()).size() == 0) {
             return evaluation(kube, getPlayer(kube)) - evaluation(kube, getOtherPlayer(kube));
         } else {
             if (player == getPlayer(kube)) {
@@ -239,14 +238,14 @@ public abstract class MiniMaxAI implements ActionListener, Serializable {
                     return -1;
                 }
                 kube.unPlay();
-                // Noeud max
+                // Node max
                 if (player == getPlayer(kube)) {
                     bestScore = Math.max(score, bestScore);
                     alpha = Math.max(score, alpha);
                     if (beta <= alpha) {
                         break;
                     }
-                    // Noeud min
+                    // Node min
                 } else {
                     bestScore = Math.min(score, bestScore);
                     beta = Math.min(score, beta);

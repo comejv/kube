@@ -14,32 +14,32 @@ import kube.model.Kube;
 import kube.model.action.move.Move;
 import kube.model.ai.MiniMaxAI;
 
-public class moveSetHeuristique extends MiniMaxAI {
+public class moveSetHeuristic extends MiniMaxAI {
 
     // TODO: refactor
 
     ArrayList<ModelColor> colors;
-    ArrayList<Float> cumulativesProbabilities;
+    ArrayList<Float> cumulativeProbabilities;
     HashMap<ModelColor, Float> probabilities;
 
     /**********
      * CONSTRUCTORS
      **********/
 
-    public moveSetHeuristique(int time, Random r) {
+    public moveSetHeuristic(int time, Random r) {
         super(time, r);
     }
 
-    public moveSetHeuristique(int time, int seed) {
+    public moveSetHeuristic(int time, int seed) {
         super(time, seed);
 
     }
 
-    public moveSetHeuristique(int time) {
+    public moveSetHeuristic(int time) {
         super(time);
     }
 
-    public moveSetHeuristique() {
+    public moveSetHeuristic() {
         super();
     }
 
@@ -49,7 +49,7 @@ public class moveSetHeuristique extends MiniMaxAI {
     @Override
     public void constructionPhase(Kube k3) {
         if (!getPlayer(k3).getIsMountainValidated()) {
-            getBaseRepartiton(k3);
+            getBaseRepartition(k3);
             for (int i = 0; i < getPlayer(k3).getMountain().getBaseSize(); i++) {
                 for (int j = 0; j < i + 1; j++) {
                     ModelColor c = getColorBasedOnProbabilities();
@@ -75,7 +75,7 @@ public class moveSetHeuristique extends MiniMaxAI {
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
 
-    private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
+    private HashMap<ModelColor, Float> getBaseRepartition(Kube k3) {
         int baseSize = k3.getBaseSize();
         float nEmplacements = 0f;
         probabilities = new HashMap<>();
