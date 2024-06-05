@@ -102,9 +102,33 @@ public class MoveMM extends Move {
 
     @Override
     public String toHTML() {
-        return "Poser " +
+        String s = "<b>" + getPlayer().getName() + "</b>" + " pose " +
                 getColor().forDisplayHTML() +
-                " depuis (" + getFrom().x + ", " + getFrom().y + ")" +
-                " en (" + getTo().x + ", " + getTo().y + ")";
+                " depuis sa " + (6 - getFrom().x);
+        if (getFrom().x == 5) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " colonne de sa " + (getFrom().y + 1);
+        if (getFrom().y == 0) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " ligne vers la " + (9 - getTo().x);
+        if (getTo().x == 8) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " colonne de la " + (getTo().y + 1);
+        if (getTo().y == 0) {
+            s += "ere";
+        } else {
+            s += "eme";
+        }
+        s += " ligne";
+        return s;
     }
 }
