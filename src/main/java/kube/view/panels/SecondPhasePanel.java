@@ -747,7 +747,7 @@ public class SecondPhasePanel extends JPanel {
             LineBorder line = new LineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 10);
             TitledBorder title = BorderFactory.createTitledBorder(line,
                     "Pieces additionnelles du " + k3.getP1().getName(), TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 40));
+                    new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor());
             p1Additionnals.setBorder(title);
             p1Additionnals.repaint();
         }
@@ -756,7 +756,7 @@ public class SecondPhasePanel extends JPanel {
             LineBorder line = new LineBorder(GUIColors.GAME_BG_LIGHT.toColor(), 10);
             TitledBorder title = BorderFactory.createTitledBorder(line,
                     "Pieces additionnelles du " + k3.getP2().getName(), TitledBorder.CENTER, TitledBorder.TOP,
-                    new Font("Jomhuria", Font.PLAIN, 40));
+                    new Font("Jomhuria", Font.PLAIN, 40), GUIColors.ACCENT.toColor());
             p2Additionnals.setBorder(title);
             p2Additionnals.repaint();
         }
