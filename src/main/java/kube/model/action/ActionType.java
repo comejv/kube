@@ -118,19 +118,4 @@ public enum ActionType {
     END_OVERLAY_MENU,
     LOAD_FILE_SELECTED,
     LOAD_PANEL,
-
-    /**********
-     * UNUSED
-     **********/
-
-    // TODO : remove unused actions
-    GRAB_HEX,
-    ADD_GLASS,
-    REMOVE_GLASS,
-    MOVE_FROM_NETWORK,
-    OTHER_PLAYER,
-    PRINT_PLAYER_NAME,
-    PRINT_ASK_PLAYER_NAME,
-    SHOW_ALL,
-    SHOW_MOUNTAIN,
 }

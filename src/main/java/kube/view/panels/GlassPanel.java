@@ -11,7 +11,7 @@ import kube.model.ModelColor;
 import kube.view.components.HexIcon;
 
 public class GlassPanel extends JPanel {
-    // TODO : refactor this class to make it more readable
+
     private HexIcon hex;
     private Point point;
     private ModelColor color;

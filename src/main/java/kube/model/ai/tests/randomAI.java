@@ -12,8 +12,6 @@ import kube.model.ai.utilsAI;
 
 public class randomAI extends MiniMaxAI {
 
-    // TODO: refactor
-
     public randomAI(int time, Random r) {
         super(time, r);
     }

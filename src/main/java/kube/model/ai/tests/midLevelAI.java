@@ -15,8 +15,6 @@ import kube.model.ai.MiniMaxAI;
 
 public class midLevelAI extends MiniMaxAI {
 
-    // TODO: refactor
-
     ArrayList<ModelColor> colors;
     ArrayList<Float> cumulativesProbabilities;
     HashMap<ModelColor, Float> probabilities;

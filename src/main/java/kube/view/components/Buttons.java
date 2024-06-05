@@ -13,7 +13,7 @@ import java.awt.image.RescaleOp;
  * This class will have subclasses for all the buttons used.
  */
 public class Buttons {
-    // TODO : refactor this class to make it more readable
+
     public static class MenuButton extends JButton {
         public MenuButton(String name) {
             super(name);
@@ -27,7 +27,6 @@ public class Buttons {
         }
     }
 
-    // TODO : maybe not in buttons ?
     public static class SelectPlayerButton extends JPanel {
         public int buttonValue;
 

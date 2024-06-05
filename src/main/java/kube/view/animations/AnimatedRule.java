@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
-import kube.configuration.Config;
 import kube.view.panels.RulesPanel;
 
 public class AnimatedRule implements ActionListener {

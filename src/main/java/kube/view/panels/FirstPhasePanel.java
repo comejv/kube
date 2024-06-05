@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -263,8 +262,6 @@ public class FirstPhasePanel extends JPanel {
         mainPanel.setLayout(new GridBagLayout());
         mainPanel.setBounds(0, 0, Config.INIT_WIDTH, Config.INIT_HEIGHT);
         mainPanel.setBackground(GUIColors.GAME_BG.toColor());
-
-        // TODO : continue the refactoring
 
         JPanel sidePanel = new JPanel();
         sidePanel.setLayout(new GridBagLayout());
@@ -781,9 +778,7 @@ public class FirstPhasePanel extends JPanel {
         getButtonsMap().get("Save").setEnabled(true);
     }
 
-    // TODO : remove ?
     public void updateDnd(Action a) {
-
     }
 
     public void updateActionnable() {

@@ -7,7 +7,6 @@ import javax.swing.Timer;
 
 import kube.model.action.Action;
 import kube.model.action.ActionType;
-import kube.model.action.Queue;
 import kube.view.GUI;
 import kube.view.panels.TransparentPanel;
 

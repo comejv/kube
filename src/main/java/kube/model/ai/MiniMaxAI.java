@@ -2,7 +2,6 @@ package kube.model.ai;
 
 // Import model classes
 import kube.model.Kube;
-import kube.model.Mountain;
 import kube.model.Player;
 import kube.model.action.move.Move;
 

@@ -8,7 +8,6 @@ import java.awt.event.MouseWheelEvent;
 
 import javax.swing.JPanel;
 
-import kube.configuration.Config;
 import kube.controller.graphical.MenuController;
 import kube.model.action.ActionType;
 import kube.view.GUI;

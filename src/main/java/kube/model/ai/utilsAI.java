@@ -1,15 +1,12 @@
 package kube.model.ai;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 import kube.model.ModelColor;
 import kube.model.Player;
 
 public class utilsAI {
-
-    // TODO: refactor
 
     /**
      * Fill the mountain of the player with random colors
