@@ -53,7 +53,8 @@ public class MenuPanel extends JPanel {
     private JPanel buttonsPanel;
     public JPanel player1, player2;
     private HashMap<String, JComponent> networkObjects;
-    private  MenuController buttonListener;
+    private MenuController buttonListener;
+
     public MenuPanel(GUI gui, MenuController buttonListener) {
         this.gui = gui;
         this.buttonListener = buttonListener;
@@ -93,6 +94,8 @@ public class MenuPanel extends JPanel {
         settings.resizeIcon(100, 100);
         settings.recolor(GUIColors.ACCENT);
         elemGBC = new GridBagConstraints();
+        elemGBC.anchor = GridBagConstraints.NORTHEAST;
+        elemGBC.insets = new Insets(20, 0, 0, 20);
         elemGBC.gridx = 2;
         elemGBC.gridy = 0;
         elemGBC.weighty = 1;
@@ -127,6 +130,8 @@ public class MenuPanel extends JPanel {
             }
         });
         elemGBC = new GridBagConstraints();
+        elemGBC.anchor = GridBagConstraints.NORTHWEST;
+        elemGBC.insets = new Insets(20, 20, 0, 0);
         elemGBC.gridx = 0;
         elemGBC.gridy = 0;
         elemGBC.weighty = 1;
@@ -311,7 +316,7 @@ public class MenuPanel extends JPanel {
 
         hostPanel.add(ipPortPanel, buttonsGBC);
         hostPanel.add(copy, buttonsGBC);
-        
+
         JButton returnHost = new MenuButton("RETOUR");
         returnHost.setActionCommand("returnHost");
         returnHost.addActionListener(e -> {
@@ -382,7 +387,7 @@ public class MenuPanel extends JPanel {
                 }
             }
         });
-        
+
         joinPanel.add(ipPortFieldPanel, buttonsGBC);
 
         JButton connect = new MenuButton("CONNECTER");
@@ -418,19 +423,19 @@ public class MenuPanel extends JPanel {
         return rules;
     }
 
-    public HashMap<String, JComponent> getNetworkObjects(){
+    public HashMap<String, JComponent> getNetworkObjects() {
         return networkObjects;
     }
 
-    public MenuController getButtonListener(){
+    public MenuController getButtonListener() {
         return buttonListener;
     }
 
-    public CardLayout getButtonsLayout(){
+    public CardLayout getButtonsLayout() {
         return buttonsLayout;
     }
 
-    public JPanel getButtonsPanel(){
+    public JPanel getButtonsPanel() {
         return buttonsPanel;
     }
 }
