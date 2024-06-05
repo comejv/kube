@@ -150,7 +150,7 @@ public enum ModelColor {
             case EMPTY:
                 return " ";
             case WHITE:
-                return "<bold><font color='white'>▣</font></bold>";
+                return "<font color='gray'>▣</font>";
             case NATURAL:
                 return "<font color='gray'>▣</font>";
             case RED:

@@ -102,7 +102,7 @@ public class MoveMM extends Move {
 
     @Override
     public String toHTML() {
-        String s = "<bold>"+getPlayer().getName()+"</bold>" + " pose " +
+        String s = "<b>" + getPlayer().getName() + "</b>" + " pose " +
                 getColor().forDisplayHTML() +
                 " depuis sa " + (6 - getFrom().x);
         if (getFrom().x == 5) {

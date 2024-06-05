@@ -83,7 +83,7 @@ public class MoveMW extends Move {
 
     @Override
     public String toHTML() {
-        String s = "<bold>" + getPlayer().getName() + "</bold>"+ " passe son tour " +
+        String s = "<b>" + getPlayer().getName() + "</b>"+ " passe son tour " +
                 getColor().forDisplayHTML() +
                 " depuis la " + (6 - getFrom().x);
         if (getFrom().x == 5) {
