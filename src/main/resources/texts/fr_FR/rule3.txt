@@ -1,1 +1,1 @@
-Lors de la seconde phase, vous devrez placer vos pièces sur la pyramide centrale à tour de rôle avec votre adversaire. La seule condition étant qu’au moins l’une des deux bases soit de la même couleur que votre pièce. 
+Lors de la seconde phase, vous devrez placer, à tour de rôle avec votre adversaire, une pièce sur la montagne commune. Néanmoins, pour poser votre pièce il faut qu’elle soit de la même couleur qu’au moins une des deux pièces en dessous. 
