@@ -93,7 +93,6 @@ public class RulesPanel extends JPanel {
 
     private void loadAllTexts() {
         for (int i = 0; i < TOTAL_RULE_NB; i++) {
-            Config.debug("load rule nb " + i);
             //rules are numerated from 1 to 8, not 0 to 7 thus the +1
             JTextArea textArea = new JTextArea(ResourceLoader.getText("rule" + (i + 1)));
             textArea.setEditable(false);
