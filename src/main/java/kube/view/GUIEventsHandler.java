@@ -190,7 +190,7 @@ public class GUIEventsHandler implements Runnable {
                     Config.debug("Forbidden action : " + action.getData());
                     message = (String) action.getData() == null ? "You can't do that now."
                             : (String) action.getData();
-                    //getGUI().showError("Forbidden action", message);
+                    // getGUI().showError("Forbidden action", message);
                     break;
                 case PRINT_INVALID_SAVE:
                     getGUI().showError("Invalid save file",
@@ -208,7 +208,11 @@ public class GUIEventsHandler implements Runnable {
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
                     while (getGUI().getOverlay().getComponentCount() > 0) {
-                        System.out.print(""); // IDK why but doesn't work whithout, nice java
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            Config.error("Interrupted win sleep");
+                        }
                     }
                     getGUI().winMessage(action);
                     break;
