@@ -91,13 +91,6 @@ public class MenuController implements ActionListener, MouseListener {
                 toView.add(new Action(ActionType.START_LOCAL));
                 break;
             case "startOnline":
-                // Logique à ajouter :
-                // différencier si on est serveur ou client
-                // si client récupérer ip et port auquel on se connecte dans Config.getHostIP
-                // et Config.getHostPort puis tester si addresse valide, sinon envoyer new
-                // action PRINT_INVALID_ADDRESS à la view si oui envoyer START_ONLINE à la vue
-                // et gérer la logique dans GUIEventsHandler
-                // Si serveur jsp mdr
                 Config.debug("Starting online game");
                 if (network.isServer()) {
                     networkListenerThread = new Thread(networkListener);
@@ -117,7 +110,7 @@ public class MenuController implements ActionListener, MouseListener {
                         Config.error(e.getMessage());
                         break;
                     }
-                    Config.debug("Connection etablished");
+                    Config.debug("Connection established");
                     networkListenerThread = new Thread(networkListener);
                     networkSenderThread = new Thread(networkSender);
                     networkListenerThread.start();

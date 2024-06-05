@@ -24,7 +24,6 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 
-import javax.swing.JButton;
 import javax.swing.Timer;
 
 public class GUIEventsHandler implements Runnable {
@@ -190,11 +189,11 @@ public class GUIEventsHandler implements Runnable {
                 case PRINT_WIN_MESSAGE:
                     Config.debug("Win message");
                     while (getGUI().getOverlay().getComponentCount() > 0) {
-                        System.out.print(""); // IDK why but doesn't work whithout, nice java
+                        System.out.print(""); // IDK why but doesn't work without, nice java
                     }
                     getGUI().winMessage(action);
                     break;
-                case PRINT_CONNECTION_ETABLISHED:
+                case PRINT_CONNECTION_ESTABLISHED:
                     event = new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "startOnline");
                     menuPanel = (MenuPanel) getGUI().getPanel(GUI.MENU);
                     menuPanel.getButtonListener().actionPerformed(event);

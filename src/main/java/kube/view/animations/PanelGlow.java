@@ -50,10 +50,10 @@ public class PanelGlow implements ActionListener {
         }
         yellowIntensity = Math.max(yellowIntensity, 0);
         if (toGlow != null) {
-            Color col = k3.getPenality() ? new Color(255, yellowIntensity, yellowIntensity)
+            Color col = k3.getPenalty() ? new Color(255, yellowIntensity, yellowIntensity)
                     : new Color(255, 255, yellowIntensity);
             for (JPanel pan : toGlow.keySet()) {
-                if (toGlow.containsKey(pan) && toGlow.get(pan).length() > 0) { // additionnal pan
+                if (toGlow.containsKey(pan) && toGlow.get(pan).length() > 0) { // additional pan
                     LineBorder line = new LineBorder(col, 10);
                     TitledBorder title = BorderFactory.createTitledBorder(line,
                             "Pieces additionnelles du " + toGlow.get(pan), TitledBorder.CENTER, TitledBorder.TOP,

@@ -10,14 +10,13 @@ import java.util.Random;
 import kube.model.ModelColor;
 import kube.model.Mountain;
 import kube.model.Player;
-import kube.configuration.Config;
 import kube.model.Kube;
 import kube.model.action.move.Move;
 import kube.model.ai.MiniMaxAI;
 
 public class betterConstructV2 extends MiniMaxAI {
     ArrayList<ModelColor> colors;
-    ArrayList<Float> cumulativesProbabilities;
+    ArrayList<Float> cumulativeProbabilities;
     HashMap<ModelColor, Float> probabilities;
 
     /**********
@@ -47,7 +46,7 @@ public class betterConstructV2 extends MiniMaxAI {
     @Override
     public void constructionPhase(Kube k3) {
         Integer[] startPoint;
-        getBaseRepartiton(k3);
+        getBaseRepartition(k3);
         setJokers(k3, getRandom());
         while (!getPlayer(k3).isMountainFull()) {
             ModelColor c = getColorBasedOnProbabilities();
@@ -72,7 +71,7 @@ public class betterConstructV2 extends MiniMaxAI {
         return Collections.max(movesMap.entrySet(), HashMap.Entry.comparingByValue()).getKey();
     }
 
-    private HashMap<ModelColor, Float> getBaseRepartiton(Kube k3) {
+    private HashMap<ModelColor, Float> getBaseRepartition(Kube k3) {
         int baseSize = k3.getBaseSize();
         float nEmplacements = 0f;
         probabilities = new HashMap<>();
