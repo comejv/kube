@@ -54,7 +54,7 @@ public class SecondPhasePanel extends JPanel {
     private JPanel leftWhiteDrop;
     private JPanel rightWhiteDrop;
     public JPanel gamePanel, p1Additionals, p2Additionals, p1, p2, base;
-    private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton, loadButton;
+    private JButton undoButton, redoButton, pauseAi, sugAIButton, saveButton, loadButton, optButton;
     private int gameType;
     public HexGlow animationHexGlow;
     public PanelGlow animationPanelGlow;
@@ -136,7 +136,7 @@ public class SecondPhasePanel extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel.add(quitButton, gbc);
 
-        JButton optButton = new Buttons.GamePhaseButton("Paramètres");
+        optButton = new Buttons.GamePhaseButton("Paramètres");
         optButton.setActionCommand("settings");
         optButton.addMouseListener(a);
         gbc.gridy = 1;
@@ -347,6 +347,7 @@ public class SecondPhasePanel extends JPanel {
             sugAIButton.setEnabled(false);
             undoButton.setEnabled(false);
             redoButton.setEnabled(false);
+            optButton.setEnabled(false);
             if (a.getType() == ActionType.AI_PAUSE) {
                 Boolean pause = (Boolean) a.getData();
                 pauseAi.setText(pause ? "Reprendre Kubot" : "Pause Kubot");
@@ -441,6 +442,7 @@ public class SecondPhasePanel extends JPanel {
                 sugAIButton.setEnabled(true);
             }
             pauseAi.setEnabled(true);
+            optButton.setEnabled(true);
         } catch (Exception e) {
             Config.debug("Trying to animate a thing which isn't load");
         }
@@ -955,7 +957,8 @@ public class SecondPhasePanel extends JPanel {
 
     private void moveAnimation(ModelColor c, Point from, Point to, Player p, Action action) {
         Object lock = new Object();
-        if (action.getType() == ActionType.AUTO_MOVE || (action.getType() == ActionType.MOVE  &&  (p.isAI() || (gameType != Game.LOCAL && gameType != p.getId())))) {
+        if (action.getType() == ActionType.AUTO_MOVE || (action.getType() == ActionType.MOVE
+                && (p.isAI() || (gameType != Game.LOCAL && gameType != p.getId())))) {
             new fakeDnD(c, from, to, gui, lock);
             synchronized (lock) {
                 try {

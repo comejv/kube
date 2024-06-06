@@ -8,7 +8,7 @@ public class Config {
      * CONFIGURATION CONSTANTS
      **********/
 
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     public static final boolean SHOW_BORDERS = false;
     public static final String SAVING_PATH_DIRECTORY = "saves/";
     public static final String SAVING_FILE_EXTENSION = ".ser";

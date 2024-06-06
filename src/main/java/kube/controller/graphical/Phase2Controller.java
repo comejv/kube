@@ -29,6 +29,7 @@ public class Phase2Controller implements ActionListener, MouseListener, Componen
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
             case "settings":
+                toModel.add(new Action(ActionType.AI_PAUSE, true));
                 toView.add(new Action(ActionType.SETTINGS));
                 break;
             case "updateHist":
